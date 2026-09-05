@@ -1,0 +1,129 @@
+// Storage service definitions — RPC declarations only.
+syntax = "proto3";
+
+package storage.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+import "storage/v1/message.proto";
+import "storage/v1/request_response.proto";
+
+// StorageService provides file storage, upload, download, and management capabilities.
+service StorageService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // Upload
+
+  // GenerateUploadURL returns a pre-signed upload URL or instant upload result.
+  rpc GenerateUploadURL(GenerateUploadURLRequest) returns (GenerateUploadURLResponse);
+  // GetSTSCredential returns STS temporary credentials for client-side upload.
+  rpc GetSTSCredential(GetSTSCredentialRequest) returns (GetSTSCredentialResponse);
+  // BatchGetSTSCredential returns linkd STS credentials plus per-file upload
+  // tokens / instant results for a batch of files. The linkd STS credential
+  // is fetched once and reused across all files in the batch.
+  rpc BatchGetSTSCredential(BatchGetSTSCredentialRequest) returns (BatchGetSTSCredentialResponse);
+  // ConfirmUpload confirms a file upload and creates the file record.
+  rpc ConfirmUpload(ConfirmUploadRequest) returns (ConfirmUploadResponse);
+  // CancelUpload cancels a pending upload session. Best-effort: only succeeds
+  // when the session is still PENDING. The OSS object is NOT deleted (the
+  // client may still be uploading); GC reclaims orphaned objects later.
+  rpc CancelUpload(CancelUploadRequest) returns (google.protobuf.Empty);
+
+  // Download
+
+  // GenerateDownloadURL returns a pre-signed download URL.
+  rpc GenerateDownloadURL(GenerateDownloadURLRequest) returns (GenerateDownloadURLResponse);
+
+  // Links (long-lived references for embedding into external systems)
+
+  // CreateFileLink mints (or returns the existing) anonymous link token for
+  // a file. The token is the credential for GetFileLinkDownload — random,
+  // not derived from file_id, so renewing retention never invalidates links
+  // already embedded in emails or documents. Optionally resets the retention
+  // window (renewal).
+  rpc CreateFileLink(CreateFileLinkRequest) returns (CreateFileLinkResponse);
+  // GetFileLinkDownload is the anonymous link-link backend: recipients hit
+  // it from links embedded in emails etc. Returns a freshly presigned
+  // short-TTL download URL plus the file summary, or expired=true once the
+  // retention window has closed (the link outlives the file only in that
+  // sense). No owner required — the token IS the credential.
+  rpc GetFileLinkDownload(GetFileLinkDownloadRequest) returns (GetFileLinkDownloadResponse);
+
+  // User File Management
+
+  // ListMyFiles lists files owned by the calling user.
+  rpc ListMyFiles(ListMyFilesRequest) returns (ListMyFilesResponse);
+  // ListMyFilesPaged lists files owned by the calling user with traditional
+  // offset pagination. Use this when the caller needs total_count and page
+  // numbers (UI list views with page navigation). For stable iteration under
+  // concurrent writes (background scans, exports), use ListMyFiles instead.
+  rpc ListMyFilesPaged(ListMyFilesPagedRequest) returns (ListMyFilesPagedResponse);
+  // GetMyFile returns details of a file owned by the calling user.
+  rpc GetMyFile(GetMyFileRequest) returns (UserFileInfo);
+  // UpdateMyFile updates metadata of a user's file.
+  rpc UpdateMyFile(UpdateMyFileRequest) returns (UserFileInfo);
+  // DeleteMyFile soft-deletes a user's file.
+  rpc DeleteMyFile(DeleteMyFileRequest) returns (google.protobuf.Empty);
+  // BatchDeleteMyFiles soft-deletes multiple user files.
+  rpc BatchDeleteMyFiles(BatchDeleteMyFilesRequest) returns (BatchDeleteMyFilesResponse);
+
+  // Image Processing
+
+  // GenerateProcessURL returns a URL with image processing parameters.
+  rpc GenerateProcessURL(GenerateProcessURLRequest) returns (GenerateProcessURLResponse);
+
+  // GenerateCDNURL returns a CDN-fronted signed URL (with expiry) for an
+  // already-uploaded file. Caller must own the file. If ops is non-empty,
+  // the URL carries image-processing parameters (Aliyun x-oss-process);
+  // S3/CloudFront providers reject ops with CDN_IMAGE_PROCESSING_UNSUPPORTED.
+  rpc GenerateCDNURL(GenerateCDNURLRequest) returns (GenerateCDNURLResponse);
+
+  // Quota
+
+  // GetMyQuota returns the calling user's storage quota.
+  rpc GetMyQuota(GetMyQuotaRequest) returns (QuotaInfo);
+
+  // Admin
+
+  // AdminListFiles lists all files (admin only).
+  rpc AdminListFiles(AdminListFilesRequest) returns (AdminListFilesResponse);
+  // AdminGetFile returns file details (admin only).
+  rpc AdminGetFile(AdminGetFileRequest) returns (AdminFileInfo);
+  // AdminDeleteFile deletes a file (admin only).
+  rpc AdminDeleteFile(AdminDeleteFileRequest) returns (google.protobuf.Empty);
+  // AdminGetQuota returns a user's quota (admin only).
+  rpc AdminGetQuota(AdminGetQuotaRequest) returns (QuotaInfo);
+  // AdminSetQuota sets a user's quota (admin only).
+  rpc AdminSetQuota(AdminSetQuotaRequest) returns (QuotaInfo);
+  // AdminGetStats returns storage statistics (admin only).
+  rpc AdminGetStats(AdminGetStatsRequest) returns (AdminGetStatsResponse);
+  // AdminListProviders lists all storage providers (admin only).
+  rpc AdminListProviders(google.protobuf.Empty) returns (AdminListProvidersResponse);
+  // AdminListBuckets lists all buckets (admin only).
+  rpc AdminListBuckets(google.protobuf.Empty) returns (AdminListBucketsResponse);
+  // AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
+  rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse);
+  // AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
+  rpc AdminDeleteOwner(AdminDeleteOwnerRequest) returns (AdminDeleteOwnerResponse);
+
+  // Audit Log
+
+  // ListMyAuditLogs lists audit logs for the calling user.
+  rpc ListMyAuditLogs(ListMyAuditLogsRequest) returns (ListMyAuditLogsResponse);
+  // AdminListAuditLogs lists all audit logs (admin only).
+  rpc AdminListAuditLogs(AdminListAuditLogsRequest) returns (AdminListAuditLogsResponse);
+
+  // Business-facing quota management.
+  // TODO(auth): these RPCs have no authentication today. Before exposing in
+  // production, add service-to-service authentication (linkd secret / mTLS /
+  // OAuth client credentials). See go-common/grpcx/auth.go for helpers.
+
+  // SetOwnerQuota overwrites an owner's total quota. Business-facing (e.g.
+  // pay-service resetting quota after a plan change). For admin tools use
+  // AdminSetQuota.
+  rpc SetOwnerQuota(SetOwnerQuotaRequest) returns (QuotaInfo);
+  // AddOwnerQuota atomically increments an owner's quota by delta_bytes
+  // (positive for purchase, negative for refund). Caller is responsible for
+  // idempotency (e.g. deduplicate by order ID upstream).
+  rpc AddOwnerQuota(AddOwnerQuotaRequest) returns (QuotaInfo);
+}

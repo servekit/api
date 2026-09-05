@@ -1,0 +1,34 @@
+// Gid RPC request/response payloads.
+syntax = "proto3";
+
+package gid.v1;
+
+import "buf/validate/validate.proto";
+
+message NextIDRequest {}
+
+message NextIDResponse {
+  int64 id = 1;
+}
+
+message BatchNextIDRequest {
+  int32 count = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 1000
+  }];
+}
+
+message BatchNextIDResponse {
+  repeated int64 ids = 1;
+}
+
+message DecomposeRequest {
+  int64 id = 1 [(buf.validate.field).int64 = {gte: 1}];
+}
+
+message DecomposeResponse {
+  int64 time = 1;
+  int64 sequence = 2;
+  int64 machine_id = 3;
+  string generated_at = 4; // ISO8601 timestamp
+}

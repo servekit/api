@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    tags: ["gen/go/v*"]
+  pull_request:
+
+jobs:
+  proto:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bufbuild/buf-action@v1
+        with:
+          setup_only: false
+          lint: true
+          format: false
+          breaking: true
+          breaking_against: "https://github.com/${{ github.repository }}.git#branch=main,subdir=${{ github.workspace }}"
+      - name: Generate and check committed artifacts are current
+        run: |
+          make gen
+          git diff --exit-code || (echo "::error::gen/ is stale — run 'make gen' and commit"; exit 1)
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: Build gen/go
+        run: cd gen/go && go build ./... && go vet ./...

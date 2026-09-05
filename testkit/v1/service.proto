@@ -1,0 +1,698 @@
+// Testkit service definitions — RPC declarations only.
+syntax = "proto3";
+
+package testkit.v1;
+
+import "common/v1/pong.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "testkit/v1/message.proto";
+import "testkit/v1/request_response.proto";
+
+service TestkitService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong) {
+    option (google.api.http) = {get: "/ping"};
+  }
+
+  rpc Login(LoginRequest) returns (TokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+
+  rpc Register(RegisterRequest) returns (TokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/register"
+      body: "*"
+    };
+  }
+
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns (SendVerificationCodeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/captcha/send"
+      body: "*"
+    };
+  }
+
+  // Logout revokes the caller's current session. session_id is NOT in the
+  // request — it is read from the authenticated context (set by the auth
+  // interceptor from the JWT).
+  rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/auth/logout"};
+  }
+
+  rpc RefreshSession(RefreshSessionRequest) returns (TokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/refresh"
+      body: "*"
+    };
+  }
+
+  // ==================== P2 RPCs (53 forwarders to user-service) ====================
+
+  // ---- Profile (P2) ----
+  rpc GetProfile(GetProfileRequest) returns (User) {
+    option (google.api.http) = {get: "/api/v1/profile"};
+  }
+  rpc UpdateProfile(UpdateProfileRequest) returns (User) {
+    option (google.api.http) = {
+      put: "/api/v1/profile"
+      body: "*"
+    };
+  }
+  rpc ChangePassword(ChangePasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/profile/password"
+      body: "*"
+    };
+  }
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/password-reset"
+      body: "*"
+    };
+  }
+
+  // ---- Identity (P2) ----
+  rpc ListIdentities(ListIdentitiesRequest) returns (ListIdentitiesResponse) {
+    option (google.api.http) = {get: "/api/v1/identities"};
+  }
+  rpc BindIdentity(BindIdentityRequest) returns (Identity) {
+    option (google.api.http) = {
+      post: "/api/v1/identities"
+      body: "*"
+    };
+  }
+  rpc BindOAuthIdentity(BindOAuthIdentityRequest) returns (BindOAuthIdentityResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identities/oauth"
+      body: "*"
+    };
+  }
+  rpc UnbindIdentity(UnbindIdentityRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/identities/{identity_id}"};
+  }
+
+  // ---- Session (P2) ----
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse) {
+    option (google.api.http) = {get: "/api/v1/sessions"};
+  }
+  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/sessions/{session_id}/revoke"};
+  }
+  rpc RevokeAllSessions(RevokeAllSessionsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/api/v1/sessions/revoke-all"};
+  }
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse) {
+    option (google.api.http) = {get: "/api/v1/sessions/{session_id}"};
+  }
+  rpc IssueSessionCode(IssueSessionCodeRequest) returns (IssueSessionCodeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/sessions/issue-code"
+      body: "*"
+    };
+  }
+  rpc ExchangeSessionCode(ExchangeSessionCodeRequest) returns (ExchangeSessionCodeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/sessions/exchange"
+      body: "*"
+    };
+  }
+
+  // ---- Social (P2) ----
+  rpc GetOAuthURL(GetOAuthURLRequest) returns (GetOAuthURLResponse) {
+    option (google.api.http) = {get: "/api/v1/social/{provider}/url"};
+  }
+  rpc SocialLogin(SocialLoginRequest) returns (SocialLoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/social/login"
+      body: "*"
+    };
+  }
+  rpc MiniProgramLogin(MiniProgramLoginRequest) returns (SocialLoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/social/miniprogram"
+      body: "*"
+    };
+  }
+  rpc MiniProgramPhoneLogin(MiniProgramPhoneLoginRequest) returns (SocialLoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/social/miniprogram/phone"
+      body: "*"
+    };
+  }
+
+  // ---- Admin-Users (P2) ----
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/users"
+      body: "*"
+    };
+  }
+  rpc GetUser(GetUserRequest) returns (User) {
+    option (google.api.http) = {get: "/api/v1/users/{user_id}"};
+  }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {get: "/api/v1/users"};
+  }
+  rpc ListUsersPaged(ListUsersPagedRequest) returns (ListUsersPagedResponse) {
+    option (google.api.http) = {get: "/api/v1/users/paged"};
+  }
+  rpc DisableUser(DisableUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/api/v1/users/{user_id}/disable"
+      body: "*"
+    };
+  }
+  rpc GetLoginLogs(GetLoginLogsRequest) returns (GetLoginLogsResponse) {
+    option (google.api.http) = {get: "/api/v1/users/login-logs"};
+  }
+
+  // ---- RBAC-Group (P2) ----
+  rpc CreateGroup(CreateGroupRequest) returns (Group) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/groups"
+      body: "*"
+    };
+  }
+  rpc GetGroup(GetGroupRequest) returns (Group) {
+    option (google.api.http) = {get: "/api/v1/rbac/groups/{group_id}"};
+  }
+  rpc UpdateGroup(UpdateGroupRequest) returns (Group) {
+    option (google.api.http) = {
+      put: "/api/v1/rbac/groups/{group_id}"
+      body: "*"
+    };
+  }
+  rpc ListGroups(ListGroupsRequest) returns (ListGroupsResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/groups"};
+  }
+  rpc DeleteGroup(DeleteGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/groups/{group_id}"};
+  }
+  rpc AddGroupMember(AddGroupMemberRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/groups/{group_id}/members"
+      body: "*"
+    };
+  }
+  rpc RemoveGroupMember(RemoveGroupMemberRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/groups/{group_id}/members/{user_id}"};
+  }
+  rpc ListGroupMembers(ListGroupMembersRequest) returns (ListGroupMembersResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/groups/{group_id}/members"};
+  }
+  rpc AddGroupRole(AddGroupRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/groups/{group_id}/roles"
+      body: "*"
+    };
+  }
+  rpc RemoveGroupRole(RemoveGroupRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/groups/{group_id}/roles/{role_id}"};
+  }
+  rpc ListGroupRoles(ListGroupRolesRequest) returns (ListGroupRolesResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/groups/{group_id}/roles"};
+  }
+
+  // ---- RBAC-Role (P2) ----
+  rpc CreateRole(CreateRoleRequest) returns (Role) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/roles"
+      body: "*"
+    };
+  }
+  rpc GetRole(GetRoleRequest) returns (Role) {
+    option (google.api.http) = {get: "/api/v1/rbac/roles/{role_id}"};
+  }
+  rpc UpdateRole(UpdateRoleRequest) returns (Role) {
+    option (google.api.http) = {
+      put: "/api/v1/rbac/roles/{role_id}"
+      body: "*"
+    };
+  }
+  rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/roles/{role_id}"};
+  }
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/roles"};
+  }
+  rpc AssignRole(AssignRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/users/{user_id}/roles"
+      body: "*"
+    };
+  }
+  rpc RevokeRole(RevokeRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/users/{user_id}/roles/{role_id}"};
+  }
+  rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/users/{user_id}/roles"};
+  }
+
+  // ---- RBAC-Permission (P2) ----
+  rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/permissions"};
+  }
+  rpc CreatePermission(CreatePermissionRequest) returns (Permission) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/permissions"
+      body: "*"
+    };
+  }
+  rpc GetPermission(GetPermissionRequest) returns (Permission) {
+    option (google.api.http) = {get: "/api/v1/rbac/permissions/{permission_id}"};
+  }
+  rpc UpdatePermission(UpdatePermissionRequest) returns (Permission) {
+    option (google.api.http) = {
+      put: "/api/v1/rbac/permissions/{permission_id}"
+      body: "*"
+    };
+  }
+  rpc DeletePermission(DeletePermissionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/permissions/{permission_id}"};
+  }
+  rpc CreatePermissionGroup(CreatePermissionGroupRequest) returns (PermissionGroup) {
+    option (google.api.http) = {
+      post: "/api/v1/rbac/permission-groups"
+      body: "*"
+    };
+  }
+  rpc GetPermissionGroup(GetPermissionGroupRequest) returns (PermissionGroup) {
+    option (google.api.http) = {get: "/api/v1/rbac/permission-groups/{permission_group_id}"};
+  }
+  rpc UpdatePermissionGroup(UpdatePermissionGroupRequest) returns (PermissionGroup) {
+    option (google.api.http) = {
+      put: "/api/v1/rbac/permission-groups/{permission_group_id}"
+      body: "*"
+    };
+  }
+  rpc DeletePermissionGroup(DeletePermissionGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/rbac/permission-groups/{permission_group_id}"};
+  }
+  rpc ListPermissionGroups(ListPermissionGroupsRequest) returns (ListPermissionGroupsResponse) {
+    option (google.api.http) = {get: "/api/v1/rbac/permission-groups"};
+  }
+
+  // ==================== P3 RPCs (29 forwarders to storage-service) ====================
+  //
+  // "my" RPCs inject Owner{USER, ctx.user_id} at the BFF; their request messages
+  // carry no owner field. admin / owner-quota RPCs pass owner_type+owner_id
+  // through as the operation target. REST avoids enum-in-path (P3 plan decision
+  // 4): owner is conveyed via body (POST/PUT) or query (GET), never a path
+  // segment. Paths are prefixed /api/v1/{files,storage,admin/...}.
+
+  // ---- Upload (owner from ctx) ----
+  rpc GenerateUploadURL(GenerateUploadURLRequest) returns (GenerateUploadURLResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/uploads"
+      body: "*"
+    };
+  }
+  rpc GetSTSCredential(GetSTSCredentialRequest) returns (GetSTSCredentialResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/sts"
+      body: "*"
+    };
+  }
+  rpc BatchGetSTSCredential(BatchGetSTSCredentialRequest) returns (BatchGetSTSCredentialResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/sts:batch"
+      body: "*"
+    };
+  }
+  rpc ConfirmUpload(ConfirmUploadRequest) returns (ConfirmUploadResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/uploads:confirm"
+      body: "*"
+    };
+  }
+  rpc CancelUpload(CancelUploadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/files/uploads:cancel"
+      body: "*"
+    };
+  }
+
+  // ---- Download / Process (owner from ctx) ----
+  rpc GenerateDownloadURL(GenerateDownloadURLRequest) returns (GenerateDownloadURLResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/{file_id}:downloadUrl"
+      body: "*"
+    };
+  }
+  rpc GenerateProcessURL(GenerateProcessURLRequest) returns (GenerateProcessURLResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/{file_id}:processUrl"
+      body: "*"
+    };
+  }
+  rpc GenerateCDNURL(GenerateCDNURLRequest) returns (GenerateCDNURLResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/{file_id}:cdnUrl"
+      body: "*"
+    };
+  }
+
+  // ---- Sharing (anonymous download surface for external links) ----
+  // CreateFileLink mints / renews an anonymous link token (owner from ctx).
+  rpc CreateFileLink(CreateFileLinkRequest) returns (CreateFileLinkResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files/{file_id}/links"
+      body: "*"
+    };
+  }
+  // GetFileLinkDownload is the anonymous backend for file links embedded in
+  // emails etc. — the token IS the credential, no login required.
+  rpc GetFileLinkDownload(GetFileLinkDownloadRequest) returns (GetFileLinkDownloadResponse) {
+    option (google.api.http) = {get: "/api/v1/links/{link_token}/download"};
+  }
+
+  // ---- My Files (owner from ctx) ----
+  rpc ListMyFiles(ListMyFilesRequest) returns (ListMyFilesResponse) {
+    option (google.api.http) = {get: "/api/v1/files"};
+  }
+  rpc ListMyFilesPaged(ListMyFilesPagedRequest) returns (ListMyFilesPagedResponse) {
+    option (google.api.http) = {get: "/api/v1/files:page"};
+  }
+  rpc GetMyFile(GetMyFileRequest) returns (FileInfo) {
+    option (google.api.http) = {get: "/api/v1/files/{file_id}"};
+  }
+  rpc UpdateMyFile(UpdateMyFileRequest) returns (FileInfo) {
+    option (google.api.http) = {
+      patch: "/api/v1/files/{file_id}"
+      body: "*"
+    };
+  }
+  rpc DeleteMyFile(DeleteMyFileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/files/{file_id}"};
+  }
+  rpc BatchDeleteMyFiles(BatchDeleteMyFilesRequest) returns (BatchDeleteMyFilesResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/files:batchDelete"
+      body: "*"
+    };
+  }
+
+  // ---- My Quota / Audit (owner from ctx) ----
+  rpc GetMyQuota(google.protobuf.Empty) returns (QuotaInfo) {
+    option (google.api.http) = {get: "/api/v1/storage/quota"};
+  }
+  rpc ListMyAuditLogs(ListMyAuditLogsRequest) returns (ListMyAuditLogsResponse) {
+    option (google.api.http) = {get: "/api/v1/storage/audit-logs"};
+  }
+
+  // ---- Admin (owner_type+owner_id = query/op target via body/query, not path) ----
+  rpc AdminListFiles(AdminListFilesRequest) returns (AdminListFilesResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/files"};
+  }
+  rpc AdminGetFile(AdminGetFileRequest) returns (AdminFileInfo) {
+    option (google.api.http) = {get: "/api/v1/admin/files/{file_id}"};
+  }
+  rpc AdminDeleteFile(AdminDeleteFileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/admin/files/{file_id}"};
+  }
+  rpc AdminGetQuota(AdminGetQuotaRequest) returns (QuotaInfo) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/quota"};
+  }
+  rpc AdminSetQuota(AdminSetQuotaRequest) returns (QuotaInfo) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/storage/quota"
+      body: "*"
+    };
+  }
+  rpc AdminGetStats(AdminGetStatsRequest) returns (AdminGetStatsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/stats"};
+  }
+  rpc AdminListProviders(google.protobuf.Empty) returns (AdminListProvidersResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/providers"};
+  }
+  rpc AdminListBuckets(google.protobuf.Empty) returns (AdminListBucketsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/buckets"};
+  }
+  rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/storage/owners:softDeleteFiles"
+      body: "*"
+    };
+  }
+  rpc AdminDeleteOwner(AdminDeleteOwnerRequest) returns (AdminDeleteOwnerResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/storage/owners:delete"
+      body: "*"
+    };
+  }
+  rpc AdminListAuditLogs(AdminListAuditLogsRequest) returns (AdminListAuditLogsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/audit-logs"};
+  }
+
+  // ---- Message (P4) ----
+  //
+  // sender_id (a service label, not a user id) is injected by the BFF from
+  // cfg.Message.SenderID on the Send RPCs; List/Stats forward no sender_id
+  // filter (ops console sees all records).
+
+  // Send (sender_id injected from config).
+  rpc SendEmail(SendEmailRequest) returns (SendResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/messages:email"
+      body: "*"
+    };
+  }
+  rpc SendSMS(SendSMSRequest) returns (SendResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/messages:sms"
+      body: "*"
+    };
+  }
+
+  // Email records.
+  rpc GetEmail(GetEmailRequest) returns (EmailRecord) {
+    option (google.api.http) = {get: "/api/v1/emails/{id}"};
+  }
+  rpc ListEmails(ListEmailsRequest) returns (ListEmailsResponse) {
+    option (google.api.http) = {get: "/api/v1/emails"};
+  }
+  rpc ListEmailsByCursor(ListEmailsByCursorRequest) returns (ListEmailsByCursorResponse) {
+    option (google.api.http) = {get: "/api/v1/emails:cursor"};
+  }
+  rpc GetEmailStats(GetEmailStatsRequest) returns (EmailStatsResponse) {
+    option (google.api.http) = {get: "/api/v1/emails:stats"};
+  }
+  rpc ListEmailSenders(ListEmailSendersRequest) returns (ListEmailSendersResponse) {
+    option (google.api.http) = {get: "/api/v1/emails:senders"};
+  }
+
+  // SMS records.
+  rpc GetSMS(GetSMSRequest) returns (SMSRecord) {
+    option (google.api.http) = {get: "/api/v1/sms/{id}"};
+  }
+  rpc ListSMS(ListSMSRequest) returns (ListSMSResponse) {
+    option (google.api.http) = {get: "/api/v1/sms"};
+  }
+  rpc ListSMSByCursor(ListSMSByCursorRequest) returns (ListSMSByCursorResponse) {
+    option (google.api.http) = {get: "/api/v1/sms:cursor"};
+  }
+  rpc GetSMSStats(GetSMSStatsRequest) returns (SMSStatsResponse) {
+    option (google.api.http) = {get: "/api/v1/sms:stats"};
+  }
+  rpc ListSMSRegions(ListSMSRegionsRequest) returns (ListSMSRegionsResponse) {
+    option (google.api.http) = {get: "/api/v1/sms:regions"};
+  }
+  rpc ListSMSSenders(ListSMSSendersRequest) returns (ListSMSSendersResponse) {
+    option (google.api.http) = {get: "/api/v1/sms:senders"};
+  }
+
+  // ==================== P5 RPCs (gid debug + aggregated dashboard) ====================
+  //
+  // All four are authenticated (NOT on the public whitelist): the dashboard
+  // needs the caller's user_id to inject the GetMyQuota Owner, and the gid
+  // debug tools sit behind login. GetDashboard fans out to message/storage/user
+  // concurrently (fail-fast); the gid RPCs are 1:1 forwards to gid-service.
+
+  // ---- GID debug (P5) ----
+  rpc NextID(NextIDRequest) returns (NextIDResponse) {
+    option (google.api.http) = {get: "/api/v1/gid/next"};
+  }
+  rpc BatchNextID(BatchNextIDRequest) returns (BatchNextIDResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/gid/batch"
+      body: "*"
+    };
+  }
+  rpc Decompose(DecomposeRequest) returns (DecomposeResponse) {
+    option (google.api.http) = {get: "/api/v1/gid/decompose/{id}"};
+  }
+
+  // ---- Dashboard (P5, aggregated) ----
+  rpc GetDashboard(GetDashboardRequest) returns (DashboardResponse) {
+    option (google.api.http) = {get: "/api/v1/dashboard"};
+  }
+
+  // ---- P6 license-service + telemetry-service forwarders ----
+
+  rpc Activate(ActivateRequest) returns (ActivateResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/activate"
+      body: "*"
+    };
+  }
+
+  rpc Deactivate(DeactivateRequest) returns (DeactivateResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/deactivate"
+      body: "*"
+    };
+  }
+
+  rpc TrialStart(TrialStartRequest) returns (TrialStartResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/trial/start"
+      body: "*"
+    };
+  }
+
+  rpc Health(HealthRequest) returns (HealthResponse) {
+    option (google.api.http) = {get: "/api/v1/license/healthz"};
+  }
+
+  rpc CreateKey(CreateKeyRequest) returns (CreateKeyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/keys"
+      body: "*"
+    };
+  }
+
+  rpc ShowKey(ShowKeyRequest) returns (ShowKeyResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/keys/{key_id}"};
+  }
+
+  rpc ListKeys(ListKeysRequest) returns (ListKeysResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/keys"};
+  }
+
+  rpc UpdateKey(UpdateKeyRequest) returns (UpdateKeyResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/license/admin/keys/{key_id}"
+      body: "*"
+    };
+  }
+
+  rpc RevokeKey(RevokeKeyRequest) returns (RevokeKeyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/keys/{key_id}/revoke"
+      body: "*"
+    };
+  }
+
+  rpc UnrevokeKey(UnrevokeKeyRequest) returns (UnrevokeKeyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/keys/{key_id}/unrevoke"
+      body: "*"
+    };
+  }
+
+  rpc DeleteKey(DeleteKeyRequest) returns (DeleteKeyResponse) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/keys/{key_id}"};
+  }
+
+  rpc GrantModule(GrantModuleRequest) returns (GrantModuleResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/license/admin/keys/{key_id}/grants/{module}"
+      body: "*"
+    };
+  }
+
+  rpc RevokeModule(RevokeModuleRequest) returns (RevokeModuleResponse) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/keys/{key_id}/grants/{module}"};
+  }
+
+  rpc ListKeyDevices(ListKeyDevicesRequest) returns (ListKeyDevicesResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/keys/{key_id}/devices"};
+  }
+
+  rpc KickDevice(KickDeviceRequest) returns (KickDeviceResponse) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/keys/{key_id}/devices/{device_token}"};
+  }
+
+  rpc ShowTrial(ShowTrialRequest) returns (ShowTrialResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/trials/{fingerprint_id}"};
+  }
+
+  rpc ResetTrial(ResetTrialRequest) returns (ResetTrialResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/trials/{fingerprint_id}/{module}/reset"
+      body: "*"
+    };
+  }
+
+  rpc ShowPubKey(ShowPubKeyRequest) returns (ShowPubKeyResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/signing/pubkey"};
+  }
+
+  rpc Ingest(IngestRequest) returns (IngestResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/telemetry/ingest"
+      body: "*"
+    };
+  }
+
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/telemetry/admin/apps"
+      body: "*"
+    };
+  }
+
+  rpc GetApp(GetAppRequest) returns (GetAppResponse) {
+    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{slug}"};
+  }
+
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/telemetry/admin/apps/{slug}"
+      body: "*"
+    };
+  }
+
+  rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/telemetry/admin/apps/{slug}/tokens"
+      body: "*"
+    };
+  }
+
+  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse) {
+    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}"};
+  }
+
+  rpc CreateSigningKey(CreateSigningKeyRequest) returns (CreateSigningKeyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/telemetry/admin/apps/{slug}/signing-keys"
+      body: "*"
+    };
+  }
+
+  rpc RevokeSigningKey(RevokeSigningKeyRequest) returns (RevokeSigningKeyResponse) {
+    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}"};
+  }
+
+  rpc ReplaceEventRules(ReplaceEventRulesRequest) returns (ReplaceEventRulesResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/telemetry/admin/apps/{slug}/events"
+      body: "*"
+    };
+  }
+
+  rpc SetVersionBlocked(SetVersionBlockedRequest) returns (SetVersionBlockedResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/telemetry/admin/apps/{slug}/versions/{version}"
+      body: "*"
+    };
+  }
+
+  rpc GetAppStats(GetAppStatsRequest) returns (GetAppStatsResponse) {
+    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{slug}/stats"};
+  }
+}

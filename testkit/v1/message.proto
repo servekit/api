@@ -1,0 +1,570 @@
+// Testkit domain messages (entities / value objects).
+syntax = "proto3";
+
+package testkit.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "license/v1/enums.proto";
+import "messaging/v1/enums.proto";
+import "storage/v1/enums.proto";
+import "telemetry/v1/enums.proto";
+import "testkit/v1/enums.proto";
+import "user/v1/enums.proto";
+
+// User is the frontend-facing user shape (P2 enriched). Fields are renumbered
+// sequentially vs uservl.User (which has gaps from historical edits); the
+// mapping layer translates field-by-name, not field-by-number. Unlike P1's
+// 6-field login view, this carries the full profile surface (status, gender,
+// timestamps, register_source, ...) used by profile/admin UIs. user_type is
+// retained so the frontend can still do its two-track split (design spec §3.5).
+message User {
+  int64 id = 1;
+  string username = 2;
+  string nickname = 3;
+  string real_name = 4;
+  string avatar_url = 5;
+  string email = 6;
+  string region_code = 7;
+  string phone = 8;
+  user.v1.Gender gender = 9 [(buf.validate.field).enum.defined_only = true];
+  string birthday = 10; // YYYY-MM-DD
+  string timezone = 11;
+  string locale = 12;
+  string bio = 13;
+  user.v1.UserStatus status = 14 [(buf.validate.field).enum.defined_only = true];
+  user.v1.IdentityProvider register_source = 15;
+  user.v1.UserType user_type = 16 [(buf.validate.field).enum.defined_only = true];
+  google.protobuf.Timestamp last_login_at = 17;
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// ---- P2 linkd entity messages (curated frontend-facing shapes) ----
+
+// Identity is a login method linked to a user (email, phone, each OAuth
+// provider, miniprogram openid).
+message Identity {
+  int64 id = 1;
+  user.v1.IdentityProvider provider = 2 [(buf.validate.field).enum.defined_only = true];
+  string provider_uid = 3;
+  bool verified = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// Session is an active login session for the "manage devices" UI.
+message Session {
+  string id = 1;
+  string ip = 2;
+  user.v1.DeviceType device_type = 3 [(buf.validate.field).enum.defined_only = true];
+  string os = 4;
+  string browser = 5;
+  string country = 6;
+  string city = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp last_active_at = 9;
+  bool current = 10;
+}
+
+// Group is an organizational unit; members inherit the group's roles.
+message Group {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 parent_id = 4;
+  string status = 5;
+  int32 member_count = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// Role is a named bundle of permissions assignable to users or groups.
+message Role {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_builtin = 4;
+  repeated Permission permissions = 5;
+  repeated PermissionGroup perm_groups = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// Permission is a resource:action catalog entry.
+message Permission {
+  int64 id = 1;
+  string resource = 2;
+  string action = 3;
+  string description = 4;
+  bool is_builtin = 5;
+}
+
+// PermissionGroup is a named bundle of permissions.
+message PermissionGroup {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated Permission permissions = 4;
+  bool is_builtin = 5;
+}
+
+// GroupMember is a user's membership row within a group.
+message GroupMember {
+  int64 user_id = 1;
+  string nickname = 2;
+  string avatar_url = 3;
+  string role = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// LoginLog is one row of the login audit trail.
+message LoginLog {
+  int64 id = 1;
+  int64 user_id = 2;
+  user.v1.IdentityProvider provider = 3;
+  user.v1.LoginAction action = 4;
+  bool success = 5;
+  string fail_reason = 6;
+  string ip = 7;
+  user.v1.DeviceType device_type = 8;
+  string os = 9;
+  string browser = 10;
+  string country = 11;
+  string city = 12;
+  google.protobuf.Timestamp created_at = 13;
+}
+
+// UserRole is one role held by a user (direct or group-inherited).
+message UserRole {
+  int64 id = 1;
+  int64 role_id = 2;
+  string role_name = 3;
+  string source = 4; // "direct" | "group:<group_name>"
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// ==================== P3 linkd entities (curated frontend-facing shapes) ====================
+//
+// Curation (design spec §3.2 + P3 plan decisions): "my" RPC request messages
+// carry NO owner/owner_type/owner_id — the BFF is the sole trust boundary and
+// builds Owner{USER, ctx.user_id} for the downstream call. admin / owner-quota
+// RPCs keep a flat owner_type + owner_id pair because it is the OPERATION
+// TARGET (not caller identity). testkit defines NO Owner message. request_id is
+// dropped everywhere except AdminListAuditLogs (where it is a search filter).
+// Field numbers mirror storage-service so reviewers can cross-read.
+
+// FileInfo is the user-facing file entity (mirrors storage.UserFileInfo; all
+// fields are file attributes — owner_type included because it is the file's
+// attribute, not the caller's identity).
+message FileInfo {
+  int64 id = 1;
+  string filename = 2;
+  string file_path = 3;
+  string description = 4;
+  map<string, string> metadata = 5;
+  bool is_public = 6;
+  storage.v1.OwnerType owner_type = 7;
+  int64 size = 10;
+  string content_type = 11;
+  string extension = 12;
+  string md5 = 13;
+  string created_at = 20;
+  string updated_at = 21;
+}
+
+// AdminFileInfo is the admin-facing file entity (adds provider/bucket/object_key/
+// object_id internal-location fields absent from the user view).
+message AdminFileInfo {
+  int64 id = 1;
+  storage.v1.OwnerType owner_type = 2;
+  int64 owner_id = 3;
+  string filename = 4;
+  string file_path = 5;
+  string description = 6;
+  map<string, string> metadata = 7;
+  bool is_public = 8;
+  int64 object_id = 9;
+  int64 size = 10;
+  string content_type = 11;
+  string extension = 12;
+  string md5 = 13;
+  string provider = 14;
+  string bucket = 15;
+  string object_key = 16;
+  string created_at = 20;
+  string updated_at = 21;
+}
+
+// QuotaInfo is an owner's storage quota (returned by GetMyQuota / SetOwnerQuota /
+// Admin*Quota). owner_type+owner_id are NOT here: GetMyQuota infers them from
+// ctx, the admin/owner-quota responses echo the request target implicitly.
+message QuotaInfo {
+  int64 total_bytes = 1;
+  int64 used_bytes = 2;
+  int64 available_bytes = 3;
+  int32 file_count = 4;
+}
+
+// ImageProcessOp mirrors the storage-service same-name message. type uses the
+// top-level ImageProcessType enum (int-identical to the downstream nested enum).
+message ImageProcessOp {
+  ImageProcessType type = 1;
+  int32 width = 2;
+  int32 height = 3;
+  storage.v1.ImageFormat format = 4;
+  int32 quality = 5;
+  storage.v1.ImageResizeMode resize_mode = 6;
+  string watermark_text = 7;
+  int32 rotate_degrees = 8;
+}
+
+// UploadFileMeta carries per-file upload metadata for BatchGetSTSCredential.
+// owner is absent — the BFF injects it from ctx.
+message UploadFileMeta {
+  string md5 = 1 [(buf.validate.field).string.len = 32];
+  int64 size = 2 [(buf.validate.field).int64.gt = 0];
+  string filename = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  string content_type = 4 [(buf.validate.field).string.min_len = 1];
+  string file_path = 5;
+  string description = 6;
+  map<string, string> metadata = 7;
+}
+
+// UploadTokenInfo carries either an upload_token (client must ConfirmUpload
+// after the upload) or a file_id when MD5 dedup hit (instant upload).
+message UploadTokenInfo {
+  string upload_token = 1;
+  int64 expires_at = 2;
+  int64 file_id = 3; // non-zero when MD5 dedup hit (instant upload)
+  string object_key = 4;
+}
+
+// ItemError is a per-file failure inside a batch upload-credential response.
+message ItemError {
+  int32 index = 1;
+  string code = 2;
+  string message = 3;
+}
+
+// UploadCredentialItem is oneof(token | error) for batch upload-credential items.
+message UploadCredentialItem {
+  oneof result {
+    UploadTokenInfo token = 1;
+    ItemError error = 2;
+  }
+}
+
+// AuditLogEntry mirrors storage.AuditLogEntry. before/after are arbitrary JSON
+// (google.protobuf.Struct → swagger "object"); request_id is the trace id of the
+// audited operation, kept for the audit UI.
+message AuditLogEntry {
+  int64 id = 1;
+  storage.v1.AuditAction action = 2;
+  storage.v1.OwnerType owner_type = 3;
+  int64 owner_id = 4;
+  storage.v1.AuditLogTargetType target_type = 5;
+  int64 target_id = 6;
+  google.protobuf.Struct before = 7;
+  google.protobuf.Struct after = 8;
+  storage.v1.AuditLogStatus status = 9;
+  string error_message = 10;
+  string request_id = 11;
+  string created_at = 12;
+}
+
+// OwnerStats / ProviderStats / BucketStats are AdminGetStats aggregates.
+message OwnerStats {
+  storage.v1.OwnerType owner_type = 1;
+  int64 file_count = 2;
+  int64 total_bytes = 3;
+}
+
+message ProviderStats {
+  string provider = 1;
+  int64 object_count = 2;
+  int64 total_bytes = 3;
+}
+
+message BucketStats {
+  string bucket = 1;
+  int64 object_count = 2;
+  int64 total_bytes = 3;
+  int64 file_count = 4;
+}
+
+// ProviderInfo / BucketInfo are admin catalog entities.
+message ProviderInfo {
+  string name = 1;
+  storage.v1.Vendor vendor = 2;
+  string endpoint = 3;
+  string region = 4;
+}
+
+message BucketInfo {
+  string name = 1;
+  string provider = 2;
+  string key_prefix = 3;
+  storage.v1.BucketACL acl = 4;
+  storage.v1.Vendor vendor = 5;
+}
+
+// ---- Message linkd entities (P4) ----
+// Nested messages are redefined in testkit (decision 5), not imported.
+
+// EmailAddress mirrors the downstream message (email + display_name).
+message EmailAddress {
+  string email = 1 [(buf.validate.field).string.email = true];
+  string display_name = 2;
+}
+
+// EmailAttachment drops the downstream `reserved` placeholders and renumbers
+// cleanly. url = caller-managed download reference (never fetched, metadata
+// only); content = inline bytes embedded as a real MIME part. Both may be
+// set (content embeds, url is record metadata). DB stores metadata only
+// (content is not persisted, so record echoes have it empty).
+message EmailAttachment {
+  string filename = 1 [(buf.validate.field).string.min_len = 1];
+  string url = 2;
+  bytes content = 3;
+  bool inline = 4;
+  string mime_type = 5;
+  int64 size_bytes = 6;
+}
+
+// EmailVendorStats / SmsVendorStats mirror the downstream per-vendor breakdown.
+message EmailVendorStats {
+  messaging.v1.EmailVendor vendor = 1;
+  int64 total = 2;
+  int64 sent = 3;
+  int64 failed = 4;
+}
+
+message SmsVendorStats {
+  messaging.v1.SmsVendor vendor = 1;
+  int64 total = 2;
+  int64 sent = 3;
+  int64 failed = 4;
+}
+
+// ---- Records (full fidelity for ops triage — decision 7) ----
+
+message EmailRecord {
+  int64 id = 1;
+  messaging.v1.EmailVendor vendor = 2;
+  string account = 3;
+  messaging.v1.EmailScene scene = 4;
+  messaging.v1.MessageStatus status = 5;
+  EmailAddress target = 6;
+  string sender_id = 7; // read-only echo (testkit's sends echo cfg.Message.SenderID)
+  repeated EmailAddress cc = 8;
+  repeated EmailAddress bcc = 9;
+  string subject = 10;
+  string content = 11;
+  string html_body = 12;
+  EmailAddress reply_to = 13;
+  string template_id = 14;
+  map<string, string> template_params = 15;
+  string error_message = 16;
+  int32 attempts = 17;
+  int64 sent_at = 18;
+  int64 created_at = 19;
+  int64 updated_at = 20;
+  repeated EmailAttachment attachments = 21;
+}
+
+message SMSRecord {
+  int64 id = 1;
+  messaging.v1.SmsVendor vendor = 2;
+  string account = 3;
+  messaging.v1.SmsScene scene = 4;
+  messaging.v1.MessageStatus status = 5;
+  string region_code = 6;
+  string phone = 7;
+  string sender_id = 8;
+  string content = 9;
+  string template_id = 10;
+  map<string, string> template_params = 11;
+  string error_message = 12;
+  int32 attempts = 13;
+  int64 sent_at = 14;
+  int64 created_at = 15;
+  int64 updated_at = 16;
+}
+
+// EmailStats mirrors message.EmailStatsResponse (read-only snapshot).
+message EmailStats {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  // success_rate in [0, 100]; -1 means "no data" (total == 0).
+  double success_rate = 4;
+  repeated EmailVendorStats vendors = 5;
+}
+
+// SMSStats mirrors message.SMSStatsResponse (read-only snapshot).
+message SMSStats {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  double success_rate = 4;
+  repeated SmsVendorStats vendors = 5;
+}
+
+// MyQuota mirrors storage.QuotaInfo (read-only snapshot of the caller's quota).
+message MyQuota {
+  int64 total_bytes = 1;
+  int64 used_bytes = 2;
+  int64 available_bytes = 3;
+  int32 file_count = 4;
+}
+
+// UsersSummary is the user-count aggregate from user.ListUsersPaged (count=true).
+message UsersSummary {
+  int64 total = 1;
+}
+
+message DeviceSlotInfo {
+  string device_token = 1;
+  string fingerprint_id = 2;
+  google.protobuf.Timestamp first_seen_at = 3;
+  google.protobuf.Timestamp last_seen_at = 4;
+  optional string name = 5;
+}
+
+message SlotSummary {
+  int32 used = 1;
+  int32 max = 2;
+  repeated DeviceSlotInfo devices = 3;
+}
+
+message HealthChecks {
+  bool db = 1;
+  bool signing = 2;
+}
+
+message SlotLimitInfo {
+  int32 max_slots = 1;
+  repeated DeviceSlotInfo devices = 2;
+}
+
+message RetryAfterInfo {
+  int32 seconds = 1;
+}
+
+message EntitlementInput {
+  license.v1.Module module = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  license.v1.EntitlementKind kind = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+
+  int32 duration_days = 3 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 3650
+  }];
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+message EntitlementInfo {
+  license.v1.Module module = 1;
+  license.v1.EntitlementKind kind = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  google.protobuf.Timestamp granted_at = 4;
+}
+
+message KeyInfo {
+  string license_id = 1;
+  string key_prefix = 2;
+  string label = 3;
+  int32 max_slots = 4;
+  int32 used_slots = 5;
+  license.v1.KeyStatus status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp revoked_at = 8;
+  repeated EntitlementInfo entitlements = 9;
+  repeated DeviceSlotInfo devices = 10;
+}
+
+message TrialInfo {
+  string fingerprint_id = 1;
+  license.v1.Module module = 2;
+  google.protobuf.Timestamp started_at = 3;
+  google.protobuf.Timestamp expires_at = 4;
+  string first_device_token = 5;
+}
+
+message SigningKeyInfo {
+  string key_id = 1;
+  string public_key_b64 = 2;
+}
+
+message ValidateEventResult {
+  int32 index = 1;
+  string event_id = 2;
+  string name = 3;
+  bool accepted = 4;
+  string drop_reason = 5;
+}
+
+message App {
+  string id = 1;
+  string slug = 2;
+  string name = 3;
+  string email = 4;
+  bool strict_versions = 5;
+  telemetry.v1.AuthMode auth_mode = 6;
+  google.protobuf.Timestamp auth_grace_until = 7;
+  int32 rate_per_minute = 8;
+  int32 rate_per_day = 9;
+  int32 raw_retention_days = 10;
+
+  int64 daily_event_budget = 13;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+message EventRule {
+  string event_name = 1 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9_]{0,63}$"}];
+  repeated string allow_props = 2 [(buf.validate.field).repeated = {
+    max_items: 16
+    items: {
+      string: {pattern: "^[a-z][a-z0-9_]{0,31}$"}
+    }
+  }];
+
+  optional string map_prop = 3 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9_]{0,31}$"}];
+}
+
+message IngestTokenInfo {
+  string prefix = 1;
+  bool revoked = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp last_used_at = 4;
+}
+
+message TelemetrySigningKeyInfo {
+  string key_id = 1;
+  bool revoked = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp last_used_at = 4;
+}
+
+message VersionInfo {
+  string version = 1;
+  bool blocked = 2;
+  int64 seen_count = 3;
+  google.protobuf.Timestamp last_seen_at = 4;
+}
+
+message DailyStat {
+  string day = 1;
+  int64 devices = 2;
+  int64 events = 3;
+}

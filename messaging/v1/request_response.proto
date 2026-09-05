@@ -1,0 +1,323 @@
+// Messaging RPC request/response payloads.
+syntax = "proto3";
+
+package messaging.v1;
+
+import "buf/validate/validate.proto";
+import "messaging/v1/enums.proto";
+import "messaging/v1/message.proto";
+
+// SendEmailRequest is the request to send an email.
+message SendEmailRequest {
+  repeated EmailAddress to = 1 [(buf.validate.field).repeated.min_items = 1];
+  repeated EmailAddress cc = 2;
+  repeated EmailAddress bcc = 3;
+  string subject = 4 [(buf.validate.field).string.min_len = 1];
+  string body = 5;
+  string html_body = 6;
+  EmailAddress reply_to = 7;
+  // Vendor + Account optionally select a specific configured account.
+  // Both must be set together; if both zero/empty, sender uses default fallback.
+  EmailVendor vendor = 8;
+  string account = 9;
+  // Template is optional: vendors that do not support templating ignore it.
+  string template_id = 10;
+  map<string, string> template_params = 11;
+  // Scene is the business purpose of this email (required).
+  EmailScene scene = 12;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Required. NOT the end-user/admin id — the caller must
+  // record that in its own audit trail.
+  string sender_id = 13;
+
+  // IdempotencyKey is optional. When set, a second request with the same
+  // (sender_id, idempotency_key) returns the existing record without
+  // re-sending. Use a UUID per logical send intent. Max length 64.
+  string idempotency_key = 14 [(buf.validate.field).string.max_len = 64];
+
+  // From optionally overrides the account's configured From address.
+  // Empty falls back to the account default. The SMTP server is the
+  // ultimate arbiter of which From addresses are accepted (verified
+  // sender lists, etc.); the service does not pre-constrain.
+  EmailAddress from = 15;
+
+  // attachments is optional. content attachments are embedded as real MIME
+  // parts; url-only attachments are pure references (caller-managed download
+  // links, rendered into html_body by the caller) whose metadata is persisted
+  // for record queries. Mixed lists are allowed.
+  repeated EmailAttachment attachments = 16;
+
+  option (buf.validate.message).cel = {
+    id: "vendor_account_pair"
+    message: "vendor and account must both be set or both be empty"
+    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
+  };
+  option (buf.validate.message).cel = {
+    id: "scene_required"
+    message: "scene is required"
+    expression: "this.scene != 0"
+  };
+  option (buf.validate.message).cel = {
+    id: "sender_required"
+    message: "sender_id is required"
+    expression: "this.sender_id != ''"
+  };
+}
+
+// SendSMSRequest is the request to send an SMS.
+message SendSMSRequest {
+  // region_code is the ISO 3166-1 alpha-2 region code used to parse phone
+  // (e.g. "CN", "US", "HK"). Required. Acts as defaultRegion for
+  // phonenumber parsing — NOT a dialing code like "86".
+  string region_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
+
+  // phone is the local phone number WITHOUT the international prefix
+  // (e.g. "13800138000", "5551234567"). Must NOT start with "+".
+  string phone = 2 [(buf.validate.field).string.min_len = 1];
+
+  // content is the raw SMS body for vendors that accept raw text (typically
+  // the international path). Substitution of placeholders (e.g. "{code}") is
+  // the caller's responsibility — message-service forwards the string as-is.
+  string content = 3;
+  string template_id = 4;
+  map<string, string> template_params = 5;
+
+  // Vendor + Account optionally select a specific configured account.
+  // Both must be set together; if both zero/empty, sender routes by phone country.
+  SmsVendor vendor = 6;
+  string account = 7;
+
+  // Scene is the business purpose of this SMS (required).
+  SmsScene scene = 8;
+
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Required. NOT the end-user/admin id — the caller must
+  // record that in its own audit trail.
+  string sender_id = 9;
+
+  // IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
+  string idempotency_key = 10 [(buf.validate.field).string.max_len = 64];
+
+  // SignName carries the per-message signature/sender ID semantics:
+  //   - For domestic SMS (region_code == "CN"): the SMS signature that must
+  //     match the pre-registered sign in the vendor console (e.g. "阿里云",
+  //     "字节跳动"). Domestic vendors reject sends without it.
+  //   - For international SMS (other region_code): treated as the sender ID
+  //     / "From" field. Some regions require pre-registered alphabetic
+  //     sender IDs; vendors apply region-specific rules.
+  // Required for paths whose vendor enforces a signature (all current
+  // domestic vendors do).
+  string sign_name = 11 [(buf.validate.field).string.max_len = 64];
+
+  option (buf.validate.message).cel = {
+    id: "vendor_account_pair"
+    message: "vendor and account must both be set or both be empty"
+    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
+  };
+  option (buf.validate.message).cel = {
+    id: "scene_required"
+    message: "scene is required"
+    expression: "this.scene != 0"
+  };
+  option (buf.validate.message).cel = {
+    id: "sender_required"
+    message: "sender_id is required"
+    expression: "this.sender_id != ''"
+  };
+  option (buf.validate.message).cel = {
+    id: "phone_no_plus"
+    message: "phone must not start with '+' — provide local number only"
+    expression: "!this.phone.startsWith('+')"
+  };
+}
+
+// SendResponse is the response from SendEmail and SendSMS.
+message SendResponse {
+  int64 id = 1;
+  MessageStatus status = 2;
+  // vendor reports which vendor actually handled the send.
+  oneof vendor {
+    EmailVendor email_vendor = 3;
+    SmsVendor sms_vendor = 4;
+  }
+}
+
+// GetEmailRequest is the request to fetch a single email record.
+message GetEmailRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+// GetSMSRequest is the request to fetch a single SMS record.
+message GetSMSRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+// ListEmailsRequest filters and paginates a ListEmails query.
+message ListEmailsRequest {
+  EmailVendor vendor = 1;
+  EmailScene scene = 2;
+  MessageStatus status = 3;
+  string target = 4;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
+  // must record that in its own audit trail.
+  string sender_id = 5;
+  int64 start_time = 6;
+  int64 end_time = 7;
+  int32 page = 8;
+  int32 page_size = 9;
+  SortField sort_field = 10;
+  SortDirection sort_direction = 11;
+}
+
+// ListEmailsResponse contains a page of email records plus pagination metadata.
+message ListEmailsResponse {
+  repeated EmailRecord records = 1;
+  int32 total = 2;
+  int32 total_pages = 3;
+  bool has_more = 4;
+}
+
+// ListSMSRequest filters and paginates a ListSMS query.
+message ListSMSRequest {
+  SmsVendor vendor = 1;
+  SmsScene scene = 2;
+  MessageStatus status = 3;
+  string region_code = 4;
+  string phone = 5;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
+  // must record that in its own audit trail.
+  string sender_id = 6;
+  int64 start_time = 7;
+  int64 end_time = 8;
+  int32 page = 9;
+  int32 page_size = 10;
+  SortField sort_field = 11;
+  SortDirection sort_direction = 12;
+}
+
+// ListSMSResponse contains a page of SMS records plus pagination metadata.
+message ListSMSResponse {
+  repeated SMSRecord records = 1;
+  int32 total = 2;
+  int32 total_pages = 3;
+  bool has_more = 4;
+}
+
+// ListEmailsByCursorRequest filters and cursor-paginates a ListEmailsByCursor
+// query. page_token is opaque — obtain it from the previous response's
+// next_page_token; empty means first page.
+message ListEmailsByCursorRequest {
+  EmailVendor vendor = 1;
+  EmailScene scene = 2;
+  MessageStatus status = 3;
+  string target = 4;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
+  // must record that in its own audit trail.
+  string sender_id = 5;
+  int64 start_time = 6;
+  int64 end_time = 7;
+  SortField sort_field = 8;
+  SortDirection sort_direction = 9;
+  int32 page_size = 10;
+  string page_token = 11;
+  // include_total controls whether COUNT(*) runs. Defaults to false: cursor
+  // users usually don't need the total, and COUNT(*) is expensive on large
+  // tables.
+  bool include_total = 12;
+}
+
+message ListEmailsByCursorResponse {
+  repeated EmailRecord records = 1;
+  // total is 0 when include_total = false. Otherwise reflects the count
+  // matching the filter (ignoring cursor position).
+  int32 total = 2;
+  // next_page_token is empty when there is no next page.
+  string next_page_token = 3;
+}
+
+// ListSMSByCursorRequest filters and cursor-paginates a ListSMSByCursor query.
+message ListSMSByCursorRequest {
+  SmsVendor vendor = 1;
+  SmsScene scene = 2;
+  MessageStatus status = 3;
+  string region_code = 4;
+  string phone = 5;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
+  // must record that in its own audit trail.
+  string sender_id = 6;
+  int64 start_time = 7;
+  int64 end_time = 8;
+  SortField sort_field = 9;
+  SortDirection sort_direction = 10;
+  int32 page_size = 11;
+  string page_token = 12;
+  bool include_total = 13;
+}
+
+message ListSMSByCursorResponse {
+  repeated SMSRecord records = 1;
+  int32 total = 2;
+  string next_page_token = 3;
+}
+
+// GetEmailStatsRequest filters a GetEmailStats query.
+message GetEmailStatsRequest {
+  EmailVendor vendor = 1;
+  EmailScene scene = 2;
+  int64 start_time = 3;
+  int64 end_time = 4;
+}
+
+// GetSMSStatsRequest filters a GetSMSStats query.
+message GetSMSStatsRequest {
+  SmsVendor vendor = 1;
+  SmsScene scene = 2;
+  int64 start_time = 3;
+  int64 end_time = 4;
+}
+
+// EmailStatsResponse contains aggregated email statistics.
+message EmailStatsResponse {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  // success_rate is in [0, 100]; -1 means "no data" (total == 0).
+  double success_rate = 4;
+  repeated EmailVendorStats vendors = 5;
+}
+
+// SMSStatsResponse contains aggregated SMS statistics.
+message SMSStatsResponse {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  // success_rate is in [0, 100]; -1 means "no data" (total == 0).
+  double success_rate = 4;
+  repeated SmsVendorStats vendors = 5;
+}
+
+// ListSMSRegionsRequest is empty — region sets are low-cardinality and the
+// distinct query is cheap, so callers filter client-side if they need to.
+message ListSMSRegionsRequest {}
+
+message ListSMSRegionsResponse {
+  repeated string region_codes = 1;
+}
+
+// ListSMSSendersRequest is empty. See ListSMSRegionsRequest.
+message ListSMSSendersRequest {}
+
+message ListSMSSendersResponse {
+  repeated string sender_ids = 1;
+}
+
+// ListEmailSendersRequest is empty. See ListSMSRegionsRequest.
+message ListEmailSendersRequest {}
+
+message ListEmailSendersResponse {
+  repeated string sender_ids = 1;
+}

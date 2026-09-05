@@ -1,0 +1,143 @@
+// User domain messages (entities / value objects).
+syntax = "proto3";
+
+package user.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "user/v1/enums.proto";
+
+// ==================== User ====================
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string nickname = 3;
+  string real_name = 4;
+  string avatar_url = 5;
+  string email = 6;
+  string region_code = 22 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7;
+  Gender gender = 8 [(buf.validate.field).enum.defined_only = true];
+  string birthday = 9; // YYYY-MM-DD
+  string timezone = 10;
+  string locale = 11;
+  string bio = 12;
+  UserStatus status = 13 [(buf.validate.field).enum.defined_only = true];
+  IdentityProvider register_source = 14;
+  UserType user_type = 19 [(buf.validate.field).enum.defined_only = true];
+  google.protobuf.Timestamp last_login_at = 16;
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// ==================== Identity ====================
+
+message Identity {
+  int64 id = 1;
+  IdentityProvider provider = 2 [(buf.validate.field).enum.defined_only = true];
+  string provider_uid = 3;
+  // verified is true when the identity was bound via a flow that
+  // cryptographically confirms control of the target (matching captcha code
+  // for EMAIL/PHONE, successful ExchangeCode for OAuth, admin attestation for
+  // ADMIN). user-service sets this to true at every write site; there is
+  // currently no separate "click the verification link" flow that flips it
+  // later — see UserIdentity.Verified godoc in internal/store/models for the
+  // full contract.
+  bool verified = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// ==================== Session ====================
+
+message Session {
+  string id = 1;
+  string ip = 2;
+  DeviceType device_type = 3;
+  string os = 4;
+  string browser = 5;
+  string country = 6;
+  string city = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp last_active_at = 9;
+  bool current = 10;
+}
+
+message LoginLog {
+  int64 id = 1;
+  int64 user_id = 2;
+  IdentityProvider provider = 3;
+  LoginAction action = 4;
+  bool success = 5;
+  string fail_reason = 6;
+  string ip = 7;
+  DeviceType device_type = 8;
+  string os = 9;
+  string browser = 10;
+  string country = 11;
+  string city = 12;
+  google.protobuf.Timestamp created_at = 13;
+}
+
+// ==================== RBAC: Groups ====================
+
+message Group {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 parent_id = 4;
+  string status = 5;
+  int32 member_count = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message GroupMember {
+  int64 user_id = 1;
+  string nickname = 2;
+  string avatar_url = 3;
+  string role = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// ==================== RBAC: Roles ====================
+
+message Role {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_builtin = 5;
+  repeated Permission permissions = 6;
+  repeated PermissionGroup perm_groups = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// ==================== RBAC: Permissions ====================
+
+message Permission {
+  int64 id = 1;
+  string resource = 2;
+  string action = 3;
+  string description = 4;
+  bool is_builtin = 5;
+}
+
+message PermissionGroup {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated Permission permissions = 4;
+  bool is_builtin = 5;
+}
+
+message UserRole {
+  int64 id = 1;
+  int64 role_id = 2;
+  string role_name = 3;
+  string source = 4; // "direct" / "group:{group_name}"
+  google.protobuf.Timestamp created_at = 5;
+}

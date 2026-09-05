@@ -1,0 +1,383 @@
+// User service definitions — RPC declarations only.
+syntax = "proto3";
+
+package user.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+import "user/v1/message.proto";
+import "user/v1/request_response.proto";
+
+service UserService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // ============================================================
+  // Auth — registration, login, logout, session refresh.
+  // Most login methods are stateless (just verify + create session);
+  // code-based methods require a prior SendVerificationCode.
+  // ============================================================
+
+  // Register creates a new user with email or phone, then opens a session.
+  // Prerequisite: SendVerificationCode with purpose=REGISTER. Pass the
+  // returned captcha_id back here alongside the code so the captcha library
+  // binds verification to the same flow that generated it.
+  // Returns: user + session_id (caller is now logged in).
+  // Errors: ErrIdentityExists if email/phone already registered; ErrBadRequest
+  // on missing/invalid/expired code.
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Login authenticates by one of: USERNAME_PASSWORD, EMAIL_PASSWORD,
+  // PHONE_PASSWORD, EMAIL_CODE, PHONE_CODE.
+  // - Password methods: never auto-register; ErrIdentityNotFound if unknown.
+  // - Code methods (EMAIL_CODE, PHONE_CODE): require a prior
+  //   SendVerificationCode (purpose=LOGIN) with captcha_id passed through;
+  //   auto-register when identity is missing (response.is_new=true).
+  // Rate-limited per lookup target (5 fails / 5 min, 15 / hour).
+  // Returns: user + session_id; is_new=true for auto-registered accounts.
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  // Logout revokes the current session. Idempotent — empty session_id is
+  // a no-op. To revoke other sessions (e.g. admin forcing logout), use
+  // RevokeSession / RevokeAllSessions.
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+
+  // RefreshSession extends the TTL of an unexpired session and updates
+  // last_active_at in the DB. Sliding-window model: call from the API
+  // gateway on each authenticated request, or periodically from clients.
+  rpc RefreshSession(RefreshSessionRequest) returns (google.protobuf.Empty);
+
+  // ============================================================
+  // Social Login — OAuth redirect + WeChat Mini Program.
+  //
+  // Architecture (multi-tenant / multi-BFF): user-service is gRPC-only and
+  // does NOT receive the OAuth provider's HTTP callback. A separate HTTP
+  // service — the "OAuth callback service" — owns the single redirect URL
+  // registered with each provider (cfg.OAuth.{provider}.RedirectURL) and
+  // routes every callback back to the originating business via the state
+  // issued here. See README §"OAuth 统一回调架构" for the full flow and a
+  // 50-line callback service reference.
+  // ============================================================
+
+  // GetOAuthURL returns the OAuth authorization URL for redirect-based
+  // providers (GitHub, Google, WeChat web, Apple). The URL embeds the
+  // FIXED redirect URL configured at the provider (cfg.OAuth.{provider}.
+  // RedirectURL) and a server-issued state. The caller only supplies
+  // return_to: where the OAuth callback service should 302 the browser
+  // AFTER user-service has minted a session. return_to must be on the
+  // per-provider AllowedRedirectURLs allowlist.
+  rpc GetOAuthURL(GetOAuthURLRequest) returns (GetOAuthURLResponse);
+
+  // SocialLogin completes a redirect-based OAuth flow. Called by the OAuth
+  // callback service with the code+state the provider handed back. The
+  // response carries the session_id AND the return_to that GetOAuthURL
+  // recorded against this state — the callback service uses return_to to
+  // 302 the browser back to the originating business with the session.
+  rpc SocialLogin(SocialLoginRequest) returns (LoginResponse);
+
+  // MiniProgramLogin handles WeChat Mini Program login via wx.login() code.
+  // Silent login identified by openid; no phone number is collected.
+  // If you need phone, follow up with MiniProgramPhoneLogin — the existing
+  // session is preserved and the phone identity is linked to the same user.
+  rpc MiniProgramLogin(MiniProgramLoginRequest) returns (LoginResponse);
+
+  // MiniProgramPhoneLogin exchanges wx.login() code AND getPhoneNumber code
+  // for openid + phone. Requires both login_code (from wx.login) and
+  // phone_code (from button bindgetphonenumber).
+  // - Existing phone user: links miniprogram identity to that account.
+  // - New user: registers with both phone and miniprogram identities.
+  // response.is_new=true for newly registered accounts.
+  rpc MiniProgramPhoneLogin(MiniProgramPhoneLoginRequest) returns (LoginResponse);
+
+  // ============================================================
+  // User Profile — read/write the current user's own data.
+  // ============================================================
+
+  // GetProfile returns the full profile of a user by ID. Caller is
+  // responsible for authorization — the RPC does not verify that the
+  // requester matches user_id.
+  rpc GetProfile(GetProfileRequest) returns (User);
+
+  // UpdateProfile updates mutable profile fields. Empty fields are ignored
+  // (partial update semantics). Read back via GetProfile.
+  rpc UpdateProfile(UpdateProfileRequest) returns (User);
+
+  // ChangePassword verifies old_password and sets new_password.
+  // Side effect: if the user is in PENDING_REVIEW status (e.g. created via
+  // CreateUser), a successful change activates the account (status=ACTIVE).
+  // This is the intended activation path for admin-created accounts.
+  // Side effect: revokes every active session for the user (including the one
+  // making this call) so the caller must re-authenticate with the new
+  // password. Matches ResetPassword's behavior.
+  rpc ChangePassword(ChangePasswordRequest) returns (google.protobuf.Empty);
+
+  // ResetPassword resets a forgotten password via verification code.
+  // Prerequisite: SendVerificationCode with purpose=PASSWORD_RESET.
+  // NOTE: not yet implemented — returns ErrInternal("not yet implemented").
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty);
+
+  // ============================================================
+  // Identity Binding — link/unlink login methods on an existing user.
+  // ============================================================
+
+  // ListIdentities returns every identity linked to a user (email, phone,
+  // each OAuth provider, miniprogram openid, ...).
+  rpc ListIdentities(ListIdentitiesRequest) returns (ListIdentitiesResponse);
+
+  // BindIdentity links a new email/phone identity to the current user.
+  // Prerequisite: SendVerificationCode with purpose=BIND; pass captcha_id
+  // in the request alongside the code.
+  rpc BindIdentity(BindIdentityRequest) returns (Identity);
+
+  // BindOAuthIdentity links an OAuth provider identity (GitHub, Google,
+  // WeChat web, Apple) to an already-authenticated user — the "绑定微信" /
+  // "connect to GitHub" flow.
+  // Prerequisite: GetOAuthURL (with the caller's session/user_id in mind) →
+  // user authorizes on the provider → the OAuth callback service receives
+  // code+state and calls BindOAuthIdentity. Does NOT create a session; the
+  // caller is already logged in. Returns ErrIdentityExists if the provider
+  // account is already linked (to this user or another).
+  rpc BindOAuthIdentity(BindOAuthIdentityRequest) returns (BindOAuthIdentityResponse);
+
+  // UnbindIdentity removes an identity. Requires user_id (the caller) and a
+  // verification code as confirmation (prevents accidental lockout and
+  // cross-user tampering — service rejects if identity.user_id != user_id).
+  rpc UnbindIdentity(UnbindIdentityRequest) returns (google.protobuf.Empty);
+
+  // ============================================================
+  // Verification Code — generate + dispatch via message-service.
+  // Underpins Register / Login (code methods) / BindIdentity / ResetPassword.
+  // ============================================================
+
+  // SendVerificationCode generates a code, persists it in Redis (bound to
+  // purpose+channel), and dispatches via message-service. Returns captcha_id
+  // — pass it back to the consuming RPC (Register/Login/BindIdentity/...)
+  // to bind code verification to the same flow (defense against cross-context
+  // replay).
+  // Caller provides ALL delivery content (template_id, sign_name, subject,
+  // body, etc.) — user-service has no built-in templates. Use {code}
+  // placeholder in body/subject for substitution.
+  // Required fields depend on channel + region: see SendVerificationCodeRequest
+  // for the CN vs international SMS path table.
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns (SendVerificationCodeResponse);
+
+  // ============================================================
+  // Session Management — list/revoke active sessions for a user.
+  // ============================================================
+
+  // ListSessions returns active sessions for a user (for "manage devices" UIs).
+  // Expired sessions are silently skipped. Sessions created by other services
+  // using the same session store are included.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+
+  // RevokeSession revokes a specific session by ID (logout one device).
+  // Caller is responsible for authorization.
+  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty);
+
+  // RevokeAllSessions revokes every session for a user (logout everywhere).
+  // Recommended after ChangePassword, ResetPassword, or DisableUser.
+  rpc RevokeAllSessions(RevokeAllSessionsRequest) returns (google.protobuf.Empty);
+
+  // GetSession resolves a session_id to its user_id and metadata. Primary use
+  // case: a BFF pulls session_id out of a cookie and needs user_id to inject
+  // into downstream user-service RPCs. Read-only against Redis — does not
+  // touch the DB. Side effect: like all session reads, slides the TTL forward
+  // (same sliding-window semantics as RefreshSession).
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+
+  // IssueSessionCode mints a one-time short code that references the given
+  // session_id. Used by the OAuth callback service to hand the session back
+  // to the business side via URL query without leaking session_id into
+  // referer/logs/history. Business side calls ExchangeSessionCode within
+  // ~5 min to trade the code for session_id + user_id. One-time use.
+  rpc IssueSessionCode(IssueSessionCodeRequest) returns (IssueSessionCodeResponse);
+
+  // ExchangeSessionCode trades a one-time short code (issued by
+  // IssueSessionCode) for session_id + user_id. Atomic one-time use
+  // (GETDEL); replay returns ErrSessionInvalid. Business side sets its
+  // own domain cookie from the returned session_id.
+  rpc ExchangeSessionCode(ExchangeSessionCodeRequest) returns (ExchangeSessionCodeResponse);
+
+  // ============================================================
+  // Admin — back-office operations on users.
+  // ============================================================
+
+  // CreateUser creates a user as an administrator. The new account starts in
+  // PENDING_REVIEW status with the given password; the user activates it by
+  // calling ChangePassword with the initial password — that flips status to
+  // ACTIVE. No verification code is required (admin attestation).
+  // Errors: ErrEmailExists / ErrPhoneExists / ErrUsernameExists on conflict.
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+
+  // GetUser returns a user by ID (admin view). Same shape as GetProfile but
+  // intended for operators, not the user themselves.
+  rpc GetUser(GetUserRequest) returns (User);
+
+  // ListUsers returns a cursor-paginated list of users with rich filters.
+  // Prefer over ListUsersPaged for stable iteration under concurrent writes
+  // (cursor pagination does not skip/dup rows when inserts happen mid-scan).
+  // Empty next_cursor means end of result set.
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  // ListUsersPaged returns offset-paginated users with optional total count.
+  // Use for admin UIs that need page numbers + totals. Set count=false on
+  // follow-up page loads to skip the COUNT(*) query (total/total_pages
+  // return 0). Filters mirror ListUsers.
+  rpc ListUsersPaged(ListUsersPagedRequest) returns (ListUsersPagedResponse);
+
+  // DisableUser toggles a user between DISABLED and ACTIVE.
+  // Does NOT revoke sessions — call RevokeAllSessions separately if you want
+  // immediate logout. A DISABLED user is rejected at Login time with
+  // ErrUserDisabled.
+  rpc DisableUser(DisableUserRequest) returns (User);
+
+  // GetLoginLogs returns login audit logs filtered by user_id (optional) and
+  // success status. Cursor-paginated. Useful for security dashboards.
+  rpc GetLoginLogs(GetLoginLogsRequest) returns (GetLoginLogsResponse);
+
+  // ============================================================
+  // RBAC — Groups — organizational units; members inherit group roles.
+  // Typical setup: CreateGroup → AddGroupMember → AddGroupRole.
+  // ============================================================
+
+  // CreateGroup creates a user group (organizational unit). Optional
+  // parent_id builds a hierarchy. After creating, add members via
+  // AddGroupMember and grant roles via AddGroupRole — members inherit the
+  // group's roles for permission checks.
+  rpc CreateGroup(CreateGroupRequest) returns (Group);
+
+  // GetGroup returns a group by ID.
+  rpc GetGroup(GetGroupRequest) returns (Group);
+
+  // UpdateGroup updates group name and description. Parent_id change is not
+  // supported (delete + recreate if hierarchy needs to change).
+  rpc UpdateGroup(UpdateGroupRequest) returns (Group);
+
+  // ListGroups returns cursor-paginated groups filtered by status.
+  rpc ListGroups(ListGroupsRequest) returns (ListGroupsResponse);
+
+  // DeleteGroup removes a group. Does NOT cascade — members keep their user
+  // records; direct user-role assignments are unaffected. Role assignments
+  // to this group (AddGroupRole mappings) should be cleaned up first.
+  rpc DeleteGroup(DeleteGroupRequest) returns (google.protobuf.Empty);
+
+  // AddGroupMember adds a user to a group with an in-group role
+  // (owner / admin / member). Invalidates the user's RBAC cache so
+  // subsequent permission checks reflect the new group's roles.
+  rpc AddGroupMember(AddGroupMemberRequest) returns (google.protobuf.Empty);
+
+  // RemoveGroupMember removes a user from a group. Invalidates the user's
+  // RBAC cache. Permissions arriving via this group's roles are dropped.
+  rpc RemoveGroupMember(RemoveGroupMemberRequest) returns (google.protobuf.Empty);
+
+  // ListGroupMembers returns members of a group with cursor pagination,
+  // optionally filtered by in-group role.
+  rpc ListGroupMembers(ListGroupMembersRequest) returns (ListGroupMembersResponse);
+
+  // ============================================================
+  // RBAC — Roles — named bundles of permissions; assignable to users or groups.
+  // Typical setup: ListPermissions/ListPermissionGroups → CreateRole →
+  // AssignRole (per-user) or AddGroupRole (per-group).
+  // ============================================================
+
+  // CreateRole creates a role with permissions and/or permission groups.
+  // Permission IDs come from ListPermissions; group IDs from
+  // ListPermissionGroups. Roles can then be assigned to users (AssignRole)
+  // or to groups (AddGroupRole).
+  rpc CreateRole(CreateRoleRequest) returns (Role);
+
+  // UpdateRole updates name/description and FULLY REPLACES the role's
+  // permission and permission-group sets — pass the complete intended list,
+  // not deltas. Invalidates the RBAC cache for all affected users.
+  rpc UpdateRole(UpdateRoleRequest) returns (Role);
+
+  // DeleteRole removes a role. Cascades to user/group assignments. Invalidates
+  // cache for affected users. Builtin roles (is_builtin=true) should not be
+  // deleted.
+  rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty);
+
+  // ListRoles returns cursor-paginated roles.
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse);
+
+  // GetRole returns a role by ID, including its permissions and permission groups.
+  rpc GetRole(GetRoleRequest) returns (Role);
+
+  // ============================================================
+  // RBAC — Permissions — resource:action catalog. Builtins are seeded via
+  // migrations; custom permissions can be added via CreatePermission.
+  // ============================================================
+
+  // ListPermissions returns cursor-paginated permissions.
+  rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse);
+
+  // CreatePermission adds a new resource:action permission. Custom (non-builtin)
+  // only — builtins are seeded via migrations. Returns ErrPermissionExists if the
+  // resource:action pair already exists.
+  rpc CreatePermission(CreatePermissionRequest) returns (Permission);
+
+  // GetPermission returns a permission by ID.
+  rpc GetPermission(GetPermissionRequest) returns (Permission);
+
+  // UpdatePermission updates resource/action/description. Builtin permissions
+  // cannot be updated (ErrPermissionIsBuiltin). Changing resource/action on a
+  // permission in use invalidates caches of all affected users.
+  rpc UpdatePermission(UpdatePermissionRequest) returns (Permission);
+
+  // DeletePermission removes a permission. Builtin permissions cannot be deleted.
+  // Invalidates caches of all users holding the permission via any role.
+  rpc DeletePermission(DeletePermissionRequest) returns (google.protobuf.Empty);
+
+  // CreatePermissionGroup creates a named bundle of permissions (custom only).
+  // Group membership is managed via UpdatePermissionGroup (full replace).
+  rpc CreatePermissionGroup(CreatePermissionGroupRequest) returns (PermissionGroup);
+
+  // GetPermissionGroup returns a permission group by ID, including its permissions.
+  rpc GetPermissionGroup(GetPermissionGroupRequest) returns (PermissionGroup);
+
+  // UpdatePermissionGroup updates name/description and FULLY REPLACES the group's
+  // permission set — pass the complete list, not deltas. Builtin groups cannot be
+  // updated. Invalidates caches of affected users.
+  rpc UpdatePermissionGroup(UpdatePermissionGroupRequest) returns (PermissionGroup);
+
+  // DeletePermissionGroup removes a group. Builtin groups cannot be deleted.
+  // Invalidates caches of affected users.
+  rpc DeletePermissionGroup(DeletePermissionGroupRequest) returns (google.protobuf.Empty);
+
+  // ListPermissionGroups returns cursor-paginated permission groups.
+  rpc ListPermissionGroups(ListPermissionGroupsRequest) returns (ListPermissionGroupsResponse);
+
+  // ============================================================
+  // RBAC — Group Roles — grant roles to groups; members inherit them.
+  // ============================================================
+
+  // AddGroupRole grants a role to a group — every current (and future)
+  // member inherits the role's permissions. Invalidates cache for all
+  // current group members.
+  rpc AddGroupRole(AddGroupRoleRequest) returns (google.protobuf.Empty);
+
+  // RemoveGroupRole revokes a role from a group. Invalidates cache for all
+  // current group members. Members who held this role only via this group
+  // lose it; direct assignments (AssignRole) are unaffected.
+  rpc RemoveGroupRole(RemoveGroupRoleRequest) returns (google.protobuf.Empty);
+
+  // ListGroupRoles returns roles granted to a group.
+  // Returns roles attached to a group (direct grants).
+  rpc ListGroupRoles(ListGroupRolesRequest) returns (ListGroupRolesResponse);
+
+  // ============================================================
+  // RBAC — User Roles — direct user↔role assignments.
+  // ============================================================
+
+  // AssignRole grants a role directly to a user. Use AddGroupRole for
+  // group-wide permissions (members inherit). Invalidates the user's RBAC
+  // cache.
+  rpc AssignRole(AssignRoleRequest) returns (google.protobuf.Empty);
+
+  // RevokeRole revokes a directly-assigned role. Does NOT revoke the same
+  // permission arriving via a group role — call RemoveGroupRole for that.
+  // Invalidates the user's RBAC cache.
+  rpc RevokeRole(RevokeRoleRequest) returns (google.protobuf.Empty);
+
+  // ListUserRoles returns roles for a user (direct + group-inherited).
+  // Returns direct + group-inherited roles; see UserRole.source.
+  rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse);
+}

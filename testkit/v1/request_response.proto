@@ -1,0 +1,1910 @@
+// Testkit RPC request/response payloads.
+syntax = "proto3";
+
+package testkit.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "license/v1/enums.proto";
+import "messaging/v1/enums.proto";
+import "storage/v1/enums.proto";
+import "telemetry/v1/enums.proto";
+import "testkit/v1/message.proto";
+import "user/v1/enums.proto";
+
+// LoginRequest is the curated frontend DTO for login. Field names line up 1:1
+// with user-service LoginRequest; the auth mapping layer int-casts the enums.
+message LoginRequest {
+  user.v1.LoginMethod method = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string username = 2 [(buf.validate.field).string.max_len = 256];
+  string password = 3 [(buf.validate.field).string.max_len = 128];
+  string code = 4 [(buf.validate.field).string.max_len = 16];
+  string email = 5 [(buf.validate.field).string.max_len = 256];
+  string region_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7 [(buf.validate.field).string.max_len = 20];
+  // captcha_id returned by SendVerificationCode; required for code-based login.
+  string captcha_id = 8 [(buf.validate.field).string.max_len = 128];
+}
+
+// RegisterRequest is the curated frontend DTO for registration.
+message RegisterRequest {
+  user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string code = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string username = 4 [(buf.validate.field).string.max_len = 64];
+  string nickname = 5 [(buf.validate.field).string.max_len = 64];
+  string password = 6 [(buf.validate.field).string.max_len = 128];
+  string region_code = 7 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 8 [(buf.validate.field).string.max_len = 20];
+  // captcha_id returned by SendVerificationCode; required to verify the code.
+  string captcha_id = 9 [(buf.validate.field).string.max_len = 128];
+  // Optional initial profile fields (mirror user-service RegisterRequest).
+  user.v1.Gender gender = 10 [(buf.validate.field).enum.defined_only = true];
+  string timezone = 11 [(buf.validate.field).string.max_len = 64];
+  string locale = 12 [(buf.validate.field).string.max_len = 16];
+}
+
+// SendVerificationCodeRequest is the curated frontend DTO for requesting a
+// verification code. The vendor template fields (sms_template_id, email_body,
+// ...) live in user-service and are intentionally NOT exposed here — the BFF
+// supplies them from server config, not the frontend (design spec §3.2.2).
+message SendVerificationCodeRequest {
+  string email = 1 [(buf.validate.field).string.max_len = 256];
+  user.v1.VerificationChannel channel = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  user.v1.VerificationPurpose purpose = 3 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [(buf.validate.field).string.max_len = 20];
+  // sender_id is the audit actor triggering this send (user id, service name,
+  // platform identifier, ...). user-service is stateless and passes it through
+  // verbatim; for unauthenticated flows (register/login) the frontend supplies
+  // a platform identifier (e.g. the target email/phone or "testkit-web").
+  string sender_id = 6 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+
+  // ---- Delivery templates (mirror user-service SendVerificationCodeRequest
+  // 1:1 — field numbers match). Required per channel by user-service's
+  // validateDeliverySpec: EMAIL needs email_subject + email_body ({code}
+  // placeholder substituted by user-service); SMS+CN needs sms_template_id +
+  // sign_name (domestic vendors reject raw content); SMS international needs
+  // exactly one of sms_template_id / sms_content.
+  string sms_template_id = 7 [(buf.validate.field).string.max_len = 128];
+  string sms_code_param_key = 8 [(buf.validate.field).string.max_len = 64];
+  string sms_content = 9 [(buf.validate.field).string.max_len = 1024];
+  string email_subject = 10 [(buf.validate.field).string.max_len = 256];
+  string email_body = 11 [(buf.validate.field).string.max_len = 16384];
+  string sign_name = 12 [(buf.validate.field).string.max_len = 64];
+  string email_html_body = 13 [(buf.validate.field).string.max_len = 65536];
+}
+
+// SendVerificationCodeResponse returns the captcha_id that binds the generated
+// code to this flow; it must be passed back to Register/Login.
+message SendVerificationCodeResponse {
+  string captcha_id = 1;
+}
+
+// RefreshSessionRequest refreshes the caller's session. session_id is optional:
+// when empty, the handler derives it from the authenticated context
+// (auth.SessionIDFromCtx). The response is a freshly-issued JWT.
+message RefreshSessionRequest {
+  string session_id = 1 [(buf.validate.field).string.max_len = 128];
+}
+
+// TokenResponse is returned by every login-class RPC (Login, Register,
+// RefreshSession). It carries the JWT (which embeds session_id internally) plus
+// the curated user. session_id is deliberately NOT surfaced — the frontend
+// holds only the token (design spec §5.1/§11).
+message TokenResponse {
+  string token = 1;
+  User user = 2;
+  // session_id mirrors downstream Login/Register/SocialLogin responses so
+  // testers can target a specific session (RevokeSession / GetSession)
+  // without decoding the JWT.
+  string session_id = 3;
+  // is_new: this login auto-registered the account (code-login/OAuth paths).
+  bool is_new = 4;
+  // return_to: business URL recorded at GetOAuthURL time (OAuth flows only;
+  // empty for password/code logins).
+  string return_to = 5;
+}
+
+// ==================== P2 request/response messages ====================
+//
+// Curation (design spec §3.2): "my" RPCs (GetProfile / UpdateProfile /
+// ChangePassword / ListIdentities / BindIdentity / BindOAuthIdentity /
+// UnbindIdentity / ListSessions / RevokeAllSessions) drop the caller's user_id
+// — the BFF injects it from ctx. Target resource IDs (user_id / identity_id /
+// session_id / group_id / role_id / permission_id / permission_group_id) are
+// kept: they describe WHAT is acted on, not WHO is calling.
+
+// ---- Profile (P2) ----
+message GetProfileRequest {} // user_id injected from ctx
+
+message UpdateProfileRequest {
+  string username = 1 [(buf.validate.field).string.max_len = 64];
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  string real_name = 3 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
+  user.v1.Gender gender = 5 [(buf.validate.field).enum.defined_only = true];
+  string birthday = 6 [(buf.validate.field).string.max_len = 10];
+  string timezone = 7 [(buf.validate.field).string.max_len = 64];
+  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string bio = 9 [(buf.validate.field).string.max_len = 512];
+}
+
+message ChangePasswordRequest {
+  string old_password = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string new_password = 2 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+}
+
+message ResetPasswordRequest {
+  string email = 1 [(buf.validate.field).string.max_len = 256];
+  string code = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string new_password = 3 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [(buf.validate.field).string.max_len = 20];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+// ---- Identity (P2) ----
+message ListIdentitiesRequest {} // user_id from ctx
+
+message ListIdentitiesResponse {
+  repeated Identity identities = 1;
+}
+
+message BindIdentityRequest {
+  user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string code = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string password = 4 [(buf.validate.field).string.max_len = 128];
+  string region_code = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 6 [(buf.validate.field).string.max_len = 20];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+message BindOAuthIdentityRequest {
+  user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [
+      0,
+      1,
+      2
+    ]
+  }]; // OAuth only
+  string code = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 512
+  }];
+  string state = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message BindOAuthIdentityResponse {
+  Identity identity = 1;
+}
+
+message UnbindIdentityRequest {
+  int64 identity_id = 1 [(buf.validate.field).int64.gt = 0]; // target identity
+  string code = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  // user_id injected from ctx
+}
+
+// ---- Session (P2) ----
+message ListSessionsRequest {} // user_id from ctx
+
+message ListSessionsResponse {
+  repeated Session sessions = 1;
+}
+
+message RevokeSessionRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message RevokeAllSessionsRequest {} // user_id from ctx
+
+message GetSessionRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message GetSessionResponse {
+  int64 user_id = 1;
+  google.protobuf.Timestamp expires_at = 2;
+  google.protobuf.Timestamp created_at = 3;
+  string ip = 4;
+  string user_agent = 5;
+  string os = 6;
+  string browser = 7;
+  string login_method = 8;
+}
+
+message IssueSessionCodeRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message IssueSessionCodeResponse {
+  string code = 1;
+}
+
+message ExchangeSessionCodeRequest {
+  string code = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message ExchangeSessionCodeResponse {
+  string session_id = 1;
+  int64 user_id = 2;
+}
+
+// ---- Social (P2) ----
+// All four are public (no caller user_id). SocialLogin / MiniProgram* consume
+// the downstream session_id to issue a testkit JWT — session_id is never
+// surfaced (design spec §5.1).
+message GetOAuthURLRequest {
+  user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string return_to = 2 [(buf.validate.field).string.max_len = 512];
+  string state = 3 [(buf.validate.field).string.max_len = 128];
+}
+
+message GetOAuthURLResponse {
+  string url = 1;
+  string state = 2;
+}
+
+message SocialLoginRequest {
+  user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string code = 2 [(buf.validate.field).string = {min_len: 1}];
+  string state = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message MiniProgramLoginRequest {
+  string code = 1 [(buf.validate.field).string = {min_len: 1}];
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message MiniProgramPhoneLoginRequest {
+  string login_code = 1 [(buf.validate.field).string = {min_len: 1}];
+  string phone_code = 2 [(buf.validate.field).string = {min_len: 1}];
+  string nickname = 3 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
+}
+
+// SocialLoginResponse is the linkd response for all social-login RPCs.
+// token = testkit-issued JWT (consumes the downstream session_id); session_id
+// is ALSO returned so testers can target the session (RevokeSession /
+// GetSession) without decoding the JWT.
+message SocialLoginResponse {
+  string token = 1;
+  User user = 2;
+  bool is_new = 3;
+  string return_to = 4; // meaningful only for SocialLogin (OAuth callback flow)
+  string session_id = 5;
+}
+
+// ---- Admin-Users (P2) ----
+// target user_id is kept; GetLoginLogs.user_id is an optional filter.
+message CreateUserRequest {
+  user.v1.UserType user_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string username = 2 [(buf.validate.field).string.max_len = 64];
+  string nickname = 3 [(buf.validate.field).string.max_len = 64];
+  string real_name = 4 [(buf.validate.field).string.max_len = 64];
+  string email = 5 [(buf.validate.field).string.max_len = 256];
+  string region_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7 [(buf.validate.field).string.max_len = 20];
+  string password = 8 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+  user.v1.Gender gender = 9 [(buf.validate.field).enum.defined_only = true];
+  string timezone = 10 [(buf.validate.field).string.max_len = 64];
+  string locale = 11 [(buf.validate.field).string.max_len = 16];
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message GetUserRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0]; // target user (kept)
+}
+
+message DisableUserRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0]; // target user (kept)
+  bool disable = 2;
+  string reason = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message ListUsersRequest {
+  user.v1.UserStatus status = 1;
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  int32 page_size = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 4 [(buf.validate.field).string.max_len = 64];
+  user.v1.Gender gender = 5;
+  user.v1.IdentityProvider register_source = 6;
+  user.v1.DeviceType register_device = 7;
+  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string timezone = 9 [(buf.validate.field).string.max_len = 64];
+  string register_ip = 10 [(buf.validate.field).string.max_len = 45];
+  string last_login_ip = 11 [(buf.validate.field).string.max_len = 45];
+  google.protobuf.Timestamp created_at_start = 12;
+  google.protobuf.Timestamp created_at_end = 13;
+  google.protobuf.Timestamp last_login_at_start = 14;
+  google.protobuf.Timestamp last_login_at_end = 15;
+  repeated int64 user_ids = 16;
+  string email = 17 [(buf.validate.field).string.max_len = 256];
+  string region_code = 18 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 19 [(buf.validate.field).string.max_len = 20];
+  string username = 20 [(buf.validate.field).string.max_len = 64];
+  user.v1.UserType user_type = 21 [(buf.validate.field).enum.defined_only = true];
+  user.v1.UserSortField order_by = 22 [(buf.validate.field).enum.defined_only = true];
+  bool descending = 23;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  string next_cursor = 2;
+}
+
+message ListUsersPagedRequest {
+  user.v1.UserStatus status = 1;
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  user.v1.Gender gender = 3;
+  user.v1.IdentityProvider register_source = 4;
+  user.v1.DeviceType register_device = 5;
+  user.v1.UserType user_type = 6;
+  string locale = 7 [(buf.validate.field).string.max_len = 16];
+  string timezone = 8 [(buf.validate.field).string.max_len = 64];
+  string register_ip = 9 [(buf.validate.field).string.max_len = 45];
+  string last_login_ip = 10 [(buf.validate.field).string.max_len = 45];
+  google.protobuf.Timestamp created_at_start = 11;
+  google.protobuf.Timestamp created_at_end = 12;
+  google.protobuf.Timestamp last_login_at_start = 13;
+  google.protobuf.Timestamp last_login_at_end = 14;
+  repeated int64 user_ids = 15;
+  string email = 16 [(buf.validate.field).string.max_len = 256];
+  string region_code = 17 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 18 [(buf.validate.field).string.max_len = 20];
+  string username = 19 [(buf.validate.field).string.max_len = 64];
+  user.v1.UserSortField order_by = 20 [(buf.validate.field).enum.defined_only = true];
+  bool descending = 21;
+  int32 page = 22 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 23 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  bool count = 24;
+}
+
+message ListUsersPagedResponse {
+  repeated User users = 1;
+  int64 total = 2;
+  int32 total_pages = 3;
+}
+
+message GetLoginLogsRequest {
+  int64 user_id = 1; // optional filter (0 = all); kept
+  user.v1.IdentityProvider provider = 2;
+  bool success = 3;
+  int32 page_size = 4 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 5 [(buf.validate.field).string.max_len = 64];
+}
+
+message GetLoginLogsResponse {
+  repeated LoginLog logs = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+// ---- RBAC-Group (P2) ----
+message CreateGroupRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  int64 parent_id = 3;
+}
+
+message GetGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdateGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message ListGroupsRequest {
+  string status = 1 [(buf.validate.field).string.max_len = 32];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 3 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListGroupsResponse {
+  repeated Group groups = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message DeleteGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message AddGroupMemberRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0]; // path
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0]; // target member (kept)
+  string role = 3 [(buf.validate.field).string = {
+    in: [
+      "owner",
+      "admin",
+      "member"
+    ]
+  }];
+}
+
+message RemoveGroupMemberRequest { // group_id + user_id both from path
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupMembersRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0]; // path
+  string role = 2 [(buf.validate.field).string.max_len = 32];
+  int32 page_size = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 4 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListGroupMembersResponse {
+  repeated GroupMember members = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message AddGroupRoleRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0]; // path
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message RemoveGroupRoleRequest { // group_id + role_id from path
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupRolesRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupRolesResponse {
+  repeated Role roles = 1;
+}
+
+// ---- RBAC-Role (P2) ----
+message CreateRoleRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 3;
+  repeated int64 permission_group_ids = 4;
+}
+
+message GetRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdateRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 4;
+  repeated int64 permission_group_ids = 5;
+}
+
+message DeleteRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListRolesRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListRolesResponse {
+  repeated Role roles = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message AssignRoleRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0]; // target user (path)
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message RevokeRoleRequest { // user_id + role_id from path
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListUserRolesRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListUserRolesResponse {
+  repeated UserRole roles = 1;
+}
+
+// ---- RBAC-Permission (P2) ----
+message ListPermissionsRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListPermissionsResponse {
+  repeated Permission permissions = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message CreatePermissionRequest {
+  string resource = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string action = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  string description = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+message GetPermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdatePermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+  string resource = 2 [(buf.validate.field).string.max_len = 64];
+  string action = 3 [(buf.validate.field).string.max_len = 32];
+  string description = 4 [(buf.validate.field).string.max_len = 256];
+}
+
+message DeletePermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message CreatePermissionGroupRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 3;
+}
+
+message GetPermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdatePermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 4;
+}
+
+message DeletePermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListPermissionGroupsRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListPermissionGroupsResponse {
+  repeated PermissionGroup groups = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+// ==================== P3 request/response messages ====================
+
+// ---- Upload (owner injected from ctx) ----
+
+message GenerateUploadURLRequest {
+  string filename = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  int64 size = 2 [(buf.validate.field).int64.gt = 0];
+  string md5 = 3 [(buf.validate.field).string.len = 32];
+  string content_type = 4 [(buf.validate.field).string.min_len = 1];
+  string bucket = 5;
+  string file_path = 6;
+  string description = 7;
+  map<string, string> metadata = 8;
+  storage.v1.Vendor vendor = 10; // optional; validates bucket vendor when non-UNSPECIFIED
+  // visibility=PUBLIC overrides `bucket` with the configured public bucket
+  // (public resources like avatars); UNSPECIFIED/PRIVATE keep bucket in charge.
+  storage.v1.Visibility visibility = 14;
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 11;
+}
+
+message GenerateUploadURLResponse {
+  bool instant = 1;
+  int64 file_id = 2;
+  FileInfo file_info = 3;
+  string upload_token = 10;
+  string upload_url = 11;
+  string object_key = 12;
+  map<string, string> headers = 13;
+}
+
+message GetSTSCredentialRequest {
+  string bucket = 1;
+  int64 max_size = 2;
+  string filename = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  string md5 = 4 [(buf.validate.field).string.len = 32];
+  string content_type = 5 [(buf.validate.field).string.min_len = 1];
+  string file_path = 6;
+  string description = 7;
+  map<string, string> metadata = 8;
+  storage.v1.Vendor vendor = 10;
+  google.protobuf.Duration ttl = 11;
+  repeated string allowed_extensions = 12;
+  // Same semantics as GenerateUploadURLRequest.visibility.
+  storage.v1.Visibility visibility = 14;
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 13;
+}
+
+message GetSTSCredentialResponse {
+  bool instant = 1;
+  int64 file_id = 2;
+  FileInfo file_info = 3;
+  string upload_token = 10;
+  string access_key = 11;
+  string secret_key = 12;
+  string security_token = 13;
+  string endpoint = 14;
+  string bucket = 15;
+  string object_key = 16;
+  int64 expires_at = 17;
+}
+
+message BatchGetSTSCredentialRequest {
+  repeated UploadFileMeta files = 1 [(buf.validate.field).repeated = {
+    min_items: 1
+    max_items: 100
+  }];
+  string bucket = 2;
+  google.protobuf.Duration ttl = 3;
+  repeated string allowed_extensions = 4;
+  // Batch-level; same semantics as GenerateUploadURLRequest.visibility.
+  storage.v1.Visibility visibility = 6;
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 5;
+}
+
+message BatchGetSTSCredentialResponse {
+  string access_key = 1;
+  string secret_key = 2;
+  string security_token = 3;
+  string endpoint = 4;
+  string bucket = 5;
+  int64 expires_at = 6;
+  repeated UploadCredentialItem items = 7; // ordered to match request.files
+}
+
+message ConfirmUploadRequest {
+  string upload_token = 1 [(buf.validate.field).string.min_len = 1];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 2;
+}
+
+message ConfirmUploadResponse {
+  int64 file_id = 1;
+  FileInfo file_info = 2;
+}
+
+message CancelUploadRequest {
+  string upload_token = 1 [(buf.validate.field).string.min_len = 1];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 2;
+}
+
+// ---- Download / Process (owner injected from ctx) ----
+
+message GenerateDownloadURLRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  int32 ttl_seconds = 2;
+  optional string filename = 3; // overrides response-content-disposition filename
+}
+
+message GenerateDownloadURLResponse {
+  string download_url = 1;
+  int64 expires_at = 2;
+}
+
+message CreateFileLinkRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  // retention_ttl_seconds, when > 0, (re)sets the retention window
+  // (renewal keeps the token stable). 0 keeps the current value.
+  int32 retention_ttl_seconds = 2;
+}
+
+message CreateFileLinkResponse {
+  string link_token = 1;
+  int64 retain_until = 2; // unix seconds, 0 = permanent
+}
+
+message GetFileLinkDownloadRequest {
+  string link_token = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message GetFileLinkDownloadResponse {
+  // expired = true: render an "attachment expired" page, download_url empty.
+  bool expired = 1;
+  string filename = 2;
+  int64 size_bytes = 3;
+  string download_url = 4; // freshly presigned short-TTL URL
+  int64 retain_until = 5; // unix seconds, 0 = permanent
+}
+
+message GenerateProcessURLRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  repeated ImageProcessOp ops = 2 [(buf.validate.field).repeated.min_items = 1];
+  int32 ttl_seconds = 3;
+}
+
+message GenerateProcessURLResponse {
+  string url = 1;
+  int64 expires_at = 2;
+}
+
+message GenerateCDNURLRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  repeated ImageProcessOp ops = 2; // empty = plain download URL
+  google.protobuf.Duration ttl = 3;
+  bool public = 4; // unsigned permanent URL for public resources
+  optional string filename = 5;
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 6;
+}
+
+message GenerateCDNURLResponse {
+  string url = 1;
+  int64 expires_at = 2;
+}
+
+// ---- My Files (owner injected from ctx; no owner fields in request) ----
+
+message ListMyFilesRequest {
+  string path_prefix = 1;
+  string extension = 2;
+  string content_type_prefix = 3;
+  storage.v1.SortField order_by = 4;
+  bool descending = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message ListMyFilesResponse {
+  repeated FileInfo files = 1;
+  string next_page_token = 3;
+}
+
+message ListMyFilesPagedRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string path_prefix = 3;
+  string extension = 4;
+  string content_type_prefix = 5;
+  storage.v1.SortField order_by = 6;
+  bool descending = 7;
+}
+
+message ListMyFilesPagedResponse {
+  repeated FileInfo files = 1;
+  int64 total_count = 2;
+  int32 page = 3;
+  int32 total_pages = 4;
+  bool has_more = 5;
+}
+
+message GetMyFileRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdateMyFileRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  optional string filename = 2;
+  optional string file_path = 3;
+  optional string description = 4;
+  map<string, string> metadata = 5;
+  optional bool clear_metadata = 7;
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 8;
+}
+
+message DeleteMyFileRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 2;
+}
+
+message BatchDeleteMyFilesRequest {
+  repeated int64 file_ids = 1 [(buf.validate.field).repeated = {
+    min_items: 1
+    max_items: 100
+  }];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 2;
+}
+
+message BatchDeleteMyFilesResponse {
+  int32 deleted_count = 1;
+  repeated int64 failed_ids = 2;
+}
+
+// ---- My Quota / Audit (owner injected from ctx) ----
+
+// GetMyQuota takes google.protobuf.Empty — owner is injected from ctx.
+message ListMyAuditLogsRequest {
+  storage.v1.AuditAction action = 1;
+  storage.v1.AuditLogTargetType target_type = 2;
+  string start_time = 3;
+  string end_time = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message ListMyAuditLogsResponse {
+  repeated AuditLogEntry logs = 1;
+  int32 total_count = 2;
+  string next_page_token = 3;
+}
+
+// ---- Owner quota ----
+// SetOwnerQuota / AddOwnerQuota are intentionally NOT exposed on testkit:
+// they are business-service RPCs (e.g. pay-service plan changes) that belong
+// on a trusted service-to-service boundary, not on a human-facing BFF. Admin
+// scenarios use AdminSetQuota.
+
+// ---- Admin (owner_type+owner_id = query/op target, NOT caller identity) ----
+
+message AdminListFilesRequest {
+  storage.v1.OwnerType owner_type = 1;
+  int64 owner_id = 2;
+  string path_prefix = 3;
+  string extension = 4;
+  string content_type_prefix = 5;
+  storage.v1.SortField order_by = 6;
+  bool descending = 7;
+  int32 page_size = 8;
+  string page_token = 9;
+  string provider = 10;
+  string bucket = 11;
+}
+
+message AdminListFilesResponse {
+  repeated AdminFileInfo files = 1;
+  int32 total_count = 2;
+  string next_page_token = 3;
+}
+
+message AdminGetFileRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message AdminDeleteFileRequest {
+  int64 file_id = 1 [(buf.validate.field).int64.gt = 0];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 2;
+}
+
+message AdminGetQuotaRequest {
+  storage.v1.OwnerType owner_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int64 owner_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message AdminSetQuotaRequest {
+  storage.v1.OwnerType owner_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int64 owner_id = 2 [(buf.validate.field).int64.gt = 0];
+  int64 total_bytes = 3 [(buf.validate.field).int64.gt = 0];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 4;
+}
+
+message AdminGetStatsRequest {
+  storage.v1.OwnerType owner_type = 1; // 0 = all
+  int64 owner_id = 2; // 0 = all
+}
+
+message AdminGetStatsResponse {
+  int64 total_objects = 1; // deduped physical files
+  int64 total_files = 2; // file references
+  int64 physical_bytes = 4; // actual cloud storage used (deduped)
+  int64 logical_bytes = 5; // sum of used_bytes (user quota only)
+  repeated OwnerStats owner_stats = 8;
+  repeated ProviderStats provider_stats = 6;
+  repeated BucketStats bucket_stats = 7;
+}
+
+message AdminListProvidersResponse {
+  repeated ProviderInfo providers = 1;
+}
+
+message AdminListBucketsResponse {
+  repeated BucketInfo buckets = 1;
+}
+
+message AdminSoftDeleteOwnerFilesRequest {
+  storage.v1.OwnerType owner_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int64 owner_id = 2 [(buf.validate.field).int64.gt = 0];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 3;
+}
+
+message AdminSoftDeleteOwnerFilesResponse {
+  int64 files_deleted = 1;
+  int64 bytes_released = 2;
+}
+
+message AdminDeleteOwnerRequest {
+  storage.v1.OwnerType owner_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int64 owner_id = 2 [(buf.validate.field).int64.gt = 0];
+  // request_id is optional; recorded in audit logs for traceability
+  // (mirror of storage-service *Request.request_id).
+  string request_id = 3;
+}
+
+message AdminDeleteOwnerResponse {
+  int64 files_deleted = 1;
+  int64 bytes_released = 2;
+}
+
+// AdminListAuditLogs.request_id is a SEARCH FILTER (find logs by trace id), so
+// it is kept — unlike the request_id on write RPCs, which describes caller
+// traceability and is dropped at the BFF edge.
+message AdminListAuditLogsRequest {
+  storage.v1.AuditAction action = 1;
+  storage.v1.AuditLogTargetType target_type = 2;
+  storage.v1.AuditLogStatus status = 3;
+  string request_id = 4; // filter: search logs by trace id
+  storage.v1.OwnerType owner_type = 5;
+  int64 owner_id = 6;
+  int64 target_id = 7;
+  string start_time = 8;
+  string end_time = 9;
+  int32 page_size = 10;
+  string page_token = 11;
+}
+
+message AdminListAuditLogsResponse {
+  repeated AuditLogEntry logs = 1;
+  int32 total_count = 2;
+  string next_page_token = 3;
+}
+
+// ---- Send (sender_id dropped — BFF fills from cfg.Message.SenderID) ----
+
+message SendEmailRequest {
+  repeated EmailAddress to = 1 [(buf.validate.field).repeated.min_items = 1];
+  repeated EmailAddress cc = 2;
+  repeated EmailAddress bcc = 3;
+  string subject = 4 [(buf.validate.field).string.min_len = 1];
+  string body = 5;
+  string html_body = 6;
+  EmailAddress reply_to = 7;
+  messaging.v1.EmailVendor vendor = 8;
+  string account = 9;
+  string template_id = 10;
+  map<string, string> template_params = 11;
+  messaging.v1.EmailScene scene = 12;
+  // sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1).
+  string idempotency_key = 13 [(buf.validate.field).string.max_len = 64];
+  EmailAddress from = 14;
+  repeated EmailAttachment attachments = 15;
+
+  option (buf.validate.message).cel = {
+    id: "vendor_account_pair"
+    message: "vendor and account must both be set or both be empty"
+    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
+  };
+  option (buf.validate.message).cel = {
+    id: "scene_required"
+    message: "scene is required"
+    expression: "this.scene != 0"
+  };
+}
+
+message SendSMSRequest {
+  string region_code = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 2 [(buf.validate.field).string.min_len = 1];
+  string content = 3;
+  string template_id = 4;
+  map<string, string> template_params = 5;
+  messaging.v1.SmsVendor vendor = 6;
+  string account = 7;
+  messaging.v1.SmsScene scene = 8;
+  // sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1).
+  string idempotency_key = 9 [(buf.validate.field).string.max_len = 64];
+  string sign_name = 10 [(buf.validate.field).string.max_len = 64];
+
+  option (buf.validate.message).cel = {
+    id: "vendor_account_pair"
+    message: "vendor and account must both be set or both be empty"
+    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
+  };
+  option (buf.validate.message).cel = {
+    id: "scene_required"
+    message: "scene is required"
+    expression: "this.scene != 0"
+  };
+  option (buf.validate.message).cel = {
+    id: "phone_no_plus"
+    message: "phone must not start with '+'"
+    expression: "!this.phone.startsWith('+')"
+  };
+}
+
+// SendResponse splits the downstream oneof vendor into two optional fields
+// (decision 6): exactly one of email_vendor / sms_vendor is non-zero.
+message SendResponse {
+  int64 id = 1;
+  messaging.v1.MessageStatus status = 2;
+  messaging.v1.EmailVendor email_vendor = 3;
+  messaging.v1.SmsVendor sms_vendor = 4;
+}
+
+// ---- Get (resource id kept — decision 3) ----
+
+message GetEmailRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message GetSMSRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+// ---- List paged (sender_id filter dropped — decision 2) ----
+
+message ListEmailsRequest {
+  messaging.v1.EmailVendor vendor = 1;
+  messaging.v1.EmailScene scene = 2;
+  messaging.v1.MessageStatus status = 3;
+  string target = 4;
+  int64 start_time = 5;
+  int64 end_time = 6;
+  int32 page = 7;
+  int32 page_size = 8;
+  storage.v1.SortField sort_field = 9;
+  messaging.v1.SortDirection sort_direction = 10;
+  // sender_id filters by the calling service label recorded on each record
+  // (mirror of message-service ListEmailsRequest.sender_id).
+  string sender_id = 11;
+}
+
+message ListEmailsResponse {
+  repeated EmailRecord records = 1;
+  int32 total = 2;
+  int32 total_pages = 3;
+  bool has_more = 4;
+}
+
+message ListSMSRequest {
+  messaging.v1.SmsVendor vendor = 1;
+  messaging.v1.SmsScene scene = 2;
+  messaging.v1.MessageStatus status = 3;
+  string region_code = 4;
+  string phone = 5;
+  int64 start_time = 6;
+  int64 end_time = 7;
+  int32 page = 8;
+  int32 page_size = 9;
+  storage.v1.SortField sort_field = 10;
+  messaging.v1.SortDirection sort_direction = 11;
+  // sender_id filter (mirror of message-service ListSMSRequest.sender_id).
+  string sender_id = 12;
+}
+
+message ListSMSResponse {
+  repeated SMSRecord records = 1;
+  int32 total = 2;
+  int32 total_pages = 3;
+  bool has_more = 4;
+}
+
+// ---- List cursor (sender_id filter dropped) ----
+
+message ListEmailsByCursorRequest {
+  messaging.v1.EmailVendor vendor = 1;
+  messaging.v1.EmailScene scene = 2;
+  messaging.v1.MessageStatus status = 3;
+  string target = 4;
+  int64 start_time = 5;
+  int64 end_time = 6;
+  storage.v1.SortField sort_field = 7;
+  messaging.v1.SortDirection sort_direction = 8;
+  int32 page_size = 9;
+  string page_token = 10;
+  bool include_total = 11;
+  // sender_id filter (mirror of message-service ListEmailsByCursorRequest.sender_id).
+  string sender_id = 12;
+}
+
+message ListEmailsByCursorResponse {
+  repeated EmailRecord records = 1;
+  int32 total = 2;
+  string next_page_token = 3;
+}
+
+message ListSMSByCursorRequest {
+  messaging.v1.SmsVendor vendor = 1;
+  messaging.v1.SmsScene scene = 2;
+  messaging.v1.MessageStatus status = 3;
+  string region_code = 4;
+  string phone = 5;
+  int64 start_time = 6;
+  int64 end_time = 7;
+  storage.v1.SortField sort_field = 8;
+  messaging.v1.SortDirection sort_direction = 9;
+  int32 page_size = 10;
+  string page_token = 11;
+  bool include_total = 12;
+  // sender_id filter (mirror of message-service ListSMSByCursorRequest.sender_id).
+  string sender_id = 13;
+}
+
+message ListSMSByCursorResponse {
+  repeated SMSRecord records = 1;
+  int32 total = 2;
+  string next_page_token = 3;
+}
+
+// ---- Stats (sender_id filter dropped) ----
+
+message GetEmailStatsRequest {
+  messaging.v1.EmailVendor vendor = 1;
+  messaging.v1.EmailScene scene = 2;
+  int64 start_time = 3;
+  int64 end_time = 4;
+}
+
+message EmailStatsResponse {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  double success_rate = 4; // [0,100]; -1 = no data
+  repeated EmailVendorStats vendors = 5;
+}
+
+message GetSMSStatsRequest {
+  messaging.v1.SmsVendor vendor = 1;
+  messaging.v1.SmsScene scene = 2;
+  int64 start_time = 3;
+  int64 end_time = 4;
+}
+
+message SMSStatsResponse {
+  int64 total = 1;
+  int64 sent = 2;
+  int64 failed = 3;
+  double success_rate = 4;
+  repeated SmsVendorStats vendors = 5;
+}
+
+// ---- Lookups (dropdown sources) ----
+
+message ListEmailSendersRequest {}
+
+message ListEmailSendersResponse {
+  repeated string sender_ids = 1;
+}
+
+message ListSMSSendersRequest {}
+
+message ListSMSSendersResponse {
+  repeated string sender_ids = 1;
+}
+
+message ListSMSRegionsRequest {}
+
+message ListSMSRegionsResponse {
+  repeated string region_codes = 1;
+}
+
+// ==================== GID debug (P5) ====================
+//
+// Mirrors gid-service/api/proto/gid/v1/gid.proto shape-for-shape. gid RPCs
+// carry no caller-identity (global unique ID generation is caller-agnostic), so
+// the testkit-owned messages are identical to gid.proto and the mapping layer
+// (internal/service/gid) is a plain field copy. Only the type ownership moves
+// to testkit.v1 (design spec v2 §3.1 — testkit.proto imports no downstream
+// proto). protovalidate enforces count ∈ [1,1000] and id >= 1; downstream
+// failures pass through as xerr (§9).
+
+message NextIDRequest {}
+
+message NextIDResponse {
+  int64 id = 1;
+}
+
+message BatchNextIDRequest {
+  int32 count = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 1000
+  }];
+}
+
+message BatchNextIDResponse {
+  repeated int64 ids = 1;
+}
+
+message DecomposeRequest {
+  int64 id = 1 [(buf.validate.field).int64 = {gte: 1}];
+}
+
+message DecomposeResponse {
+  int64 time = 1;
+  int64 sequence = 2;
+  int64 machine_id = 3;
+  string generated_at = 4; // ISO8601 timestamp
+}
+
+// ==================== Dashboard (P5, aggregated) ====================
+//
+// GetDashboard fans out to message.GetEmailStats + message.GetSMSStats +
+// storage.GetMyQuota + user.ListUsersPaged concurrently (fail-fast via errgroup)
+// and assembles this response (design spec §10 "聚合型" reference example).
+//
+// The caller's Owner (for GetMyQuota) is injected from ctx by the BFF — it is
+// NEVER present in GetDashboardRequest (v2 §3.2 rule 1: the BFF is the sole
+// trust boundary). messaging.v1.EmailVendor / messaging.v1.SmsVendor / EmailVendorStats / SmsVendorStats
+// are reused as-is from P4 above (mirrored from message.proto name-for-name and
+// number-for-number), so the mapping layer is a plain int cast — no redefinition
+// here. The sub-structures (EmailStats / SMSStats / MyQuota / UsersSummary)
+// mirror the downstream response shapes as read-only snapshots.
+
+message GetDashboardRequest {} // caller user_id injected from ctx for GetMyQuota
+
+message DashboardResponse {
+  EmailStats email_stats = 1;
+  SMSStats sms_stats = 2;
+  MyQuota quota = 3;
+  UsersSummary users = 4;
+}
+
+message ActivateRequest {
+  string key = 1 [(buf.validate.field).string.max_len = 128];
+  string license_key = 2 [(buf.validate.field).string.max_len = 128];
+
+  string fingerprint_id = 3 [(buf.validate.field).string = {
+    pattern: "^v1\\.[0-9a-f]{64}$"
+    min_len: 1
+    max_len: 128
+  }];
+
+  string device_token = 4 [(buf.validate.field).string.uuid = true];
+
+  optional string evict_device_token = 5 [(buf.validate.field).string.uuid = true];
+}
+
+message ActivateResponse {
+  string payload = 1;
+  string signature = 2;
+  SlotSummary slots = 3;
+}
+
+message DeactivateRequest {
+  string key = 1 [(buf.validate.field).string.max_len = 128];
+  string license_key = 2 [(buf.validate.field).string.max_len = 128];
+  string device_token = 3 [(buf.validate.field).string.uuid = true];
+}
+
+message DeactivateResponse {
+  bool released = 1;
+}
+
+message TrialStartRequest {
+  string module = 1 [(buf.validate.field).string = {
+    in: [
+      "downloads",
+      "tools"
+    ]
+    min_len: 1
+  }];
+  string fingerprint_id = 2 [(buf.validate.field).string = {
+    pattern: "^v1\\.[0-9a-f]{64}$"
+    min_len: 1
+    max_len: 128
+  }];
+  string device_token = 3 [(buf.validate.field).string.uuid = true];
+  string license_key = 4 [(buf.validate.field).string.max_len = 128];
+}
+
+message TrialStartResponse {
+  string payload = 1;
+  string signature = 2;
+
+  bool already_started = 3;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+  HealthChecks checks = 2;
+}
+
+message CreateKeyRequest {
+  string label = 1 [(buf.validate.field).string.max_len = 200];
+
+  int32 slots = 2 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 100
+  }];
+  repeated EntitlementInput grants = 3 [(buf.validate.field).repeated.max_items = 16];
+}
+
+message CreateKeyResponse {
+  KeyInfo key = 1;
+
+  string plaintext_key = 2;
+}
+
+message ShowKeyRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message ShowKeyResponse {
+  KeyInfo key = 1;
+}
+
+message ListKeysRequest {
+  license.v1.KeyStatus status = 1 [(buf.validate.field).enum.defined_only = true];
+  int32 limit = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 500
+  }];
+}
+
+message ListKeysResponse {
+  repeated KeyInfo keys = 1;
+}
+
+message UpdateKeyRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string label = 2 [(buf.validate.field).string.max_len = 200];
+  optional int32 slots = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+}
+
+message UpdateKeyResponse {
+  KeyInfo key = 1;
+}
+
+message RevokeKeyRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string reason = 2 [(buf.validate.field).string.max_len = 500];
+}
+
+message RevokeKeyResponse {
+  KeyInfo key = 1;
+}
+
+message UnrevokeKeyRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message UnrevokeKeyResponse {
+  KeyInfo key = 1;
+}
+
+message DeleteKeyRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+
+  optional bool confirm = 2;
+}
+
+message DeleteKeyResponse {}
+
+message GrantModuleRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  license.v1.Module module = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  license.v1.EntitlementKind kind = 3 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+
+  int32 duration_days = 4 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 3650
+  }];
+  google.protobuf.Timestamp expires_at = 5;
+
+  option (buf.validate.message).cel = {
+    id: "grant_module.expiry_exclusive"
+    message: "exactly one of duration_days or expires_at must be set"
+    expression: "(this.duration_days > 0) != has(this.expires_at)"
+  };
+}
+
+message GrantModuleResponse {
+  EntitlementInfo entitlement = 1;
+}
+
+message RevokeModuleRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  license.v1.Module module = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  optional string reason = 3 [(buf.validate.field).string.max_len = 500];
+}
+
+message RevokeModuleResponse {}
+
+message ListKeyDevicesRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message ListKeyDevicesResponse {
+  repeated DeviceSlotInfo devices = 1;
+}
+
+message KickDeviceRequest {
+  string key_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string device_token = 2 [(buf.validate.field).string.uuid = true];
+  optional string reason = 3 [(buf.validate.field).string.max_len = 500];
+}
+
+message KickDeviceResponse {
+  bool kicked = 1;
+}
+
+message ShowTrialRequest {
+  string fingerprint_id = 1 [(buf.validate.field).string = {
+    pattern: "^v1\\.[0-9a-f]{64}$"
+    min_len: 1
+    max_len: 128
+  }];
+
+  license.v1.Module module = 2 [(buf.validate.field).enum.defined_only = true];
+}
+
+message ShowTrialResponse {
+  repeated TrialInfo trials = 1;
+}
+
+message ResetTrialRequest {
+  string fingerprint_id = 1 [(buf.validate.field).string = {
+    pattern: "^v1\\.[0-9a-f]{64}$"
+    min_len: 1
+    max_len: 128
+  }];
+  license.v1.Module module = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+
+  string reason = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 500
+  }];
+}
+
+message ResetTrialResponse {
+  bool reset = 1;
+}
+
+message ShowPubKeyRequest {}
+
+message ShowPubKeyResponse {
+  reserved 1, 2, 3;
+  reserved "public_key_b64", "key_id", "secondary_public_key_b64";
+
+  string active_key_id = 4;
+
+  repeated SigningKeyInfo keys = 5;
+}
+
+message IngestRequest {
+  string token = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+
+  bytes body = 2 [(buf.validate.field).bytes = {
+    min_len: 2
+    max_len: 65536
+  }];
+
+  string signature = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+message IngestResponse {
+  int32 http_code = 1;
+
+  string error_code = 6;
+  bool duplicate = 2;
+  int32 accepted = 3;
+  int32 dropped = 4;
+
+  map<string, int32> drops = 5;
+}
+
+message ValidateBatchResponse {
+  int32 http_code = 1;
+  string app = 2;
+  string error_code = 3;
+  bool signature_valid = 4;
+  string signature_error = 5;
+  string envelope_error = 6;
+  repeated ValidateEventResult events = 7;
+}
+
+message CreateAppRequest {
+  string slug = 1 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9-]{0,63}$"}];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  string email = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.email = true
+  ];
+}
+
+message CreateAppResponse {
+  App app = 1;
+
+  string token = 2;
+}
+
+message GetAppRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message GetAppResponse {
+  App app = 1;
+  repeated IngestTokenInfo tokens = 2;
+  repeated TelemetrySigningKeyInfo signing_keys = 3;
+  repeated EventRule rules = 4;
+  repeated VersionInfo versions = 5;
+}
+
+message UpdateAppRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  optional string email = 3 [(buf.validate.field).string.email = true];
+  optional bool strict_versions = 4;
+  optional telemetry.v1.AuthMode auth_mode = 5 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  optional google.protobuf.Timestamp auth_grace_until = 6;
+
+  bool clear_auth_grace = 7;
+
+  optional int32 rate_per_minute = 8 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 30
+  }];
+  optional int32 rate_per_day = 9 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 5000
+  }];
+  optional int32 raw_retention_days = 10 [(buf.validate.field).int32 = {
+    gte: 7
+    lte: 90
+  }];
+
+  optional int64 daily_event_budget = 11 [(buf.validate.field).int64 = {
+    gte: 10000
+    lte: 100000000
+  }];
+}
+
+message UpdateAppResponse {
+  App app = 1;
+}
+
+message RotateTokenRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message RotateTokenResponse {
+  string token = 1;
+}
+
+message RevokeTokenRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string prefix = 2 [(buf.validate.field).string = {
+    min_len: 6
+    max_len: 16
+    pattern: "^tm_live_[a-z0-9]+$"
+  }];
+}
+
+message RevokeTokenResponse {}
+
+message CreateSigningKeyRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+
+  string key_id = 2 [(buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]{1,32}$"}];
+}
+
+message CreateSigningKeyResponse {
+  string key_id = 1;
+
+  string secret = 2;
+}
+
+message RevokeSigningKeyRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string key_id = 2 [(buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]{1,32}$"}];
+}
+
+message RevokeSigningKeyResponse {}
+
+message ReplaceEventRulesRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+
+  repeated EventRule rules = 2 [
+    (buf.validate.field).repeated.max_items = 500,
+    (buf.validate.field).cel = {
+      id: "rules.unique_event_names"
+      message: "event names must be unique"
+      expression: "this.map(r, r.event_name).unique()"
+    }
+  ];
+}
+
+message ReplaceEventRulesResponse {
+  repeated EventRule rules = 1;
+}
+
+message SetVersionBlockedRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string version = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  bool blocked = 3;
+}
+
+message SetVersionBlockedResponse {}
+
+message GetAppStatsRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  int32 days = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 90
+  }];
+}
+
+message GetAppStatsResponse {
+  repeated DailyStat days = 1;
+  map<string, int64> drops = 2;
+  map<string, int64> sig_fails = 3;
+}

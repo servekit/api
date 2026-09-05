@@ -1,0 +1,22 @@
+// Gid service definitions — RPC declarations only.
+syntax = "proto3";
+
+package gid.v1;
+
+import "common/v1/pong.proto";
+import "gid/v1/request_response.proto";
+import "google/protobuf/empty.proto";
+
+// GidService provides global unique ID generation based on Sonyflake.
+service GidService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // NextID generates a single unique ID.
+  rpc NextID(NextIDRequest) returns (NextIDResponse);
+
+  // BatchNextID generates multiple unique IDs.
+  rpc BatchNextID(BatchNextIDRequest) returns (BatchNextIDResponse);
+
+  // Decompose parses an ID into its components.
+  rpc Decompose(DecomposeRequest) returns (DecomposeResponse);
+}

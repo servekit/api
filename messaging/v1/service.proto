@@ -1,0 +1,113 @@
+// Messaging service definitions — RPC declarations only.
+syntax = "proto3";
+
+package messaging.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+import "messaging/v1/message.proto";
+import "messaging/v1/request_response.proto";
+
+service MessageService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // SendEmail sends an email via the configured vendor/account, or the default
+  // fallback chain when both vendor + account are unset.
+  //
+  // Idempotency (when idempotency_key is set): Redis dedupes per
+  // (sender_id, idempotency_key).
+  //   - First request: sends + caches the success response.
+  //   - Concurrent second request: returns ErrIdempotencyConflict (409) while
+  //     the first is in flight.
+  //   - Sequential replay after success: returns the cached response without
+  //     re-sending.
+  //   - Failure: reservation released — caller can retry the same key.
+  //
+  // Required fields: to, subject, body (or html_body), scene, sender_id.
+  // vendor + account must be set together or both empty.
+  // Returns: record ID + MessageStatus (SENT on success).
+  // Errors: ErrBadRequest on validation; ErrMessageSendFailed on vendor
+  // rejection / transport failure (NOT cached — safe to retry the same key).
+  rpc SendEmail(SendEmailRequest) returns (SendResponse);
+
+  // SendSMS sends an SMS via the configured vendor/account, or routes by phone
+  // country code when both are unset.
+  //
+  // Path selection by region_code:
+  //   - "CN" (domestic): template-based only. template_id + sign_name +
+  //     template_params required; content is ignored.
+  //   - other (international): caller picks ONE of template_id (template-based
+  //     vendor: Byteplus, Tencent intl) OR content (raw-content vendor: Aliyun
+  //     intl, Twilio-style). Setting both is a validation error.
+  //
+  // Idempotency: same contract as SendEmail.
+  // Required fields: region_code (ISO alpha-2), phone (local, no "+"), scene,
+  // sender_id. sign_name required for CN + some intl paths.
+  // Returns: record ID + MessageStatus (SENT on success).
+  // Errors: ErrBadRequest on validation (incl. invalid phone / region); see
+  // SendSMSRequest.phone_no_plus for the "+" rule.
+  rpc SendSMS(SendSMSRequest) returns (SendResponse);
+
+  // GetEmail returns a single email record by ID.
+  // Errors: ErrEmailNotFound (404); ErrPersistenceDisabled (503) when email
+  // persistence is off.
+  rpc GetEmail(GetEmailRequest) returns (EmailRecord);
+
+  // ListEmails returns an offset-paginated list of email records matching the
+  // filter. Each page runs a COUNT(*) for totals — for large datasets or
+  // streaming scans, use ListEmailsByCursor instead.
+  // Errors: ErrPersistenceDisabled (503) when email persistence is off.
+  rpc ListEmails(ListEmailsRequest) returns (ListEmailsResponse);
+
+  // ListEmailsByCursor returns a cursor-paginated list of email records.
+  // Stable under concurrent writes: ordering is (sort_field, id) with id as
+  // tiebreaker, so inserts mid-scan do not cause skips or duplicates.
+  // Skips COUNT(*) by default; set include_total=true when totals are needed
+  // (the first page can usually return total == len(records) without a count).
+  // Errors: ErrPersistenceDisabled (503) when email persistence is off;
+  // ErrBadRequest on malformed page_token.
+  rpc ListEmailsByCursor(ListEmailsByCursorRequest) returns (ListEmailsByCursorResponse);
+
+  // GetEmailStats returns aggregated statistics for emails matching the filter
+  // (vendor, scene, time range). success_rate is in [0, 100]; -1 means "no
+  // data" (total == 0). Per-vendor breakdown is included.
+  // Errors: ErrPersistenceDisabled (503) when email persistence is off.
+  rpc GetEmailStats(GetEmailStatsRequest) returns (EmailStatsResponse);
+
+  // GetSMS returns a single SMS record by ID.
+  // Errors: ErrSMSNotFound (404); ErrPersistenceDisabled (503) when SMS
+  // persistence is off.
+  rpc GetSMS(GetSMSRequest) returns (SMSRecord);
+
+  // ListSMS returns an offset-paginated list of SMS records matching the
+  // filter. See ListEmails for pagination trade-offs.
+  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
+  rpc ListSMS(ListSMSRequest) returns (ListSMSResponse);
+
+  // ListSMSByCursor returns a cursor-paginated list of SMS records.
+  // See ListEmailsByCursor for semantics.
+  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off;
+  // ErrBadRequest on malformed page_token.
+  rpc ListSMSByCursor(ListSMSByCursorRequest) returns (ListSMSByCursorResponse);
+
+  // GetSMSStats returns aggregated statistics for SMS messages matching the
+  // filter. See GetEmailStats for response shape.
+  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
+  rpc GetSMSStats(GetSMSStatsRequest) returns (SMSStatsResponse);
+
+  // ListSMSRegions returns distinct region_code values matching existing SMS
+  // records, for populating frontend filter dropdowns. Cheap (low-cardinality
+  // DISTINCT). Callers further filter client-side if needed.
+  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
+  rpc ListSMSRegions(ListSMSRegionsRequest) returns (ListSMSRegionsResponse);
+
+  // ListSMSSenders returns distinct sender_id values across SMS records, for
+  // populating frontend filter dropdowns.
+  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
+  rpc ListSMSSenders(ListSMSSendersRequest) returns (ListSMSSendersResponse);
+
+  // ListEmailSenders returns distinct sender_id values across email records,
+  // for populating frontend filter dropdowns.
+  // Errors: ErrPersistenceDisabled (503) when email persistence is off.
+  rpc ListEmailSenders(ListEmailSendersRequest) returns (ListEmailSendersResponse);
+}

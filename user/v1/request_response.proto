@@ -1,0 +1,797 @@
+// User RPC request/response payloads.
+syntax = "proto3";
+
+package user.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "user/v1/enums.proto";
+import "user/v1/message.proto";
+
+// ==================== Auth ====================
+
+message RegisterRequest {
+  IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string code = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string username = 4 [(buf.validate.field).string = {max_len: 64}];
+  string nickname = 5 [(buf.validate.field).string = {max_len: 64}];
+  string password = 6 [(buf.validate.field).string = {max_len: 128}];
+  Gender gender = 7 [(buf.validate.field).enum.defined_only = true];
+  string timezone = 8 [(buf.validate.field).string = {max_len: 64}];
+  string locale = 9 [(buf.validate.field).string = {max_len: 16}];
+  string region_code = 10 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 11 [(buf.validate.field).string.max_len = 20];
+  // captcha_id returned by SendVerificationCode; required to verify the code.
+  string captcha_id = 12 [(buf.validate.field).string.max_len = 128];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+message RegisterResponse {
+  User user = 1;
+  string session_id = 2;
+}
+
+message LoginRequest {
+  LoginMethod method = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string username = 2 [(buf.validate.field).string.max_len = 256];
+  string password = 3 [(buf.validate.field).string.max_len = 128];
+  string code = 4 [(buf.validate.field).string.max_len = 16];
+  string email = 5 [(buf.validate.field).string.max_len = 256];
+  string region_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7 [(buf.validate.field).string.max_len = 20];
+  // captcha_id returned by SendVerificationCode; required for code-based login methods.
+  string captcha_id = 8 [(buf.validate.field).string.max_len = 128];
+}
+
+message LoginResponse {
+  User user = 1;
+  string session_id = 2;
+  bool is_new = 3;
+  // return_to is the business URL recorded against the OAuth state at
+  // GetOAuthURL time. The OAuth callback service reads this and 302's the
+  // browser there with the session token. Empty for non-OAuth login paths
+  // (e.g. username+password).
+  string return_to = 4;
+}
+
+message LogoutRequest {
+  string session_id = 1 [(buf.validate.field).string.max_len = 128];
+}
+
+message RefreshSessionRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+// ==================== Social Login ====================
+
+message GetOAuthURLRequest {
+  IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // return_to: where the OAuth callback service should send the browser
+  // AFTER user-service has minted a session. Must be on the per-provider
+  // AllowedRedirectURLs allowlist. This is NOT the URL registered with the
+  // OAuth provider — that one is cfg.OAuth.{provider}.RedirectURL and is
+  // fixed for the whole deployment.
+  string return_to = 2 [(buf.validate.field).string.max_len = 512];
+  // state: optional caller-supplied CSRF token (e.g. PKCE flows). When
+  // empty, user-service generates one. Either way it ends up recorded
+  // against this GetOAuthURL call so SocialLogin can confirm provenance.
+  string state = 3 [(buf.validate.field).string.max_len = 128];
+}
+
+message GetOAuthURLResponse {
+  // url: hand this to the browser as a 302 Location. It already encodes the
+  // fixed provider RedirectURL and the recorded state — caller does not
+  // need to add anything.
+  string url = 1;
+  string state = 2;
+}
+
+message SocialLoginRequest {
+  IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string code = 2 [(buf.validate.field).string = {min_len: 1}];
+  string state = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message MiniProgramLoginRequest {
+  string code = 1 [(buf.validate.field).string = {min_len: 1}];
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message MiniProgramPhoneLoginRequest {
+  string login_code = 1 [(buf.validate.field).string = {min_len: 1}];
+  string phone_code = 2 [(buf.validate.field).string = {min_len: 1}];
+  string nickname = 3 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
+}
+
+message GetProfileRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdateProfileRequest {
+  int64 user_id = 10 [(buf.validate.field).int64.gt = 0];
+  string username = 1 [(buf.validate.field).string.max_len = 64];
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  string real_name = 3 [(buf.validate.field).string.max_len = 64];
+  string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
+  Gender gender = 5 [(buf.validate.field).enum.defined_only = true];
+  string birthday = 6 [(buf.validate.field).string.max_len = 10];
+  string timezone = 7 [(buf.validate.field).string.max_len = 64];
+  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string bio = 9 [(buf.validate.field).string.max_len = 512];
+}
+
+message ChangePasswordRequest {
+  int64 user_id = 3 [(buf.validate.field).int64.gt = 0];
+  string old_password = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string new_password = 2 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+}
+
+message ResetPasswordRequest {
+  string email = 1 [(buf.validate.field).string.max_len = 256];
+  string code = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string new_password = 3 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [(buf.validate.field).string.max_len = 20];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+message ListIdentitiesRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListIdentitiesResponse {
+  repeated Identity identities = 1;
+}
+
+message BindIdentityRequest {
+  int64 user_id = 5 [(buf.validate.field).int64.gt = 0];
+  IdentityProvider provider = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string code = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+  string password = 4 [(buf.validate.field).string.max_len = 128];
+  string region_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7 [(buf.validate.field).string.max_len = 20];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+message BindOAuthIdentityRequest {
+  // The already-authenticated user to attach the OAuth identity to. The
+  // gateway should fill this from the session token, not trust the client.
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  IdentityProvider provider = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [
+      0,
+      1,
+      2
+    ]
+  }]; // OAuth only — EMAIL/PHONE go via BindIdentity
+  string code = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 512
+  }];
+  // state: required, must match what GetOAuthURL issued for this flow. Note
+  // this RPC does NOT need return_to — the caller already has a session,
+  // there's no post-OAuth browser redirect to worry about. state is here
+  // purely for CSRF protection on the GetOAuthURL → BindOAuthIdentity path.
+  string state = 5 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message BindOAuthIdentityResponse {
+  Identity identity = 1;
+}
+
+message UnbindIdentityRequest {
+  // The caller. The service refuses to delete when identity.user_id != user_id.
+  int64 user_id = 3 [(buf.validate.field).int64.gt = 0];
+  int64 identity_id = 1 [(buf.validate.field).int64.gt = 0];
+  string code = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 16
+  }];
+}
+
+// ==================== Verification Code ====================
+
+message SendVerificationCodeRequest {
+  string email = 1 [(buf.validate.field).string.max_len = 256];
+  VerificationChannel channel = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  VerificationPurpose purpose = 3 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [(buf.validate.field).string.max_len = 20];
+  // sender_id identifies the audit actor triggering this send (user ID,
+  // service name, platform identifier, ...). Required: user-service is
+  // stateless and passes this through to message-service verbatim — it does
+  // not derive, transform, or default the value.
+  string sender_id = 6 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+
+  // SMS delivery — required when channel=SMS. Path is decided by destination
+  // region (mirrors message-service's routing):
+  //   - region_code == "CN" (domestic): sms_template_id + sms_code_param_key +
+  //     sign_name are required. Domestic vendors reject raw content for
+  //     regulatory reasons — every SMS must use a vendor pre-registered
+  //     template. sms_code_param_key is the param-name under which the code is
+  //     placed in template_params; the name is fixed at the vendor's template-
+  //     registration time (e.g. "code", "param1", "verify_code") — caller must
+  //     match it. Empty defaults to "code".
+  //   - region_code != "CN" (international): caller picks ONE of
+  //     sms_template_id (vendor that requires templates even for intl, e.g.
+  //     Byteplus / Tencent-intl) OR sms_content (vendor that accepts raw
+  //     text, e.g. Aliyun SendMessageToGlobe, Twilio).
+  //
+  // {code} placeholder convention: sms_content may contain the literal
+  // substring "{code}", which user-service replaces with the actual generated
+  // code before forwarding to message-service. If sms_content does NOT
+  // contain "{code}", the substitution is a no-op and the code is silently
+  // dropped — caller's responsibility to include it.
+  string sms_template_id = 7 [(buf.validate.field).string.max_len = 128];
+  string sms_code_param_key = 8 [(buf.validate.field).string.max_len = 64];
+  string sms_content = 9 [(buf.validate.field).string.max_len = 1024];
+
+  // Email delivery — required when channel=EMAIL. email_subject and email_body
+  // are always required; email_html_body is optional.
+  //
+  // When email_html_body is set, message-service sends the email as MIME
+  // multipart/alternative with both representations — HTML-capable clients
+  // (Gmail, Outlook, mobile mail) render the pretty HTML; plain-text-only
+  // clients (terminal mutt, some accessibility tools) fall back to email_body.
+  // When email_html_body is empty, only the plain text body is sent.
+  //
+  // All three fields may use the "{code}" placeholder convention (see
+  // sms_content above): user-service replaces the literal substring "{code}"
+  // with the actual code before forwarding. Missing "{code}" is a no-op —
+  // the code is silently dropped. Typically only email_body / email_html_body
+  // include it; subject rarely does (it's a header).
+  string email_subject = 10 [(buf.validate.field).string = {max_len: 256}];
+  string email_body = 11 [(buf.validate.field).string = {max_len: 16384}];
+  string email_html_body = 13 [(buf.validate.field).string = {max_len: 65536}];
+
+  // sign_name is the SMS signature passed through verbatim to message-service
+  // when channel=SMS. Required for CN (domestic) SMS — domestic vendors reject
+  // sends without it. Treated as sender ID for international SMS (vendor- and
+  // region-specific semantics).
+  string sign_name = 12 [(buf.validate.field).string.max_len = 64];
+
+  option (buf.validate.message).cel = {
+    id: "target_exclusive"
+    message: "exactly one of email or region_code+phone must be set"
+    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+  };
+}
+
+message SendVerificationCodeResponse {
+  // captcha_id must be passed back to Register/Login to bind code verification
+  // to the same flow that generated it (defense against cross-context replay).
+  string captcha_id = 1;
+}
+
+message ListSessionsRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListSessionsResponse {
+  repeated Session sessions = 1;
+}
+
+message RevokeSessionRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message RevokeAllSessionsRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message GetSessionRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message IssueSessionCodeRequest {
+  string session_id = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message IssueSessionCodeResponse {
+  // code: 32 random bytes base64url-encoded (~43 chars). Pass via URL
+  // query to the business side. TTL ~5 min, one-time use.
+  string code = 1;
+}
+
+message ExchangeSessionCodeRequest {
+  string code = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+}
+
+message ExchangeSessionCodeResponse {
+  string session_id = 1;
+  int64 user_id = 2;
+}
+
+// GetSessionResponse carries everything a BFF needs after resolving a
+// session_id: user_id is the primary field for downstream RPCs; expires_at is
+// derived from the Redis TTL at read time; created_at / ip / user_agent / os /
+// browser / login_method come from the Redis session payload (no DB read).
+// last_active_at is intentionally omitted — that field lives in the
+// user_sessions DB table and would force a DB lookup on every BFF request.
+message GetSessionResponse {
+  int64 user_id = 1;
+  google.protobuf.Timestamp expires_at = 2;
+  google.protobuf.Timestamp created_at = 3;
+  string ip = 4;
+  string user_agent = 5;
+  string os = 6;
+  string browser = 7;
+  string login_method = 8;
+}
+
+// ==================== Admin ====================
+
+message CreateUserRequest {
+  UserType user_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string username = 2 [(buf.validate.field).string.max_len = 64];
+  string nickname = 3 [(buf.validate.field).string.max_len = 64];
+  string real_name = 4 [(buf.validate.field).string.max_len = 64];
+  string email = 5 [(buf.validate.field).string.max_len = 256];
+  string region_code = 11 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 6 [(buf.validate.field).string.max_len = 20];
+  string password = 7 [(buf.validate.field).string = {
+    min_len: 8
+    max_len: 128
+  }];
+  Gender gender = 8 [(buf.validate.field).enum.defined_only = true];
+  string timezone = 9 [(buf.validate.field).string.max_len = 64];
+  string locale = 10 [(buf.validate.field).string.max_len = 16];
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message GetUserRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListUsersRequest {
+  UserStatus status = 1;
+  // nickname is matched as a prefix (LIKE 'nickname%') to leverage index.
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  int32 page_size = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 4 [(buf.validate.field).string.max_len = 64];
+
+  // New filters
+  Gender gender = 5;
+  IdentityProvider register_source = 6;
+  DeviceType register_device = 7;
+  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string timezone = 9 [(buf.validate.field).string.max_len = 64];
+  string register_ip = 10 [(buf.validate.field).string.max_len = 45];
+  string last_login_ip = 11 [(buf.validate.field).string.max_len = 45];
+  google.protobuf.Timestamp created_at_start = 12;
+  google.protobuf.Timestamp created_at_end = 13;
+  google.protobuf.Timestamp last_login_at_start = 14;
+  google.protobuf.Timestamp last_login_at_end = 15;
+
+  // Exact-match filters (empty/absent = no filter)
+  repeated int64 user_ids = 16;
+  string email = 17 [(buf.validate.field).string.max_len = 256];
+  string region_code = 23 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 18 [(buf.validate.field).string.max_len = 20];
+  string username = 19 [(buf.validate.field).string.max_len = 64];
+  UserType user_type = 20 [(buf.validate.field).enum.defined_only = true];
+
+  // Sort spec: order_by picks the column, descending flips direction.
+  // UNSPECIFIED + descending=false is equivalent to id ascending.
+  UserSortField order_by = 21 [(buf.validate.field).enum.defined_only = true];
+  bool descending = 22;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  string next_cursor = 2;
+}
+
+// ListUsersPagedRequest is the offset-based variant of ListUsers for admin UIs
+// that need page numbers and total counts. Filters mirror ListUsersRequest;
+// the page/page_size/count fields drive offset pagination. Set count=false on
+// follow-up page loads to skip the COUNT(*) query.
+message ListUsersPagedRequest {
+  // Filters — same semantics as ListUsersRequest. Empty/zero means no filter.
+  UserStatus status = 1;
+  string nickname = 2 [(buf.validate.field).string.max_len = 64];
+  Gender gender = 3;
+  IdentityProvider register_source = 4;
+  DeviceType register_device = 5;
+  UserType user_type = 6;
+  string locale = 7 [(buf.validate.field).string.max_len = 16];
+  string timezone = 8 [(buf.validate.field).string.max_len = 64];
+  string register_ip = 9 [(buf.validate.field).string.max_len = 45];
+  string last_login_ip = 10 [(buf.validate.field).string.max_len = 45];
+  google.protobuf.Timestamp created_at_start = 11;
+  google.protobuf.Timestamp created_at_end = 12;
+  google.protobuf.Timestamp last_login_at_start = 13;
+  google.protobuf.Timestamp last_login_at_end = 14;
+  repeated int64 user_ids = 15;
+  string email = 16 [(buf.validate.field).string.max_len = 256];
+  string region_code = 24 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 17 [(buf.validate.field).string.max_len = 20];
+  string username = 18 [(buf.validate.field).string.max_len = 64];
+
+  // Sort — same semantics as ListUsersRequest.
+  UserSortField order_by = 19 [(buf.validate.field).enum.defined_only = true];
+  bool descending = 20;
+
+  // Offset pagination.
+  int32 page = 21 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 22 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  bool count = 23; // when false, total/total_pages are returned as 0 (skip COUNT)
+}
+
+message ListUsersPagedResponse {
+  repeated User users = 1;
+  int64 total = 2; // 0 when request.count is false
+  int32 total_pages = 3; // 0 when request.count is false
+}
+
+message DisableUserRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  bool disable = 2;
+  string reason = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message GetLoginLogsRequest {
+  int64 user_id = 1;
+  IdentityProvider provider = 2;
+  bool success = 3;
+  int32 page_size = 4 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 5 [(buf.validate.field).string.max_len = 64];
+}
+
+message GetLoginLogsResponse {
+  repeated LoginLog logs = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message CreateGroupRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  int64 parent_id = 3;
+}
+
+message GetGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdateGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+message ListGroupsRequest {
+  string status = 1 [(buf.validate.field).string.max_len = 32];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 3 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListGroupsResponse {
+  repeated Group groups = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message DeleteGroupRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message AddGroupMemberRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0];
+  string role = 3 [(buf.validate.field).string = {
+    in: [
+      "owner",
+      "admin",
+      "member"
+    ]
+  }];
+}
+
+message RemoveGroupMemberRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupMembersRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  string role = 2 [(buf.validate.field).string.max_len = 32];
+  int32 page_size = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 4 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListGroupMembersResponse {
+  repeated GroupMember members = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message CreateRoleRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 4;
+  repeated int64 permission_group_ids = 5;
+}
+
+message UpdateRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 4;
+  repeated int64 permission_group_ids = 5;
+}
+
+message DeleteRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListRolesRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListRolesResponse {
+  repeated Role roles = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message ListPermissionsRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListPermissionsResponse {
+  repeated Permission permissions = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message CreatePermissionRequest {
+  string resource = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string action = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  string description = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+message GetPermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdatePermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+  string resource = 2 [(buf.validate.field).string.max_len = 64];
+  string action = 3 [(buf.validate.field).string.max_len = 32];
+  string description = 4 [(buf.validate.field).string.max_len = 256];
+}
+
+message DeletePermissionRequest {
+  int64 permission_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListPermissionGroupsRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
+
+message ListPermissionGroupsResponse {
+  repeated PermissionGroup groups = 1;
+  string next_cursor = 2;
+  int32 total = 3;
+}
+
+message CreatePermissionGroupRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 2 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 3;
+}
+
+message GetPermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message UpdatePermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+  string name = 2 [(buf.validate.field).string.max_len = 64];
+  string description = 3 [(buf.validate.field).string.max_len = 512];
+  repeated int64 permission_ids = 4;
+}
+
+message DeletePermissionGroupRequest {
+  int64 permission_group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message GetRoleRequest {
+  int64 role_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+// ==================== RBAC: Group Roles ====================
+
+message AddGroupRoleRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message RemoveGroupRoleRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupRolesRequest {
+  int64 group_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListGroupRolesResponse {
+  repeated Role roles = 1;
+}
+
+// ==================== RBAC: User Roles ====================
+
+message AssignRoleRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message RevokeRoleRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  int64 role_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListUserRolesRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListUserRolesResponse {
+  repeated UserRole roles = 1;
+}

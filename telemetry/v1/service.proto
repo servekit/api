@@ -1,0 +1,65 @@
+// Telemetry service definitions — RPC declarations only.
+syntax = "proto3";
+
+package telemetry.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+import "telemetry/v1/request_response.proto";
+
+// TelemetryService is the ingestion face. The HTTP endpoints
+// (POST /v1/e/{token}/events, POST /v1/collect/events) are served by the
+// same pipeline via pkg/ingesthttp, mounted by the gateway (testkit) —
+// they do not appear here because they are not transcoded RPCs.
+service TelemetryService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // Ingest processes one raw batch.
+  //
+  // The CLIENT contract is served by the raw routes in pkg/ingesthttp,
+  // mounted by the gateway (testkit today): POST /v1/e/{token}/events and
+  // /v1/collect/events — HMAC signatures cover the exact request bytes and
+  // the exact status codes (204/413/429) are part of the protocol, neither
+  // of which transcoding can express.
+  //
+  // This gRPC Ingest is the JSON compat face only: it always answers 200
+  // (plus protovalidate 400s) and carries the outcome in
+  // IngestResponse.http_code. The envelope travels base64-encoded in the
+  // body field. Tooling and module callers use it; telemetry clients must
+  // not.
+  rpc Ingest(IngestRequest) returns (IngestResponse);
+
+  // ValidateBatch is the ?dry_run=1 face: same request as Ingest (token
+  // gate + HMAC verify included), but nothing is written — the response
+  // reports what a real request would return (http_code) plus per-event
+  // acceptance results, for client-side envelope/signature debugging.
+  // Being a proper RPC (not just an in-process method) lets the
+  // gateway-mounted HTTP dry-run work in both module and gRPC modes.
+  rpc ValidateBatch(IngestRequest) returns (ValidateBatchResponse);
+}
+
+// TelemetryAdminService is the operator surface (spec §7). Every method
+// requires `Authorization: Bearer $ADMIN_TOKEN` (enforced by the admin auth
+// interceptor); registry changes take effect within 60 seconds, or
+// immediately for this process on success.
+service TelemetryAdminService {
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+
+  rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
+
+  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
+
+  rpc CreateSigningKey(CreateSigningKeyRequest) returns (CreateSigningKeyResponse);
+
+  rpc RevokeSigningKey(RevokeSigningKeyRequest) returns (RevokeSigningKeyResponse);
+
+  rpc ReplaceEventRules(ReplaceEventRulesRequest) returns (ReplaceEventRulesResponse);
+
+  rpc SetVersionBlocked(SetVersionBlockedRequest) returns (SetVersionBlockedResponse);
+
+  rpc GetAppStats(GetAppStatsRequest) returns (GetAppStatsResponse);
+}

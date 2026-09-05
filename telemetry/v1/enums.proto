@@ -1,0 +1,14 @@
+// Telemetry domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package telemetry.v1;
+
+// AuthMode selects the request-authentication posture of an app (spec §4.5).
+enum AuthMode {
+  AUTH_MODE_UNSPECIFIED = 0;
+  // Public token only — lightweight SDKs may stay here.
+  AUTH_MODE_NONE = 1;
+  // Every batch must carry a valid X-Telemetry-Signature; failures are
+  // dropped silently with a 204.
+  AUTH_MODE_HMAC = 2;
+}

@@ -1,0 +1,128 @@
+// Messaging domain messages (entities / value objects).
+syntax = "proto3";
+
+package messaging.v1;
+
+import "buf/validate/validate.proto";
+import "messaging/v1/enums.proto";
+
+// EmailAddress is one recipient or sender. email is required; display_name
+// is optional and rendered as the RFC 5322 mailbox "Name" <email> form when
+// set. The service persists only the bare email (for query filtering);
+// display_name is not stored.
+message EmailAddress {
+  string email = 1 [(buf.validate.field).string.email = true];
+  string display_name = 2;
+}
+
+// EmailAttachment describes one attachment on an email. Source of bytes is
+// either url (caller-managed object storage) or content (inline bytes for
+// small attachments). The same message type appears on SendEmailRequest
+// (input) and EmailRecord (query).
+message EmailAttachment {
+  reserved 1;
+  reserved "kind";
+
+  // filename is the MIME filename. Required.
+  string filename = 2 [(buf.validate.field).string.min_len = 1];
+
+  // url is the HTTP or HTTPS URL of the attachment content — a
+  // caller-managed reference (typically an object-storage download link).
+  // message-service does NOT fetch it and does NOT embed it into the email:
+  // callers render the download link into html_body themselves; message-service
+  // only persists the reference for record queries. Non-http(s) schemes are
+  // rejected defensively (file://, ftp://, gopher://, etc.).
+  string url = 3;
+
+  // content is the raw attachment bytes supplied inline — embedded as a real
+  // MIME part. Bounded by attachment.max_inline_bytes (single attachment)
+  // and attachment.max_total_inline_bytes (sum across the request).
+  // May be set together with url (content embeds; url is kept as record
+  // metadata). Larger files must use url references instead.
+  bytes content = 8;
+
+  // inline selects rendering: true = CID-embedded (display inline in the
+  // body where the caller referenced the CID); false = regular attachment
+  // shown in the client's attachment list. When inline=true with a non-image
+  // MIME type, the attachment silently falls back to regular.
+  bool inline = 4;
+
+  // mime_type is optional. Empty = let MIME detection infer from filename.
+  string mime_type = 5;
+
+  // size_bytes is optional. When non-zero, pre-validated against
+  // max_bytes (url path: before fetch; content path: against len(content)).
+  // Zero = no pre-check; the hard cap is still enforced after fetch / for
+  // content length.
+  int64 size_bytes = 6;
+
+  reserved 7;
+  reserved "expires_at";
+}
+
+// EmailRecord is the stored record of a sent email.
+message EmailRecord {
+  int64 id = 1;
+  EmailVendor vendor = 2;
+  string account = 3;
+  EmailScene scene = 4;
+  MessageStatus status = 5;
+  EmailAddress target = 6;
+  // SenderID identifies the calling business service (e.g. "user-service",
+  // "pay-service"). NOT the end-user/admin id — the caller must record that
+  // in its own audit trail.
+  string sender_id = 7;
+  repeated EmailAddress cc = 8;
+  repeated EmailAddress bcc = 9;
+  string subject = 10;
+  string content = 11;
+  string html_body = 12;
+  EmailAddress reply_to = 13;
+  string template_id = 14;
+  map<string, string> template_params = 15;
+  string error_message = 16;
+  int32 attempts = 17;
+  int64 sent_at = 18;
+  int64 created_at = 19;
+  int64 updated_at = 20;
+  // attachments lists metadata for each attachment recorded at send time.
+  // Empty when no attachments were sent or persistence is disabled.
+  repeated EmailAttachment attachments = 21;
+}
+
+// SMSRecord is the stored record of a sent SMS.
+message SMSRecord {
+  int64 id = 1;
+  SmsVendor vendor = 2;
+  string account = 3;
+  SmsScene scene = 4;
+  MessageStatus status = 5;
+  string region_code = 6;
+  string phone = 7;
+  // SenderID identifies the calling business service. See SendSMSRequest.sender_id.
+  string sender_id = 8;
+  string content = 9;
+  string template_id = 10;
+  map<string, string> template_params = 11;
+  string error_message = 12;
+  int32 attempts = 13;
+  int64 sent_at = 14;
+  int64 created_at = 15;
+  int64 updated_at = 16;
+}
+
+// EmailVendorStats holds per-vendor statistics for email messages.
+message EmailVendorStats {
+  EmailVendor vendor = 1;
+  int64 total = 2;
+  int64 sent = 3;
+  int64 failed = 4;
+}
+
+// SmsVendorStats holds per-vendor statistics for SMS messages.
+message SmsVendorStats {
+  SmsVendor vendor = 1;
+  int64 total = 2;
+  int64 sent = 3;
+  int64 failed = 4;
+}

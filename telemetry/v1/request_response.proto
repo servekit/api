@@ -1,0 +1,251 @@
+// Telemetry RPC request/response payloads.
+syntax = "proto3";
+
+package telemetry.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "telemetry/v1/enums.proto";
+import "telemetry/v1/message.proto";
+
+// IngestRequest carries one raw ingestion attempt. The wire envelope stays
+// opaque bytes: HMAC signatures are computed over the exact request body, so
+// the envelope must never be re-encoded on its way to the pipeline.
+//
+// The HTTP surface (POST /v1/e/{token}/events) feeds this same request from
+// the path token, the raw body, and the X-Telemetry-Signature header; the
+// RPC exists so in-process module callers share one code path.
+message IngestRequest {
+  // Ingest token as presented by the client ("tm_live_…" path token, or the
+  // Bearer credential on the /v1/collect route).
+  string token = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  // Raw request body exactly as received (hard cap 64KB, spec §3.2).
+  bytes body = 2 [(buf.validate.field).bytes = {
+    min_len: 2
+    max_len: 65536
+  }];
+  // Value of X-Telemetry-Signature ("v1 <key_id> <unix_ts> <hex>"), empty
+  // when the client sent none.
+  string signature = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+// IngestResponse reports what the collector decided for the batch. It maps
+// 1:1 onto the HTTP status the raw endpoint would return (204 accept /
+// 400+413 envelope violation / 429 rate limited); the ingest pipeline is
+// best-effort, so drop details here are diagnostics, not errors.
+message IngestResponse {
+  // 204 / 400 / 401 / 403 / 413 / 429. 401 = token rejected, 403 = request
+  // signature rejected — both are permanent for the batch (do not retry).
+  int32 http_code = 1;
+  // Machine-readable failure reason on 4xx: missing_token, bad_sig,
+  // unknown_key, stale_ts, envelope, oversized. Empty on 204.
+  string error_code = 6;
+  bool duplicate = 2; // batch_id replayed within the idempotency window
+  int32 accepted = 3; // events queued for persistence
+  int32 dropped = 4; // events silently dropped (see drops)
+  // Per-reason drop counts: unknown_event, prop_not_allowed, prop_too_many,
+  // prop_not_scalar, bad_uuid, bad_version, ts_too_old, ts_invalid,
+  // duplicate_event, app_budget_exceeded, queue_full.
+  map<string, int32> drops = 5;
+}
+
+// ValidateBatchResponse is the dry-run answer for POST
+// /v1/e/{token}/events?dry_run=1: the exact verdicts the pipeline would
+// produce, with zero side effects (nothing booked, counted, queued, or
+// metric'd). For SDK integration and allowlist debugging.
+message ValidateBatchResponse {
+  int32 http_code = 1; // what a real request would return
+  string app = 2; // resolved app slug, "" when 401
+  string error_code = 3; // 4xx reason, empty otherwise
+  bool signature_valid = 4; // signature check outcome (true when auth_mode=none)
+  string signature_error = 5; // missing / unknown_key / bad_sig / stale_ts
+  string envelope_error = 6; // structural violation detail
+  repeated ValidateEventResult events = 7;
+}
+
+message CreateAppRequest {
+  string slug = 1 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9-]{0,63}$"}];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  string email = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.email = true
+  ];
+}
+
+message CreateAppResponse {
+  App app = 1;
+  // Full plaintext ingest token — returned exactly once, never stored.
+  string token = 2;
+}
+
+message GetAppRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message GetAppResponse {
+  App app = 1;
+  repeated IngestTokenInfo tokens = 2;
+  repeated SigningKeyInfo signing_keys = 3;
+  repeated EventRule rules = 4;
+  repeated VersionInfo versions = 5;
+}
+
+message UpdateAppRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // All other fields are optional; only present fields are applied.
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  optional string email = 3 [(buf.validate.field).string.email = true];
+  optional bool strict_versions = 4;
+  optional AuthMode auth_mode = 5 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  optional google.protobuf.Timestamp auth_grace_until = 6;
+  // Explicitly clear auth_grace_until (grpc-gateway JSON cannot send a null
+  // timestamp into an optional field).
+  bool clear_auth_grace = 7;
+  // Rate/retention overrides may only tighten (spec §3.2); bounds below are
+  // the wire-contract ceilings.
+  optional int32 rate_per_minute = 8 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 30
+  }];
+  optional int32 rate_per_day = 9 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 5000
+  }];
+  optional int32 raw_retention_days = 10 [(buf.validate.field).int32 = {
+    gte: 7
+    lte: 90
+  }];
+  // Abuse ceiling, adjustable in both directions (not a wire-contract
+  // limit). Default 1,000,000 events/day per app.
+  optional int64 daily_event_budget = 11 [(buf.validate.field).int64 = {
+    gte: 10000
+    lte: 100000000
+  }];
+}
+
+message UpdateAppResponse {
+  App app = 1;
+}
+
+message RotateTokenRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message RotateTokenResponse {
+  // Full plaintext ingest token — returned exactly once, never stored. The
+  // previous token stays valid until explicitly revoked.
+  string token = 1;
+}
+
+message RevokeTokenRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string prefix = 2 [(buf.validate.field).string = {
+    min_len: 6
+    max_len: 16
+    pattern: "^tm_live_[a-z0-9]+$"
+  }];
+}
+
+message RevokeTokenResponse {}
+
+message CreateSigningKeyRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // Caller-chosen key id (e.g. "k202609"); one key per client version band.
+  string key_id = 2 [(buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]{1,32}$"}];
+}
+
+message CreateSigningKeyResponse {
+  string key_id = 1;
+  // base64url(32B) signing secret — returned exactly once. The server keeps
+  // the plaintext (it must compute HMACs); treat like the admin token.
+  string secret = 2;
+}
+
+message RevokeSigningKeyRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string key_id = 2 [(buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]{1,32}$"}];
+}
+
+message RevokeSigningKeyResponse {}
+
+message ReplaceEventRulesRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // Full replacement: an empty list clears the allowlist (the app then
+  // accepts no events at all). Event names must be unique.
+  repeated EventRule rules = 2 [
+    (buf.validate.field).repeated.max_items = 500,
+    (buf.validate.field).cel = {
+      id: "rules.unique_event_names"
+      message: "event names must be unique"
+      expression: "this.map(r, r.event_name).unique()"
+    }
+  ];
+}
+
+message ReplaceEventRulesResponse {
+  repeated EventRule rules = 1;
+}
+
+message SetVersionBlockedRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string version = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  bool blocked = 3;
+}
+
+message SetVersionBlockedResponse {}
+
+message GetAppStatsRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  int32 days = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 90
+  }];
+}
+
+message GetAppStatsResponse {
+  repeated DailyStat days = 1; // newest first
+  map<string, int64> drops = 2; // per-reason event drops (since process start)
+  map<string, int64> sig_fails = 3; // per-reason signature failures (since process start)
+}

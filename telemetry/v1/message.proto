@@ -1,0 +1,86 @@
+// Telemetry domain messages (entities / value objects).
+syntax = "proto3";
+
+package telemetry.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "telemetry/v1/enums.proto";
+
+// ValidateEventResult is one event's verdict in a dry-run validation.
+message ValidateEventResult {
+  int32 index = 1; // position in the submitted events array
+  string event_id = 2; // as submitted ("" when absent)
+  string name = 3;
+  bool accepted = 4;
+  string drop_reason = 5; // metrics reason, empty when accepted
+}
+
+// App is one registered publisher (spec §3.2).
+message App {
+  string id = 1; // uuid
+  string slug = 2; // unique, url-safe
+  string name = 3;
+  string email = 4; // optional operator contact
+  bool strict_versions = 5; // drop unknown versions instead of auto-registering
+  AuthMode auth_mode = 6;
+  google.protobuf.Timestamp auth_grace_until = 7; // while set+future: hmac apps still accept unsigned batches
+  int32 rate_per_minute = 8; // per device
+  int32 rate_per_day = 9; // per device
+  int32 raw_retention_days = 10; // events_raw TTL (≥ partition horizon)
+  // Per-app daily ingestion budget (events/day, attempts counted). Exceeding
+  // it drops the batch's events silently with a 204 and fires the
+  // app_budget_exceeded metric — the bounded-garbage abuse backstop that
+  // per-device limits cannot provide (spec §4.6 #1).
+  int64 daily_event_budget = 13;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// EventRule is one (event, allowlist) entry (spec §3.2). Properties outside
+// allow_props drop the whole event; map_prop marks the count-mapping channel.
+message EventRule {
+  string event_name = 1 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9_]{0,63}$"}];
+  repeated string allow_props = 2 [(buf.validate.field).repeated = {
+    max_items: 16
+    items: {
+      string: {pattern: "^[a-z][a-z0-9_]{0,31}$"}
+    }
+  }];
+  // When set, this event carries one property of that name whose value is a
+  // nested command→count object feeding map_count_daily.
+  optional string map_prop = 3 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9_]{0,31}$"}];
+}
+
+// IngestTokenInfo is the admin view of an ingest token. Hashes never leave
+// the service; the plaintext exists only in mint responses.
+message IngestTokenInfo {
+  string prefix = 1; // "tm_live_ab12…" identification
+  bool revoked = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp last_used_at = 4; // unset = never used
+}
+
+// SigningKeyInfo is the admin view of an HMAC signing key.
+message SigningKeyInfo {
+  string key_id = 1;
+  bool revoked = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp last_used_at = 4; // unset = never used
+}
+
+// VersionInfo is the admin view of a known app version.
+message VersionInfo {
+  string version = 1;
+  bool blocked = 2;
+  int64 seen_count = 3;
+  google.protobuf.Timestamp last_seen_at = 4; // unset = seen only at registration
+}
+
+// DailyStat is one day of the stats overview.
+message DailyStat {
+  // Day in "YYYY-MM-DD" (UTC) — a calendar date, not a point in time.
+  string day = 1;
+  int64 devices = 2; // distinct devices (DAU)
+  int64 events = 3; // accepted events
+}

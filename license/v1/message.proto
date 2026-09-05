@@ -1,0 +1,113 @@
+// License domain messages (entities / value objects).
+syntax = "proto3";
+
+package license.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "license/v1/enums.proto";
+
+// DeviceSlotInfo describes one device occupying a slot. `name` is reserved
+// for a future device-name source; the server never sets it today.
+message DeviceSlotInfo {
+  string device_token = 1;
+  string fingerprint_id = 2;
+  google.protobuf.Timestamp first_seen_at = 3;
+  google.protobuf.Timestamp last_seen_at = 4;
+  optional string name = 5;
+}
+
+// SlotSummary reports concurrent-slot usage after activate.
+message SlotSummary {
+  int32 used = 1;
+  int32 max = 2;
+  repeated DeviceSlotInfo devices = 3;
+}
+
+message HealthChecks {
+  bool db = 1;
+  bool signing = 2;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Error detail messages — attached to gRPC status details by the error
+// interceptor; the future HTTP gateway flattens them into the error body.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// SlotLimitInfo accompanies SLOT_LIMIT (409) so the client can render the
+// device chooser.
+message SlotLimitInfo {
+  int32 max_slots = 1;
+  repeated DeviceSlotInfo devices = 2;
+}
+
+// RetryAfterInfo accompanies RATE_LIMITED (429); the gateway maps it to the
+// Retry-After header.
+message RetryAfterInfo {
+  int32 seconds = 1;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin-facing messages (LicenseAdminService)
+// {key_id} accepts the licenseId ("lk_" + 32 hex) or the full 64-hex key_hash.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// EntitlementInput is one grant entry for CreateKey / GrantModule.
+// For subscription/trial: exactly one of duration_days (extend from
+// max(now, current expires_at)) or expires_at (absolute override).
+// For perpetual: neither may be set.
+message EntitlementInput {
+  Module module = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  EntitlementKind kind = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // 0 = unset (perpetual grants carry no duration); the service enforces the
+  // exactly-one-of rule against expires_at.
+  int32 duration_days = 3 [(buf.validate.field).int32 = {
+    gte: 0
+    lte: 3650
+  }];
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+// EntitlementInfo is the read-side view of one module entitlement.
+// perpetual ⇒ expires_at unset; subscription/trial ⇒ expires_at always set.
+message EntitlementInfo {
+  Module module = 1;
+  EntitlementKind kind = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  google.protobuf.Timestamp granted_at = 4;
+}
+
+// KeyInfo never contains the plaintext key — only license_id/key_prefix.
+message KeyInfo {
+  string license_id = 1;
+  string key_prefix = 2; // first 8 chars of the normalized key, for support
+  string label = 3;
+  int32 max_slots = 4;
+  int32 used_slots = 5;
+  KeyStatus status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp revoked_at = 8;
+  repeated EntitlementInfo entitlements = 9;
+  repeated DeviceSlotInfo devices = 10; // populated by ShowKey only
+}
+
+message TrialInfo {
+  string fingerprint_id = 1;
+  Module module = 2;
+  google.protobuf.Timestamp started_at = 3;
+  google.protobuf.Timestamp expires_at = 4;
+  string first_device_token = 5; // audit only
+}
+
+// SigningKeyInfo describes one signing key (single-key deployments list one;
+// rotation / per-build shards list more).
+message SigningKeyInfo {
+  string key_id = 1;
+  string public_key_b64 = 2;
+}

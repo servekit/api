@@ -1,0 +1,94 @@
+// Messaging domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package messaging.v1;
+
+// MessageStatus represents the delivery status of a message.
+enum MessageStatus {
+  // UNSPECIFIED — never persisted.
+  MESSAGE_STATUS_UNSPECIFIED = 0;
+
+  // PENDING — send in progress. Reserved for future async-send flow;
+  // the sync flow does NOT write PENDING (currently unused).
+  MESSAGE_STATUS_PENDING = 1;
+
+  // SENT — the vendor synchronously accepted the send request.
+  // For SMS: vendor API returned OK; does NOT mean handset received
+  //          (async delivery is not tracked yet).
+  // For email: SMTP server accepted the message.
+  MESSAGE_STATUS_SENT = 2;
+
+  // FAILED — the vendor rejected the request, network/transport failed,
+  // or context was cancelled. error_message carries the last error.
+  MESSAGE_STATUS_FAILED = 3;
+}
+
+// EmailVendor represents the email service brand. Each vendor offers SMTP
+// access today; an API path may be added per-vendor in the future. Vendor
+// is an audit label and (vendor, account) selection key — the underlying
+// transport is always SMTP. Vendors are configured in config.yaml; selecting
+// one with an unconfigured account returns ErrBadRequest.
+enum EmailVendor {
+  EMAIL_VENDOR_UNSPECIFIED = 0;
+  EMAIL_VENDOR_ALIYUN = 1; // Aliyun DirectMail.
+  EMAIL_VENDOR_TENCENT = 2; // Tencent SES.
+  EMAIL_VENDOR_NETEASE = 3; // NetEase EasyMail.
+}
+
+// SmsVendor represents the SMS service brand. Path capabilities differ:
+//   - Domestic (CN) vendors: template-based only; raw content rejected.
+//   - International vendors split into:
+//       * raw-content (ALIYUN, VOLCENGINE intl, ...): caller supplies Content.
+//       * template-based (TENCENT intl, BYTEPLUS): caller supplies TemplateID + Params.
+// The service picks a path automatically from the destination region_code,
+// unless the request explicitly sets vendor + account.
+enum SmsVendor {
+  SMS_VENDOR_UNSPECIFIED = 0;
+  SMS_VENDOR_ALIYUN = 1; // Aliyun (domestic + intl SendMessageToGlobe).
+  SMS_VENDOR_TENCENT = 2; // Tencent Cloud SMS (domestic + intl via SdkAppid).
+  SMS_VENDOR_VOLCENGINE = 3; // ByteDance Volcengine SMS.
+  SMS_VENDOR_BYTEPLUS = 4; // Byteplus (intl-only, template-based).
+  SMS_VENDOR_HUAWEI = 5; // Huawei Cloud SMS.
+}
+
+// EmailScene represents the business purpose of an email. Required on every
+// send. Used for audit, filtering, and stats grouping — NOT for routing
+// (vendor selection is independent of scene).
+enum EmailScene {
+  EMAIL_SCENE_UNSPECIFIED = 0;
+  EMAIL_SCENE_LOGIN_CODE = 1; // One-time login verification code.
+  EMAIL_SCENE_FORGOT_PASSWORD = 2; // Password reset link / code.
+  EMAIL_SCENE_REGISTER = 3; // Registration verification code.
+  EMAIL_SCENE_CHANGE_PASSWORD = 4; // Confirmation of password change.
+  EMAIL_SCENE_BIND_ACCOUNT = 5; // Bind a new email/identity to an account.
+  EMAIL_SCENE_NOTIFICATION = 6; // Generic transactional notification.
+  EMAIL_SCENE_VERIFY_EMAIL = 7; // Verify ownership of an email address.
+}
+
+// SmsScene represents the business purpose of an SMS. Required on every send.
+// Mirrors EmailScene; VERIFY_PHONE is the SMS counterpart of VERIFY_EMAIL
+// (cross-channel pairs like VERIFY_EMAIL+SMS are rejected by SendSMS).
+enum SmsScene {
+  SMS_SCENE_UNSPECIFIED = 0;
+  SMS_SCENE_LOGIN_CODE = 1; // One-time login verification code.
+  SMS_SCENE_FORGOT_PASSWORD = 2; // Password reset code.
+  SMS_SCENE_REGISTER = 3; // Registration verification code.
+  SMS_SCENE_CHANGE_PASSWORD = 4; // Confirmation of password change.
+  SMS_SCENE_BIND_ACCOUNT = 5; // Bind a new phone to an account.
+  SMS_SCENE_VERIFY_PHONE = 6; // Verify ownership of a phone number.
+}
+
+// SortField selects the column used to order List responses.
+// Only CREATED_AT is currently defined; future versions may add more.
+enum SortField {
+  SORT_FIELD_UNSPECIFIED = 0;
+  SORT_FIELD_CREATED_AT = 1;
+}
+
+// SortDirection selects ascending or descending order. UNSPECIFIED must be
+// treated as DESC by the service layer (preserves current behavior).
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

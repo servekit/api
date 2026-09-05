@@ -1,0 +1,18 @@
+// Testkit domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package testkit.v1;
+
+// ImageProcessType mirrors the nested storage-service ImageProcessOp.Type enum,
+// lifted to top level here so the generated swagger exposes a real named enum.
+// Values are identical, so the testkit↔storagev1 conversion is a plain int cast
+// (storagev1.ImageProcessOp_TYPE(req.GetType())).
+enum ImageProcessType {
+  IMAGE_PROCESS_TYPE_UNSPECIFIED = 0;
+  IMAGE_PROCESS_TYPE_RESIZE = 1;
+  IMAGE_PROCESS_TYPE_CROP = 2;
+  IMAGE_PROCESS_TYPE_QUALITY = 3;
+  IMAGE_PROCESS_TYPE_FORMAT = 4;
+  IMAGE_PROCESS_TYPE_WATERMARK = 5;
+  IMAGE_PROCESS_TYPE_ROTATE = 6;
+}

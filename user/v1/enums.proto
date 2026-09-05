@@ -1,0 +1,126 @@
+// User domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package user.v1;
+
+// ==================== Enums ====================
+
+// UserStatus is the account lifecycle state.
+//   - ACTIVE: account can log in (default after Register / SocialLogin / MiniProgramLogin).
+//   - DISABLED: account blocked; Login returns ErrUserDisabled.
+//   - PENDING_REVIEW: account created via CreateUser; user must call ChangePassword
+//     with the initial password to flip to ACTIVE before Login is accepted.
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_DISABLED = 2;
+  USER_STATUS_PENDING_REVIEW = 3;
+}
+
+// Gender is the user's self-reported gender. Stored as-is; no business logic
+// branches on it.
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+  GENDER_OTHER = 3;
+  GENDER_UNKNOWN = 4;
+}
+
+// IdentityProvider identifies which login system a UserIdentity row belongs to.
+// Referenced by: Register.provider, BindIdentity.provider, SocialLogin.provider,
+// MiniProgramLogin (implicit WECHAT_MINIPROGRAM), and User.register_source.
+//
+// Storage note: PHONE identities store ProviderUID as "<region_code>|<phone>"
+// (e.g. "CN|13800138000") so a single index covers region + local number.
+//
+// ADMIN is not a real login method — it tags identities created by the
+// CreateUser RPC for audit purposes; Login never uses it.
+enum IdentityProvider {
+  IDENTITY_PROVIDER_UNSPECIFIED = 0;
+  IDENTITY_PROVIDER_EMAIL = 1;
+  IDENTITY_PROVIDER_PHONE = 2;
+  IDENTITY_PROVIDER_GITHUB = 3;
+  IDENTITY_PROVIDER_GOOGLE = 4;
+  IDENTITY_PROVIDER_WECHAT = 5; // WeChat web OAuth (redirect-based).
+  IDENTITY_PROVIDER_APPLE = 6;
+  IDENTITY_PROVIDER_WECHAT_MINIPROGRAM = 7;
+  IDENTITY_PROVIDER_ADMIN = 8; // Audit tag for CreateUser; not a login method.
+}
+
+// LoginMethod is the authentication strategy for the Login RPC.
+// PASSWORD methods verify a stored bcrypt hash; CODE methods verify a one-time
+// code from SendVerificationCode(purpose=LOGIN) and auto-register when the
+// identity is missing (response.is_new=true).
+enum LoginMethod {
+  LOGIN_METHOD_UNSPECIFIED = 0;
+  LOGIN_METHOD_EMAIL_PASSWORD = 1;
+  LOGIN_METHOD_PHONE_PASSWORD = 2;
+  LOGIN_METHOD_PHONE_CODE = 3; // Auto-registers on missing identity.
+  LOGIN_METHOD_EMAIL_CODE = 4; // Auto-registers on missing identity.
+  LOGIN_METHOD_USERNAME_PASSWORD = 5;
+}
+
+// VerificationChannel is the delivery channel for SendVerificationCode.
+// Decides which message-service API is called (SendEmail vs SendSMS) and which
+// template fields the request must supply.
+enum VerificationChannel {
+  VERIFICATION_CHANNEL_UNSPECIFIED = 0;
+  VERIFICATION_CHANNEL_EMAIL = 1;
+  VERIFICATION_CHANNEL_SMS = 2;
+}
+
+// VerificationPurpose binds a SendVerificationCode call to its consuming RPC,
+// preventing cross-context replay (e.g. a REGISTER code being reused to log in).
+// The (purpose, channel) pair must map to a valid scene in message-service —
+// e.g. VERIFY_PHONE on the EMAIL channel is rejected.
+enum VerificationPurpose {
+  VERIFICATION_PURPOSE_UNSPECIFIED = 0;
+  VERIFICATION_PURPOSE_REGISTER = 1; // Consumed by Register.
+  VERIFICATION_PURPOSE_LOGIN = 2; // Consumed by Login (code methods).
+  VERIFICATION_PURPOSE_VERIFY_EMAIL = 3; // EMAIL channel only.
+  VERIFICATION_PURPOSE_VERIFY_PHONE = 4; // SMS channel only.
+  VERIFICATION_PURPOSE_PASSWORD_RESET = 5; // Consumed by ResetPassword (TBD).
+  VERIFICATION_PURPOSE_BIND = 6; // Consumed by BindIdentity (TBD).
+}
+
+// DeviceType categorizes the client device for session and audit metadata.
+// Inferred at login time from request headers / user-agent by the API gateway
+// and passed through.
+enum DeviceType {
+  DEVICE_TYPE_UNSPECIFIED = 0;
+  DEVICE_TYPE_WEB = 1;
+  DEVICE_TYPE_IOS = 2;
+  DEVICE_TYPE_ANDROID = 3;
+  DEVICE_TYPE_API = 4; // Machine-to-machine / direct API token (no UA).
+}
+
+// LoginAction classifies an entry in the login audit log (UserLoginLog.action).
+// Set by user-service at login time — callers never pass this value.
+enum LoginAction {
+  LOGIN_ACTION_UNSPECIFIED = 0;
+  LOGIN_ACTION_LOGIN = 1; // Successful password Login.
+  LOGIN_ACTION_REGISTER = 2; // Register RPC or code-login auto-register.
+  LOGIN_ACTION_SOCIAL_LOGIN = 3; // SocialLogin on an existing user.
+  LOGIN_ACTION_SOCIAL_REGISTER = 4; // SocialLogin / MiniProgramLogin on a new user.
+  LOGIN_ACTION_BIND = 5; // BindIdentity (planned).
+  LOGIN_ACTION_UNBIND = 6; // UnbindIdentity (planned).
+}
+
+// UserType separates external end users from internal platform users
+// (staff, operations, ...). Set at creation time; not user-editable.
+enum UserType {
+  USER_TYPE_UNSPECIFIED = 0;
+  USER_TYPE_NORMAL = 1; // External end user (default).
+  USER_TYPE_INTERNAL = 2; // Platform internal user (staff, operations, etc.).
+}
+
+// UserSortField is the sort column for ListUsers / ListUsersPaged.
+// Default (UNSPECIFIED + descending=false) is equivalent to ID ascending.
+enum UserSortField {
+  USER_SORT_FIELD_UNSPECIFIED = 0;
+  USER_SORT_FIELD_ID = 1; // Default: snowflake id ascending.
+  USER_SORT_FIELD_CREATED_AT = 2;
+  USER_SORT_FIELD_UPDATED_AT = 3;
+  USER_SORT_FIELD_LAST_LOGIN_AT = 4;
+}

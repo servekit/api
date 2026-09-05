@@ -1,0 +1,22 @@
+// Package common.v1 holds types shared by two or more domains (the bar for
+// entry: referenced by >= 2 domains — see README). Keep it deliberately
+// small; domain-owned types stay in their own package.
+syntax = "proto3";
+
+package common.v1;
+
+// Pong is the standard health-check response shared by every servekit
+// service's Ping RPC — only public, non-sensitive info (service name, build
+// version, status, timestamps). Never include internal addresses, IPs, env
+// vars, secrets, or dependency topology here.
+message Pong {
+  string service = 1; // service name, e.g. "user-service"
+  string version = 2; // semantic version (ldflags; "dev" by default)
+  string git_commit = 3; // short commit hash (ldflags or VCS-embedded)
+  string git_branch = 4; // git branch (ldflags)
+  string build_time = 5; // build time, RFC3339 UTC (ldflags)
+  string go_version = 6; // Go toolchain version (runtime, not injected)
+  string status = 7; // "SERVING" when serving normally
+  int64 now = 8; // server time, Unix millis
+  int64 started_at = 9; // process start time, Unix millis (client computes uptime)
+}

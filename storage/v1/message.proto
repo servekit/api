@@ -1,0 +1,173 @@
+// Storage domain messages (entities / value objects).
+syntax = "proto3";
+
+package storage.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/struct.proto";
+import "storage/v1/enums.proto";
+
+// Owner identifies the owner of a resource (user, group, business, etc.).
+message Owner {
+  OwnerType owner_type = 1 [(buf.validate.field).enum = {defined_only: true}];
+  int64 owner_id = 2 [(buf.validate.field).int64 = {gt: 0}];
+}
+
+message UploadFileMeta {
+  string md5 = 1 [(buf.validate.field).string = {len: 32}];
+  int64 size = 2 [(buf.validate.field).int64 = {gt: 0}];
+  string filename = 3 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  string content_type = 4 [(buf.validate.field).string = {min_len: 1}];
+  string file_path = 5;
+  string description = 6;
+  map<string, string> metadata = 7;
+}
+
+message UploadCredentialItem {
+  oneof result {
+    UploadTokenInfo token = 1;
+    ItemError error = 2;
+  }
+}
+
+// UploadTokenInfo carries either an upload_token (client must ConfirmUpload
+// after the upload) or a file_id when MD5 dedup hit (instant upload).
+message UploadTokenInfo {
+  string upload_token = 1;
+  int64 expires_at = 2;
+  // file_id is set when MD5 dedup hit (instant). upload_token is empty in that case.
+  int64 file_id = 3;
+  // object_key is the full OSS object path the client must PUT to (e.g.
+  // "<keyPrefix>/<md5[:2]>/<md5>"). Empty when file_id is set (instant dedup,
+  // no upload needed). Single-file GetSTSCredential callers read object_key
+  // from the top-level response; batch callers read it from each item.
+  string object_key = 4;
+}
+
+message ItemError {
+  int32 index = 1;
+  string code = 2;
+  string message = 3;
+}
+
+// Image Processing
+
+message ImageProcessOp {
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    TYPE_RESIZE = 1;
+    TYPE_CROP = 2;
+    TYPE_QUALITY = 3;
+    TYPE_FORMAT = 4;
+    TYPE_WATERMARK = 5;
+    TYPE_ROTATE = 6;
+  }
+  Type type = 1;
+  int32 width = 2;
+  int32 height = 3;
+  ImageFormat format = 4;
+  int32 quality = 5;
+  ImageResizeMode resize_mode = 6;
+  string watermark_text = 7;
+  int32 rotate_degrees = 8;
+}
+
+message QuotaInfo {
+  int64 total_bytes = 1;
+  int64 used_bytes = 2;
+  int64 available_bytes = 3;
+  int32 file_count = 4;
+}
+
+// File Info
+
+message UserFileInfo {
+  int64 id = 1;
+  string filename = 2;
+  string file_path = 3;
+  string description = 4;
+  map<string, string> metadata = 5;
+  bool is_public = 6;
+  OwnerType owner_type = 7;
+  int64 size = 10;
+  string content_type = 11;
+  string extension = 12;
+  string md5 = 13;
+  string created_at = 20;
+  string updated_at = 21;
+}
+
+message AdminFileInfo {
+  int64 id = 1;
+  OwnerType owner_type = 2;
+  int64 owner_id = 3;
+  string filename = 4;
+  string file_path = 5;
+  string description = 6;
+  map<string, string> metadata = 7;
+  bool is_public = 8;
+  int64 object_id = 9;
+  int64 size = 10;
+  string content_type = 11;
+  string extension = 12;
+  string md5 = 13;
+  string provider = 14;
+  string bucket = 15;
+  string object_key = 16;
+  string created_at = 20;
+  string updated_at = 21;
+}
+
+message OwnerStats {
+  OwnerType owner_type = 1;
+  int64 file_count = 2;
+  int64 total_bytes = 3;
+}
+
+message ProviderStats {
+  string provider = 1;
+  int64 object_count = 2;
+  int64 total_bytes = 3;
+}
+
+message BucketStats {
+  string bucket = 1;
+  int64 object_count = 2;
+  int64 total_bytes = 3;
+  int64 file_count = 4;
+}
+
+message ProviderInfo {
+  string name = 1;
+  Vendor vendor = 2;
+  string endpoint = 3;
+  string region = 4;
+}
+
+message BucketInfo {
+  string name = 1;
+  string provider = 2;
+  string key_prefix = 3;
+  BucketACL acl = 4;
+  Vendor vendor = 5;
+}
+
+// Audit Log
+
+message AuditLogEntry {
+  int64 id = 1;
+  AuditAction action = 2;
+  OwnerType owner_type = 3;
+  int64 owner_id = 4;
+  AuditLogTargetType target_type = 5;
+  int64 target_id = 6;
+  google.protobuf.Struct before = 7;
+  google.protobuf.Struct after = 8;
+  AuditLogStatus status = 9;
+  string error_message = 10;
+  string request_id = 11;
+  string created_at = 12;
+}

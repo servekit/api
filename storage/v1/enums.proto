@@ -1,0 +1,127 @@
+// Storage domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package storage.v1;
+
+// OwnerType classifies who owns a file (user, system, group, etc.).
+enum OwnerType {
+  OWNER_TYPE_UNSPECIFIED = 0;
+  OWNER_TYPE_USER = 1;
+  OWNER_TYPE_SYSTEM = 2;
+  OWNER_TYPE_GROUP = 3;
+  OWNER_TYPE_BUSINESS = 4;
+  OWNER_TYPE_SERVICE = 5;
+}
+
+// Vendor classifies storage backends (cloud storage providers).
+enum Vendor {
+  VENDOR_UNSPECIFIED = 0;
+  VENDOR_ALIYUN_OSS = 1;
+  VENDOR_AWS_S3 = 2;
+  VENDOR_S3_COMPATIBLE = 3;
+  VENDOR_TENCENT_COS = 4;
+  VENDOR_HUAWEI_OBS = 5;
+  VENDOR_VOLCENGINE_TOS = 6;
+}
+
+// StorageClass represents cloud storage tiers.
+enum StorageClass {
+  STORAGE_CLASS_UNSPECIFIED = 0;
+  STORAGE_CLASS_STANDARD = 1;
+  STORAGE_CLASS_INFREQUENT_ACCESS = 2;
+  STORAGE_CLASS_ARCHIVE = 3;
+  STORAGE_CLASS_DEEP_ARCHIVE = 4;
+}
+
+// BucketACL represents bucket access control levels.
+enum BucketACL {
+  BUCKET_ACL_UNSPECIFIED = 0;
+  BUCKET_ACL_PRIVATE = 1;
+  BUCKET_ACL_PUBLIC_READ = 2;
+  BUCKET_ACL_PUBLIC_READ_WRITE = 3;
+}
+
+// ImageResizeMode controls how images are resized.
+enum ImageResizeMode {
+  IMAGE_RESIZE_MODE_UNSPECIFIED = 0;
+  IMAGE_RESIZE_MODE_FIT = 1; // lfit — fit within bounds
+  IMAGE_RESIZE_MODE_FILL = 2; // fill — crop to fill
+  IMAGE_RESIZE_MODE_PAD = 3; // pad — fit with padding
+}
+
+// ImageFormat represents output image formats.
+enum ImageFormat {
+  IMAGE_FORMAT_UNSPECIFIED = 0;
+  IMAGE_FORMAT_JPG = 1;
+  IMAGE_FORMAT_PNG = 2;
+  IMAGE_FORMAT_WEBP = 3;
+  IMAGE_FORMAT_GIF = 4;
+  IMAGE_FORMAT_BMP = 5;
+  IMAGE_FORMAT_HEIC = 6;
+  IMAGE_FORMAT_AVIF = 7;
+}
+
+// SortField controls list ordering.
+enum SortField {
+  SORT_FIELD_UNSPECIFIED = 0;
+  SORT_FIELD_CREATED_AT = 1;
+  SORT_FIELD_FILENAME = 2;
+  SORT_FIELD_SIZE = 3;
+}
+
+// AuditAction represents types of auditable operations.
+enum AuditAction {
+  AUDIT_ACTION_UNSPECIFIED = 0;
+  AUDIT_ACTION_UPLOAD = 1;
+  AUDIT_ACTION_UPDATE = 2;
+  AUDIT_ACTION_DELETE = 3;
+  AUDIT_ACTION_BATCH_DELETE = 4;
+  AUDIT_ACTION_ADMIN_DELETE = 5;
+  AUDIT_ACTION_ADMIN_SET_QUOTA = 6;
+  AUDIT_ACTION_ADMIN_SOFT_DELETE_OWNER = 7;
+  AUDIT_ACTION_ADMIN_DELETE_OWNER = 8;
+  AUDIT_ACTION_SET_OWNER_QUOTA = 9;
+  AUDIT_ACTION_ADD_OWNER_QUOTA = 10;
+  AUDIT_ACTION_UPLOAD_SESSION_CREATE = 11;
+  AUDIT_ACTION_UPLOAD_SESSION_CONFIRM = 12;
+  AUDIT_ACTION_UPLOAD_SESSION_CANCEL = 13;
+  AUDIT_ACTION_UPLOAD_SESSION_GC = 14;
+}
+
+// UploadSessionStatus represents the lifecycle state of an upload session.
+enum UploadSessionStatus {
+  UPLOAD_SESSION_STATUS_UNSPECIFIED = 0;
+  UPLOAD_SESSION_STATUS_PENDING = 1;
+  UPLOAD_SESSION_STATUS_CONFIRMED = 2;
+  UPLOAD_SESSION_STATUS_EXPIRED = 3;
+  UPLOAD_SESSION_STATUS_CANCELLED = 4;
+}
+
+// Visibility declares the intended audience class of an upload (avatar /
+// cover style "public resource" vs. default private). It maps to BUCKETS, not
+// per-file ACLs: objects are content-addressed and deduplicated globally, so
+// a physical object cannot be public for one referencing file and private
+// for another — bucket-level visibility is the only coherent granularity.
+// PUBLIC uploads land in the configured public bucket (public-read / CDN);
+// PRIVATE (and UNSPECIFIED, for backward compatibility) keep today's
+// behavior: the requested bucket, or the default bucket when unset.
+enum Visibility {
+  VISIBILITY_UNSPECIFIED = 0;
+  VISIBILITY_PUBLIC = 1;
+  VISIBILITY_PRIVATE = 2;
+}
+
+// AuditLogStatus represents the result of an audited operation.
+enum AuditLogStatus {
+  AUDIT_LOG_STATUS_UNSPECIFIED = 0;
+  AUDIT_LOG_STATUS_SUCCESS = 1;
+  AUDIT_LOG_STATUS_FAILED = 2;
+}
+
+// AuditLogTargetType represents the kind of resource an audited operation touched.
+enum AuditLogTargetType {
+  AUDIT_LOG_TARGET_TYPE_UNSPECIFIED = 0;
+  AUDIT_LOG_TARGET_TYPE_FILE = 1;
+  AUDIT_LOG_TARGET_TYPE_QUOTA = 2;
+  AUDIT_LOG_TARGET_TYPE_OWNER = 3;
+}

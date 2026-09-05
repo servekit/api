@@ -1,0 +1,67 @@
+// License service definitions — RPC declarations only.
+syntax = "proto3";
+
+package license.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+import "license/v1/request_response.proto";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Services
+// ─────────────────────────────────────────────────────────────────────────────
+
+// LicenseService is the client-facing activation surface. This service runs
+// gRPC-only; the HTTP routing contract for the (future standalone) gateway is
+// recorded in docs/wire-contract.md §0 — the gateway owns its own mapping.
+service LicenseService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+
+  // Activate is the idempotent converger: first activation, 24h heartbeat,
+  // fingerprint rebind, entitlement refresh, and evict-retry all funnel here.
+  rpc Activate(ActivateRequest) returns (ActivateResponse);
+
+  // Deactivate releases the caller's slot. Idempotent: 200 with
+  // released=false when the device was never in a slot.
+  rpc Deactivate(DeactivateRequest) returns (DeactivateResponse);
+
+  // TrialStart starts or resumes a keyless trial by (fingerprint_id, module).
+  rpc TrialStart(TrialStartRequest) returns (TrialStartResponse);
+
+  // Health reports DB reachability and signing-key readiness.
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+// LicenseAdminService is the operator surface (key issuance, entitlement and
+// device management, trial resets, pubkey introspection). Every RPC requires
+// `Authorization: Bearer <ADMIN_TOKEN>`; the deployment layer additionally
+// keeps these paths off the public edge.
+service LicenseAdminService {
+  rpc CreateKey(CreateKeyRequest) returns (CreateKeyResponse);
+
+  rpc ShowKey(ShowKeyRequest) returns (ShowKeyResponse);
+
+  rpc ListKeys(ListKeysRequest) returns (ListKeysResponse);
+
+  rpc UpdateKey(UpdateKeyRequest) returns (UpdateKeyResponse);
+
+  rpc RevokeKey(RevokeKeyRequest) returns (RevokeKeyResponse);
+
+  rpc UnrevokeKey(UnrevokeKeyRequest) returns (UnrevokeKeyResponse);
+
+  rpc DeleteKey(DeleteKeyRequest) returns (DeleteKeyResponse);
+
+  rpc GrantModule(GrantModuleRequest) returns (GrantModuleResponse);
+
+  rpc RevokeModule(RevokeModuleRequest) returns (RevokeModuleResponse);
+
+  rpc ListKeyDevices(ListKeyDevicesRequest) returns (ListKeyDevicesResponse);
+
+  rpc KickDevice(KickDeviceRequest) returns (KickDeviceResponse);
+
+  rpc ShowTrial(ShowTrialRequest) returns (ShowTrialResponse);
+
+  rpc ResetTrial(ResetTrialRequest) returns (ResetTrialResponse);
+
+  rpc ShowPubKey(ShowPubKeyRequest) returns (ShowPubKeyResponse);
+}

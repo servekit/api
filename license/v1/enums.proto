@@ -1,0 +1,39 @@
+// License domain enums. Owned by this domain; enums referenced by >= 2 domains belong in common/v1 instead.
+syntax = "proto3";
+
+package license.v1;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums — enums live in proto, DB stores the underlying int32, and the
+// int32↔enum cast happens at the store boundary inside the service layer.
+// json_name pins the wire names the client contract uses ("downloads",
+// "perpetual", ...) for both protojson marshal and unmarshal.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Module is a sellable module. player/storage/sound/environment/settings are
+// always free and never enter the entitlement system. The client-facing
+// trial/start request carries the module as the lowercase wire name
+// ("downloads"/"tools", matching the client contract) and converts at the
+// service boundary.
+enum Module {
+  MODULE_UNSPECIFIED = 0;
+  MODULE_DOWNLOADS = 1;
+  MODULE_TOOLS = 2;
+}
+
+// EntitlementKind is the billing model of an entitlement entry.
+enum EntitlementKind {
+  ENTITLEMENT_KIND_UNSPECIFIED = 0;
+  ENTITLEMENT_KIND_PERPETUAL = 1;
+  ENTITLEMENT_KIND_SUBSCRIPTION = 2;
+  ENTITLEMENT_KIND_TRIAL = 3;
+}
+
+// KeyStatus is the lifecycle state of a license key. Revocation is a soft
+// state (rows kept); devices/entitlements survive and slots reattach on
+// unrevoke.
+enum KeyStatus {
+  KEY_STATUS_UNSPECIFIED = 0;
+  KEY_STATUS_ACTIVE = 1;
+  KEY_STATUS_REVOKED = 2;
+}
