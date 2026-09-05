@@ -21,7 +21,7 @@ gen:
 		gen/openapi/user gen/openapi/testkit/v1/enums.swagger.json \
 		gen/openapi/testkit/v1/message.swagger.json \
 		gen/openapi/testkit/v1/request_response.swagger.json
-	printf 'module github.com/servekit/api/gen/go\n\ngo 1.26.1\n' > gen/go/go.mod
+	printf 'module github.com/servekit/api/gen/go\n\ngo 1.26.6\n' > gen/go/go.mod
 	cd gen/go && go mod tidy && go build ./...
 
 ## lint: buf lint over the whole module.
