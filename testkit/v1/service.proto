@@ -732,4 +732,9 @@ service TestkitService {
       body: "*"
     };
   }
+  rpc GetCountryProfile(reference.v1.GetCountryProfileRequest) returns (reference.v1.GetCountryProfileResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/reference/countries/{country_code}/profile"
+    };
+  }
 }

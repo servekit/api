@@ -165,6 +165,7 @@ const (
 	TestkitService_ListRegionGroups_FullMethodName          = "/testkit.v1.TestkitService/ListRegionGroups"
 	TestkitService_ParsePhone_FullMethodName                = "/testkit.v1.TestkitService/ParsePhone"
 	TestkitService_ResolveCodes_FullMethodName              = "/testkit.v1.TestkitService/ResolveCodes"
+	TestkitService_GetCountryProfile_FullMethodName         = "/testkit.v1.TestkitService/GetCountryProfile"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -337,6 +338,7 @@ type TestkitServiceClient interface {
 	ListRegionGroups(ctx context.Context, in *v11.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v11.ListRegionGroupsResponse, error)
 	ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error)
 	ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error)
+	GetCountryProfile(ctx context.Context, in *v11.GetCountryProfileRequest, opts ...grpc.CallOption) (*v11.GetCountryProfileResponse, error)
 }
 
 type testkitServiceClient struct {
@@ -1757,6 +1759,16 @@ func (c *testkitServiceClient) ResolveCodes(ctx context.Context, in *v11.Resolve
 	return out, nil
 }
 
+func (c *testkitServiceClient) GetCountryProfile(ctx context.Context, in *v11.GetCountryProfileRequest, opts ...grpc.CallOption) (*v11.GetCountryProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.GetCountryProfileResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetCountryProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TestkitServiceServer is the server API for TestkitService service.
 // All implementations must embed UnimplementedTestkitServiceServer
 // for forward compatibility.
@@ -1927,6 +1939,7 @@ type TestkitServiceServer interface {
 	ListRegionGroups(context.Context, *v11.ListRegionGroupsRequest) (*v11.ListRegionGroupsResponse, error)
 	ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error)
 	ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error)
+	GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -2359,6 +2372,9 @@ func (UnimplementedTestkitServiceServer) ParsePhone(context.Context, *v11.ParseP
 }
 func (UnimplementedTestkitServiceServer) ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ResolveCodes not implemented")
+}
+func (UnimplementedTestkitServiceServer) GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCountryProfile not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
 func (UnimplementedTestkitServiceServer) testEmbeddedByValue()                        {}
@@ -4919,6 +4935,24 @@ func _TestkitService_ResolveCodes_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_GetCountryProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.GetCountryProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).GetCountryProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_GetCountryProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).GetCountryProfile(ctx, req.(*v11.GetCountryProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TestkitService_ServiceDesc is the grpc.ServiceDesc for TestkitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5489,6 +5523,10 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResolveCodes",
 			Handler:    _TestkitService_ResolveCodes_Handler,
+		},
+		{
+			MethodName: "GetCountryProfile",
+			Handler:    _TestkitService_GetCountryProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

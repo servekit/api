@@ -3865,6 +3865,42 @@
         ]
       }
     },
+    "/api/v1/reference/countries/{countryCode}/profile": {
+      "get": {
+        "operationId": "GetCountryProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCountryProfileResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/reference/currencies": {
       "get": {
         "operationId": "ListCurrencies",
@@ -8018,6 +8054,49 @@
             "type": "string",
             "format": "int64"
           }
+        }
+      }
+    },
+    "v1GetCountryProfileResponse": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "$ref": "#/definitions/v1Country"
+        },
+        "regionGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RegionGroup"
+          },
+          "description": "The country's group chain, continent first then sub-regions\n(e.g. Asia -\u003e Eastern Asia). Empty for territories outside the\nserved hierarchy (e.g. Antarctica sits under the unserved world root)."
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Language"
+          },
+          "description": "Official (incl. de facto official) languages, most-spoken first\n(CLDR territoryInfo); e.g. zh-Hans for CN."
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Currency"
+          },
+          "title": "currently valid in this country"
+        },
+        "timezones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Timezone"
+          },
+          "title": "IANA zones covering this country"
+        },
+        "dataVersion": {
+          "type": "string"
         }
       }
     },
