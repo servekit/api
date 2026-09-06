@@ -35,12 +35,13 @@ const (
 	PhoneType_PHONE_TYPE_FIXED_LINE_OR_MOBILE PhoneType = 3
 	PhoneType_PHONE_TYPE_TOLL_FREE            PhoneType = 4
 	PhoneType_PHONE_TYPE_PREMIUM_RATE         PhoneType = 5
-	PhoneType_PHONE_TYPE_VOIP                 PhoneType = 6
-	PhoneType_PHONE_TYPE_PERSONAL_NUMBER      PhoneType = 7
-	PhoneType_PHONE_TYPE_PAGER                PhoneType = 8
-	PhoneType_PHONE_TYPE_UAN                  PhoneType = 9
-	PhoneType_PHONE_TYPE_VOICE_MAIL           PhoneType = 10
-	PhoneType_PHONE_TYPE_UNKNOWN              PhoneType = 11
+	PhoneType_PHONE_TYPE_SHARED_COST          PhoneType = 6
+	PhoneType_PHONE_TYPE_VOIP                 PhoneType = 7
+	PhoneType_PHONE_TYPE_PERSONAL_NUMBER      PhoneType = 8
+	PhoneType_PHONE_TYPE_PAGER                PhoneType = 9
+	PhoneType_PHONE_TYPE_UAN                  PhoneType = 10
+	PhoneType_PHONE_TYPE_VOICE_MAIL           PhoneType = 11
+	PhoneType_PHONE_TYPE_UNKNOWN              PhoneType = 12
 )
 
 // Enum value maps for PhoneType.
@@ -52,12 +53,13 @@ var (
 		3:  "PHONE_TYPE_FIXED_LINE_OR_MOBILE",
 		4:  "PHONE_TYPE_TOLL_FREE",
 		5:  "PHONE_TYPE_PREMIUM_RATE",
-		6:  "PHONE_TYPE_VOIP",
-		7:  "PHONE_TYPE_PERSONAL_NUMBER",
-		8:  "PHONE_TYPE_PAGER",
-		9:  "PHONE_TYPE_UAN",
-		10: "PHONE_TYPE_VOICE_MAIL",
-		11: "PHONE_TYPE_UNKNOWN",
+		6:  "PHONE_TYPE_SHARED_COST",
+		7:  "PHONE_TYPE_VOIP",
+		8:  "PHONE_TYPE_PERSONAL_NUMBER",
+		9:  "PHONE_TYPE_PAGER",
+		10: "PHONE_TYPE_UAN",
+		11: "PHONE_TYPE_VOICE_MAIL",
+		12: "PHONE_TYPE_UNKNOWN",
 	}
 	PhoneType_value = map[string]int32{
 		"PHONE_TYPE_UNSPECIFIED":          0,
@@ -66,12 +68,13 @@ var (
 		"PHONE_TYPE_FIXED_LINE_OR_MOBILE": 3,
 		"PHONE_TYPE_TOLL_FREE":            4,
 		"PHONE_TYPE_PREMIUM_RATE":         5,
-		"PHONE_TYPE_VOIP":                 6,
-		"PHONE_TYPE_PERSONAL_NUMBER":      7,
-		"PHONE_TYPE_PAGER":                8,
-		"PHONE_TYPE_UAN":                  9,
-		"PHONE_TYPE_VOICE_MAIL":           10,
-		"PHONE_TYPE_UNKNOWN":              11,
+		"PHONE_TYPE_SHARED_COST":          6,
+		"PHONE_TYPE_VOIP":                 7,
+		"PHONE_TYPE_PERSONAL_NUMBER":      8,
+		"PHONE_TYPE_PAGER":                9,
+		"PHONE_TYPE_UAN":                  10,
+		"PHONE_TYPE_VOICE_MAIL":           11,
+		"PHONE_TYPE_UNKNOWN":              12,
 	}
 )
 
@@ -106,21 +109,22 @@ var File_reference_v1_enums_proto protoreflect.FileDescriptor
 
 const file_reference_v1_enums_proto_rawDesc = "" +
 	"\n" +
-	"\x18reference/v1/enums.proto\x12\freference.v1*\xc7\x02\n" +
+	"\x18reference/v1/enums.proto\x12\freference.v1*\xe3\x02\n" +
 	"\tPhoneType\x12\x1a\n" +
 	"\x16PHONE_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11PHONE_TYPE_MOBILE\x10\x01\x12\x19\n" +
 	"\x15PHONE_TYPE_FIXED_LINE\x10\x02\x12#\n" +
 	"\x1fPHONE_TYPE_FIXED_LINE_OR_MOBILE\x10\x03\x12\x18\n" +
 	"\x14PHONE_TYPE_TOLL_FREE\x10\x04\x12\x1b\n" +
-	"\x17PHONE_TYPE_PREMIUM_RATE\x10\x05\x12\x13\n" +
-	"\x0fPHONE_TYPE_VOIP\x10\x06\x12\x1e\n" +
-	"\x1aPHONE_TYPE_PERSONAL_NUMBER\x10\a\x12\x14\n" +
-	"\x10PHONE_TYPE_PAGER\x10\b\x12\x12\n" +
-	"\x0ePHONE_TYPE_UAN\x10\t\x12\x19\n" +
-	"\x15PHONE_TYPE_VOICE_MAIL\x10\n" +
-	"\x12\x16\n" +
-	"\x12PHONE_TYPE_UNKNOWN\x10\vB\xa8\x01\n" +
+	"\x17PHONE_TYPE_PREMIUM_RATE\x10\x05\x12\x1a\n" +
+	"\x16PHONE_TYPE_SHARED_COST\x10\x06\x12\x13\n" +
+	"\x0fPHONE_TYPE_VOIP\x10\a\x12\x1e\n" +
+	"\x1aPHONE_TYPE_PERSONAL_NUMBER\x10\b\x12\x14\n" +
+	"\x10PHONE_TYPE_PAGER\x10\t\x12\x12\n" +
+	"\x0ePHONE_TYPE_UAN\x10\n" +
+	"\x12\x19\n" +
+	"\x15PHONE_TYPE_VOICE_MAIL\x10\v\x12\x16\n" +
+	"\x12PHONE_TYPE_UNKNOWN\x10\fB\xa8\x01\n" +
 	"\x10com.reference.v1B\n" +
 	"EnumsProtoP\x01Z7github.com/servekit/api/gen/go/reference/v1;referencev1\xa2\x02\x03RXX\xaa\x02\fReference.V1\xca\x02\fReference\\V1\xe2\x02\x18Reference\\V1\\GPBMetadata\xea\x02\rReference::V1b\x06proto3"
 
