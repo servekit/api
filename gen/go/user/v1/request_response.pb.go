@@ -2070,15 +2070,19 @@ func (x *ExchangeSessionCodeResponse) GetUserId() int64 {
 // ZSET expiry score (see ListSessions); beyond the live window it is
 // unknowable, so no field would be honest.
 type GetSessionResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	Ip            string                 `protobuf:"bytes,4,opt,name=ip,proto3" json:"ip,omitempty"`
-	UserAgent     string                 `protobuf:"bytes,5,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
-	Os            string                 `protobuf:"bytes,6,opt,name=os,proto3" json:"os,omitempty"`
-	Browser       string                 `protobuf:"bytes,7,opt,name=browser,proto3" json:"browser,omitempty"`
-	LoginMethod   string                 `protobuf:"bytes,8,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	UserId      int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ExpiresAt   *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	CreatedAt   *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Ip          string                 `protobuf:"bytes,4,opt,name=ip,proto3" json:"ip,omitempty"`
+	UserAgent   string                 `protobuf:"bytes,5,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
+	Os          string                 `protobuf:"bytes,6,opt,name=os,proto3" json:"os,omitempty"`
+	Browser     string                 `protobuf:"bytes,7,opt,name=browser,proto3" json:"browser,omitempty"`
+	LoginMethod string                 `protobuf:"bytes,8,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	// The credential subject the session authenticated with.
+	LoginTarget string `protobuf:"bytes,9,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
+	// Hardware identity when known (see Session.device).
+	Device        string `protobuf:"bytes,10,opt,name=device,proto3" json:"device,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2165,6 +2169,20 @@ func (x *GetSessionResponse) GetBrowser() string {
 func (x *GetSessionResponse) GetLoginMethod() string {
 	if x != nil {
 		return x.LoginMethod
+	}
+	return ""
+}
+
+func (x *GetSessionResponse) GetLoginTarget() string {
+	if x != nil {
+		return x.LoginTarget
+	}
+	return ""
+}
+
+func (x *GetSessionResponse) GetDevice() string {
+	if x != nil {
+		return x.Device
 	}
 	return ""
 }
@@ -5327,7 +5345,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x1bExchangeSessionCodeResponse\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\x9f\x02\n" +
+	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xda\x02\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -5339,7 +5357,10 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"user_agent\x18\x05 \x01(\tR\tuserAgent\x12\x0e\n" +
 	"\x02os\x18\x06 \x01(\tR\x02os\x12\x18\n" +
 	"\abrowser\x18\a \x01(\tR\abrowser\x12!\n" +
-	"\flogin_method\x18\b \x01(\tR\vloginMethod\"\xd6\x03\n" +
+	"\flogin_method\x18\b \x01(\tR\vloginMethod\x12!\n" +
+	"\flogin_target\x18\t \x01(\tR\vloginTarget\x12\x16\n" +
+	"\x06device\x18\n" +
+	" \x01(\tR\x06device\"\xd6\x03\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +

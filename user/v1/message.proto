@@ -69,6 +69,15 @@ message Session {
   // ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
   // history from the PG tombstone table.
   SessionStatus status = 11;
+  // How this session authenticated: a LOGIN_METHOD_* value for credential
+  // logins, or an IDENTITY_PROVIDER_* value for social/mini-program ones.
+  // Sensitive operations can demand a stronger re-auth based on it.
+  string login_method = 12;
+  // The credential subject (username/email/phone/oauth uid).
+  string login_target = 13;
+  // Hardware identity when known: iPhone/iPad/Android model (or the
+  // Sec-CH-UA-Model hint); empty when unknowable (desktop web).
+  string device = 14;
 }
 
 message LoginLog {

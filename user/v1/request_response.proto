@@ -420,6 +420,10 @@ message GetSessionResponse {
   string os = 6;
   string browser = 7;
   string login_method = 8;
+  // The credential subject the session authenticated with.
+  string login_target = 9;
+  // Hardware identity when known (see Session.device).
+  string device = 10;
 }
 
 // ==================== Admin ====================

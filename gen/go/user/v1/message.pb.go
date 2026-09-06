@@ -312,7 +312,16 @@ type Session struct {
 	Current      bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
 	// ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
 	// history from the PG tombstone table.
-	Status        SessionStatus `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
+	Status SessionStatus `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
+	// How this session authenticated: a LOGIN_METHOD_* value for credential
+	// logins, or an IDENTITY_PROVIDER_* value for social/mini-program ones.
+	// Sensitive operations can demand a stronger re-auth based on it.
+	LoginMethod string `protobuf:"bytes,12,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	// The credential subject (username/email/phone/oauth uid).
+	LoginTarget string `protobuf:"bytes,13,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
+	// Hardware identity when known: iPhone/iPad/Android model (or the
+	// Sec-CH-UA-Model hint); empty when unknowable (desktop web).
+	Device        string `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -422,6 +431,27 @@ func (x *Session) GetStatus() SessionStatus {
 		return x.Status
 	}
 	return SessionStatus_SESSION_STATUS_UNSPECIFIED
+}
+
+func (x *Session) GetLoginMethod() string {
+	if x != nil {
+		return x.LoginMethod
+	}
+	return ""
+}
+
+func (x *Session) GetLoginTarget() string {
+	if x != nil {
+		return x.LoginTarget
+	}
+	return ""
+}
+
+func (x *Session) GetDevice() string {
+	if x != nil {
+		return x.Device
+	}
+	return ""
 }
 
 type LoginLog struct {
@@ -1136,7 +1166,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\fprovider_uid\x18\x03 \x01(\tR\vproviderUid\x12\x1a\n" +
 	"\bverified\x18\x04 \x01(\bR\bverified\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfe\x02\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xdc\x03\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02ip\x18\x02 \x01(\tR\x02ip\x124\n" +
@@ -1151,7 +1181,10 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
 	" \x01(\bR\acurrent\x12.\n" +
-	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\"\x8e\x04\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x12!\n" +
+	"\flogin_method\x18\f \x01(\tR\vloginMethod\x12!\n" +
+	"\flogin_target\x18\r \x01(\tR\vloginTarget\x12\x16\n" +
+	"\x06device\x18\x0e \x01(\tR\x06device\"\x8e\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
