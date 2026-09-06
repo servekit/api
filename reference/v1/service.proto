@@ -1,0 +1,12 @@
+// Reference service definitions — RPC declarations only. Three-way split
+// per the api repo layout (service / enums / message / request_response).
+syntax = "proto3";
+
+package reference.v1;
+
+import "common/v1/pong.proto";
+import "google/protobuf/empty.proto";
+
+service ReferenceService {
+  rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
+}
