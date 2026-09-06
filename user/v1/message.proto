@@ -80,6 +80,10 @@ message LoginLog {
   string country = 11;
   string city = 12;
   google.protobuf.Timestamp created_at = 13;
+  // The login method used (账号密码/邮箱密码/手机密码/邮箱验证码/手机验证码).
+  // Register rows carry the code method that verified ownership; social
+  // logins have no LoginMethod and stay UNSPECIFIED.
+  LoginMethod method = 14;
 }
 
 // ==================== RBAC: Groups ====================

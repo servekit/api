@@ -413,20 +413,24 @@ func (x *Session) GetCurrent() bool {
 }
 
 type LoginLog struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId        int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Provider      IdentityProvider       `protobuf:"varint,3,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Action        LoginAction            `protobuf:"varint,4,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"`
-	Success       bool                   `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
-	FailReason    string                 `protobuf:"bytes,6,opt,name=fail_reason,json=failReason,proto3" json:"fail_reason,omitempty"`
-	Ip            string                 `protobuf:"bytes,7,opt,name=ip,proto3" json:"ip,omitempty"`
-	DeviceType    DeviceType             `protobuf:"varint,8,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
-	Os            string                 `protobuf:"bytes,9,opt,name=os,proto3" json:"os,omitempty"`
-	Browser       string                 `protobuf:"bytes,10,opt,name=browser,proto3" json:"browser,omitempty"`
-	Country       string                 `protobuf:"bytes,11,opt,name=country,proto3" json:"country,omitempty"`
-	City          string                 `protobuf:"bytes,12,opt,name=city,proto3" json:"city,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Id         int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId     int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Provider   IdentityProvider       `protobuf:"varint,3,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	Action     LoginAction            `protobuf:"varint,4,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"`
+	Success    bool                   `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
+	FailReason string                 `protobuf:"bytes,6,opt,name=fail_reason,json=failReason,proto3" json:"fail_reason,omitempty"`
+	Ip         string                 `protobuf:"bytes,7,opt,name=ip,proto3" json:"ip,omitempty"`
+	DeviceType DeviceType             `protobuf:"varint,8,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
+	Os         string                 `protobuf:"bytes,9,opt,name=os,proto3" json:"os,omitempty"`
+	Browser    string                 `protobuf:"bytes,10,opt,name=browser,proto3" json:"browser,omitempty"`
+	Country    string                 `protobuf:"bytes,11,opt,name=country,proto3" json:"country,omitempty"`
+	City       string                 `protobuf:"bytes,12,opt,name=city,proto3" json:"city,omitempty"`
+	CreatedAt  *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// The login method used (账号密码/邮箱密码/手机密码/邮箱验证码/手机验证码).
+	// Register rows carry the code method that verified ownership; social
+	// logins have no LoginMethod and stay UNSPECIFIED.
+	Method        LoginMethod `protobuf:"varint,14,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -550,6 +554,13 @@ func (x *LoginLog) GetCreatedAt() *timestamppb.Timestamp {
 		return x.CreatedAt
 	}
 	return nil
+}
+
+func (x *LoginLog) GetMethod() LoginMethod {
+	if x != nil {
+		return x.Method
+	}
+	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
 }
 
 type Group struct {
@@ -1107,7 +1118,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12@\n" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
-	" \x01(\bR\acurrent\"\xac\x03\n" +
+	" \x01(\bR\acurrent\"\xda\x03\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -1125,7 +1136,8 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\acountry\x18\v \x01(\tR\acountry\x12\x12\n" +
 	"\x04city\x18\f \x01(\tR\x04city\x129\n" +
 	"\n" +
-	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x9b\x02\n" +
+	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
+	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -1213,6 +1225,7 @@ var file_user_v1_message_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
 	(DeviceType)(0),               // 15: user.v1.DeviceType
 	(LoginAction)(0),              // 16: user.v1.LoginAction
+	(LoginMethod)(0),              // 17: user.v1.LoginMethod
 }
 var file_user_v1_message_proto_depIdxs = []int32{
 	10, // 0: user.v1.User.gender:type_name -> user.v1.Gender
@@ -1231,20 +1244,21 @@ var file_user_v1_message_proto_depIdxs = []int32{
 	16, // 13: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
 	15, // 14: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
 	14, // 15: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	14, // 16: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 17: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 18: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 19: user.v1.Role.permissions:type_name -> user.v1.Permission
-	8,  // 20: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 21: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 22: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 23: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 24: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	17, // 16: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	14, // 17: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	14, // 18: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 19: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 20: user.v1.Role.permissions:type_name -> user.v1.Permission
+	8,  // 21: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
+	14, // 22: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	14, // 23: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 24: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
+	14, // 25: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	26, // [26:26] is the sub-list for method output_type
+	26, // [26:26] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }

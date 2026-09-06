@@ -133,6 +133,8 @@ message LoginLog {
   string country = 11;
   string city = 12;
   google.protobuf.Timestamp created_at = 13;
+  // The login method used; UNSPECIFIED for social logins (see user.v1).
+  user.v1.LoginMethod method = 14;
 }
 
 // UserRole is one role held by a user (direct or group-inherited).

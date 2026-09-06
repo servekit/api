@@ -8655,6 +8655,10 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "method": {
+          "$ref": "#/definitions/v1LoginMethod",
+          "description": "The login method used; UNSPECIFIED for social logins (see user.v1)."
         }
       },
       "description": "LoginLog is one row of the login audit trail."
