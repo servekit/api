@@ -38,6 +38,10 @@ message Currency {
   int32 minor_units = 3;      // 0 (JPY) / 2 (CNY) / 3 (BHD)
   repeated string country_codes = 4; // current official users
   string name = 5;            // display name in the request locale
+  string flag_emoji = 6;      // issuer flag, e.g. "🇨🇳" — derived from the
+                              // code's leading alpha-2 (EUR -> "🇪🇺");
+                              // X-prefixed multi-country codes take their
+                              // first member, no-country codes (XDR) are ""
 }
 
 // RegionGroup is one UN M49 node (continent or sub-region). The world root

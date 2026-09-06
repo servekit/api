@@ -235,6 +235,7 @@ type Currency struct {
 	MinorUnits    int32                  `protobuf:"varint,3,opt,name=minor_units,json=minorUnits,proto3" json:"minor_units,omitempty"`      // 0 (JPY) / 2 (CNY) / 3 (BHD)
 	CountryCodes  []string               `protobuf:"bytes,4,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"` // current official users
 	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                                     // display name in the request locale
+	FlagEmoji     string                 `protobuf:"bytes,6,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`          // issuer flag, e.g. "🇨🇳" — derived from the
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,6 +301,13 @@ func (x *Currency) GetCountryCodes() []string {
 func (x *Currency) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *Currency) GetFlagEmoji() string {
+	if x != nil {
+		return x.FlagEmoji
 	}
 	return ""
 }
@@ -393,14 +401,16 @@ const file_reference_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x04 \x01(\tR\x04name\"0\n" +
 	"\bLanguage\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\x90\x01\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xaf\x01\n" +
 	"\bCurrency\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x16\n" +
 	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12\x1f\n" +
 	"\vminor_units\x18\x03 \x01(\x05R\n" +
 	"minorUnits\x12#\n" +
 	"\rcountry_codes\x18\x04 \x03(\tR\fcountryCodes\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\"{\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x1d\n" +
+	"\n" +
+	"flag_emoji\x18\x06 \x01(\tR\tflagEmoji\"{\n" +
 	"\vRegionGroup\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x1f\n" +
 	"\vparent_code\x18\x02 \x01(\tR\n" +

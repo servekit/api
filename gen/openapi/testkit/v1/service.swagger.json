@@ -7346,6 +7346,10 @@
         "name": {
           "type": "string",
           "title": "display name in the request locale"
+        },
+        "flagEmoji": {
+          "type": "string",
+          "title": "issuer flag, e.g. \"🇨🇳\" — derived from the"
         }
       },
       "description": "Currency is one ISO 4217 currency."
