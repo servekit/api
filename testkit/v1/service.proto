@@ -84,7 +84,12 @@ service TestkitService {
     };
   }
   rpc UnbindIdentity(UnbindIdentityRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/identities/{identity_id}"};
+    // POST (not DELETE): the request body carries the verification code, and
+    // grpc-gateway drops bodies on DELETE (allow_delete_body is off).
+    option (google.api.http) = {
+      post: "/api/v1/identities/{identity_id}:unbind"
+      body: "*"
+    };
   }
 
   // ---- Session (P2) ----
@@ -492,6 +497,9 @@ service TestkitService {
   }
   rpc ListSMSRegions(ListSMSRegionsRequest) returns (ListSMSRegionsResponse) {
     option (google.api.http) = {get: "/api/v1/sms:regions"};
+  }
+  rpc ListRegionCodes(ListRegionCodesRequest) returns (ListRegionCodesResponse) {
+    option (google.api.http) = {get: "/api/v1/region-codes"};
   }
   rpc ListSMSSenders(ListSMSSendersRequest) returns (ListSMSSendersResponse) {
     option (google.api.http) = {get: "/api/v1/sms:senders"};

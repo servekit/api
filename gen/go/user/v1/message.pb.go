@@ -313,15 +313,19 @@ type Session struct {
 	// ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
 	// history from the PG tombstone table.
 	Status SessionStatus `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
-	// How this session authenticated: a LOGIN_METHOD_* value for credential
-	// logins, or an IDENTITY_PROVIDER_* value for social/mini-program ones.
-	// Sensitive operations can demand a stronger re-auth based on it.
-	LoginMethod string `protobuf:"bytes,12,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	// How this session authenticated: the LOGIN_METHOD_* strategy for
+	// credential logins; social/mini-program logins have no LoginMethod and
+	// stay UNSPECIFIED with login_provider carrying the IdP. Sensitive
+	// operations can demand a stronger re-auth based on these.
+	LoginMethod LoginMethod `protobuf:"varint,12,opt,name=login_method,json=loginMethod,proto3,enum=user.v1.LoginMethod" json:"login_method,omitempty"`
 	// The credential subject (username/email/phone/oauth uid).
 	LoginTarget string `protobuf:"bytes,13,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
 	// Hardware identity when known: iPhone/iPad/Android model (or the
 	// Sec-CH-UA-Model hint); empty when unknowable (desktop web).
-	Device        string `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
+	Device string `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
+	// The identity provider for social/mini-program logins (EMAIL/PHONE for
+	// direct registrations); UNSPECIFIED for plain credential logins.
+	LoginProvider IdentityProvider `protobuf:"varint,15,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -433,11 +437,11 @@ func (x *Session) GetStatus() SessionStatus {
 	return SessionStatus_SESSION_STATUS_UNSPECIFIED
 }
 
-func (x *Session) GetLoginMethod() string {
+func (x *Session) GetLoginMethod() LoginMethod {
 	if x != nil {
 		return x.LoginMethod
 	}
-	return ""
+	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
 }
 
 func (x *Session) GetLoginTarget() string {
@@ -454,6 +458,13 @@ func (x *Session) GetDevice() string {
 	return ""
 }
 
+func (x *Session) GetLoginProvider() IdentityProvider {
+	if x != nil {
+		return x.LoginProvider
+	}
+	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
+}
+
 type LoginLog struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
 	Id         int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -461,7 +472,7 @@ type LoginLog struct {
 	Provider   IdentityProvider       `protobuf:"varint,3,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
 	Action     LoginAction            `protobuf:"varint,4,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"`
 	Success    bool                   `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
-	FailReason string                 `protobuf:"bytes,6,opt,name=fail_reason,json=failReason,proto3" json:"fail_reason,omitempty"`
+	FailReason LoginFailReason        `protobuf:"varint,6,opt,name=fail_reason,json=failReason,proto3,enum=user.v1.LoginFailReason" json:"fail_reason,omitempty"`
 	Ip         string                 `protobuf:"bytes,7,opt,name=ip,proto3" json:"ip,omitempty"`
 	DeviceType DeviceType             `protobuf:"varint,8,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
 	Os         string                 `protobuf:"bytes,9,opt,name=os,proto3" json:"os,omitempty"`
@@ -548,11 +559,11 @@ func (x *LoginLog) GetSuccess() bool {
 	return false
 }
 
-func (x *LoginLog) GetFailReason() string {
+func (x *LoginLog) GetFailReason() LoginFailReason {
 	if x != nil {
 		return x.FailReason
 	}
-	return ""
+	return LoginFailReason_LOGIN_FAIL_REASON_UNSPECIFIED
 }
 
 func (x *LoginLog) GetIp() string {
@@ -1166,7 +1177,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\fprovider_uid\x18\x03 \x01(\tR\vproviderUid\x12\x1a\n" +
 	"\bverified\x18\x04 \x01(\bR\bverified\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xdc\x03\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xb4\x04\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02ip\x18\x02 \x01(\tR\x02ip\x124\n" +
@@ -1181,17 +1192,18 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
 	" \x01(\bR\acurrent\x12.\n" +
-	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x12!\n" +
-	"\flogin_method\x18\f \x01(\tR\vloginMethod\x12!\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x127\n" +
+	"\flogin_method\x18\f \x01(\x0e2\x14.user.v1.LoginMethodR\vloginMethod\x12!\n" +
 	"\flogin_target\x18\r \x01(\tR\vloginTarget\x12\x16\n" +
-	"\x06device\x18\x0e \x01(\tR\x06device\"\x8e\x04\n" +
+	"\x06device\x18\x0e \x01(\tR\x06device\x12@\n" +
+	"\x0elogin_provider\x18\x0f \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xa8\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12,\n" +
 	"\x06action\x18\x04 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12\x18\n" +
-	"\asuccess\x18\x05 \x01(\bR\asuccess\x12\x1f\n" +
-	"\vfail_reason\x18\x06 \x01(\tR\n" +
+	"\asuccess\x18\x05 \x01(\bR\asuccess\x129\n" +
+	"\vfail_reason\x18\x06 \x01(\x0e2\x18.user.v1.LoginFailReasonR\n" +
 	"failReason\x12\x0e\n" +
 	"\x02ip\x18\a \x01(\tR\x02ip\x124\n" +
 	"\vdevice_type\x18\b \x01(\x0e2\x13.user.v1.DeviceTypeR\n" +
@@ -1293,8 +1305,9 @@ var file_user_v1_message_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
 	(DeviceType)(0),               // 15: user.v1.DeviceType
 	(SessionStatus)(0),            // 16: user.v1.SessionStatus
-	(LoginAction)(0),              // 17: user.v1.LoginAction
-	(LoginMethod)(0),              // 18: user.v1.LoginMethod
+	(LoginMethod)(0),              // 17: user.v1.LoginMethod
+	(LoginAction)(0),              // 18: user.v1.LoginAction
+	(LoginFailReason)(0),          // 19: user.v1.LoginFailReason
 }
 var file_user_v1_message_proto_depIdxs = []int32{
 	10, // 0: user.v1.User.gender:type_name -> user.v1.Gender
@@ -1310,25 +1323,28 @@ var file_user_v1_message_proto_depIdxs = []int32{
 	14, // 10: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
 	14, // 11: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
 	16, // 12: user.v1.Session.status:type_name -> user.v1.SessionStatus
-	12, // 13: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
-	17, // 14: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
-	15, // 15: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
-	14, // 16: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	18, // 17: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	14, // 18: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 19: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 20: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 21: user.v1.Role.permissions:type_name -> user.v1.Permission
-	8,  // 22: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 23: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 24: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 25: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 26: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	17, // 13: user.v1.Session.login_method:type_name -> user.v1.LoginMethod
+	12, // 14: user.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
+	12, // 15: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
+	18, // 16: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
+	19, // 17: user.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
+	15, // 18: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
+	14, // 19: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
+	17, // 20: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	14, // 21: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	14, // 22: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 23: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 24: user.v1.Role.permissions:type_name -> user.v1.Permission
+	8,  // 25: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
+	14, // 26: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	14, // 27: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 28: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
+	14, // 29: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	30, // [30:30] is the sub-list for method output_type
+	30, // [30:30] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }

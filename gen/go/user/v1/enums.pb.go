@@ -568,6 +568,61 @@ func (LoginAction) EnumDescriptor() ([]byte, []int) {
 	return file_user_v1_enums_proto_rawDescGZIP(), []int{8}
 }
 
+// LoginFailReason classifies WHY a failed audit-log row failed. Stored as the
+// int enum in user_auth_logs.fail_reason (the raw string column is gone) —
+// set by user-service, rendered as the enum name on the wire.
+type LoginFailReason int32
+
+const (
+	LoginFailReason_LOGIN_FAIL_REASON_UNSPECIFIED    LoginFailReason = 0
+	LoginFailReason_LOGIN_FAIL_REASON_WRONG_PASSWORD LoginFailReason = 1
+	LoginFailReason_LOGIN_FAIL_REASON_WRONG_CODE     LoginFailReason = 2
+	LoginFailReason_LOGIN_FAIL_REASON_VERIFY_FAILED  LoginFailReason = 3 // Account status / risk checks rejected the attempt.
+)
+
+// Enum value maps for LoginFailReason.
+var (
+	LoginFailReason_name = map[int32]string{
+		0: "LOGIN_FAIL_REASON_UNSPECIFIED",
+		1: "LOGIN_FAIL_REASON_WRONG_PASSWORD",
+		2: "LOGIN_FAIL_REASON_WRONG_CODE",
+		3: "LOGIN_FAIL_REASON_VERIFY_FAILED",
+	}
+	LoginFailReason_value = map[string]int32{
+		"LOGIN_FAIL_REASON_UNSPECIFIED":    0,
+		"LOGIN_FAIL_REASON_WRONG_PASSWORD": 1,
+		"LOGIN_FAIL_REASON_WRONG_CODE":     2,
+		"LOGIN_FAIL_REASON_VERIFY_FAILED":  3,
+	}
+)
+
+func (x LoginFailReason) Enum() *LoginFailReason {
+	p := new(LoginFailReason)
+	*p = x
+	return p
+}
+
+func (x LoginFailReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (LoginFailReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_user_v1_enums_proto_enumTypes[9].Descriptor()
+}
+
+func (LoginFailReason) Type() protoreflect.EnumType {
+	return &file_user_v1_enums_proto_enumTypes[9]
+}
+
+func (x LoginFailReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use LoginFailReason.Descriptor instead.
+func (LoginFailReason) EnumDescriptor() ([]byte, []int) {
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{9}
+}
+
 // UserType separates external end users from internal platform users
 // (staff, operations, ...). Set at creation time; not user-editable.
 type UserType int32
@@ -603,11 +658,11 @@ func (x UserType) String() string {
 }
 
 func (UserType) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_enums_proto_enumTypes[9].Descriptor()
+	return file_user_v1_enums_proto_enumTypes[10].Descriptor()
 }
 
 func (UserType) Type() protoreflect.EnumType {
-	return &file_user_v1_enums_proto_enumTypes[9]
+	return &file_user_v1_enums_proto_enumTypes[10]
 }
 
 func (x UserType) Number() protoreflect.EnumNumber {
@@ -616,7 +671,7 @@ func (x UserType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UserType.Descriptor instead.
 func (UserType) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_enums_proto_rawDescGZIP(), []int{9}
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{10}
 }
 
 // UserSortField is the sort column for ListUsers / ListUsersPaged.
@@ -660,11 +715,11 @@ func (x UserSortField) String() string {
 }
 
 func (UserSortField) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_enums_proto_enumTypes[10].Descriptor()
+	return file_user_v1_enums_proto_enumTypes[11].Descriptor()
 }
 
 func (UserSortField) Type() protoreflect.EnumType {
-	return &file_user_v1_enums_proto_enumTypes[10]
+	return &file_user_v1_enums_proto_enumTypes[11]
 }
 
 func (x UserSortField) Number() protoreflect.EnumNumber {
@@ -673,7 +728,7 @@ func (x UserSortField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UserSortField.Descriptor instead.
 func (UserSortField) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_enums_proto_rawDescGZIP(), []int{10}
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{11}
 }
 
 var File_user_v1_enums_proto protoreflect.FileDescriptor
@@ -741,7 +796,12 @@ const file_user_v1_enums_proto_rawDesc = "" +
 	"\x19LOGIN_ACTION_SOCIAL_LOGIN\x10\x03\x12 \n" +
 	"\x1cLOGIN_ACTION_SOCIAL_REGISTER\x10\x04\x12\x15\n" +
 	"\x11LOGIN_ACTION_BIND\x10\x05\x12\x17\n" +
-	"\x13LOGIN_ACTION_UNBIND\x10\x06*S\n" +
+	"\x13LOGIN_ACTION_UNBIND\x10\x06*\xa1\x01\n" +
+	"\x0fLoginFailReason\x12!\n" +
+	"\x1dLOGIN_FAIL_REASON_UNSPECIFIED\x10\x00\x12$\n" +
+	" LOGIN_FAIL_REASON_WRONG_PASSWORD\x10\x01\x12 \n" +
+	"\x1cLOGIN_FAIL_REASON_WRONG_CODE\x10\x02\x12#\n" +
+	"\x1fLOGIN_FAIL_REASON_VERIFY_FAILED\x10\x03*S\n" +
 	"\bUserType\x12\x19\n" +
 	"\x15USER_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10USER_TYPE_NORMAL\x10\x01\x12\x16\n" +
@@ -767,7 +827,7 @@ func file_user_v1_enums_proto_rawDescGZIP() []byte {
 	return file_user_v1_enums_proto_rawDescData
 }
 
-var file_user_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
+var file_user_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
 var file_user_v1_enums_proto_goTypes = []any{
 	(UserStatus)(0),          // 0: user.v1.UserStatus
 	(Gender)(0),              // 1: user.v1.Gender
@@ -778,8 +838,9 @@ var file_user_v1_enums_proto_goTypes = []any{
 	(DeviceType)(0),          // 6: user.v1.DeviceType
 	(SessionStatus)(0),       // 7: user.v1.SessionStatus
 	(LoginAction)(0),         // 8: user.v1.LoginAction
-	(UserType)(0),            // 9: user.v1.UserType
-	(UserSortField)(0),       // 10: user.v1.UserSortField
+	(LoginFailReason)(0),     // 9: user.v1.LoginFailReason
+	(UserType)(0),            // 10: user.v1.UserType
+	(UserSortField)(0),       // 11: user.v1.UserSortField
 }
 var file_user_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -799,7 +860,7 @@ func file_user_v1_enums_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_enums_proto_rawDesc), len(file_user_v1_enums_proto_rawDesc)),
-			NumEnums:      11,
+			NumEnums:      12,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

@@ -117,6 +117,16 @@ enum LoginAction {
   LOGIN_ACTION_UNBIND = 6; // UnbindIdentity (planned).
 }
 
+// LoginFailReason classifies WHY a failed audit-log row failed. Stored as the
+// int enum in user_auth_logs.fail_reason (the raw string column is gone) —
+// set by user-service, rendered as the enum name on the wire.
+enum LoginFailReason {
+  LOGIN_FAIL_REASON_UNSPECIFIED = 0;
+  LOGIN_FAIL_REASON_WRONG_PASSWORD = 1;
+  LOGIN_FAIL_REASON_WRONG_CODE = 2;
+  LOGIN_FAIL_REASON_VERIFY_FAILED = 3; // Account status / risk checks rejected the attempt.
+}
+
 // UserType separates external end users from internal platform users
 // (staff, operations, ...). Set at creation time; not user-editable.
 enum UserType {

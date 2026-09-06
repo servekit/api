@@ -317,11 +317,13 @@ type Session struct {
 	LastActiveAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_active_at,json=lastActiveAt,proto3" json:"last_active_at,omitempty"`
 	Current      bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
 	Status       v1.SessionStatus       `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
-	// How this session authenticated (see user.v1): LOGIN_METHOD_* for
-	// credential logins, IDENTITY_PROVIDER_* for social/mini-program.
-	LoginMethod   string `protobuf:"bytes,12,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
-	LoginTarget   string `protobuf:"bytes,13,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
-	Device        string `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
+	// How this session authenticated (see user.v1): LOGIN_METHOD_* strategy;
+	// social/mini-program logins stay UNSPECIFIED with login_provider set.
+	LoginMethod v1.LoginMethod `protobuf:"varint,12,opt,name=login_method,json=loginMethod,proto3,enum=user.v1.LoginMethod" json:"login_method,omitempty"`
+	LoginTarget string         `protobuf:"bytes,13,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
+	Device      string         `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
+	// Social/mini-program IdP (see user.v1.Session.login_provider).
+	LoginProvider v1.IdentityProvider `protobuf:"varint,15,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -433,11 +435,11 @@ func (x *Session) GetStatus() v1.SessionStatus {
 	return v1.SessionStatus(0)
 }
 
-func (x *Session) GetLoginMethod() string {
+func (x *Session) GetLoginMethod() v1.LoginMethod {
 	if x != nil {
 		return x.LoginMethod
 	}
-	return ""
+	return v1.LoginMethod(0)
 }
 
 func (x *Session) GetLoginTarget() string {
@@ -452,6 +454,13 @@ func (x *Session) GetDevice() string {
 		return x.Device
 	}
 	return ""
+}
+
+func (x *Session) GetLoginProvider() v1.IdentityProvider {
+	if x != nil {
+		return x.LoginProvider
+	}
+	return v1.IdentityProvider(0)
 }
 
 // Group is an organizational unit; members inherit the group's roles.
@@ -895,7 +904,7 @@ type LoginLog struct {
 	Provider   v1.IdentityProvider    `protobuf:"varint,3,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
 	Action     v1.LoginAction         `protobuf:"varint,4,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"`
 	Success    bool                   `protobuf:"varint,5,opt,name=success,proto3" json:"success,omitempty"`
-	FailReason string                 `protobuf:"bytes,6,opt,name=fail_reason,json=failReason,proto3" json:"fail_reason,omitempty"`
+	FailReason v1.LoginFailReason     `protobuf:"varint,6,opt,name=fail_reason,json=failReason,proto3,enum=user.v1.LoginFailReason" json:"fail_reason,omitempty"`
 	Ip         string                 `protobuf:"bytes,7,opt,name=ip,proto3" json:"ip,omitempty"`
 	DeviceType v1.DeviceType          `protobuf:"varint,8,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
 	Os         string                 `protobuf:"bytes,9,opt,name=os,proto3" json:"os,omitempty"`
@@ -979,11 +988,11 @@ func (x *LoginLog) GetSuccess() bool {
 	return false
 }
 
-func (x *LoginLog) GetFailReason() string {
+func (x *LoginLog) GetFailReason() v1.LoginFailReason {
 	if x != nil {
 		return x.FailReason
 	}
-	return ""
+	return v1.LoginFailReason(0)
 }
 
 func (x *LoginLog) GetIp() string {
@@ -4565,7 +4574,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\fprovider_uid\x18\x03 \x01(\tR\vproviderUid\x12\x1a\n" +
 	"\bverified\x18\x04 \x01(\bR\bverified\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xe6\x03\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd2\x04\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02ip\x18\x02 \x01(\tR\x02ip\x12>\n" +
@@ -4580,10 +4589,11 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
 	" \x01(\bR\acurrent\x12.\n" +
-	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x12!\n" +
-	"\flogin_method\x18\f \x01(\tR\vloginMethod\x12!\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x12A\n" +
+	"\flogin_method\x18\f \x01(\x0e2\x14.user.v1.LoginMethodB\b\xbaH\x05\x82\x01\x02\x10\x01R\vloginMethod\x12!\n" +
 	"\flogin_target\x18\r \x01(\tR\vloginTarget\x12\x16\n" +
-	"\x06device\x18\x0e \x01(\tR\x06device\"\x9b\x02\n" +
+	"\x06device\x18\x0e \x01(\tR\x06device\x12J\n" +
+	"\x0elogin_provider\x18\x0f \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\rloginProvider\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -4630,14 +4640,14 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"avatar_url\x18\x03 \x01(\tR\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x8e\x04\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xb2\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12,\n" +
 	"\x06action\x18\x04 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12\x18\n" +
-	"\asuccess\x18\x05 \x01(\bR\asuccess\x12\x1f\n" +
-	"\vfail_reason\x18\x06 \x01(\tR\n" +
+	"\asuccess\x18\x05 \x01(\bR\asuccess\x12C\n" +
+	"\vfail_reason\x18\x06 \x01(\x0e2\x18.user.v1.LoginFailReasonB\b\xbaH\x05\x82\x01\x02\x10\x01R\n" +
 	"failReason\x12\x0e\n" +
 	"\x02ip\x18\a \x01(\tR\x02ip\x124\n" +
 	"\vdevice_type\x18\b \x01(\x0e2\x13.user.v1.DeviceTypeR\n" +
@@ -5103,27 +5113,28 @@ var file_testkit_v1_message_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),   // 60: google.protobuf.Timestamp
 	(v1.DeviceType)(0),              // 61: user.v1.DeviceType
 	(v1.SessionStatus)(0),           // 62: user.v1.SessionStatus
-	(v1.LoginAction)(0),             // 63: user.v1.LoginAction
-	(v1.LoginMethod)(0),             // 64: user.v1.LoginMethod
-	(v11.OwnerType)(0),              // 65: storage.v1.OwnerType
-	(ImageProcessType)(0),           // 66: testkit.v1.ImageProcessType
-	(v11.ImageFormat)(0),            // 67: storage.v1.ImageFormat
-	(v11.ImageResizeMode)(0),        // 68: storage.v1.ImageResizeMode
-	(v11.AuditAction)(0),            // 69: storage.v1.AuditAction
-	(v11.AuditLogTargetType)(0),     // 70: storage.v1.AuditLogTargetType
-	(*structpb.Struct)(nil),         // 71: google.protobuf.Struct
-	(v11.AuditLogStatus)(0),         // 72: storage.v1.AuditLogStatus
-	(v11.Vendor)(0),                 // 73: storage.v1.Vendor
-	(v11.BucketACL)(0),              // 74: storage.v1.BucketACL
-	(v12.EmailVendor)(0),            // 75: messaging.v1.EmailVendor
-	(v12.SmsVendor)(0),              // 76: messaging.v1.SmsVendor
-	(v12.EmailScene)(0),             // 77: messaging.v1.EmailScene
-	(v12.MessageStatus)(0),          // 78: messaging.v1.MessageStatus
-	(v12.SmsScene)(0),               // 79: messaging.v1.SmsScene
-	(v13.Module)(0),                 // 80: license.v1.Module
-	(v13.EntitlementKind)(0),        // 81: license.v1.EntitlementKind
-	(v13.KeyStatus)(0),              // 82: license.v1.KeyStatus
-	(v14.AuthMode)(0),               // 83: telemetry.v1.AuthMode
+	(v1.LoginMethod)(0),             // 63: user.v1.LoginMethod
+	(v1.LoginAction)(0),             // 64: user.v1.LoginAction
+	(v1.LoginFailReason)(0),         // 65: user.v1.LoginFailReason
+	(v11.OwnerType)(0),              // 66: storage.v1.OwnerType
+	(ImageProcessType)(0),           // 67: testkit.v1.ImageProcessType
+	(v11.ImageFormat)(0),            // 68: storage.v1.ImageFormat
+	(v11.ImageResizeMode)(0),        // 69: storage.v1.ImageResizeMode
+	(v11.AuditAction)(0),            // 70: storage.v1.AuditAction
+	(v11.AuditLogTargetType)(0),     // 71: storage.v1.AuditLogTargetType
+	(*structpb.Struct)(nil),         // 72: google.protobuf.Struct
+	(v11.AuditLogStatus)(0),         // 73: storage.v1.AuditLogStatus
+	(v11.Vendor)(0),                 // 74: storage.v1.Vendor
+	(v11.BucketACL)(0),              // 75: storage.v1.BucketACL
+	(v12.EmailVendor)(0),            // 76: messaging.v1.EmailVendor
+	(v12.SmsVendor)(0),              // 77: messaging.v1.SmsVendor
+	(v12.EmailScene)(0),             // 78: messaging.v1.EmailScene
+	(v12.MessageStatus)(0),          // 79: messaging.v1.MessageStatus
+	(v12.SmsScene)(0),               // 80: messaging.v1.SmsScene
+	(v13.Module)(0),                 // 81: license.v1.Module
+	(v13.EntitlementKind)(0),        // 82: license.v1.EntitlementKind
+	(v13.KeyStatus)(0),              // 83: license.v1.KeyStatus
+	(v14.AuthMode)(0),               // 84: telemetry.v1.AuthMode
 }
 var file_testkit_v1_message_proto_depIdxs = []int32{
 	56, // 0: testkit.v1.User.gender:type_name -> user.v1.Gender
@@ -5139,90 +5150,93 @@ var file_testkit_v1_message_proto_depIdxs = []int32{
 	60, // 10: testkit.v1.Session.created_at:type_name -> google.protobuf.Timestamp
 	60, // 11: testkit.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
 	62, // 12: testkit.v1.Session.status:type_name -> user.v1.SessionStatus
-	60, // 13: testkit.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	60, // 14: testkit.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	5,  // 15: testkit.v1.Role.permissions:type_name -> testkit.v1.Permission
-	6,  // 16: testkit.v1.Role.perm_groups:type_name -> testkit.v1.PermissionGroup
-	60, // 17: testkit.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	60, // 18: testkit.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	5,  // 19: testkit.v1.PermissionGroup.permissions:type_name -> testkit.v1.Permission
-	60, // 20: testkit.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	58, // 21: testkit.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
-	63, // 22: testkit.v1.LoginLog.action:type_name -> user.v1.LoginAction
-	61, // 23: testkit.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
-	60, // 24: testkit.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	64, // 25: testkit.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	60, // 26: testkit.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	51, // 27: testkit.v1.FileInfo.metadata:type_name -> testkit.v1.FileInfo.MetadataEntry
-	65, // 28: testkit.v1.FileInfo.owner_type:type_name -> storage.v1.OwnerType
-	65, // 29: testkit.v1.AdminFileInfo.owner_type:type_name -> storage.v1.OwnerType
-	52, // 30: testkit.v1.AdminFileInfo.metadata:type_name -> testkit.v1.AdminFileInfo.MetadataEntry
-	66, // 31: testkit.v1.ImageProcessOp.type:type_name -> testkit.v1.ImageProcessType
-	67, // 32: testkit.v1.ImageProcessOp.format:type_name -> storage.v1.ImageFormat
-	68, // 33: testkit.v1.ImageProcessOp.resize_mode:type_name -> storage.v1.ImageResizeMode
-	53, // 34: testkit.v1.UploadFileMeta.metadata:type_name -> testkit.v1.UploadFileMeta.MetadataEntry
-	15, // 35: testkit.v1.UploadCredentialItem.token:type_name -> testkit.v1.UploadTokenInfo
-	16, // 36: testkit.v1.UploadCredentialItem.error:type_name -> testkit.v1.ItemError
-	69, // 37: testkit.v1.AuditLogEntry.action:type_name -> storage.v1.AuditAction
-	65, // 38: testkit.v1.AuditLogEntry.owner_type:type_name -> storage.v1.OwnerType
-	70, // 39: testkit.v1.AuditLogEntry.target_type:type_name -> storage.v1.AuditLogTargetType
-	71, // 40: testkit.v1.AuditLogEntry.before:type_name -> google.protobuf.Struct
-	71, // 41: testkit.v1.AuditLogEntry.after:type_name -> google.protobuf.Struct
-	72, // 42: testkit.v1.AuditLogEntry.status:type_name -> storage.v1.AuditLogStatus
-	65, // 43: testkit.v1.OwnerStats.owner_type:type_name -> storage.v1.OwnerType
-	73, // 44: testkit.v1.ProviderInfo.vendor:type_name -> storage.v1.Vendor
-	74, // 45: testkit.v1.BucketInfo.acl:type_name -> storage.v1.BucketACL
-	73, // 46: testkit.v1.BucketInfo.vendor:type_name -> storage.v1.Vendor
-	75, // 47: testkit.v1.EmailVendorStats.vendor:type_name -> messaging.v1.EmailVendor
-	76, // 48: testkit.v1.SmsVendorStats.vendor:type_name -> messaging.v1.SmsVendor
-	75, // 49: testkit.v1.EmailRecord.vendor:type_name -> messaging.v1.EmailVendor
-	77, // 50: testkit.v1.EmailRecord.scene:type_name -> messaging.v1.EmailScene
-	78, // 51: testkit.v1.EmailRecord.status:type_name -> messaging.v1.MessageStatus
-	24, // 52: testkit.v1.EmailRecord.target:type_name -> testkit.v1.EmailAddress
-	24, // 53: testkit.v1.EmailRecord.cc:type_name -> testkit.v1.EmailAddress
-	24, // 54: testkit.v1.EmailRecord.bcc:type_name -> testkit.v1.EmailAddress
-	24, // 55: testkit.v1.EmailRecord.reply_to:type_name -> testkit.v1.EmailAddress
-	54, // 56: testkit.v1.EmailRecord.template_params:type_name -> testkit.v1.EmailRecord.TemplateParamsEntry
-	25, // 57: testkit.v1.EmailRecord.attachments:type_name -> testkit.v1.EmailAttachment
-	76, // 58: testkit.v1.SMSRecord.vendor:type_name -> messaging.v1.SmsVendor
-	79, // 59: testkit.v1.SMSRecord.scene:type_name -> messaging.v1.SmsScene
-	78, // 60: testkit.v1.SMSRecord.status:type_name -> messaging.v1.MessageStatus
-	55, // 61: testkit.v1.SMSRecord.template_params:type_name -> testkit.v1.SMSRecord.TemplateParamsEntry
-	26, // 62: testkit.v1.EmailStats.vendors:type_name -> testkit.v1.EmailVendorStats
-	27, // 63: testkit.v1.SMSStats.vendors:type_name -> testkit.v1.SmsVendorStats
-	60, // 64: testkit.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
-	60, // 65: testkit.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
-	34, // 66: testkit.v1.SlotSummary.devices:type_name -> testkit.v1.DeviceSlotInfo
-	34, // 67: testkit.v1.SlotLimitInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
-	80, // 68: testkit.v1.EntitlementInput.module:type_name -> license.v1.Module
-	81, // 69: testkit.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
-	60, // 70: testkit.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
-	80, // 71: testkit.v1.EntitlementInfo.module:type_name -> license.v1.Module
-	81, // 72: testkit.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
-	60, // 73: testkit.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
-	60, // 74: testkit.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
-	82, // 75: testkit.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
-	60, // 76: testkit.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 77: testkit.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
-	40, // 78: testkit.v1.KeyInfo.entitlements:type_name -> testkit.v1.EntitlementInfo
-	34, // 79: testkit.v1.KeyInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
-	80, // 80: testkit.v1.TrialInfo.module:type_name -> license.v1.Module
-	60, // 81: testkit.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
-	60, // 82: testkit.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
-	83, // 83: testkit.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
-	60, // 84: testkit.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
-	60, // 85: testkit.v1.App.created_at:type_name -> google.protobuf.Timestamp
-	60, // 86: testkit.v1.App.updated_at:type_name -> google.protobuf.Timestamp
-	60, // 87: testkit.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 88: testkit.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
-	60, // 89: testkit.v1.TelemetrySigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 90: testkit.v1.TelemetrySigningKeyInfo.last_used_at:type_name -> google.protobuf.Timestamp
-	60, // 91: testkit.v1.VersionInfo.last_seen_at:type_name -> google.protobuf.Timestamp
-	92, // [92:92] is the sub-list for method output_type
-	92, // [92:92] is the sub-list for method input_type
-	92, // [92:92] is the sub-list for extension type_name
-	92, // [92:92] is the sub-list for extension extendee
-	0,  // [0:92] is the sub-list for field type_name
+	63, // 13: testkit.v1.Session.login_method:type_name -> user.v1.LoginMethod
+	58, // 14: testkit.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
+	60, // 15: testkit.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	60, // 16: testkit.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	5,  // 17: testkit.v1.Role.permissions:type_name -> testkit.v1.Permission
+	6,  // 18: testkit.v1.Role.perm_groups:type_name -> testkit.v1.PermissionGroup
+	60, // 19: testkit.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	60, // 20: testkit.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	5,  // 21: testkit.v1.PermissionGroup.permissions:type_name -> testkit.v1.Permission
+	60, // 22: testkit.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	58, // 23: testkit.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
+	64, // 24: testkit.v1.LoginLog.action:type_name -> user.v1.LoginAction
+	65, // 25: testkit.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
+	61, // 26: testkit.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
+	60, // 27: testkit.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
+	63, // 28: testkit.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	60, // 29: testkit.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	51, // 30: testkit.v1.FileInfo.metadata:type_name -> testkit.v1.FileInfo.MetadataEntry
+	66, // 31: testkit.v1.FileInfo.owner_type:type_name -> storage.v1.OwnerType
+	66, // 32: testkit.v1.AdminFileInfo.owner_type:type_name -> storage.v1.OwnerType
+	52, // 33: testkit.v1.AdminFileInfo.metadata:type_name -> testkit.v1.AdminFileInfo.MetadataEntry
+	67, // 34: testkit.v1.ImageProcessOp.type:type_name -> testkit.v1.ImageProcessType
+	68, // 35: testkit.v1.ImageProcessOp.format:type_name -> storage.v1.ImageFormat
+	69, // 36: testkit.v1.ImageProcessOp.resize_mode:type_name -> storage.v1.ImageResizeMode
+	53, // 37: testkit.v1.UploadFileMeta.metadata:type_name -> testkit.v1.UploadFileMeta.MetadataEntry
+	15, // 38: testkit.v1.UploadCredentialItem.token:type_name -> testkit.v1.UploadTokenInfo
+	16, // 39: testkit.v1.UploadCredentialItem.error:type_name -> testkit.v1.ItemError
+	70, // 40: testkit.v1.AuditLogEntry.action:type_name -> storage.v1.AuditAction
+	66, // 41: testkit.v1.AuditLogEntry.owner_type:type_name -> storage.v1.OwnerType
+	71, // 42: testkit.v1.AuditLogEntry.target_type:type_name -> storage.v1.AuditLogTargetType
+	72, // 43: testkit.v1.AuditLogEntry.before:type_name -> google.protobuf.Struct
+	72, // 44: testkit.v1.AuditLogEntry.after:type_name -> google.protobuf.Struct
+	73, // 45: testkit.v1.AuditLogEntry.status:type_name -> storage.v1.AuditLogStatus
+	66, // 46: testkit.v1.OwnerStats.owner_type:type_name -> storage.v1.OwnerType
+	74, // 47: testkit.v1.ProviderInfo.vendor:type_name -> storage.v1.Vendor
+	75, // 48: testkit.v1.BucketInfo.acl:type_name -> storage.v1.BucketACL
+	74, // 49: testkit.v1.BucketInfo.vendor:type_name -> storage.v1.Vendor
+	76, // 50: testkit.v1.EmailVendorStats.vendor:type_name -> messaging.v1.EmailVendor
+	77, // 51: testkit.v1.SmsVendorStats.vendor:type_name -> messaging.v1.SmsVendor
+	76, // 52: testkit.v1.EmailRecord.vendor:type_name -> messaging.v1.EmailVendor
+	78, // 53: testkit.v1.EmailRecord.scene:type_name -> messaging.v1.EmailScene
+	79, // 54: testkit.v1.EmailRecord.status:type_name -> messaging.v1.MessageStatus
+	24, // 55: testkit.v1.EmailRecord.target:type_name -> testkit.v1.EmailAddress
+	24, // 56: testkit.v1.EmailRecord.cc:type_name -> testkit.v1.EmailAddress
+	24, // 57: testkit.v1.EmailRecord.bcc:type_name -> testkit.v1.EmailAddress
+	24, // 58: testkit.v1.EmailRecord.reply_to:type_name -> testkit.v1.EmailAddress
+	54, // 59: testkit.v1.EmailRecord.template_params:type_name -> testkit.v1.EmailRecord.TemplateParamsEntry
+	25, // 60: testkit.v1.EmailRecord.attachments:type_name -> testkit.v1.EmailAttachment
+	77, // 61: testkit.v1.SMSRecord.vendor:type_name -> messaging.v1.SmsVendor
+	80, // 62: testkit.v1.SMSRecord.scene:type_name -> messaging.v1.SmsScene
+	79, // 63: testkit.v1.SMSRecord.status:type_name -> messaging.v1.MessageStatus
+	55, // 64: testkit.v1.SMSRecord.template_params:type_name -> testkit.v1.SMSRecord.TemplateParamsEntry
+	26, // 65: testkit.v1.EmailStats.vendors:type_name -> testkit.v1.EmailVendorStats
+	27, // 66: testkit.v1.SMSStats.vendors:type_name -> testkit.v1.SmsVendorStats
+	60, // 67: testkit.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
+	60, // 68: testkit.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
+	34, // 69: testkit.v1.SlotSummary.devices:type_name -> testkit.v1.DeviceSlotInfo
+	34, // 70: testkit.v1.SlotLimitInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
+	81, // 71: testkit.v1.EntitlementInput.module:type_name -> license.v1.Module
+	82, // 72: testkit.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
+	60, // 73: testkit.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
+	81, // 74: testkit.v1.EntitlementInfo.module:type_name -> license.v1.Module
+	82, // 75: testkit.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
+	60, // 76: testkit.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
+	60, // 77: testkit.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
+	83, // 78: testkit.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
+	60, // 79: testkit.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 80: testkit.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
+	40, // 81: testkit.v1.KeyInfo.entitlements:type_name -> testkit.v1.EntitlementInfo
+	34, // 82: testkit.v1.KeyInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
+	81, // 83: testkit.v1.TrialInfo.module:type_name -> license.v1.Module
+	60, // 84: testkit.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
+	60, // 85: testkit.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
+	84, // 86: testkit.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
+	60, // 87: testkit.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
+	60, // 88: testkit.v1.App.created_at:type_name -> google.protobuf.Timestamp
+	60, // 89: testkit.v1.App.updated_at:type_name -> google.protobuf.Timestamp
+	60, // 90: testkit.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 91: testkit.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
+	60, // 92: testkit.v1.TelemetrySigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 93: testkit.v1.TelemetrySigningKeyInfo.last_used_at:type_name -> google.protobuf.Timestamp
+	60, // 94: testkit.v1.VersionInfo.last_seen_at:type_name -> google.protobuf.Timestamp
+	95, // [95:95] is the sub-list for method output_type
+	95, // [95:95] is the sub-list for method input_type
+	95, // [95:95] is the sub-list for extension type_name
+	95, // [95:95] is the sub-list for extension extendee
+	0,  // [0:95] is the sub-list for field type_name
 }
 
 func init() { file_testkit_v1_message_proto_init() }

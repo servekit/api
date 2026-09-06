@@ -1917,8 +1917,8 @@
         ]
       }
     },
-    "/api/v1/identities/{identityId}": {
-      "delete": {
+    "/api/v1/identities/{identityId}:unbind": {
+      "post": {
         "operationId": "UnbindIdentity",
         "responses": {
           "200": {
@@ -1945,11 +1945,12 @@
             "format": "int64"
           },
           {
-            "name": "code",
-            "description": "user_id injected from ctx",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceUnbindIdentityBody"
+            }
           }
         ],
         "tags": [
@@ -3796,6 +3797,28 @@
             "format": "int64"
           }
         ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/region-codes": {
+      "get": {
+        "operationId": "ListRegionCodes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListRegionCodesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "TestkitService"
         ]
@@ -5963,6 +5986,15 @@
         }
       }
     },
+    "TestkitServiceUnbindIdentityBody": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Empty for OAuth identities (session is the proof).\n\nuser_id injected from ctx"
+        }
+      }
+    },
     "TestkitServiceUnrevokeKeyBody": {
       "type": "object"
     },
@@ -7889,7 +7921,10 @@
           "type": "string"
         },
         "loginMethod": {
-          "type": "string"
+          "$ref": "#/definitions/v1LoginMethod"
+        },
+        "loginProvider": {
+          "$ref": "#/definitions/v1IdentityProvider"
         }
       }
     },
@@ -8493,6 +8528,18 @@
         }
       }
     },
+    "v1ListRegionCodesResponse": {
+      "type": "object",
+      "properties": {
+        "regionCodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RegionCode"
+          }
+        }
+      }
+    },
     "v1ListRolesResponse": {
       "type": "object",
       "properties": {
@@ -8652,6 +8699,17 @@
       "default": "LOGIN_ACTION_UNSPECIFIED",
       "description": "LoginAction classifies an entry in the login audit log (UserLoginLog.action).\nSet by user-service at login time — callers never pass this value.\n\n - LOGIN_ACTION_LOGIN: Successful password Login.\n - LOGIN_ACTION_REGISTER: Register RPC or code-login auto-register.\n - LOGIN_ACTION_SOCIAL_LOGIN: SocialLogin on an existing user.\n - LOGIN_ACTION_SOCIAL_REGISTER: SocialLogin / MiniProgramLogin on a new user.\n - LOGIN_ACTION_BIND: BindIdentity (planned).\n - LOGIN_ACTION_UNBIND: UnbindIdentity (planned)."
     },
+    "v1LoginFailReason": {
+      "type": "string",
+      "enum": [
+        "LOGIN_FAIL_REASON_UNSPECIFIED",
+        "LOGIN_FAIL_REASON_WRONG_PASSWORD",
+        "LOGIN_FAIL_REASON_WRONG_CODE",
+        "LOGIN_FAIL_REASON_VERIFY_FAILED"
+      ],
+      "default": "LOGIN_FAIL_REASON_UNSPECIFIED",
+      "description": "LoginFailReason classifies WHY a failed audit-log row failed. Stored as the\nint enum in user_auth_logs.fail_reason (the raw string column is gone) —\nset by user-service, rendered as the enum name on the wire.\n\n - LOGIN_FAIL_REASON_VERIFY_FAILED: Account status / risk checks rejected the attempt."
+    },
     "v1LoginLog": {
       "type": "object",
       "properties": {
@@ -8673,7 +8731,7 @@
           "type": "boolean"
         },
         "failReason": {
-          "type": "string"
+          "$ref": "#/definitions/v1LoginFailReason"
         },
         "ip": {
           "type": "string"
@@ -9016,6 +9074,24 @@
         }
       },
       "description": "QuotaInfo is an owner's storage quota (returned by GetMyQuota / SetOwnerQuota /\nAdmin*Quota). owner_type+owner_id are NOT here: GetMyQuota infers them from\nctx, the admin/owner-quota responses echo the request target implicitly."
+    },
+    "v1RegionCode": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "dialCode": {
+          "type": "string"
+        },
+        "nameZh": {
+          "type": "string"
+        },
+        "nameEn": {
+          "type": "string"
+        }
+      },
+      "description": "RegionCode mirrors messaging.v1.RegionCode (see user.v1-style mirroring:\ntestkit owns its wire types; the mapping layer is a plain field copy)."
     },
     "v1RegisterRequest": {
       "type": "object",
@@ -9508,14 +9584,18 @@
           "$ref": "#/definitions/v1SessionStatus"
         },
         "loginMethod": {
-          "type": "string",
-          "description": "How this session authenticated (see user.v1): LOGIN_METHOD_* for\ncredential logins, IDENTITY_PROVIDER_* for social/mini-program."
+          "$ref": "#/definitions/v1LoginMethod",
+          "description": "How this session authenticated (see user.v1): LOGIN_METHOD_* strategy;\nsocial/mini-program logins stay UNSPECIFIED with login_provider set."
         },
         "loginTarget": {
           "type": "string"
         },
         "device": {
           "type": "string"
+        },
+        "loginProvider": {
+          "$ref": "#/definitions/v1IdentityProvider",
+          "description": "Social/mini-program IdP (see user.v1.Session.login_provider)."
         }
       },
       "description": "Session is an active login session for the \"manage devices\" UI."

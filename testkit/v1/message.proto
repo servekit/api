@@ -66,11 +66,13 @@ message Session {
   google.protobuf.Timestamp last_active_at = 9;
   bool current = 10;
   user.v1.SessionStatus status = 11;
-  // How this session authenticated (see user.v1): LOGIN_METHOD_* for
-  // credential logins, IDENTITY_PROVIDER_* for social/mini-program.
-  string login_method = 12;
+  // How this session authenticated (see user.v1): LOGIN_METHOD_* strategy;
+  // social/mini-program logins stay UNSPECIFIED with login_provider set.
+  user.v1.LoginMethod login_method = 12 [(buf.validate.field).enum.defined_only = true];
   string login_target = 13;
   string device = 14;
+  // Social/mini-program IdP (see user.v1.Session.login_provider).
+  user.v1.IdentityProvider login_provider = 15 [(buf.validate.field).enum.defined_only = true];
 }
 
 // Group is an organizational unit; members inherit the group's roles.
@@ -131,7 +133,7 @@ message LoginLog {
   user.v1.IdentityProvider provider = 3;
   user.v1.LoginAction action = 4;
   bool success = 5;
-  string fail_reason = 6;
+  user.v1.LoginFailReason fail_reason = 6 [(buf.validate.field).enum.defined_only = true];
   string ip = 7;
   user.v1.DeviceType device_type = 8;
   string os = 9;

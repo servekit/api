@@ -69,15 +69,19 @@ message Session {
   // ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
   // history from the PG tombstone table.
   SessionStatus status = 11;
-  // How this session authenticated: a LOGIN_METHOD_* value for credential
-  // logins, or an IDENTITY_PROVIDER_* value for social/mini-program ones.
-  // Sensitive operations can demand a stronger re-auth based on it.
-  string login_method = 12;
+  // How this session authenticated: the LOGIN_METHOD_* strategy for
+  // credential logins; social/mini-program logins have no LoginMethod and
+  // stay UNSPECIFIED with login_provider carrying the IdP. Sensitive
+  // operations can demand a stronger re-auth based on these.
+  LoginMethod login_method = 12;
   // The credential subject (username/email/phone/oauth uid).
   string login_target = 13;
   // Hardware identity when known: iPhone/iPad/Android model (or the
   // Sec-CH-UA-Model hint); empty when unknowable (desktop web).
   string device = 14;
+  // The identity provider for social/mini-program logins (EMAIL/PHONE for
+  // direct registrations); UNSPECIFIED for plain credential logins.
+  IdentityProvider login_provider = 15;
 }
 
 message LoginLog {
@@ -86,7 +90,7 @@ message LoginLog {
   IdentityProvider provider = 3;
   LoginAction action = 4;
   bool success = 5;
-  string fail_reason = 6;
+  LoginFailReason fail_reason = 6;
   string ip = 7;
   DeviceType device_type = 8;
   string os = 9;

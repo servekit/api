@@ -237,10 +237,8 @@ message BindOAuthIdentityResponse {
 
 message UnbindIdentityRequest {
   int64 identity_id = 1 [(buf.validate.field).int64.gt = 0]; // target identity
-  string code = 2 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 16
-  }];
+  // Empty for OAuth identities (session is the proof).
+  string code = 2 [(buf.validate.field).string.max_len = 16];
   // user_id injected from ctx
 }
 
@@ -287,7 +285,8 @@ message GetSessionResponse {
   string user_agent = 5;
   string os = 6;
   string browser = 7;
-  string login_method = 8;
+  user.v1.LoginMethod login_method = 8 [(buf.validate.field).enum.defined_only = true];
+  user.v1.IdentityProvider login_provider = 9 [(buf.validate.field).enum.defined_only = true];
 }
 
 message IssueSessionCodeRequest {
@@ -1374,6 +1373,21 @@ message ListSMSRegionsRequest {}
 
 message ListSMSRegionsResponse {
   repeated string region_codes = 1;
+}
+
+message ListRegionCodesRequest {}
+
+message ListRegionCodesResponse {
+  repeated RegionCode region_codes = 1;
+}
+
+// RegionCode mirrors messaging.v1.RegionCode (see user.v1-style mirroring:
+// testkit owns its wire types; the mapping layer is a plain field copy).
+message RegionCode {
+  string code = 1;
+  string dial_code = 2;
+  string name_zh = 3;
+  string name_en = 4;
 }
 
 // ==================== GID debug (P5) ====================

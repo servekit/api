@@ -250,10 +250,9 @@ message UnbindIdentityRequest {
   // The caller. The service refuses to delete when identity.user_id != user_id.
   int64 user_id = 3 [(buf.validate.field).int64.gt = 0];
   int64 identity_id = 1 [(buf.validate.field).int64.gt = 0];
-  string code = 2 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 16
-  }];
+  // Empty for OAuth identities — credentials live at the IdP and the
+  // authenticated session is the proof (no code round-trip).
+  string code = 2 [(buf.validate.field).string.max_len = 16];
 }
 
 // ==================== Verification Code ====================
@@ -370,6 +369,13 @@ message RevokeSessionRequest {
 
 message RevokeAllSessionsRequest {
   int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  // Optional: keep this session alive ("log out OTHER devices" — the testkit
+  // session page). The caller's current session id, injected by the edge from
+  // the authenticated context; empty revokes everything (password change /
+  // reset / user disable flows).
+  string exclude_session_id = 2 [(buf.validate.field).string = {
+    max_len: 128
+  }];
 }
 
 message GetSessionRequest {
@@ -419,11 +425,13 @@ message GetSessionResponse {
   string user_agent = 5;
   string os = 6;
   string browser = 7;
-  string login_method = 8;
+  LoginMethod login_method = 8;
   // The credential subject the session authenticated with.
   string login_target = 9;
   // Hardware identity when known (see Session.device).
   string device = 10;
+  // Social/mini-program IdP (see Session.login_provider).
+  IdentityProvider login_provider = 11;
 }
 
 // ==================== Admin ====================

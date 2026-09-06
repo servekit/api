@@ -1335,8 +1335,10 @@ func (x *BindOAuthIdentityResponse) GetIdentity() *Identity {
 type UnbindIdentityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The caller. The service refuses to delete when identity.user_id != user_id.
-	UserId        int64  `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	IdentityId    int64  `protobuf:"varint,1,opt,name=identity_id,json=identityId,proto3" json:"identity_id,omitempty"`
+	UserId     int64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	IdentityId int64 `protobuf:"varint,1,opt,name=identity_id,json=identityId,proto3" json:"identity_id,omitempty"`
+	// Empty for OAuth identities — credentials live at the IdP and the
+	// authenticated session is the proof (no code round-trip).
 	Code          string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1789,10 +1791,15 @@ func (x *RevokeSessionRequest) GetSessionId() string {
 }
 
 type RevokeAllSessionsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	UserId int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// Optional: keep this session alive ("log out OTHER devices" — the testkit
+	// session page). The caller's current session id, injected by the edge from
+	// the authenticated context; empty revokes everything (password change /
+	// reset / user disable flows).
+	ExcludeSessionId string `protobuf:"bytes,2,opt,name=exclude_session_id,json=excludeSessionId,proto3" json:"exclude_session_id,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *RevokeAllSessionsRequest) Reset() {
@@ -1830,6 +1837,13 @@ func (x *RevokeAllSessionsRequest) GetUserId() int64 {
 		return x.UserId
 	}
 	return 0
+}
+
+func (x *RevokeAllSessionsRequest) GetExcludeSessionId() string {
+	if x != nil {
+		return x.ExcludeSessionId
+	}
+	return ""
 }
 
 type GetSessionRequest struct {
@@ -2078,11 +2092,13 @@ type GetSessionResponse struct {
 	UserAgent   string                 `protobuf:"bytes,5,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
 	Os          string                 `protobuf:"bytes,6,opt,name=os,proto3" json:"os,omitempty"`
 	Browser     string                 `protobuf:"bytes,7,opt,name=browser,proto3" json:"browser,omitempty"`
-	LoginMethod string                 `protobuf:"bytes,8,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	LoginMethod LoginMethod            `protobuf:"varint,8,opt,name=login_method,json=loginMethod,proto3,enum=user.v1.LoginMethod" json:"login_method,omitempty"`
 	// The credential subject the session authenticated with.
 	LoginTarget string `protobuf:"bytes,9,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
 	// Hardware identity when known (see Session.device).
-	Device        string `protobuf:"bytes,10,opt,name=device,proto3" json:"device,omitempty"`
+	Device string `protobuf:"bytes,10,opt,name=device,proto3" json:"device,omitempty"`
+	// Social/mini-program IdP (see Session.login_provider).
+	LoginProvider IdentityProvider `protobuf:"varint,11,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2166,11 +2182,11 @@ func (x *GetSessionResponse) GetBrowser() string {
 	return ""
 }
 
-func (x *GetSessionResponse) GetLoginMethod() string {
+func (x *GetSessionResponse) GetLoginMethod() LoginMethod {
 	if x != nil {
 		return x.LoginMethod
 	}
-	return ""
+	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
 }
 
 func (x *GetSessionResponse) GetLoginTarget() string {
@@ -2185,6 +2201,13 @@ func (x *GetSessionResponse) GetDevice() string {
 		return x.Device
 	}
 	return ""
+}
+
+func (x *GetSessionResponse) GetLoginProvider() IdentityProvider {
+	if x != nil {
+		return x.LoginProvider
+	}
+	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
 }
 
 type CreateUserRequest struct {
@@ -5282,12 +5305,12 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x05state\x18\x05 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\x05state\"J\n" +
 	"\x19BindOAuthIdentityResponse\x12-\n" +
-	"\bidentity\x18\x01 \x01(\v2\x11.user.v1.IdentityR\bidentity\"\x82\x01\n" +
+	"\bidentity\x18\x01 \x01(\v2\x11.user.v1.IdentityR\bidentity\"\x80\x01\n" +
 	"\x15UnbindIdentityRequest\x12 \n" +
 	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12(\n" +
 	"\videntity_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\n" +
-	"identityId\x12\x1d\n" +
-	"\x04code\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\"\xe3\x06\n" +
+	"identityId\x12\x1b\n" +
+	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\xe3\x06\n" +
 	"\x1bSendVerificationCodeRequest\x12\x1e\n" +
 	"\x05email\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12B\n" +
 	"\achannel\x18\x02 \x01(\x0e2\x1c.user.v1.VerificationChannelB\n" +
@@ -5326,9 +5349,10 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x14RevokeSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"<\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"t\n" +
 	"\x18RevokeAllSessionsRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\">\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x126\n" +
+	"\x12exclude_session_id\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x10excludeSessionId\">\n" +
 	"\x11GetSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
@@ -5345,7 +5369,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x1bExchangeSessionCodeResponse\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xda\x02\n" +
+	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xb2\x03\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -5356,11 +5380,12 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"user_agent\x18\x05 \x01(\tR\tuserAgent\x12\x0e\n" +
 	"\x02os\x18\x06 \x01(\tR\x02os\x12\x18\n" +
-	"\abrowser\x18\a \x01(\tR\abrowser\x12!\n" +
-	"\flogin_method\x18\b \x01(\tR\vloginMethod\x12!\n" +
+	"\abrowser\x18\a \x01(\tR\abrowser\x127\n" +
+	"\flogin_method\x18\b \x01(\x0e2\x14.user.v1.LoginMethodR\vloginMethod\x12!\n" +
 	"\flogin_target\x18\t \x01(\tR\vloginTarget\x12\x16\n" +
 	"\x06device\x18\n" +
-	" \x01(\tR\x06device\"\xd6\x03\n" +
+	" \x01(\tR\x06device\x12@\n" +
+	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xd6\x03\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -5731,47 +5756,49 @@ var file_user_v1_request_response_proto_depIdxs = []int32{
 	86, // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
 	87, // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
 	87, // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
-	88, // 18: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
-	79, // 19: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
-	80, // 20: user.v1.CreateUserResponse.user:type_name -> user.v1.User
-	89, // 21: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
-	79, // 22: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
-	78, // 23: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
-	90, // 24: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
-	87, // 25: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	87, // 26: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	87, // 27: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	87, // 28: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	88, // 29: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
-	91, // 30: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 31: user.v1.ListUsersResponse.users:type_name -> user.v1.User
-	89, // 32: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
-	79, // 33: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
-	78, // 34: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
-	90, // 35: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
-	88, // 36: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
-	87, // 37: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	87, // 38: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	87, // 39: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	87, // 40: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	91, // 41: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 42: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
-	78, // 43: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	92, // 44: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
-	81, // 45: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
-	93, // 46: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
-	94, // 47: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
-	95, // 48: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
-	96, // 49: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
-	97, // 50: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
-	98, // 51: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
-	96, // 52: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
-	99, // 53: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
-	54, // [54:54] is the sub-list for method output_type
-	54, // [54:54] is the sub-list for method input_type
-	54, // [54:54] is the sub-list for extension type_name
-	54, // [54:54] is the sub-list for extension extendee
-	0,  // [0:54] is the sub-list for field type_name
+	81, // 18: user.v1.GetSessionResponse.login_method:type_name -> user.v1.LoginMethod
+	78, // 19: user.v1.GetSessionResponse.login_provider:type_name -> user.v1.IdentityProvider
+	88, // 20: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
+	79, // 21: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
+	80, // 22: user.v1.CreateUserResponse.user:type_name -> user.v1.User
+	89, // 23: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
+	79, // 24: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
+	78, // 25: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
+	90, // 26: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
+	87, // 27: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	87, // 28: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	87, // 29: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	87, // 30: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	88, // 31: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
+	91, // 32: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
+	80, // 33: user.v1.ListUsersResponse.users:type_name -> user.v1.User
+	89, // 34: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
+	79, // 35: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
+	78, // 36: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
+	90, // 37: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
+	88, // 38: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
+	87, // 39: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	87, // 40: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	87, // 41: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	87, // 42: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	91, // 43: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
+	80, // 44: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
+	78, // 45: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
+	92, // 46: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	81, // 47: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	93, // 48: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
+	94, // 49: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
+	95, // 50: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
+	96, // 51: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
+	97, // 52: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
+	98, // 53: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
+	96, // 54: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
+	99, // 55: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
+	56, // [56:56] is the sub-list for method output_type
+	56, // [56:56] is the sub-list for method input_type
+	56, // [56:56] is the sub-list for extension type_name
+	56, // [56:56] is the sub-list for extension extendee
+	0,  // [0:56] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_request_response_proto_init() }

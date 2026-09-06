@@ -35,6 +35,7 @@ const (
 	MessageService_ListSMSByCursor_FullMethodName    = "/messaging.v1.MessageService/ListSMSByCursor"
 	MessageService_GetSMSStats_FullMethodName        = "/messaging.v1.MessageService/GetSMSStats"
 	MessageService_ListSMSRegions_FullMethodName     = "/messaging.v1.MessageService/ListSMSRegions"
+	MessageService_ListRegionCodes_FullMethodName    = "/messaging.v1.MessageService/ListRegionCodes"
 	MessageService_ListSMSSenders_FullMethodName     = "/messaging.v1.MessageService/ListSMSSenders"
 	MessageService_ListEmailSenders_FullMethodName   = "/messaging.v1.MessageService/ListEmailSenders"
 )
@@ -123,6 +124,10 @@ type MessageServiceClient interface {
 	// DISTINCT). Callers further filter client-side if needed.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
 	ListSMSRegions(ctx context.Context, in *ListSMSRegionsRequest, opts ...grpc.CallOption) (*ListSMSRegionsResponse, error)
+	// ListRegionCodes returns the full international dial-code directory
+	// (ISO 3166-1 alpha-2 + E.164 dial code + display names) — the data source
+	// for region pickers on the business side. Static reference data; no DB.
+	ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error)
 	// ListSMSSenders returns distinct sender_id values across SMS records, for
 	// populating frontend filter dropdowns.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
@@ -261,6 +266,16 @@ func (c *messageServiceClient) ListSMSRegions(ctx context.Context, in *ListSMSRe
 	return out, nil
 }
 
+func (c *messageServiceClient) ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRegionCodesResponse)
+	err := c.cc.Invoke(ctx, MessageService_ListRegionCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *messageServiceClient) ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListSMSSendersResponse)
@@ -365,6 +380,10 @@ type MessageServiceServer interface {
 	// DISTINCT). Callers further filter client-side if needed.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
 	ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error)
+	// ListRegionCodes returns the full international dial-code directory
+	// (ISO 3166-1 alpha-2 + E.164 dial code + display names) — the data source
+	// for region pickers on the business side. Static reference data; no DB.
+	ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error)
 	// ListSMSSenders returns distinct sender_id values across SMS records, for
 	// populating frontend filter dropdowns.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
@@ -418,6 +437,9 @@ func (UnimplementedMessageServiceServer) GetSMSStats(context.Context, *GetSMSSta
 }
 func (UnimplementedMessageServiceServer) ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSMSRegions not implemented")
+}
+func (UnimplementedMessageServiceServer) ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRegionCodes not implemented")
 }
 func (UnimplementedMessageServiceServer) ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSMSSenders not implemented")
@@ -662,6 +684,24 @@ func _MessageService_ListSMSRegions_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_ListRegionCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRegionCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).ListRegionCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_ListRegionCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).ListRegionCodes(ctx, req.(*ListRegionCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MessageService_ListSMSSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListSMSSendersRequest)
 	if err := dec(in); err != nil {
@@ -752,6 +792,10 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSMSRegions",
 			Handler:    _MessageService_ListSMSRegions_Handler,
+		},
+		{
+			MethodName: "ListRegionCodes",
+			Handler:    _MessageService_ListRegionCodes_Handler,
 		},
 		{
 			MethodName: "ListSMSSenders",

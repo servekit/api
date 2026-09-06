@@ -122,6 +122,7 @@ const (
 	TestkitService_ListSMSByCursor_FullMethodName           = "/testkit.v1.TestkitService/ListSMSByCursor"
 	TestkitService_GetSMSStats_FullMethodName               = "/testkit.v1.TestkitService/GetSMSStats"
 	TestkitService_ListSMSRegions_FullMethodName            = "/testkit.v1.TestkitService/ListSMSRegions"
+	TestkitService_ListRegionCodes_FullMethodName           = "/testkit.v1.TestkitService/ListRegionCodes"
 	TestkitService_ListSMSSenders_FullMethodName            = "/testkit.v1.TestkitService/ListSMSSenders"
 	TestkitService_NextID_FullMethodName                    = "/testkit.v1.TestkitService/NextID"
 	TestkitService_BatchNextID_FullMethodName               = "/testkit.v1.TestkitService/BatchNextID"
@@ -284,6 +285,7 @@ type TestkitServiceClient interface {
 	ListSMSByCursor(ctx context.Context, in *ListSMSByCursorRequest, opts ...grpc.CallOption) (*ListSMSByCursorResponse, error)
 	GetSMSStats(ctx context.Context, in *GetSMSStatsRequest, opts ...grpc.CallOption) (*SMSStatsResponse, error)
 	ListSMSRegions(ctx context.Context, in *ListSMSRegionsRequest, opts ...grpc.CallOption) (*ListSMSRegionsResponse, error)
+	ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error)
 	ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error)
 	// ---- GID debug (P5) ----
 	NextID(ctx context.Context, in *NextIDRequest, opts ...grpc.CallOption) (*NextIDResponse, error)
@@ -1320,6 +1322,16 @@ func (c *testkitServiceClient) ListSMSRegions(ctx context.Context, in *ListSMSRe
 	return out, nil
 }
 
+func (c *testkitServiceClient) ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRegionCodesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListRegionCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *testkitServiceClient) ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListSMSSendersResponse)
@@ -1786,6 +1798,7 @@ type TestkitServiceServer interface {
 	ListSMSByCursor(context.Context, *ListSMSByCursorRequest) (*ListSMSByCursorResponse, error)
 	GetSMSStats(context.Context, *GetSMSStatsRequest) (*SMSStatsResponse, error)
 	ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error)
+	ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error)
 	ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error)
 	// ---- GID debug (P5) ----
 	NextID(context.Context, *NextIDRequest) (*NextIDResponse, error)
@@ -2128,6 +2141,9 @@ func (UnimplementedTestkitServiceServer) GetSMSStats(context.Context, *GetSMSSta
 }
 func (UnimplementedTestkitServiceServer) ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSMSRegions not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRegionCodes not implemented")
 }
 func (UnimplementedTestkitServiceServer) ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSMSSenders not implemented")
@@ -4034,6 +4050,24 @@ func _TestkitService_ListSMSRegions_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_ListRegionCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRegionCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListRegionCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListRegionCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListRegionCodes(ctx, req.(*ListRegionCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TestkitService_ListSMSSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListSMSSendersRequest)
 	if err := dec(in); err != nil {
@@ -5048,6 +5082,10 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSMSRegions",
 			Handler:    _TestkitService_ListSMSRegions_Handler,
+		},
+		{
+			MethodName: "ListRegionCodes",
+			Handler:    _TestkitService_ListRegionCodes_Handler,
 		},
 		{
 			MethodName: "ListSMSSenders",
