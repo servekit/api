@@ -249,10 +249,19 @@ message UnbindIdentityRequest {
 }
 
 // ---- Session (P2) ----
-message ListSessionsRequest {} // user_id from ctx
+message ListSessionsRequest { // user_id from ctx
+  // History pages are cursor-based; the first call (empty cursor) also
+  // returns the LIVE sessions ahead of the history (see user.v1).
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 2 [(buf.validate.field).string.max_len = 64];
+}
 
 message ListSessionsResponse {
   repeated Session sessions = 1;
+  string next_cursor = 2;
 }
 
 message RevokeSessionRequest {

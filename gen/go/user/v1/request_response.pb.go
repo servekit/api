@@ -1621,8 +1621,12 @@ func (x *SendVerificationCodeResponse) GetCaptchaId() string {
 }
 
 type ListSessionsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	UserId int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// History pages are cursor-based (created_at descending). The first call
+	// (empty cursor) also returns the LIVE sessions ahead of the history.
+	PageSize      int32  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor        string `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1664,9 +1668,24 @@ func (x *ListSessionsRequest) GetUserId() int64 {
 	return 0
 }
 
+func (x *ListSessionsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSessionsRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
 type ListSessionsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Sessions      []*Session             `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1706,6 +1725,13 @@ func (x *ListSessionsResponse) GetSessions() []*Session {
 		return x.Sessions
 	}
 	return nil
+}
+
+func (x *ListSessionsResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
 }
 
 type RevokeSessionRequest struct {
@@ -5248,11 +5274,15 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
-	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"7\n" +
+	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\x80\x01\n" +
 	"\x13ListSessionsRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"D\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12&\n" +
+	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
+	"\x06cursor\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\"e\n" +
 	"\x14ListSessionsResponse\x12,\n" +
-	"\bsessions\x18\x01 \x03(\v2\x10.user.v1.SessionR\bsessions\"A\n" +
+	"\bsessions\x18\x01 \x03(\v2\x10.user.v1.SessionR\bsessions\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor\"A\n" +
 	"\x14RevokeSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +

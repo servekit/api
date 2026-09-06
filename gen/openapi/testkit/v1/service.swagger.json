@@ -3819,6 +3819,22 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "description": "History pages are cursor-based; the first call (empty cursor) also\nreturns the LIVE sessions ahead of the history (see user.v1).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "TestkitService"
         ]
@@ -8548,6 +8564,9 @@
             "type": "object",
             "$ref": "#/definitions/v1Session"
           }
+        },
+        "nextCursor": {
+          "type": "string"
         }
       }
     },

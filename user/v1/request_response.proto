@@ -344,10 +344,18 @@ message SendVerificationCodeResponse {
 
 message ListSessionsRequest {
   int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  // History pages are cursor-based (created_at descending). The first call
+  // (empty cursor) also returns the LIVE sessions ahead of the history.
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+  string cursor = 3 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListSessionsResponse {
   repeated Session sessions = 1;
+  string next_cursor = 2;
 }
 
 message RevokeSessionRequest {

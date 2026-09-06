@@ -1151,7 +1151,11 @@ func (x *UnbindIdentityRequest) GetCode() string {
 
 // ---- Session (P2) ----
 type ListSessionsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// History pages are cursor-based; the first call (empty cursor) also
+	// returns the LIVE sessions ahead of the history (see user.v1).
+	PageSize      int32  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor        string `protobuf:"bytes,2,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1186,9 +1190,24 @@ func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_testkit_v1_request_response_proto_rawDescGZIP(), []int{15}
 }
 
+func (x *ListSessionsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListSessionsRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
 type ListSessionsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Sessions      []*Session             `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1228,6 +1247,13 @@ func (x *ListSessionsResponse) GetSessions() []*Session {
 		return x.Sessions
 	}
 	return nil
+}
+
+func (x *ListSessionsResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
 }
 
 type RevokeSessionRequest struct {
@@ -13575,10 +13601,14 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x15UnbindIdentityRequest\x12(\n" +
 	"\videntity_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\n" +
 	"identityId\x12\x1d\n" +
-	"\x04code\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\"\x15\n" +
-	"\x13ListSessionsRequest\"G\n" +
+	"\x04code\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\"^\n" +
+	"\x13ListSessionsRequest\x12&\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
+	"\x06cursor\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\"h\n" +
 	"\x14ListSessionsResponse\x12/\n" +
-	"\bsessions\x18\x01 \x03(\v2\x13.testkit.v1.SessionR\bsessions\"A\n" +
+	"\bsessions\x18\x01 \x03(\v2\x13.testkit.v1.SessionR\bsessions\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor\"A\n" +
 	"\x14RevokeSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
