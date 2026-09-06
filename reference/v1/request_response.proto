@@ -152,4 +152,59 @@ message GetCountryProfileResponse {
   repeated Currency currencies = 3; // currently valid in this country
   repeated Timezone timezones = 4;  // IANA zones covering this country
   string data_version = 5;
+
+// ListCountriesByRegion returns every country under a UN M49 group,
+// recursively (a continent yields all its sub-regions' countries; a
+// sub-region yields its direct members). Ordered by the request locale's
+// country collation.
+message ListCountriesByRegionRequest {
+  string region_code = 1 [(buf.validate.field).string.pattern = "^[0-9]{3}$"];
+  string locale = 2 [
+    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+  ];
+}
+
+message ListCountriesByRegionResponse {
+  repeated Country countries = 1;
+  string data_version = 2;
+}
+
+// GetCountryDefaults returns the auto-fill set for "user picked a country":
+// primary timezone, default currency (first valid), default language (most
+// spoken official), dial code, and the example phone number. Names are
+// resolved in the request locale so a form can display without a second
+// call.
+message GetCountryDefaultsRequest {
+  string country_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
+  string locale = 2 [
+    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+  ];
+}
+
+message GetCountryDefaultsResponse {
+  string timezone_id = 1;    // primary IANA zone, e.g. "Asia/Shanghai"
+  string timezone_name = 2;  // display name in the request locale
+  string currency_code = 3;  // first currently-valid currency, e.g. "CNY"
+  string currency_name = 4;
+  string currency_symbol = 5;
+  string language_tag = 6;   // most-spoken official language, e.g. "zh-Hans"
+  string language_name = 7;
+  string dial_code = 8;      // "+86"
+  string example_number = 9; // "+86 138 0013 8000"
+  string data_version = 10;
+}
+
+// GetDataInfo reports the compiled snapshot: version, locale set, and
+// per-domain counts — enough for cache freshness checks and debugging.
+message GetDataInfoRequest {}
+
+message GetDataInfoResponse {
+  string data_version = 1;
+  repeated string locales = 2;
+  int32 country_count = 3;
+  int32 timezone_count = 4;
+  int32 language_count = 5;
+  int32 currency_count = 6;
+  int32 region_group_count = 7;
+}
 }

@@ -27,4 +27,13 @@ service ReferenceService {
   // GetCountryProfile aggregates the existing domains for one country:
   // base info, continent/sub-region chain, currencies, timezones.
   rpc GetCountryProfile(GetCountryProfileRequest) returns (GetCountryProfileResponse);
+
+  // Hierarchy navigation: every country under a region group, recursively.
+  rpc ListCountriesByRegion(ListCountriesByRegionRequest) returns (ListCountriesByRegionResponse);
+
+  // Auto-fill set for "user picked a country" forms.
+  rpc GetCountryDefaults(GetCountryDefaultsRequest) returns (GetCountryDefaultsResponse);
+
+  // Compiled-snapshot metadata for cache freshness checks.
+  rpc GetDataInfo(GetDataInfoRequest) returns (GetDataInfoResponse);
 }
