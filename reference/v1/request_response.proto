@@ -127,4 +127,26 @@ message ResolveCodesResponse {
   repeated string missing_languages = 7;
   repeated string missing_currencies = 8;
   string data_version = 9;
+
+// GetCountryProfile aggregates everything the existing domains know about
+// one country: base info, its continent/sub-region chain, currently-valid
+// currencies, and IANA zones. No new data domains — pure join over the
+// compiled tables.
+message GetCountryProfileRequest {
+  string country_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
+  string locale = 2 [
+    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+  ];
+}
+
+message GetCountryProfileResponse {
+  Country country = 1;
+  // The country's group chain, continent first then sub-regions
+  // (e.g. Asia -> Eastern Asia). Empty for territories outside the
+  // served hierarchy (e.g. Antarctica sits under the unserved world root).
+  repeated RegionGroup region_groups = 2;
+  repeated Currency currencies = 3; // currently valid in this country
+  repeated Timezone timezones = 4;  // IANA zones covering this country
+  string data_version = 5;
+}
 }

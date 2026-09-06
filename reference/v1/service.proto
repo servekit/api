@@ -23,4 +23,8 @@ service ReferenceService {
       returns (ListRegionGroupsResponse);
   rpc ParsePhone(ParsePhoneRequest) returns (ParsePhoneResponse);
   rpc ResolveCodes(ResolveCodesRequest) returns (ResolveCodesResponse);
+
+  // GetCountryProfile aggregates the existing domains for one country:
+  // base info, continent/sub-region chain, currencies, timezones.
+  rpc GetCountryProfile(GetCountryProfileRequest) returns (GetCountryProfileResponse);
 }
