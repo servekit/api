@@ -140,8 +140,7 @@ message LoginLog {
   // resolves (see user.v1).
   string username = 15;
   // The credential subject of the attempt (see user.v1).
-  user.v1.AuthTargetType target_type = 16;
-  string target_key = 17;
+  string target = 16;
 }
 
 // UserRole is one role held by a user (direct or group-inherited).

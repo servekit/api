@@ -446,10 +446,9 @@ type LoginLog struct {
 	// Denormalized at read time for list views (rows may outlive usernames);
 	// empty when user_id no longer resolves.
 	Username string `protobuf:"bytes,15,opt,name=username,proto3" json:"username,omitempty"`
-	// The credential subject of the attempt, e.g. phone 17000000000 —
-	// present even when no user matched (brute-force rows carry no user).
-	TargetType    AuthTargetType `protobuf:"varint,16,opt,name=target_type,json=targetType,proto3,enum=user.v1.AuthTargetType" json:"target_type,omitempty"`
-	TargetKey     string         `protobuf:"bytes,17,opt,name=target_key,json=targetKey,proto3" json:"target_key,omitempty"`
+	// The credential subject of the attempt (username / email / phone /
+	// oauth uid), e.g. 17000000000 — the kind derives from method + provider.
+	Target        string `protobuf:"bytes,16,opt,name=target,proto3" json:"target,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -589,16 +588,9 @@ func (x *LoginLog) GetUsername() string {
 	return ""
 }
 
-func (x *LoginLog) GetTargetType() AuthTargetType {
+func (x *LoginLog) GetTarget() string {
 	if x != nil {
-		return x.TargetType
-	}
-	return AuthTargetType_AUTH_TARGET_TYPE_UNSPECIFIED
-}
-
-func (x *LoginLog) GetTargetKey() string {
-	if x != nil {
-		return x.TargetKey
+		return x.Target
 	}
 	return ""
 }
@@ -1159,7 +1151,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
 	" \x01(\bR\acurrent\x12.\n" +
-	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\"\xcf\x04\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\"\x8e\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -1179,11 +1171,8 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
 	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
-	"\busername\x18\x0f \x01(\tR\busername\x128\n" +
-	"\vtarget_type\x18\x10 \x01(\x0e2\x17.user.v1.AuthTargetTypeR\n" +
-	"targetType\x12\x1d\n" +
-	"\n" +
-	"target_key\x18\x11 \x01(\tR\ttargetKey\"\x9b\x02\n" +
+	"\busername\x18\x0f \x01(\tR\busername\x12\x16\n" +
+	"\x06target\x18\x10 \x01(\tR\x06target\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -1273,7 +1262,6 @@ var file_user_v1_message_proto_goTypes = []any{
 	(SessionStatus)(0),            // 16: user.v1.SessionStatus
 	(LoginAction)(0),              // 17: user.v1.LoginAction
 	(LoginMethod)(0),              // 18: user.v1.LoginMethod
-	(AuthTargetType)(0),           // 19: user.v1.AuthTargetType
 }
 var file_user_v1_message_proto_depIdxs = []int32{
 	10, // 0: user.v1.User.gender:type_name -> user.v1.Gender
@@ -1294,21 +1282,20 @@ var file_user_v1_message_proto_depIdxs = []int32{
 	15, // 15: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
 	14, // 16: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
 	18, // 17: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	19, // 18: user.v1.LoginLog.target_type:type_name -> user.v1.AuthTargetType
-	14, // 19: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 20: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 21: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 22: user.v1.Role.permissions:type_name -> user.v1.Permission
-	8,  // 23: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 24: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 25: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 26: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 27: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	28, // [28:28] is the sub-list for method output_type
-	28, // [28:28] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	14, // 18: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	14, // 19: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 20: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 21: user.v1.Role.permissions:type_name -> user.v1.Permission
+	8,  // 22: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
+	14, // 23: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	14, // 24: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 25: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
+	14, // 26: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	27, // [27:27] is the sub-list for method output_type
+	27, // [27:27] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }

@@ -6585,18 +6585,6 @@
       "default": "AUTH_MODE_UNSPECIFIED",
       "description": "AuthMode selects the request-authentication posture of an app (spec §4.5).\n\n - AUTH_MODE_NONE: Public token only — lightweight SDKs may stay here.\n - AUTH_MODE_HMAC: Every batch must carry a valid X-Telemetry-Signature; failures are\ndropped silently with a 204."
     },
-    "v1AuthTargetType": {
-      "type": "string",
-      "enum": [
-        "AUTH_TARGET_TYPE_UNSPECIFIED",
-        "AUTH_TARGET_USERNAME",
-        "AUTH_TARGET_EMAIL",
-        "AUTH_TARGET_PHONE",
-        "AUTH_TARGET_OAUTH_UID"
-      ],
-      "default": "AUTH_TARGET_TYPE_UNSPECIFIED",
-      "description": "AuthTargetType names WHAT the caller tried to authenticate as, so audit\nrows read like \"phone 17000000000\" or \"username alice\" instead of a bare\nfail reason with no subject.\n\n - AUTH_TARGET_OAUTH_UID: Social/mini-program logins authenticate by the provider's opaque uid."
-    },
     "v1BatchDeleteMyFilesRequest": {
       "type": "object",
       "properties": {
@@ -8717,12 +8705,9 @@
           "type": "string",
           "description": "Denormalized at read time for list views; empty when user_id no longer\nresolves (see user.v1)."
         },
-        "targetType": {
-          "$ref": "#/definitions/v1AuthTargetType",
+        "target": {
+          "type": "string",
           "description": "The credential subject of the attempt (see user.v1)."
-        },
-        "targetKey": {
-          "type": "string"
         }
       },
       "description": "LoginLog is one row of the login audit trail."
