@@ -166,6 +166,9 @@ const (
 	TestkitService_ParsePhone_FullMethodName                = "/testkit.v1.TestkitService/ParsePhone"
 	TestkitService_ResolveCodes_FullMethodName              = "/testkit.v1.TestkitService/ResolveCodes"
 	TestkitService_GetCountryProfile_FullMethodName         = "/testkit.v1.TestkitService/GetCountryProfile"
+	TestkitService_ListCountriesByRegion_FullMethodName     = "/testkit.v1.TestkitService/ListCountriesByRegion"
+	TestkitService_GetCountryDefaults_FullMethodName        = "/testkit.v1.TestkitService/GetCountryDefaults"
+	TestkitService_GetDataInfo_FullMethodName               = "/testkit.v1.TestkitService/GetDataInfo"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -339,6 +342,9 @@ type TestkitServiceClient interface {
 	ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error)
 	ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error)
 	GetCountryProfile(ctx context.Context, in *v11.GetCountryProfileRequest, opts ...grpc.CallOption) (*v11.GetCountryProfileResponse, error)
+	ListCountriesByRegion(ctx context.Context, in *v11.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v11.ListCountriesByRegionResponse, error)
+	GetCountryDefaults(ctx context.Context, in *v11.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v11.GetCountryDefaultsResponse, error)
+	GetDataInfo(ctx context.Context, in *v11.GetDataInfoRequest, opts ...grpc.CallOption) (*v11.GetDataInfoResponse, error)
 }
 
 type testkitServiceClient struct {
@@ -1769,6 +1775,36 @@ func (c *testkitServiceClient) GetCountryProfile(ctx context.Context, in *v11.Ge
 	return out, nil
 }
 
+func (c *testkitServiceClient) ListCountriesByRegion(ctx context.Context, in *v11.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v11.ListCountriesByRegionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListCountriesByRegionResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListCountriesByRegion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) GetCountryDefaults(ctx context.Context, in *v11.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v11.GetCountryDefaultsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.GetCountryDefaultsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetCountryDefaults_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) GetDataInfo(ctx context.Context, in *v11.GetDataInfoRequest, opts ...grpc.CallOption) (*v11.GetDataInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.GetDataInfoResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetDataInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TestkitServiceServer is the server API for TestkitService service.
 // All implementations must embed UnimplementedTestkitServiceServer
 // for forward compatibility.
@@ -1940,6 +1976,9 @@ type TestkitServiceServer interface {
 	ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error)
 	ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error)
 	GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error)
+	ListCountriesByRegion(context.Context, *v11.ListCountriesByRegionRequest) (*v11.ListCountriesByRegionResponse, error)
+	GetCountryDefaults(context.Context, *v11.GetCountryDefaultsRequest) (*v11.GetCountryDefaultsResponse, error)
+	GetDataInfo(context.Context, *v11.GetDataInfoRequest) (*v11.GetDataInfoResponse, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -2375,6 +2414,15 @@ func (UnimplementedTestkitServiceServer) ResolveCodes(context.Context, *v11.Reso
 }
 func (UnimplementedTestkitServiceServer) GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCountryProfile not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListCountriesByRegion(context.Context, *v11.ListCountriesByRegionRequest) (*v11.ListCountriesByRegionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCountriesByRegion not implemented")
+}
+func (UnimplementedTestkitServiceServer) GetCountryDefaults(context.Context, *v11.GetCountryDefaultsRequest) (*v11.GetCountryDefaultsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCountryDefaults not implemented")
+}
+func (UnimplementedTestkitServiceServer) GetDataInfo(context.Context, *v11.GetDataInfoRequest) (*v11.GetDataInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataInfo not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
 func (UnimplementedTestkitServiceServer) testEmbeddedByValue()                        {}
@@ -4953,6 +5001,60 @@ func _TestkitService_GetCountryProfile_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_ListCountriesByRegion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListCountriesByRegionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListCountriesByRegion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListCountriesByRegion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListCountriesByRegion(ctx, req.(*v11.ListCountriesByRegionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_GetCountryDefaults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.GetCountryDefaultsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).GetCountryDefaults(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_GetCountryDefaults_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).GetCountryDefaults(ctx, req.(*v11.GetCountryDefaultsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_GetDataInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.GetDataInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).GetDataInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_GetDataInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).GetDataInfo(ctx, req.(*v11.GetDataInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TestkitService_ServiceDesc is the grpc.ServiceDesc for TestkitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5527,6 +5629,18 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCountryProfile",
 			Handler:    _TestkitService_GetCountryProfile_Handler,
+		},
+		{
+			MethodName: "ListCountriesByRegion",
+			Handler:    _TestkitService_ListCountriesByRegion_Handler,
+		},
+		{
+			MethodName: "GetCountryDefaults",
+			Handler:    _TestkitService_GetCountryDefaults_Handler,
+		},
+		{
+			MethodName: "GetDataInfo",
+			Handler:    _TestkitService_GetDataInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

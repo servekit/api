@@ -3865,6 +3865,42 @@
         ]
       }
     },
+    "/api/v1/reference/countries/{countryCode}/defaults": {
+      "get": {
+        "operationId": "GetCountryDefaults",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCountryDefaultsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/reference/countries/{countryCode}/profile": {
       "get": {
         "operationId": "GetCountryProfile",
@@ -3926,6 +3962,28 @@
             "type": "string"
           }
         ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/data-info": {
+      "get": {
+        "operationId": "GetDataInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDataInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "TestkitService"
         ]
@@ -4012,6 +4070,42 @@
           }
         },
         "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/regions/{regionCode}/countries": {
+      "get": {
+        "operationId": "ListCountriesByRegion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListCountriesByRegionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "regionCode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "locale",
             "in": "query",
@@ -8061,6 +8155,47 @@
         }
       }
     },
+    "v1GetCountryDefaultsResponse": {
+      "type": "object",
+      "properties": {
+        "timezoneId": {
+          "type": "string",
+          "title": "primary IANA zone, e.g. \"Asia/Shanghai\""
+        },
+        "timezoneName": {
+          "type": "string",
+          "title": "display name in the request locale"
+        },
+        "currencyCode": {
+          "type": "string",
+          "title": "first currently-valid currency, e.g. \"CNY\""
+        },
+        "currencyName": {
+          "type": "string"
+        },
+        "currencySymbol": {
+          "type": "string"
+        },
+        "languageTag": {
+          "type": "string",
+          "title": "most-spoken official language, e.g. \"zh-Hans\""
+        },
+        "languageName": {
+          "type": "string"
+        },
+        "dialCode": {
+          "type": "string",
+          "title": "\"+86\""
+        },
+        "exampleNumber": {
+          "type": "string",
+          "title": "\"+86 138 0013 8000\""
+        },
+        "dataVersion": {
+          "type": "string"
+        }
+      }
+    },
     "v1GetCountryProfileResponse": {
       "type": "object",
       "properties": {
@@ -8101,6 +8236,40 @@
         },
         "dataVersion": {
           "type": "string"
+        }
+      }
+    },
+    "v1GetDataInfoResponse": {
+      "type": "object",
+      "properties": {
+        "dataVersion": {
+          "type": "string"
+        },
+        "locales": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "countryCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timezoneCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "languageCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "currencyCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "regionGroupCount": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8662,6 +8831,21 @@
         }
       },
       "description": "Language is one selectable BCP 47 tag."
+    },
+    "v1ListCountriesByRegionResponse": {
+      "type": "object",
+      "properties": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Country"
+          }
+        },
+        "dataVersion": {
+          "type": "string"
+        }
+      }
     },
     "v1ListCountriesResponse": {
       "type": "object",

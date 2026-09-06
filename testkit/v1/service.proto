@@ -737,4 +737,17 @@ service TestkitService {
       get: "/api/v1/reference/countries/{country_code}/profile"
     };
   }
+  rpc ListCountriesByRegion(reference.v1.ListCountriesByRegionRequest) returns (reference.v1.ListCountriesByRegionResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/reference/regions/{region_code}/countries"
+    };
+  }
+  rpc GetCountryDefaults(reference.v1.GetCountryDefaultsRequest) returns (reference.v1.GetCountryDefaultsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/reference/countries/{country_code}/defaults"
+    };
+  }
+  rpc GetDataInfo(reference.v1.GetDataInfoRequest) returns (reference.v1.GetDataInfoResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/data-info"};
+  }
 }
