@@ -135,6 +135,9 @@ message LoginLog {
   google.protobuf.Timestamp created_at = 13;
   // The login method used; UNSPECIFIED for social logins (see user.v1).
   user.v1.LoginMethod method = 14;
+  // Denormalized at read time for list views; empty when user_id no longer
+  // resolves (see user.v1).
+  string username = 15;
 }
 
 // UserRole is one role held by a user (direct or group-inherited).

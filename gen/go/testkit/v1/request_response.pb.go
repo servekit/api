@@ -2904,12 +2904,16 @@ func (x *ListUsersPagedResponse) GetTotalPages() int32 {
 }
 
 type GetLoginLogsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // optional filter (0 = all); kept
-	Provider      v1.IdentityProvider    `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Cursor        string                 `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UserId   int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // optional filter (0 = all); kept
+	Provider v1.IdentityProvider    `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	// optional: presence distinguishes "filter failed attempts" (false) from
+	// "no filter" — a plain proto3 bool cannot tell those apart.
+	Success       *bool          `protobuf:"varint,3,opt,name=success,proto3,oneof" json:"success,omitempty"`
+	PageSize      int32          `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor        string         `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Action        v1.LoginAction `protobuf:"varint,6,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"` // optional filter (0 = all)
+	Method        v1.LoginMethod `protobuf:"varint,7,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"` // optional filter (0 = all)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2959,8 +2963,8 @@ func (x *GetLoginLogsRequest) GetProvider() v1.IdentityProvider {
 }
 
 func (x *GetLoginLogsRequest) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -2977,6 +2981,20 @@ func (x *GetLoginLogsRequest) GetCursor() string {
 		return x.Cursor
 	}
 	return ""
+}
+
+func (x *GetLoginLogsRequest) GetAction() v1.LoginAction {
+	if x != nil {
+		return x.Action
+	}
+	return v1.LoginAction(0)
+}
+
+func (x *GetLoginLogsRequest) GetMethod() v1.LoginMethod {
+	if x != nil {
+		return x.Method
+	}
+	return v1.LoginMethod(0)
 }
 
 type GetLoginLogsResponse struct {
@@ -13773,13 +13791,17 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
-	"totalPages\"\xc8\x01\n" +
+	"totalPages\"\xb5\x02\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
-	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x18\n" +
-	"\asuccess\x18\x03 \x01(\bR\asuccess\x12&\n" +
+	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
+	"\asuccess\x18\x03 \x01(\bH\x00R\asuccess\x88\x01\x01\x12&\n" +
 	"\tpage_size\x18\x04 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
-	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\"w\n" +
+	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
+	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
+	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06methodB\n" +
+	"\n" +
+	"\b_success\"w\n" +
 	"\x14GetLoginLogsResponse\x12(\n" +
 	"\x04logs\x18\x01 \x03(\v2\x14.testkit.v1.LoginLogR\x04logs\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -14940,67 +14962,68 @@ var file_testkit_v1_request_response_proto_goTypes = []any{
 	(v1.UserStatus)(0),                        // 233: user.v1.UserStatus
 	(v1.DeviceType)(0),                        // 234: user.v1.DeviceType
 	(v1.UserSortField)(0),                     // 235: user.v1.UserSortField
-	(*LoginLog)(nil),                          // 236: testkit.v1.LoginLog
-	(*Group)(nil),                             // 237: testkit.v1.Group
-	(*GroupMember)(nil),                       // 238: testkit.v1.GroupMember
-	(*Role)(nil),                              // 239: testkit.v1.Role
-	(*UserRole)(nil),                          // 240: testkit.v1.UserRole
-	(*Permission)(nil),                        // 241: testkit.v1.Permission
-	(*PermissionGroup)(nil),                   // 242: testkit.v1.PermissionGroup
-	(v11.Vendor)(0),                           // 243: storage.v1.Vendor
-	(v11.Visibility)(0),                       // 244: storage.v1.Visibility
-	(*FileInfo)(nil),                          // 245: testkit.v1.FileInfo
-	(*durationpb.Duration)(nil),               // 246: google.protobuf.Duration
-	(*UploadFileMeta)(nil),                    // 247: testkit.v1.UploadFileMeta
-	(*UploadCredentialItem)(nil),              // 248: testkit.v1.UploadCredentialItem
-	(*ImageProcessOp)(nil),                    // 249: testkit.v1.ImageProcessOp
-	(v11.SortField)(0),                        // 250: storage.v1.SortField
-	(v11.AuditAction)(0),                      // 251: storage.v1.AuditAction
-	(v11.AuditLogTargetType)(0),               // 252: storage.v1.AuditLogTargetType
-	(*AuditLogEntry)(nil),                     // 253: testkit.v1.AuditLogEntry
-	(v11.OwnerType)(0),                        // 254: storage.v1.OwnerType
-	(*AdminFileInfo)(nil),                     // 255: testkit.v1.AdminFileInfo
-	(*OwnerStats)(nil),                        // 256: testkit.v1.OwnerStats
-	(*ProviderStats)(nil),                     // 257: testkit.v1.ProviderStats
-	(*BucketStats)(nil),                       // 258: testkit.v1.BucketStats
-	(*ProviderInfo)(nil),                      // 259: testkit.v1.ProviderInfo
-	(*BucketInfo)(nil),                        // 260: testkit.v1.BucketInfo
-	(v11.AuditLogStatus)(0),                   // 261: storage.v1.AuditLogStatus
-	(*EmailAddress)(nil),                      // 262: testkit.v1.EmailAddress
-	(v12.EmailVendor)(0),                      // 263: messaging.v1.EmailVendor
-	(v12.EmailScene)(0),                       // 264: messaging.v1.EmailScene
-	(*EmailAttachment)(nil),                   // 265: testkit.v1.EmailAttachment
-	(v12.SmsVendor)(0),                        // 266: messaging.v1.SmsVendor
-	(v12.SmsScene)(0),                         // 267: messaging.v1.SmsScene
-	(v12.MessageStatus)(0),                    // 268: messaging.v1.MessageStatus
-	(v12.SortDirection)(0),                    // 269: messaging.v1.SortDirection
-	(*EmailRecord)(nil),                       // 270: testkit.v1.EmailRecord
-	(*SMSRecord)(nil),                         // 271: testkit.v1.SMSRecord
-	(*EmailVendorStats)(nil),                  // 272: testkit.v1.EmailVendorStats
-	(*SmsVendorStats)(nil),                    // 273: testkit.v1.SmsVendorStats
-	(*EmailStats)(nil),                        // 274: testkit.v1.EmailStats
-	(*SMSStats)(nil),                          // 275: testkit.v1.SMSStats
-	(*MyQuota)(nil),                           // 276: testkit.v1.MyQuota
-	(*UsersSummary)(nil),                      // 277: testkit.v1.UsersSummary
-	(*SlotSummary)(nil),                       // 278: testkit.v1.SlotSummary
-	(*HealthChecks)(nil),                      // 279: testkit.v1.HealthChecks
-	(*EntitlementInput)(nil),                  // 280: testkit.v1.EntitlementInput
-	(*KeyInfo)(nil),                           // 281: testkit.v1.KeyInfo
-	(v13.KeyStatus)(0),                        // 282: license.v1.KeyStatus
-	(v13.Module)(0),                           // 283: license.v1.Module
-	(v13.EntitlementKind)(0),                  // 284: license.v1.EntitlementKind
-	(*EntitlementInfo)(nil),                   // 285: testkit.v1.EntitlementInfo
-	(*DeviceSlotInfo)(nil),                    // 286: testkit.v1.DeviceSlotInfo
-	(*TrialInfo)(nil),                         // 287: testkit.v1.TrialInfo
-	(*SigningKeyInfo)(nil),                    // 288: testkit.v1.SigningKeyInfo
-	(*ValidateEventResult)(nil),               // 289: testkit.v1.ValidateEventResult
-	(*App)(nil),                               // 290: testkit.v1.App
-	(*IngestTokenInfo)(nil),                   // 291: testkit.v1.IngestTokenInfo
-	(*TelemetrySigningKeyInfo)(nil),           // 292: testkit.v1.TelemetrySigningKeyInfo
-	(*EventRule)(nil),                         // 293: testkit.v1.EventRule
-	(*VersionInfo)(nil),                       // 294: testkit.v1.VersionInfo
-	(v14.AuthMode)(0),                         // 295: telemetry.v1.AuthMode
-	(*DailyStat)(nil),                         // 296: testkit.v1.DailyStat
+	(v1.LoginAction)(0),                       // 236: user.v1.LoginAction
+	(*LoginLog)(nil),                          // 237: testkit.v1.LoginLog
+	(*Group)(nil),                             // 238: testkit.v1.Group
+	(*GroupMember)(nil),                       // 239: testkit.v1.GroupMember
+	(*Role)(nil),                              // 240: testkit.v1.Role
+	(*UserRole)(nil),                          // 241: testkit.v1.UserRole
+	(*Permission)(nil),                        // 242: testkit.v1.Permission
+	(*PermissionGroup)(nil),                   // 243: testkit.v1.PermissionGroup
+	(v11.Vendor)(0),                           // 244: storage.v1.Vendor
+	(v11.Visibility)(0),                       // 245: storage.v1.Visibility
+	(*FileInfo)(nil),                          // 246: testkit.v1.FileInfo
+	(*durationpb.Duration)(nil),               // 247: google.protobuf.Duration
+	(*UploadFileMeta)(nil),                    // 248: testkit.v1.UploadFileMeta
+	(*UploadCredentialItem)(nil),              // 249: testkit.v1.UploadCredentialItem
+	(*ImageProcessOp)(nil),                    // 250: testkit.v1.ImageProcessOp
+	(v11.SortField)(0),                        // 251: storage.v1.SortField
+	(v11.AuditAction)(0),                      // 252: storage.v1.AuditAction
+	(v11.AuditLogTargetType)(0),               // 253: storage.v1.AuditLogTargetType
+	(*AuditLogEntry)(nil),                     // 254: testkit.v1.AuditLogEntry
+	(v11.OwnerType)(0),                        // 255: storage.v1.OwnerType
+	(*AdminFileInfo)(nil),                     // 256: testkit.v1.AdminFileInfo
+	(*OwnerStats)(nil),                        // 257: testkit.v1.OwnerStats
+	(*ProviderStats)(nil),                     // 258: testkit.v1.ProviderStats
+	(*BucketStats)(nil),                       // 259: testkit.v1.BucketStats
+	(*ProviderInfo)(nil),                      // 260: testkit.v1.ProviderInfo
+	(*BucketInfo)(nil),                        // 261: testkit.v1.BucketInfo
+	(v11.AuditLogStatus)(0),                   // 262: storage.v1.AuditLogStatus
+	(*EmailAddress)(nil),                      // 263: testkit.v1.EmailAddress
+	(v12.EmailVendor)(0),                      // 264: messaging.v1.EmailVendor
+	(v12.EmailScene)(0),                       // 265: messaging.v1.EmailScene
+	(*EmailAttachment)(nil),                   // 266: testkit.v1.EmailAttachment
+	(v12.SmsVendor)(0),                        // 267: messaging.v1.SmsVendor
+	(v12.SmsScene)(0),                         // 268: messaging.v1.SmsScene
+	(v12.MessageStatus)(0),                    // 269: messaging.v1.MessageStatus
+	(v12.SortDirection)(0),                    // 270: messaging.v1.SortDirection
+	(*EmailRecord)(nil),                       // 271: testkit.v1.EmailRecord
+	(*SMSRecord)(nil),                         // 272: testkit.v1.SMSRecord
+	(*EmailVendorStats)(nil),                  // 273: testkit.v1.EmailVendorStats
+	(*SmsVendorStats)(nil),                    // 274: testkit.v1.SmsVendorStats
+	(*EmailStats)(nil),                        // 275: testkit.v1.EmailStats
+	(*SMSStats)(nil),                          // 276: testkit.v1.SMSStats
+	(*MyQuota)(nil),                           // 277: testkit.v1.MyQuota
+	(*UsersSummary)(nil),                      // 278: testkit.v1.UsersSummary
+	(*SlotSummary)(nil),                       // 279: testkit.v1.SlotSummary
+	(*HealthChecks)(nil),                      // 280: testkit.v1.HealthChecks
+	(*EntitlementInput)(nil),                  // 281: testkit.v1.EntitlementInput
+	(*KeyInfo)(nil),                           // 282: testkit.v1.KeyInfo
+	(v13.KeyStatus)(0),                        // 283: license.v1.KeyStatus
+	(v13.Module)(0),                           // 284: license.v1.Module
+	(v13.EntitlementKind)(0),                  // 285: license.v1.EntitlementKind
+	(*EntitlementInfo)(nil),                   // 286: testkit.v1.EntitlementInfo
+	(*DeviceSlotInfo)(nil),                    // 287: testkit.v1.DeviceSlotInfo
+	(*TrialInfo)(nil),                         // 288: testkit.v1.TrialInfo
+	(*SigningKeyInfo)(nil),                    // 289: testkit.v1.SigningKeyInfo
+	(*ValidateEventResult)(nil),               // 290: testkit.v1.ValidateEventResult
+	(*App)(nil),                               // 291: testkit.v1.App
+	(*IngestTokenInfo)(nil),                   // 292: testkit.v1.IngestTokenInfo
+	(*TelemetrySigningKeyInfo)(nil),           // 293: testkit.v1.TelemetrySigningKeyInfo
+	(*EventRule)(nil),                         // 294: testkit.v1.EventRule
+	(*VersionInfo)(nil),                       // 295: testkit.v1.VersionInfo
+	(v14.AuthMode)(0),                         // 296: telemetry.v1.AuthMode
+	(*DailyStat)(nil),                         // 297: testkit.v1.DailyStat
 }
 var file_testkit_v1_request_response_proto_depIdxs = []int32{
 	223, // 0: testkit.v1.LoginRequest.method:type_name -> user.v1.LoginMethod
@@ -15046,148 +15069,150 @@ var file_testkit_v1_request_response_proto_depIdxs = []int32{
 	235, // 40: testkit.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
 	228, // 41: testkit.v1.ListUsersPagedResponse.users:type_name -> testkit.v1.User
 	224, // 42: testkit.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	236, // 43: testkit.v1.GetLoginLogsResponse.logs:type_name -> testkit.v1.LoginLog
-	237, // 44: testkit.v1.ListGroupsResponse.groups:type_name -> testkit.v1.Group
-	238, // 45: testkit.v1.ListGroupMembersResponse.members:type_name -> testkit.v1.GroupMember
-	239, // 46: testkit.v1.ListGroupRolesResponse.roles:type_name -> testkit.v1.Role
-	239, // 47: testkit.v1.ListRolesResponse.roles:type_name -> testkit.v1.Role
-	240, // 48: testkit.v1.ListUserRolesResponse.roles:type_name -> testkit.v1.UserRole
-	241, // 49: testkit.v1.ListPermissionsResponse.permissions:type_name -> testkit.v1.Permission
-	242, // 50: testkit.v1.ListPermissionGroupsResponse.groups:type_name -> testkit.v1.PermissionGroup
-	214, // 51: testkit.v1.GenerateUploadURLRequest.metadata:type_name -> testkit.v1.GenerateUploadURLRequest.MetadataEntry
-	243, // 52: testkit.v1.GenerateUploadURLRequest.vendor:type_name -> storage.v1.Vendor
-	244, // 53: testkit.v1.GenerateUploadURLRequest.visibility:type_name -> storage.v1.Visibility
-	245, // 54: testkit.v1.GenerateUploadURLResponse.file_info:type_name -> testkit.v1.FileInfo
-	215, // 55: testkit.v1.GenerateUploadURLResponse.headers:type_name -> testkit.v1.GenerateUploadURLResponse.HeadersEntry
-	216, // 56: testkit.v1.GetSTSCredentialRequest.metadata:type_name -> testkit.v1.GetSTSCredentialRequest.MetadataEntry
-	243, // 57: testkit.v1.GetSTSCredentialRequest.vendor:type_name -> storage.v1.Vendor
-	246, // 58: testkit.v1.GetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
-	244, // 59: testkit.v1.GetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
-	245, // 60: testkit.v1.GetSTSCredentialResponse.file_info:type_name -> testkit.v1.FileInfo
-	247, // 61: testkit.v1.BatchGetSTSCredentialRequest.files:type_name -> testkit.v1.UploadFileMeta
-	246, // 62: testkit.v1.BatchGetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
-	244, // 63: testkit.v1.BatchGetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
-	248, // 64: testkit.v1.BatchGetSTSCredentialResponse.items:type_name -> testkit.v1.UploadCredentialItem
-	245, // 65: testkit.v1.ConfirmUploadResponse.file_info:type_name -> testkit.v1.FileInfo
-	249, // 66: testkit.v1.GenerateProcessURLRequest.ops:type_name -> testkit.v1.ImageProcessOp
-	249, // 67: testkit.v1.GenerateCDNURLRequest.ops:type_name -> testkit.v1.ImageProcessOp
-	246, // 68: testkit.v1.GenerateCDNURLRequest.ttl:type_name -> google.protobuf.Duration
-	250, // 69: testkit.v1.ListMyFilesRequest.order_by:type_name -> storage.v1.SortField
-	245, // 70: testkit.v1.ListMyFilesResponse.files:type_name -> testkit.v1.FileInfo
-	250, // 71: testkit.v1.ListMyFilesPagedRequest.order_by:type_name -> storage.v1.SortField
-	245, // 72: testkit.v1.ListMyFilesPagedResponse.files:type_name -> testkit.v1.FileInfo
-	217, // 73: testkit.v1.UpdateMyFileRequest.metadata:type_name -> testkit.v1.UpdateMyFileRequest.MetadataEntry
-	251, // 74: testkit.v1.ListMyAuditLogsRequest.action:type_name -> storage.v1.AuditAction
-	252, // 75: testkit.v1.ListMyAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
-	253, // 76: testkit.v1.ListMyAuditLogsResponse.logs:type_name -> testkit.v1.AuditLogEntry
-	254, // 77: testkit.v1.AdminListFilesRequest.owner_type:type_name -> storage.v1.OwnerType
-	250, // 78: testkit.v1.AdminListFilesRequest.order_by:type_name -> storage.v1.SortField
-	255, // 79: testkit.v1.AdminListFilesResponse.files:type_name -> testkit.v1.AdminFileInfo
-	254, // 80: testkit.v1.AdminGetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	254, // 81: testkit.v1.AdminSetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	254, // 82: testkit.v1.AdminGetStatsRequest.owner_type:type_name -> storage.v1.OwnerType
-	256, // 83: testkit.v1.AdminGetStatsResponse.owner_stats:type_name -> testkit.v1.OwnerStats
-	257, // 84: testkit.v1.AdminGetStatsResponse.provider_stats:type_name -> testkit.v1.ProviderStats
-	258, // 85: testkit.v1.AdminGetStatsResponse.bucket_stats:type_name -> testkit.v1.BucketStats
-	259, // 86: testkit.v1.AdminListProvidersResponse.providers:type_name -> testkit.v1.ProviderInfo
-	260, // 87: testkit.v1.AdminListBucketsResponse.buckets:type_name -> testkit.v1.BucketInfo
-	254, // 88: testkit.v1.AdminSoftDeleteOwnerFilesRequest.owner_type:type_name -> storage.v1.OwnerType
-	254, // 89: testkit.v1.AdminDeleteOwnerRequest.owner_type:type_name -> storage.v1.OwnerType
-	251, // 90: testkit.v1.AdminListAuditLogsRequest.action:type_name -> storage.v1.AuditAction
-	252, // 91: testkit.v1.AdminListAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
-	261, // 92: testkit.v1.AdminListAuditLogsRequest.status:type_name -> storage.v1.AuditLogStatus
-	254, // 93: testkit.v1.AdminListAuditLogsRequest.owner_type:type_name -> storage.v1.OwnerType
-	253, // 94: testkit.v1.AdminListAuditLogsResponse.logs:type_name -> testkit.v1.AuditLogEntry
-	262, // 95: testkit.v1.SendEmailRequest.to:type_name -> testkit.v1.EmailAddress
-	262, // 96: testkit.v1.SendEmailRequest.cc:type_name -> testkit.v1.EmailAddress
-	262, // 97: testkit.v1.SendEmailRequest.bcc:type_name -> testkit.v1.EmailAddress
-	262, // 98: testkit.v1.SendEmailRequest.reply_to:type_name -> testkit.v1.EmailAddress
-	263, // 99: testkit.v1.SendEmailRequest.vendor:type_name -> messaging.v1.EmailVendor
-	218, // 100: testkit.v1.SendEmailRequest.template_params:type_name -> testkit.v1.SendEmailRequest.TemplateParamsEntry
-	264, // 101: testkit.v1.SendEmailRequest.scene:type_name -> messaging.v1.EmailScene
-	262, // 102: testkit.v1.SendEmailRequest.from:type_name -> testkit.v1.EmailAddress
-	265, // 103: testkit.v1.SendEmailRequest.attachments:type_name -> testkit.v1.EmailAttachment
-	219, // 104: testkit.v1.SendSMSRequest.template_params:type_name -> testkit.v1.SendSMSRequest.TemplateParamsEntry
-	266, // 105: testkit.v1.SendSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
-	267, // 106: testkit.v1.SendSMSRequest.scene:type_name -> messaging.v1.SmsScene
-	268, // 107: testkit.v1.SendResponse.status:type_name -> messaging.v1.MessageStatus
-	263, // 108: testkit.v1.SendResponse.email_vendor:type_name -> messaging.v1.EmailVendor
-	266, // 109: testkit.v1.SendResponse.sms_vendor:type_name -> messaging.v1.SmsVendor
-	263, // 110: testkit.v1.ListEmailsRequest.vendor:type_name -> messaging.v1.EmailVendor
-	264, // 111: testkit.v1.ListEmailsRequest.scene:type_name -> messaging.v1.EmailScene
-	268, // 112: testkit.v1.ListEmailsRequest.status:type_name -> messaging.v1.MessageStatus
-	250, // 113: testkit.v1.ListEmailsRequest.sort_field:type_name -> storage.v1.SortField
-	269, // 114: testkit.v1.ListEmailsRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	270, // 115: testkit.v1.ListEmailsResponse.records:type_name -> testkit.v1.EmailRecord
-	266, // 116: testkit.v1.ListSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
-	267, // 117: testkit.v1.ListSMSRequest.scene:type_name -> messaging.v1.SmsScene
-	268, // 118: testkit.v1.ListSMSRequest.status:type_name -> messaging.v1.MessageStatus
-	250, // 119: testkit.v1.ListSMSRequest.sort_field:type_name -> storage.v1.SortField
-	269, // 120: testkit.v1.ListSMSRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	271, // 121: testkit.v1.ListSMSResponse.records:type_name -> testkit.v1.SMSRecord
-	263, // 122: testkit.v1.ListEmailsByCursorRequest.vendor:type_name -> messaging.v1.EmailVendor
-	264, // 123: testkit.v1.ListEmailsByCursorRequest.scene:type_name -> messaging.v1.EmailScene
-	268, // 124: testkit.v1.ListEmailsByCursorRequest.status:type_name -> messaging.v1.MessageStatus
-	250, // 125: testkit.v1.ListEmailsByCursorRequest.sort_field:type_name -> storage.v1.SortField
-	269, // 126: testkit.v1.ListEmailsByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	270, // 127: testkit.v1.ListEmailsByCursorResponse.records:type_name -> testkit.v1.EmailRecord
-	266, // 128: testkit.v1.ListSMSByCursorRequest.vendor:type_name -> messaging.v1.SmsVendor
-	267, // 129: testkit.v1.ListSMSByCursorRequest.scene:type_name -> messaging.v1.SmsScene
-	268, // 130: testkit.v1.ListSMSByCursorRequest.status:type_name -> messaging.v1.MessageStatus
-	250, // 131: testkit.v1.ListSMSByCursorRequest.sort_field:type_name -> storage.v1.SortField
-	269, // 132: testkit.v1.ListSMSByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	271, // 133: testkit.v1.ListSMSByCursorResponse.records:type_name -> testkit.v1.SMSRecord
-	263, // 134: testkit.v1.GetEmailStatsRequest.vendor:type_name -> messaging.v1.EmailVendor
-	264, // 135: testkit.v1.GetEmailStatsRequest.scene:type_name -> messaging.v1.EmailScene
-	272, // 136: testkit.v1.EmailStatsResponse.vendors:type_name -> testkit.v1.EmailVendorStats
-	266, // 137: testkit.v1.GetSMSStatsRequest.vendor:type_name -> messaging.v1.SmsVendor
-	267, // 138: testkit.v1.GetSMSStatsRequest.scene:type_name -> messaging.v1.SmsScene
-	273, // 139: testkit.v1.SMSStatsResponse.vendors:type_name -> testkit.v1.SmsVendorStats
-	274, // 140: testkit.v1.DashboardResponse.email_stats:type_name -> testkit.v1.EmailStats
-	275, // 141: testkit.v1.DashboardResponse.sms_stats:type_name -> testkit.v1.SMSStats
-	276, // 142: testkit.v1.DashboardResponse.quota:type_name -> testkit.v1.MyQuota
-	277, // 143: testkit.v1.DashboardResponse.users:type_name -> testkit.v1.UsersSummary
-	278, // 144: testkit.v1.ActivateResponse.slots:type_name -> testkit.v1.SlotSummary
-	279, // 145: testkit.v1.HealthResponse.checks:type_name -> testkit.v1.HealthChecks
-	280, // 146: testkit.v1.CreateKeyRequest.grants:type_name -> testkit.v1.EntitlementInput
-	281, // 147: testkit.v1.CreateKeyResponse.key:type_name -> testkit.v1.KeyInfo
-	281, // 148: testkit.v1.ShowKeyResponse.key:type_name -> testkit.v1.KeyInfo
-	282, // 149: testkit.v1.ListKeysRequest.status:type_name -> license.v1.KeyStatus
-	281, // 150: testkit.v1.ListKeysResponse.keys:type_name -> testkit.v1.KeyInfo
-	281, // 151: testkit.v1.UpdateKeyResponse.key:type_name -> testkit.v1.KeyInfo
-	281, // 152: testkit.v1.RevokeKeyResponse.key:type_name -> testkit.v1.KeyInfo
-	281, // 153: testkit.v1.UnrevokeKeyResponse.key:type_name -> testkit.v1.KeyInfo
-	283, // 154: testkit.v1.GrantModuleRequest.module:type_name -> license.v1.Module
-	284, // 155: testkit.v1.GrantModuleRequest.kind:type_name -> license.v1.EntitlementKind
-	231, // 156: testkit.v1.GrantModuleRequest.expires_at:type_name -> google.protobuf.Timestamp
-	285, // 157: testkit.v1.GrantModuleResponse.entitlement:type_name -> testkit.v1.EntitlementInfo
-	283, // 158: testkit.v1.RevokeModuleRequest.module:type_name -> license.v1.Module
-	286, // 159: testkit.v1.ListKeyDevicesResponse.devices:type_name -> testkit.v1.DeviceSlotInfo
-	283, // 160: testkit.v1.ShowTrialRequest.module:type_name -> license.v1.Module
-	287, // 161: testkit.v1.ShowTrialResponse.trials:type_name -> testkit.v1.TrialInfo
-	283, // 162: testkit.v1.ResetTrialRequest.module:type_name -> license.v1.Module
-	288, // 163: testkit.v1.ShowPubKeyResponse.keys:type_name -> testkit.v1.SigningKeyInfo
-	220, // 164: testkit.v1.IngestResponse.drops:type_name -> testkit.v1.IngestResponse.DropsEntry
-	289, // 165: testkit.v1.ValidateBatchResponse.events:type_name -> testkit.v1.ValidateEventResult
-	290, // 166: testkit.v1.CreateAppResponse.app:type_name -> testkit.v1.App
-	290, // 167: testkit.v1.GetAppResponse.app:type_name -> testkit.v1.App
-	291, // 168: testkit.v1.GetAppResponse.tokens:type_name -> testkit.v1.IngestTokenInfo
-	292, // 169: testkit.v1.GetAppResponse.signing_keys:type_name -> testkit.v1.TelemetrySigningKeyInfo
-	293, // 170: testkit.v1.GetAppResponse.rules:type_name -> testkit.v1.EventRule
-	294, // 171: testkit.v1.GetAppResponse.versions:type_name -> testkit.v1.VersionInfo
-	295, // 172: testkit.v1.UpdateAppRequest.auth_mode:type_name -> telemetry.v1.AuthMode
-	231, // 173: testkit.v1.UpdateAppRequest.auth_grace_until:type_name -> google.protobuf.Timestamp
-	290, // 174: testkit.v1.UpdateAppResponse.app:type_name -> testkit.v1.App
-	293, // 175: testkit.v1.ReplaceEventRulesRequest.rules:type_name -> testkit.v1.EventRule
-	293, // 176: testkit.v1.ReplaceEventRulesResponse.rules:type_name -> testkit.v1.EventRule
-	296, // 177: testkit.v1.GetAppStatsResponse.days:type_name -> testkit.v1.DailyStat
-	221, // 178: testkit.v1.GetAppStatsResponse.drops:type_name -> testkit.v1.GetAppStatsResponse.DropsEntry
-	222, // 179: testkit.v1.GetAppStatsResponse.sig_fails:type_name -> testkit.v1.GetAppStatsResponse.SigFailsEntry
-	180, // [180:180] is the sub-list for method output_type
-	180, // [180:180] is the sub-list for method input_type
-	180, // [180:180] is the sub-list for extension type_name
-	180, // [180:180] is the sub-list for extension extendee
-	0,   // [0:180] is the sub-list for field type_name
+	236, // 43: testkit.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	223, // 44: testkit.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	237, // 45: testkit.v1.GetLoginLogsResponse.logs:type_name -> testkit.v1.LoginLog
+	238, // 46: testkit.v1.ListGroupsResponse.groups:type_name -> testkit.v1.Group
+	239, // 47: testkit.v1.ListGroupMembersResponse.members:type_name -> testkit.v1.GroupMember
+	240, // 48: testkit.v1.ListGroupRolesResponse.roles:type_name -> testkit.v1.Role
+	240, // 49: testkit.v1.ListRolesResponse.roles:type_name -> testkit.v1.Role
+	241, // 50: testkit.v1.ListUserRolesResponse.roles:type_name -> testkit.v1.UserRole
+	242, // 51: testkit.v1.ListPermissionsResponse.permissions:type_name -> testkit.v1.Permission
+	243, // 52: testkit.v1.ListPermissionGroupsResponse.groups:type_name -> testkit.v1.PermissionGroup
+	214, // 53: testkit.v1.GenerateUploadURLRequest.metadata:type_name -> testkit.v1.GenerateUploadURLRequest.MetadataEntry
+	244, // 54: testkit.v1.GenerateUploadURLRequest.vendor:type_name -> storage.v1.Vendor
+	245, // 55: testkit.v1.GenerateUploadURLRequest.visibility:type_name -> storage.v1.Visibility
+	246, // 56: testkit.v1.GenerateUploadURLResponse.file_info:type_name -> testkit.v1.FileInfo
+	215, // 57: testkit.v1.GenerateUploadURLResponse.headers:type_name -> testkit.v1.GenerateUploadURLResponse.HeadersEntry
+	216, // 58: testkit.v1.GetSTSCredentialRequest.metadata:type_name -> testkit.v1.GetSTSCredentialRequest.MetadataEntry
+	244, // 59: testkit.v1.GetSTSCredentialRequest.vendor:type_name -> storage.v1.Vendor
+	247, // 60: testkit.v1.GetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
+	245, // 61: testkit.v1.GetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
+	246, // 62: testkit.v1.GetSTSCredentialResponse.file_info:type_name -> testkit.v1.FileInfo
+	248, // 63: testkit.v1.BatchGetSTSCredentialRequest.files:type_name -> testkit.v1.UploadFileMeta
+	247, // 64: testkit.v1.BatchGetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
+	245, // 65: testkit.v1.BatchGetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
+	249, // 66: testkit.v1.BatchGetSTSCredentialResponse.items:type_name -> testkit.v1.UploadCredentialItem
+	246, // 67: testkit.v1.ConfirmUploadResponse.file_info:type_name -> testkit.v1.FileInfo
+	250, // 68: testkit.v1.GenerateProcessURLRequest.ops:type_name -> testkit.v1.ImageProcessOp
+	250, // 69: testkit.v1.GenerateCDNURLRequest.ops:type_name -> testkit.v1.ImageProcessOp
+	247, // 70: testkit.v1.GenerateCDNURLRequest.ttl:type_name -> google.protobuf.Duration
+	251, // 71: testkit.v1.ListMyFilesRequest.order_by:type_name -> storage.v1.SortField
+	246, // 72: testkit.v1.ListMyFilesResponse.files:type_name -> testkit.v1.FileInfo
+	251, // 73: testkit.v1.ListMyFilesPagedRequest.order_by:type_name -> storage.v1.SortField
+	246, // 74: testkit.v1.ListMyFilesPagedResponse.files:type_name -> testkit.v1.FileInfo
+	217, // 75: testkit.v1.UpdateMyFileRequest.metadata:type_name -> testkit.v1.UpdateMyFileRequest.MetadataEntry
+	252, // 76: testkit.v1.ListMyAuditLogsRequest.action:type_name -> storage.v1.AuditAction
+	253, // 77: testkit.v1.ListMyAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
+	254, // 78: testkit.v1.ListMyAuditLogsResponse.logs:type_name -> testkit.v1.AuditLogEntry
+	255, // 79: testkit.v1.AdminListFilesRequest.owner_type:type_name -> storage.v1.OwnerType
+	251, // 80: testkit.v1.AdminListFilesRequest.order_by:type_name -> storage.v1.SortField
+	256, // 81: testkit.v1.AdminListFilesResponse.files:type_name -> testkit.v1.AdminFileInfo
+	255, // 82: testkit.v1.AdminGetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	255, // 83: testkit.v1.AdminSetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	255, // 84: testkit.v1.AdminGetStatsRequest.owner_type:type_name -> storage.v1.OwnerType
+	257, // 85: testkit.v1.AdminGetStatsResponse.owner_stats:type_name -> testkit.v1.OwnerStats
+	258, // 86: testkit.v1.AdminGetStatsResponse.provider_stats:type_name -> testkit.v1.ProviderStats
+	259, // 87: testkit.v1.AdminGetStatsResponse.bucket_stats:type_name -> testkit.v1.BucketStats
+	260, // 88: testkit.v1.AdminListProvidersResponse.providers:type_name -> testkit.v1.ProviderInfo
+	261, // 89: testkit.v1.AdminListBucketsResponse.buckets:type_name -> testkit.v1.BucketInfo
+	255, // 90: testkit.v1.AdminSoftDeleteOwnerFilesRequest.owner_type:type_name -> storage.v1.OwnerType
+	255, // 91: testkit.v1.AdminDeleteOwnerRequest.owner_type:type_name -> storage.v1.OwnerType
+	252, // 92: testkit.v1.AdminListAuditLogsRequest.action:type_name -> storage.v1.AuditAction
+	253, // 93: testkit.v1.AdminListAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
+	262, // 94: testkit.v1.AdminListAuditLogsRequest.status:type_name -> storage.v1.AuditLogStatus
+	255, // 95: testkit.v1.AdminListAuditLogsRequest.owner_type:type_name -> storage.v1.OwnerType
+	254, // 96: testkit.v1.AdminListAuditLogsResponse.logs:type_name -> testkit.v1.AuditLogEntry
+	263, // 97: testkit.v1.SendEmailRequest.to:type_name -> testkit.v1.EmailAddress
+	263, // 98: testkit.v1.SendEmailRequest.cc:type_name -> testkit.v1.EmailAddress
+	263, // 99: testkit.v1.SendEmailRequest.bcc:type_name -> testkit.v1.EmailAddress
+	263, // 100: testkit.v1.SendEmailRequest.reply_to:type_name -> testkit.v1.EmailAddress
+	264, // 101: testkit.v1.SendEmailRequest.vendor:type_name -> messaging.v1.EmailVendor
+	218, // 102: testkit.v1.SendEmailRequest.template_params:type_name -> testkit.v1.SendEmailRequest.TemplateParamsEntry
+	265, // 103: testkit.v1.SendEmailRequest.scene:type_name -> messaging.v1.EmailScene
+	263, // 104: testkit.v1.SendEmailRequest.from:type_name -> testkit.v1.EmailAddress
+	266, // 105: testkit.v1.SendEmailRequest.attachments:type_name -> testkit.v1.EmailAttachment
+	219, // 106: testkit.v1.SendSMSRequest.template_params:type_name -> testkit.v1.SendSMSRequest.TemplateParamsEntry
+	267, // 107: testkit.v1.SendSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
+	268, // 108: testkit.v1.SendSMSRequest.scene:type_name -> messaging.v1.SmsScene
+	269, // 109: testkit.v1.SendResponse.status:type_name -> messaging.v1.MessageStatus
+	264, // 110: testkit.v1.SendResponse.email_vendor:type_name -> messaging.v1.EmailVendor
+	267, // 111: testkit.v1.SendResponse.sms_vendor:type_name -> messaging.v1.SmsVendor
+	264, // 112: testkit.v1.ListEmailsRequest.vendor:type_name -> messaging.v1.EmailVendor
+	265, // 113: testkit.v1.ListEmailsRequest.scene:type_name -> messaging.v1.EmailScene
+	269, // 114: testkit.v1.ListEmailsRequest.status:type_name -> messaging.v1.MessageStatus
+	251, // 115: testkit.v1.ListEmailsRequest.sort_field:type_name -> storage.v1.SortField
+	270, // 116: testkit.v1.ListEmailsRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	271, // 117: testkit.v1.ListEmailsResponse.records:type_name -> testkit.v1.EmailRecord
+	267, // 118: testkit.v1.ListSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
+	268, // 119: testkit.v1.ListSMSRequest.scene:type_name -> messaging.v1.SmsScene
+	269, // 120: testkit.v1.ListSMSRequest.status:type_name -> messaging.v1.MessageStatus
+	251, // 121: testkit.v1.ListSMSRequest.sort_field:type_name -> storage.v1.SortField
+	270, // 122: testkit.v1.ListSMSRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	272, // 123: testkit.v1.ListSMSResponse.records:type_name -> testkit.v1.SMSRecord
+	264, // 124: testkit.v1.ListEmailsByCursorRequest.vendor:type_name -> messaging.v1.EmailVendor
+	265, // 125: testkit.v1.ListEmailsByCursorRequest.scene:type_name -> messaging.v1.EmailScene
+	269, // 126: testkit.v1.ListEmailsByCursorRequest.status:type_name -> messaging.v1.MessageStatus
+	251, // 127: testkit.v1.ListEmailsByCursorRequest.sort_field:type_name -> storage.v1.SortField
+	270, // 128: testkit.v1.ListEmailsByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	271, // 129: testkit.v1.ListEmailsByCursorResponse.records:type_name -> testkit.v1.EmailRecord
+	267, // 130: testkit.v1.ListSMSByCursorRequest.vendor:type_name -> messaging.v1.SmsVendor
+	268, // 131: testkit.v1.ListSMSByCursorRequest.scene:type_name -> messaging.v1.SmsScene
+	269, // 132: testkit.v1.ListSMSByCursorRequest.status:type_name -> messaging.v1.MessageStatus
+	251, // 133: testkit.v1.ListSMSByCursorRequest.sort_field:type_name -> storage.v1.SortField
+	270, // 134: testkit.v1.ListSMSByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	272, // 135: testkit.v1.ListSMSByCursorResponse.records:type_name -> testkit.v1.SMSRecord
+	264, // 136: testkit.v1.GetEmailStatsRequest.vendor:type_name -> messaging.v1.EmailVendor
+	265, // 137: testkit.v1.GetEmailStatsRequest.scene:type_name -> messaging.v1.EmailScene
+	273, // 138: testkit.v1.EmailStatsResponse.vendors:type_name -> testkit.v1.EmailVendorStats
+	267, // 139: testkit.v1.GetSMSStatsRequest.vendor:type_name -> messaging.v1.SmsVendor
+	268, // 140: testkit.v1.GetSMSStatsRequest.scene:type_name -> messaging.v1.SmsScene
+	274, // 141: testkit.v1.SMSStatsResponse.vendors:type_name -> testkit.v1.SmsVendorStats
+	275, // 142: testkit.v1.DashboardResponse.email_stats:type_name -> testkit.v1.EmailStats
+	276, // 143: testkit.v1.DashboardResponse.sms_stats:type_name -> testkit.v1.SMSStats
+	277, // 144: testkit.v1.DashboardResponse.quota:type_name -> testkit.v1.MyQuota
+	278, // 145: testkit.v1.DashboardResponse.users:type_name -> testkit.v1.UsersSummary
+	279, // 146: testkit.v1.ActivateResponse.slots:type_name -> testkit.v1.SlotSummary
+	280, // 147: testkit.v1.HealthResponse.checks:type_name -> testkit.v1.HealthChecks
+	281, // 148: testkit.v1.CreateKeyRequest.grants:type_name -> testkit.v1.EntitlementInput
+	282, // 149: testkit.v1.CreateKeyResponse.key:type_name -> testkit.v1.KeyInfo
+	282, // 150: testkit.v1.ShowKeyResponse.key:type_name -> testkit.v1.KeyInfo
+	283, // 151: testkit.v1.ListKeysRequest.status:type_name -> license.v1.KeyStatus
+	282, // 152: testkit.v1.ListKeysResponse.keys:type_name -> testkit.v1.KeyInfo
+	282, // 153: testkit.v1.UpdateKeyResponse.key:type_name -> testkit.v1.KeyInfo
+	282, // 154: testkit.v1.RevokeKeyResponse.key:type_name -> testkit.v1.KeyInfo
+	282, // 155: testkit.v1.UnrevokeKeyResponse.key:type_name -> testkit.v1.KeyInfo
+	284, // 156: testkit.v1.GrantModuleRequest.module:type_name -> license.v1.Module
+	285, // 157: testkit.v1.GrantModuleRequest.kind:type_name -> license.v1.EntitlementKind
+	231, // 158: testkit.v1.GrantModuleRequest.expires_at:type_name -> google.protobuf.Timestamp
+	286, // 159: testkit.v1.GrantModuleResponse.entitlement:type_name -> testkit.v1.EntitlementInfo
+	284, // 160: testkit.v1.RevokeModuleRequest.module:type_name -> license.v1.Module
+	287, // 161: testkit.v1.ListKeyDevicesResponse.devices:type_name -> testkit.v1.DeviceSlotInfo
+	284, // 162: testkit.v1.ShowTrialRequest.module:type_name -> license.v1.Module
+	288, // 163: testkit.v1.ShowTrialResponse.trials:type_name -> testkit.v1.TrialInfo
+	284, // 164: testkit.v1.ResetTrialRequest.module:type_name -> license.v1.Module
+	289, // 165: testkit.v1.ShowPubKeyResponse.keys:type_name -> testkit.v1.SigningKeyInfo
+	220, // 166: testkit.v1.IngestResponse.drops:type_name -> testkit.v1.IngestResponse.DropsEntry
+	290, // 167: testkit.v1.ValidateBatchResponse.events:type_name -> testkit.v1.ValidateEventResult
+	291, // 168: testkit.v1.CreateAppResponse.app:type_name -> testkit.v1.App
+	291, // 169: testkit.v1.GetAppResponse.app:type_name -> testkit.v1.App
+	292, // 170: testkit.v1.GetAppResponse.tokens:type_name -> testkit.v1.IngestTokenInfo
+	293, // 171: testkit.v1.GetAppResponse.signing_keys:type_name -> testkit.v1.TelemetrySigningKeyInfo
+	294, // 172: testkit.v1.GetAppResponse.rules:type_name -> testkit.v1.EventRule
+	295, // 173: testkit.v1.GetAppResponse.versions:type_name -> testkit.v1.VersionInfo
+	296, // 174: testkit.v1.UpdateAppRequest.auth_mode:type_name -> telemetry.v1.AuthMode
+	231, // 175: testkit.v1.UpdateAppRequest.auth_grace_until:type_name -> google.protobuf.Timestamp
+	291, // 176: testkit.v1.UpdateAppResponse.app:type_name -> testkit.v1.App
+	294, // 177: testkit.v1.ReplaceEventRulesRequest.rules:type_name -> testkit.v1.EventRule
+	294, // 178: testkit.v1.ReplaceEventRulesResponse.rules:type_name -> testkit.v1.EventRule
+	297, // 179: testkit.v1.GetAppStatsResponse.days:type_name -> testkit.v1.DailyStat
+	221, // 180: testkit.v1.GetAppStatsResponse.drops:type_name -> testkit.v1.GetAppStatsResponse.DropsEntry
+	222, // 181: testkit.v1.GetAppStatsResponse.sig_fails:type_name -> testkit.v1.GetAppStatsResponse.SigFailsEntry
+	182, // [182:182] is the sub-list for method output_type
+	182, // [182:182] is the sub-list for method input_type
+	182, // [182:182] is the sub-list for extension type_name
+	182, // [182:182] is the sub-list for extension extendee
+	0,   // [0:182] is the sub-list for field type_name
 }
 
 func init() { file_testkit_v1_request_response_proto_init() }
@@ -15196,6 +15221,7 @@ func file_testkit_v1_request_response_proto_init() {
 		return
 	}
 	file_testkit_v1_message_proto_init()
+	file_testkit_v1_request_response_proto_msgTypes[40].OneofWrappers = []any{}
 	file_testkit_v1_request_response_proto_msgTypes[87].OneofWrappers = []any{}
 	file_testkit_v1_request_response_proto_msgTypes[95].OneofWrappers = []any{}
 	file_testkit_v1_request_response_proto_msgTypes[102].OneofWrappers = []any{}

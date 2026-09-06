@@ -84,6 +84,9 @@ message LoginLog {
   // Register rows carry the code method that verified ownership; social
   // logins have no LoginMethod and stay UNSPECIFIED.
   LoginMethod method = 14;
+  // Denormalized at read time for list views (rows may outlive usernames);
+  // empty when user_id no longer resolves.
+  string username = 15;
 }
 
 // ==================== RBAC: Groups ====================

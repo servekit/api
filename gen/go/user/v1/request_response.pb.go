@@ -3021,12 +3021,16 @@ func (x *DisableUserRequest) GetReason() string {
 }
 
 type GetLoginLogsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Provider      IdentityProvider       `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Cursor        string                 `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UserId   int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Provider IdentityProvider       `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	// optional: presence distinguishes "filter failed attempts" (false) from
+	// "no filter" — a plain proto3 bool cannot tell those apart.
+	Success       *bool       `protobuf:"varint,3,opt,name=success,proto3,oneof" json:"success,omitempty"`
+	PageSize      int32       `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor        string      `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Action        LoginAction `protobuf:"varint,6,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"` // optional filter (0 = all)
+	Method        LoginMethod `protobuf:"varint,7,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"` // optional filter (0 = all)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3076,8 +3080,8 @@ func (x *GetLoginLogsRequest) GetProvider() IdentityProvider {
 }
 
 func (x *GetLoginLogsRequest) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -3094,6 +3098,20 @@ func (x *GetLoginLogsRequest) GetCursor() string {
 		return x.Cursor
 	}
 	return ""
+}
+
+func (x *GetLoginLogsRequest) GetAction() LoginAction {
+	if x != nil {
+		return x.Action
+	}
+	return LoginAction_LOGIN_ACTION_UNSPECIFIED
+}
+
+func (x *GetLoginLogsRequest) GetMethod() LoginMethod {
+	if x != nil {
+		return x.Method
+	}
+	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
 }
 
 type GetLoginLogsResponse struct {
@@ -5412,13 +5430,17 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xc8\x01\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xb5\x02\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
-	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x18\n" +
-	"\asuccess\x18\x03 \x01(\bR\asuccess\x12&\n" +
+	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
+	"\asuccess\x18\x03 \x01(\bH\x00R\asuccess\x88\x01\x01\x12&\n" +
 	"\tpage_size\x18\x04 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
-	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\"t\n" +
+	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
+	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
+	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06methodB\n" +
+	"\n" +
+	"\b_success\"t\n" +
 	"\x14GetLoginLogsResponse\x12%\n" +
 	"\x04logs\x18\x01 \x03(\v2\x11.user.v1.LoginLogR\x04logs\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -5655,13 +5677,14 @@ var file_user_v1_request_response_proto_goTypes = []any{
 	(UserStatus)(0),                      // 89: user.v1.UserStatus
 	(DeviceType)(0),                      // 90: user.v1.DeviceType
 	(UserSortField)(0),                   // 91: user.v1.UserSortField
-	(*LoginLog)(nil),                     // 92: user.v1.LoginLog
-	(*Group)(nil),                        // 93: user.v1.Group
-	(*GroupMember)(nil),                  // 94: user.v1.GroupMember
-	(*Role)(nil),                         // 95: user.v1.Role
-	(*Permission)(nil),                   // 96: user.v1.Permission
-	(*PermissionGroup)(nil),              // 97: user.v1.PermissionGroup
-	(*UserRole)(nil),                     // 98: user.v1.UserRole
+	(LoginAction)(0),                     // 92: user.v1.LoginAction
+	(*LoginLog)(nil),                     // 93: user.v1.LoginLog
+	(*Group)(nil),                        // 94: user.v1.Group
+	(*GroupMember)(nil),                  // 95: user.v1.GroupMember
+	(*Role)(nil),                         // 96: user.v1.Role
+	(*Permission)(nil),                   // 97: user.v1.Permission
+	(*PermissionGroup)(nil),              // 98: user.v1.PermissionGroup
+	(*UserRole)(nil),                     // 99: user.v1.UserRole
 }
 var file_user_v1_request_response_proto_depIdxs = []int32{
 	79, // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
@@ -5707,19 +5730,21 @@ var file_user_v1_request_response_proto_depIdxs = []int32{
 	91, // 40: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
 	81, // 41: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
 	79, // 42: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	92, // 43: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
-	93, // 44: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
-	94, // 45: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
-	95, // 46: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
-	96, // 47: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
-	97, // 48: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
-	95, // 49: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
-	98, // 50: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
-	51, // [51:51] is the sub-list for method output_type
-	51, // [51:51] is the sub-list for method input_type
-	51, // [51:51] is the sub-list for extension type_name
-	51, // [51:51] is the sub-list for extension extendee
-	0,  // [0:51] is the sub-list for field type_name
+	92, // 43: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	82, // 44: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	93, // 45: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
+	94, // 46: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
+	95, // 47: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
+	96, // 48: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
+	97, // 49: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
+	98, // 50: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
+	96, // 51: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
+	99, // 52: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
+	53, // [53:53] is the sub-list for method output_type
+	53, // [53:53] is the sub-list for method input_type
+	53, // [53:53] is the sub-list for extension type_name
+	53, // [53:53] is the sub-list for extension extendee
+	0,  // [0:53] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_request_response_proto_init() }
@@ -5729,6 +5754,7 @@ func file_user_v1_request_response_proto_init() {
 	}
 	file_user_v1_enums_proto_init()
 	file_user_v1_message_proto_init()
+	file_user_v1_request_response_proto_msgTypes[41].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

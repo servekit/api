@@ -5403,6 +5403,7 @@
           },
           {
             "name": "success",
+            "description": "optional: presence distinguishes \"filter failed attempts\" (false) from\n\"no filter\" — a plain proto3 bool cannot tell those apart.",
             "in": "query",
             "required": false,
             "type": "boolean"
@@ -5419,6 +5420,39 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "action",
+            "description": "optional filter (0 = all)\n\n - LOGIN_ACTION_LOGIN: Successful password Login.\n - LOGIN_ACTION_REGISTER: Register RPC or code-login auto-register.\n - LOGIN_ACTION_SOCIAL_LOGIN: SocialLogin on an existing user.\n - LOGIN_ACTION_SOCIAL_REGISTER: SocialLogin / MiniProgramLogin on a new user.\n - LOGIN_ACTION_BIND: BindIdentity (planned).\n - LOGIN_ACTION_UNBIND: UnbindIdentity (planned).",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "LOGIN_ACTION_UNSPECIFIED",
+              "LOGIN_ACTION_LOGIN",
+              "LOGIN_ACTION_REGISTER",
+              "LOGIN_ACTION_SOCIAL_LOGIN",
+              "LOGIN_ACTION_SOCIAL_REGISTER",
+              "LOGIN_ACTION_BIND",
+              "LOGIN_ACTION_UNBIND"
+            ],
+            "default": "LOGIN_ACTION_UNSPECIFIED"
+          },
+          {
+            "name": "method",
+            "description": "optional filter (0 = all)\n\n - LOGIN_METHOD_PHONE_CODE: Auto-registers on missing identity.\n - LOGIN_METHOD_EMAIL_CODE: Auto-registers on missing identity.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "LOGIN_METHOD_UNSPECIFIED",
+              "LOGIN_METHOD_EMAIL_PASSWORD",
+              "LOGIN_METHOD_PHONE_PASSWORD",
+              "LOGIN_METHOD_PHONE_CODE",
+              "LOGIN_METHOD_EMAIL_CODE",
+              "LOGIN_METHOD_USERNAME_PASSWORD"
+            ],
+            "default": "LOGIN_METHOD_UNSPECIFIED"
           }
         ],
         "tags": [
@@ -8659,6 +8693,10 @@
         "method": {
           "$ref": "#/definitions/v1LoginMethod",
           "description": "The login method used; UNSPECIFIED for social logins (see user.v1)."
+        },
+        "username": {
+          "type": "string",
+          "description": "Denormalized at read time for list views; empty when user_id no longer\nresolves (see user.v1)."
         }
       },
       "description": "LoginLog is one row of the login audit trail."

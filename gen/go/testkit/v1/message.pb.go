@@ -870,7 +870,10 @@ type LoginLog struct {
 	City       string                 `protobuf:"bytes,12,opt,name=city,proto3" json:"city,omitempty"`
 	CreatedAt  *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// The login method used; UNSPECIFIED for social logins (see user.v1).
-	Method        v1.LoginMethod `protobuf:"varint,14,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	Method v1.LoginMethod `protobuf:"varint,14,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	// Denormalized at read time for list views; empty when user_id no longer
+	// resolves (see user.v1).
+	Username      string `protobuf:"bytes,15,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1001,6 +1004,13 @@ func (x *LoginLog) GetMethod() v1.LoginMethod {
 		return x.Method
 	}
 	return v1.LoginMethod(0)
+}
+
+func (x *LoginLog) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
 }
 
 // UserRole is one role held by a user (direct or group-inherited).
@@ -4573,7 +4583,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"avatar_url\x18\x03 \x01(\tR\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xda\x03\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xf6\x03\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -4592,7 +4602,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x04city\x18\f \x01(\tR\x04city\x129\n" +
 	"\n" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
-	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\"\xa3\x01\n" +
+	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
+	"\busername\x18\x0f \x01(\tR\busername\"\xa3\x01\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\arole_id\x18\x02 \x01(\x03R\x06roleId\x12\x1b\n" +

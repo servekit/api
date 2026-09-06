@@ -430,7 +430,10 @@ type LoginLog struct {
 	// The login method used (账号密码/邮箱密码/手机密码/邮箱验证码/手机验证码).
 	// Register rows carry the code method that verified ownership; social
 	// logins have no LoginMethod and stay UNSPECIFIED.
-	Method        LoginMethod `protobuf:"varint,14,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	Method LoginMethod `protobuf:"varint,14,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	// Denormalized at read time for list views (rows may outlive usernames);
+	// empty when user_id no longer resolves.
+	Username      string `protobuf:"bytes,15,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -561,6 +564,13 @@ func (x *LoginLog) GetMethod() LoginMethod {
 		return x.Method
 	}
 	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
+}
+
+func (x *LoginLog) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
 }
 
 type Group struct {
@@ -1118,7 +1128,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12@\n" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
-	" \x01(\bR\acurrent\"\xda\x03\n" +
+	" \x01(\bR\acurrent\"\xf6\x03\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -1137,7 +1147,8 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x04city\x18\f \x01(\tR\x04city\x129\n" +
 	"\n" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
-	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\"\x9b\x02\n" +
+	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
+	"\busername\x18\x0f \x01(\tR\busername\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +

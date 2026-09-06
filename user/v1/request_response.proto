@@ -552,12 +552,16 @@ message DisableUserRequest {
 message GetLoginLogsRequest {
   int64 user_id = 1;
   IdentityProvider provider = 2;
-  bool success = 3;
+  // optional: presence distinguishes "filter failed attempts" (false) from
+  // "no filter" — a plain proto3 bool cannot tell those apart.
+  optional bool success = 3;
   int32 page_size = 4 [(buf.validate.field).int32 = {
     gte: 1
     lte: 100
   }];
   string cursor = 5 [(buf.validate.field).string.max_len = 64];
+  LoginAction action = 6; // optional filter (0 = all)
+  LoginMethod method = 7; // optional filter (0 = all)
 }
 
 message GetLoginLogsResponse {
