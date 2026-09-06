@@ -5450,6 +5450,13 @@
               "LOGIN_METHOD_USERNAME_PASSWORD"
             ],
             "default": "LOGIN_METHOD_UNSPECIFIED"
+          },
+          {
+            "name": "username",
+            "description": "Alternative to user_id: resolve the username server-side. user_id wins\nwhen both are set; an unknown username yields an empty page.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [

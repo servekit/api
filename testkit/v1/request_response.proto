@@ -500,6 +500,9 @@ message GetLoginLogsRequest {
   string cursor = 5 [(buf.validate.field).string.max_len = 64];
   user.v1.LoginAction action = 6; // optional filter (0 = all)
   user.v1.LoginMethod method = 7; // optional filter (0 = all)
+  // Alternative to user_id: resolve the username server-side. user_id wins
+  // when both are set; an unknown username yields an empty page.
+  string username = 8 [(buf.validate.field).string.max_len = 64];
 }
 
 message GetLoginLogsResponse {

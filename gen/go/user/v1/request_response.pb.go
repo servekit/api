@@ -3018,11 +3018,14 @@ type GetLoginLogsRequest struct {
 	Provider IdentityProvider       `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
 	// optional: presence distinguishes "filter failed attempts" (false) from
 	// "no filter" — a plain proto3 bool cannot tell those apart.
-	Success       *bool       `protobuf:"varint,3,opt,name=success,proto3,oneof" json:"success,omitempty"`
-	PageSize      int32       `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Cursor        string      `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
-	Action        LoginAction `protobuf:"varint,6,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"` // optional filter (0 = all)
-	Method        LoginMethod `protobuf:"varint,7,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"` // optional filter (0 = all)
+	Success  *bool       `protobuf:"varint,3,opt,name=success,proto3,oneof" json:"success,omitempty"`
+	PageSize int32       `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor   string      `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Action   LoginAction `protobuf:"varint,6,opt,name=action,proto3,enum=user.v1.LoginAction" json:"action,omitempty"` // optional filter (0 = all)
+	Method   LoginMethod `protobuf:"varint,7,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"` // optional filter (0 = all)
+	// Alternative to user_id: resolve the username server-side. user_id wins
+	// when both are set; an unknown username yields an empty page.
+	Username      string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3104,6 +3107,13 @@ func (x *GetLoginLogsRequest) GetMethod() LoginMethod {
 		return x.Method
 	}
 	return LoginMethod_LOGIN_METHOD_UNSPECIFIED
+}
+
+func (x *GetLoginLogsRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
 }
 
 type GetLoginLogsResponse struct {
@@ -5423,7 +5433,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xb5\x02\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xda\x02\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
@@ -5431,7 +5441,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\tpage_size\x18\x04 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
 	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
 	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
-	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06methodB\n" +
+	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12#\n" +
+	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busernameB\n" +
 	"\n" +
 	"\b_success\"t\n" +
 	"\x14GetLoginLogsResponse\x12%\n" +
