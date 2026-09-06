@@ -450,6 +450,61 @@ func (DeviceType) EnumDescriptor() ([]byte, []int) {
 	return file_user_v1_enums_proto_rawDescGZIP(), []int{6}
 }
 
+// SessionStatus classifies a row in the session list: live rows come from
+// Redis (validate-on-use sliding window); historical rows come from the PG
+// tombstone table (user_sessions) once they leave Redis.
+type SessionStatus int32
+
+const (
+	SessionStatus_SESSION_STATUS_UNSPECIFIED SessionStatus = 0
+	SessionStatus_SESSION_STATUS_ACTIVE      SessionStatus = 1 // in Redis; the sliding window is alive
+	SessionStatus_SESSION_STATUS_REVOKED     SessionStatus = 2 // explicit logout / revoke (revoked_at set)
+	SessionStatus_SESSION_STATUS_EXPIRED     SessionStatus = 3 // not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap
+)
+
+// Enum value maps for SessionStatus.
+var (
+	SessionStatus_name = map[int32]string{
+		0: "SESSION_STATUS_UNSPECIFIED",
+		1: "SESSION_STATUS_ACTIVE",
+		2: "SESSION_STATUS_REVOKED",
+		3: "SESSION_STATUS_EXPIRED",
+	}
+	SessionStatus_value = map[string]int32{
+		"SESSION_STATUS_UNSPECIFIED": 0,
+		"SESSION_STATUS_ACTIVE":      1,
+		"SESSION_STATUS_REVOKED":     2,
+		"SESSION_STATUS_EXPIRED":     3,
+	}
+)
+
+func (x SessionStatus) Enum() *SessionStatus {
+	p := new(SessionStatus)
+	*p = x
+	return p
+}
+
+func (x SessionStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SessionStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_user_v1_enums_proto_enumTypes[7].Descriptor()
+}
+
+func (SessionStatus) Type() protoreflect.EnumType {
+	return &file_user_v1_enums_proto_enumTypes[7]
+}
+
+func (x SessionStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SessionStatus.Descriptor instead.
+func (SessionStatus) EnumDescriptor() ([]byte, []int) {
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{7}
+}
+
 // LoginAction classifies an entry in the login audit log (UserLoginLog.action).
 // Set by user-service at login time — callers never pass this value.
 type LoginAction int32
@@ -497,11 +552,11 @@ func (x LoginAction) String() string {
 }
 
 func (LoginAction) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_enums_proto_enumTypes[7].Descriptor()
+	return file_user_v1_enums_proto_enumTypes[8].Descriptor()
 }
 
 func (LoginAction) Type() protoreflect.EnumType {
-	return &file_user_v1_enums_proto_enumTypes[7]
+	return &file_user_v1_enums_proto_enumTypes[8]
 }
 
 func (x LoginAction) Number() protoreflect.EnumNumber {
@@ -510,7 +565,7 @@ func (x LoginAction) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use LoginAction.Descriptor instead.
 func (LoginAction) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_enums_proto_rawDescGZIP(), []int{7}
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{8}
 }
 
 // UserType separates external end users from internal platform users
@@ -548,11 +603,11 @@ func (x UserType) String() string {
 }
 
 func (UserType) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_enums_proto_enumTypes[8].Descriptor()
+	return file_user_v1_enums_proto_enumTypes[9].Descriptor()
 }
 
 func (UserType) Type() protoreflect.EnumType {
-	return &file_user_v1_enums_proto_enumTypes[8]
+	return &file_user_v1_enums_proto_enumTypes[9]
 }
 
 func (x UserType) Number() protoreflect.EnumNumber {
@@ -561,7 +616,7 @@ func (x UserType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UserType.Descriptor instead.
 func (UserType) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_enums_proto_rawDescGZIP(), []int{8}
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{9}
 }
 
 // UserSortField is the sort column for ListUsers / ListUsersPaged.
@@ -605,11 +660,11 @@ func (x UserSortField) String() string {
 }
 
 func (UserSortField) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_v1_enums_proto_enumTypes[9].Descriptor()
+	return file_user_v1_enums_proto_enumTypes[10].Descriptor()
 }
 
 func (UserSortField) Type() protoreflect.EnumType {
-	return &file_user_v1_enums_proto_enumTypes[9]
+	return &file_user_v1_enums_proto_enumTypes[10]
 }
 
 func (x UserSortField) Number() protoreflect.EnumNumber {
@@ -618,7 +673,7 @@ func (x UserSortField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use UserSortField.Descriptor instead.
 func (UserSortField) EnumDescriptor() ([]byte, []int) {
-	return file_user_v1_enums_proto_rawDescGZIP(), []int{9}
+	return file_user_v1_enums_proto_rawDescGZIP(), []int{10}
 }
 
 var File_user_v1_enums_proto protoreflect.FileDescriptor
@@ -673,7 +728,12 @@ const file_user_v1_enums_proto_rawDesc = "" +
 	"\x0fDEVICE_TYPE_WEB\x10\x01\x12\x13\n" +
 	"\x0fDEVICE_TYPE_IOS\x10\x02\x12\x17\n" +
 	"\x13DEVICE_TYPE_ANDROID\x10\x03\x12\x13\n" +
-	"\x0fDEVICE_TYPE_API\x10\x04*\xcf\x01\n" +
+	"\x0fDEVICE_TYPE_API\x10\x04*\x82\x01\n" +
+	"\rSessionStatus\x12\x1e\n" +
+	"\x1aSESSION_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15SESSION_STATUS_ACTIVE\x10\x01\x12\x1a\n" +
+	"\x16SESSION_STATUS_REVOKED\x10\x02\x12\x1a\n" +
+	"\x16SESSION_STATUS_EXPIRED\x10\x03*\xcf\x01\n" +
 	"\vLoginAction\x12\x1c\n" +
 	"\x18LOGIN_ACTION_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12LOGIN_ACTION_LOGIN\x10\x01\x12\x19\n" +
@@ -707,7 +767,7 @@ func file_user_v1_enums_proto_rawDescGZIP() []byte {
 	return file_user_v1_enums_proto_rawDescData
 }
 
-var file_user_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_user_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_user_v1_enums_proto_goTypes = []any{
 	(UserStatus)(0),          // 0: user.v1.UserStatus
 	(Gender)(0),              // 1: user.v1.Gender
@@ -716,9 +776,10 @@ var file_user_v1_enums_proto_goTypes = []any{
 	(VerificationChannel)(0), // 4: user.v1.VerificationChannel
 	(VerificationPurpose)(0), // 5: user.v1.VerificationPurpose
 	(DeviceType)(0),          // 6: user.v1.DeviceType
-	(LoginAction)(0),         // 7: user.v1.LoginAction
-	(UserType)(0),            // 8: user.v1.UserType
-	(UserSortField)(0),       // 9: user.v1.UserSortField
+	(SessionStatus)(0),       // 7: user.v1.SessionStatus
+	(LoginAction)(0),         // 8: user.v1.LoginAction
+	(UserType)(0),            // 9: user.v1.UserType
+	(UserSortField)(0),       // 10: user.v1.UserSortField
 }
 var file_user_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -738,7 +799,7 @@ func file_user_v1_enums_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_enums_proto_rawDesc), len(file_user_v1_enums_proto_rawDesc)),
-			NumEnums:      10,
+			NumEnums:      11,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

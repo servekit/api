@@ -62,8 +62,13 @@ message Session {
   string country = 6;
   string city = 7;
   google.protobuf.Timestamp created_at = 8;
+  // Derived from the Redis expiry score; unset on historical rows (the
+  // column was removed — activity beyond the live window is unknowable).
   google.protobuf.Timestamp last_active_at = 9;
   bool current = 10;
+  // ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
+  // history from the PG tombstone table.
+  SessionStatus status = 11;
 }
 
 message LoginLog {

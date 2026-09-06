@@ -9459,9 +9459,23 @@
         },
         "current": {
           "type": "boolean"
+        },
+        "status": {
+          "$ref": "#/definitions/v1SessionStatus"
         }
       },
       "description": "Session is an active login session for the \"manage devices\" UI."
+    },
+    "v1SessionStatus": {
+      "type": "string",
+      "enum": [
+        "SESSION_STATUS_UNSPECIFIED",
+        "SESSION_STATUS_ACTIVE",
+        "SESSION_STATUS_REVOKED",
+        "SESSION_STATUS_EXPIRED"
+      ],
+      "default": "SESSION_STATUS_UNSPECIFIED",
+      "description": "SessionStatus classifies a row in the session list: live rows come from\nRedis (validate-on-use sliding window); historical rows come from the PG\ntombstone table (user_sessions) once they leave Redis.\n\n - SESSION_STATUS_ACTIVE: in Redis; the sliding window is alive\n - SESSION_STATUS_REVOKED: explicit logout / revoke (revoked_at set)\n - SESSION_STATUS_EXPIRED: not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap"
     },
     "v1SetVersionBlockedResponse": {
       "type": "object"

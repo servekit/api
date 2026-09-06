@@ -297,17 +297,22 @@ func (x *Identity) GetCreatedAt() *timestamppb.Timestamp {
 }
 
 type Session struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Ip            string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
-	DeviceType    DeviceType             `protobuf:"varint,3,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
-	Os            string                 `protobuf:"bytes,4,opt,name=os,proto3" json:"os,omitempty"`
-	Browser       string                 `protobuf:"bytes,5,opt,name=browser,proto3" json:"browser,omitempty"`
-	Country       string                 `protobuf:"bytes,6,opt,name=country,proto3" json:"country,omitempty"`
-	City          string                 `protobuf:"bytes,7,opt,name=city,proto3" json:"city,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	LastActiveAt  *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_active_at,json=lastActiveAt,proto3" json:"last_active_at,omitempty"`
-	Current       bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Id         string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Ip         string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
+	DeviceType DeviceType             `protobuf:"varint,3,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
+	Os         string                 `protobuf:"bytes,4,opt,name=os,proto3" json:"os,omitempty"`
+	Browser    string                 `protobuf:"bytes,5,opt,name=browser,proto3" json:"browser,omitempty"`
+	Country    string                 `protobuf:"bytes,6,opt,name=country,proto3" json:"country,omitempty"`
+	City       string                 `protobuf:"bytes,7,opt,name=city,proto3" json:"city,omitempty"`
+	CreatedAt  *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// Derived from the Redis expiry score; unset on historical rows (the
+	// column was removed — activity beyond the live window is unknowable).
+	LastActiveAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_active_at,json=lastActiveAt,proto3" json:"last_active_at,omitempty"`
+	Current      bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
+	// ACTIVE rows come first (from Redis); REVOKED/EXPIRED rows follow as
+	// history from the PG tombstone table.
+	Status        SessionStatus `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -410,6 +415,13 @@ func (x *Session) GetCurrent() bool {
 		return x.Current
 	}
 	return false
+}
+
+func (x *Session) GetStatus() SessionStatus {
+	if x != nil {
+		return x.Status
+	}
+	return SessionStatus_SESSION_STATUS_UNSPECIFIED
 }
 
 type LoginLog struct {
@@ -1114,7 +1126,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\fprovider_uid\x18\x03 \x01(\tR\vproviderUid\x12\x1a\n" +
 	"\bverified\x18\x04 \x01(\bR\bverified\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xce\x02\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfe\x02\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02ip\x18\x02 \x01(\tR\x02ip\x124\n" +
@@ -1128,7 +1140,8 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12@\n" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
-	" \x01(\bR\acurrent\"\xf6\x03\n" +
+	" \x01(\bR\acurrent\x12.\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\"\xf6\x03\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -1235,8 +1248,9 @@ var file_user_v1_message_proto_goTypes = []any{
 	(UserType)(0),                 // 13: user.v1.UserType
 	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
 	(DeviceType)(0),               // 15: user.v1.DeviceType
-	(LoginAction)(0),              // 16: user.v1.LoginAction
-	(LoginMethod)(0),              // 17: user.v1.LoginMethod
+	(SessionStatus)(0),            // 16: user.v1.SessionStatus
+	(LoginAction)(0),              // 17: user.v1.LoginAction
+	(LoginMethod)(0),              // 18: user.v1.LoginMethod
 }
 var file_user_v1_message_proto_depIdxs = []int32{
 	10, // 0: user.v1.User.gender:type_name -> user.v1.Gender
@@ -1251,25 +1265,26 @@ var file_user_v1_message_proto_depIdxs = []int32{
 	15, // 9: user.v1.Session.device_type:type_name -> user.v1.DeviceType
 	14, // 10: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
 	14, // 11: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
-	12, // 12: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
-	16, // 13: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
-	15, // 14: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
-	14, // 15: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	17, // 16: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	14, // 17: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 18: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 19: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 20: user.v1.Role.permissions:type_name -> user.v1.Permission
-	8,  // 21: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 22: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 23: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 24: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 25: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	26, // [26:26] is the sub-list for method output_type
-	26, // [26:26] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	16, // 12: user.v1.Session.status:type_name -> user.v1.SessionStatus
+	12, // 13: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
+	17, // 14: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
+	15, // 15: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
+	14, // 16: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
+	18, // 17: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	14, // 18: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	14, // 19: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 20: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 21: user.v1.Role.permissions:type_name -> user.v1.Permission
+	8,  // 22: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
+	14, // 23: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	14, // 24: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 25: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
+	14, // 26: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	27, // [27:27] is the sub-list for method output_type
+	27, // [27:27] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }

@@ -65,6 +65,7 @@ message Session {
   google.protobuf.Timestamp created_at = 8;
   google.protobuf.Timestamp last_active_at = 9;
   bool current = 10;
+  user.v1.SessionStatus status = 11;
 }
 
 // Group is an organizational unit; members inherit the group's roles.

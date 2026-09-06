@@ -95,6 +95,16 @@ enum DeviceType {
   DEVICE_TYPE_API = 4; // Machine-to-machine / direct API token (no UA).
 }
 
+// SessionStatus classifies a row in the session list: live rows come from
+// Redis (validate-on-use sliding window); historical rows come from the PG
+// tombstone table (user_sessions) once they leave Redis.
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0;
+  SESSION_STATUS_ACTIVE = 1; // in Redis; the sliding window is alive
+  SESSION_STATUS_REVOKED = 2; // explicit logout / revoke (revoked_at set)
+  SESSION_STATUS_EXPIRED = 3; // not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap
+}
+
 // LoginAction classifies an entry in the login audit log (UserLoginLog.action).
 // Set by user-service at login time — callers never pass this value.
 enum LoginAction {
