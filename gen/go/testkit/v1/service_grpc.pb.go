@@ -28,7 +28,6 @@ const (
 	TestkitService_Register_FullMethodName                  = "/testkit.v1.TestkitService/Register"
 	TestkitService_SendVerificationCode_FullMethodName      = "/testkit.v1.TestkitService/SendVerificationCode"
 	TestkitService_Logout_FullMethodName                    = "/testkit.v1.TestkitService/Logout"
-	TestkitService_RefreshSession_FullMethodName            = "/testkit.v1.TestkitService/RefreshSession"
 	TestkitService_GetProfile_FullMethodName                = "/testkit.v1.TestkitService/GetProfile"
 	TestkitService_UpdateProfile_FullMethodName             = "/testkit.v1.TestkitService/UpdateProfile"
 	TestkitService_ChangePassword_FullMethodName            = "/testkit.v1.TestkitService/ChangePassword"
@@ -171,7 +170,6 @@ type TestkitServiceClient interface {
 	// request — it is read from the authenticated context (set by the auth
 	// interceptor from the JWT).
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	// ---- Profile (P2) ----
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*User, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*User, error)
@@ -376,16 +374,6 @@ func (c *testkitServiceClient) Logout(ctx context.Context, in *emptypb.Empty, op
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, TestkitService_Logout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *testkitServiceClient) RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TokenResponse)
-	err := c.cc.Invoke(ctx, TestkitService_RefreshSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1684,7 +1672,6 @@ type TestkitServiceServer interface {
 	// request — it is read from the authenticated context (set by the auth
 	// interceptor from the JWT).
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	RefreshSession(context.Context, *RefreshSessionRequest) (*TokenResponse, error)
 	// ---- Profile (P2) ----
 	GetProfile(context.Context, *GetProfileRequest) (*User, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*User, error)
@@ -1859,9 +1846,6 @@ func (UnimplementedTestkitServiceServer) SendVerificationCode(context.Context, *
 }
 func (UnimplementedTestkitServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedTestkitServiceServer) RefreshSession(context.Context, *RefreshSessionRequest) (*TokenResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RefreshSession not implemented")
 }
 func (UnimplementedTestkitServiceServer) GetProfile(context.Context, *GetProfileRequest) (*User, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetProfile not implemented")
@@ -2354,24 +2338,6 @@ func _TestkitService_Logout_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TestkitServiceServer).Logout(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TestkitService_RefreshSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshSessionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TestkitServiceServer).RefreshSession(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TestkitService_RefreshSession_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).RefreshSession(ctx, req.(*RefreshSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4706,10 +4672,6 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _TestkitService_Logout_Handler,
-		},
-		{
-			MethodName: "RefreshSession",
-			Handler:    _TestkitService_RefreshSession_Handler,
 		},
 		{
 			MethodName: "GetProfile",

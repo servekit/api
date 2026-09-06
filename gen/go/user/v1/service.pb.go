@@ -28,13 +28,12 @@ var File_user_v1_service_proto protoreflect.FileDescriptor
 
 const file_user_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/service.proto\x12\auser.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\xec!\n" +
+	"\x15user/v1/service.proto\x12\auser.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\xa2!\n" +
 	"\vUserService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12?\n" +
 	"\bRegister\x12\x18.user.v1.RegisterRequest\x1a\x19.user.v1.RegisterResponse\x126\n" +
 	"\x05Login\x12\x15.user.v1.LoginRequest\x1a\x16.user.v1.LoginResponse\x128\n" +
 	"\x06Logout\x12\x16.user.v1.LogoutRequest\x1a\x16.google.protobuf.Empty\x12H\n" +
-	"\x0eRefreshSession\x12\x1e.user.v1.RefreshSessionRequest\x1a\x16.google.protobuf.Empty\x12H\n" +
 	"\vGetOAuthURL\x12\x1b.user.v1.GetOAuthURLRequest\x1a\x1c.user.v1.GetOAuthURLResponse\x12B\n" +
 	"\vSocialLogin\x12\x1b.user.v1.SocialLoginRequest\x1a\x16.user.v1.LoginResponse\x12L\n" +
 	"\x10MiniProgramLogin\x12 .user.v1.MiniProgramLoginRequest\x1a\x16.user.v1.LoginResponse\x12V\n" +
@@ -105,211 +104,208 @@ var file_user_v1_service_proto_goTypes = []any{
 	(*RegisterRequest)(nil),              // 1: user.v1.RegisterRequest
 	(*LoginRequest)(nil),                 // 2: user.v1.LoginRequest
 	(*LogoutRequest)(nil),                // 3: user.v1.LogoutRequest
-	(*RefreshSessionRequest)(nil),        // 4: user.v1.RefreshSessionRequest
-	(*GetOAuthURLRequest)(nil),           // 5: user.v1.GetOAuthURLRequest
-	(*SocialLoginRequest)(nil),           // 6: user.v1.SocialLoginRequest
-	(*MiniProgramLoginRequest)(nil),      // 7: user.v1.MiniProgramLoginRequest
-	(*MiniProgramPhoneLoginRequest)(nil), // 8: user.v1.MiniProgramPhoneLoginRequest
-	(*GetProfileRequest)(nil),            // 9: user.v1.GetProfileRequest
-	(*UpdateProfileRequest)(nil),         // 10: user.v1.UpdateProfileRequest
-	(*ChangePasswordRequest)(nil),        // 11: user.v1.ChangePasswordRequest
-	(*ResetPasswordRequest)(nil),         // 12: user.v1.ResetPasswordRequest
-	(*ListIdentitiesRequest)(nil),        // 13: user.v1.ListIdentitiesRequest
-	(*BindIdentityRequest)(nil),          // 14: user.v1.BindIdentityRequest
-	(*BindOAuthIdentityRequest)(nil),     // 15: user.v1.BindOAuthIdentityRequest
-	(*UnbindIdentityRequest)(nil),        // 16: user.v1.UnbindIdentityRequest
-	(*SendVerificationCodeRequest)(nil),  // 17: user.v1.SendVerificationCodeRequest
-	(*ListSessionsRequest)(nil),          // 18: user.v1.ListSessionsRequest
-	(*RevokeSessionRequest)(nil),         // 19: user.v1.RevokeSessionRequest
-	(*RevokeAllSessionsRequest)(nil),     // 20: user.v1.RevokeAllSessionsRequest
-	(*GetSessionRequest)(nil),            // 21: user.v1.GetSessionRequest
-	(*IssueSessionCodeRequest)(nil),      // 22: user.v1.IssueSessionCodeRequest
-	(*ExchangeSessionCodeRequest)(nil),   // 23: user.v1.ExchangeSessionCodeRequest
-	(*CreateUserRequest)(nil),            // 24: user.v1.CreateUserRequest
-	(*GetUserRequest)(nil),               // 25: user.v1.GetUserRequest
-	(*ListUsersRequest)(nil),             // 26: user.v1.ListUsersRequest
-	(*ListUsersPagedRequest)(nil),        // 27: user.v1.ListUsersPagedRequest
-	(*DisableUserRequest)(nil),           // 28: user.v1.DisableUserRequest
-	(*GetLoginLogsRequest)(nil),          // 29: user.v1.GetLoginLogsRequest
-	(*CreateGroupRequest)(nil),           // 30: user.v1.CreateGroupRequest
-	(*GetGroupRequest)(nil),              // 31: user.v1.GetGroupRequest
-	(*UpdateGroupRequest)(nil),           // 32: user.v1.UpdateGroupRequest
-	(*ListGroupsRequest)(nil),            // 33: user.v1.ListGroupsRequest
-	(*DeleteGroupRequest)(nil),           // 34: user.v1.DeleteGroupRequest
-	(*AddGroupMemberRequest)(nil),        // 35: user.v1.AddGroupMemberRequest
-	(*RemoveGroupMemberRequest)(nil),     // 36: user.v1.RemoveGroupMemberRequest
-	(*ListGroupMembersRequest)(nil),      // 37: user.v1.ListGroupMembersRequest
-	(*CreateRoleRequest)(nil),            // 38: user.v1.CreateRoleRequest
-	(*UpdateRoleRequest)(nil),            // 39: user.v1.UpdateRoleRequest
-	(*DeleteRoleRequest)(nil),            // 40: user.v1.DeleteRoleRequest
-	(*ListRolesRequest)(nil),             // 41: user.v1.ListRolesRequest
-	(*GetRoleRequest)(nil),               // 42: user.v1.GetRoleRequest
-	(*ListPermissionsRequest)(nil),       // 43: user.v1.ListPermissionsRequest
-	(*CreatePermissionRequest)(nil),      // 44: user.v1.CreatePermissionRequest
-	(*GetPermissionRequest)(nil),         // 45: user.v1.GetPermissionRequest
-	(*UpdatePermissionRequest)(nil),      // 46: user.v1.UpdatePermissionRequest
-	(*DeletePermissionRequest)(nil),      // 47: user.v1.DeletePermissionRequest
-	(*CreatePermissionGroupRequest)(nil), // 48: user.v1.CreatePermissionGroupRequest
-	(*GetPermissionGroupRequest)(nil),    // 49: user.v1.GetPermissionGroupRequest
-	(*UpdatePermissionGroupRequest)(nil), // 50: user.v1.UpdatePermissionGroupRequest
-	(*DeletePermissionGroupRequest)(nil), // 51: user.v1.DeletePermissionGroupRequest
-	(*ListPermissionGroupsRequest)(nil),  // 52: user.v1.ListPermissionGroupsRequest
-	(*AddGroupRoleRequest)(nil),          // 53: user.v1.AddGroupRoleRequest
-	(*RemoveGroupRoleRequest)(nil),       // 54: user.v1.RemoveGroupRoleRequest
-	(*ListGroupRolesRequest)(nil),        // 55: user.v1.ListGroupRolesRequest
-	(*AssignRoleRequest)(nil),            // 56: user.v1.AssignRoleRequest
-	(*RevokeRoleRequest)(nil),            // 57: user.v1.RevokeRoleRequest
-	(*ListUserRolesRequest)(nil),         // 58: user.v1.ListUserRolesRequest
-	(*v1.Pong)(nil),                      // 59: common.v1.Pong
-	(*RegisterResponse)(nil),             // 60: user.v1.RegisterResponse
-	(*LoginResponse)(nil),                // 61: user.v1.LoginResponse
-	(*GetOAuthURLResponse)(nil),          // 62: user.v1.GetOAuthURLResponse
-	(*User)(nil),                         // 63: user.v1.User
-	(*ListIdentitiesResponse)(nil),       // 64: user.v1.ListIdentitiesResponse
-	(*Identity)(nil),                     // 65: user.v1.Identity
-	(*BindOAuthIdentityResponse)(nil),    // 66: user.v1.BindOAuthIdentityResponse
-	(*SendVerificationCodeResponse)(nil), // 67: user.v1.SendVerificationCodeResponse
-	(*ListSessionsResponse)(nil),         // 68: user.v1.ListSessionsResponse
-	(*GetSessionResponse)(nil),           // 69: user.v1.GetSessionResponse
-	(*IssueSessionCodeResponse)(nil),     // 70: user.v1.IssueSessionCodeResponse
-	(*ExchangeSessionCodeResponse)(nil),  // 71: user.v1.ExchangeSessionCodeResponse
-	(*CreateUserResponse)(nil),           // 72: user.v1.CreateUserResponse
-	(*ListUsersResponse)(nil),            // 73: user.v1.ListUsersResponse
-	(*ListUsersPagedResponse)(nil),       // 74: user.v1.ListUsersPagedResponse
-	(*GetLoginLogsResponse)(nil),         // 75: user.v1.GetLoginLogsResponse
-	(*Group)(nil),                        // 76: user.v1.Group
-	(*ListGroupsResponse)(nil),           // 77: user.v1.ListGroupsResponse
-	(*ListGroupMembersResponse)(nil),     // 78: user.v1.ListGroupMembersResponse
-	(*Role)(nil),                         // 79: user.v1.Role
-	(*ListRolesResponse)(nil),            // 80: user.v1.ListRolesResponse
-	(*ListPermissionsResponse)(nil),      // 81: user.v1.ListPermissionsResponse
-	(*Permission)(nil),                   // 82: user.v1.Permission
-	(*PermissionGroup)(nil),              // 83: user.v1.PermissionGroup
-	(*ListPermissionGroupsResponse)(nil), // 84: user.v1.ListPermissionGroupsResponse
-	(*ListGroupRolesResponse)(nil),       // 85: user.v1.ListGroupRolesResponse
-	(*ListUserRolesResponse)(nil),        // 86: user.v1.ListUserRolesResponse
+	(*GetOAuthURLRequest)(nil),           // 4: user.v1.GetOAuthURLRequest
+	(*SocialLoginRequest)(nil),           // 5: user.v1.SocialLoginRequest
+	(*MiniProgramLoginRequest)(nil),      // 6: user.v1.MiniProgramLoginRequest
+	(*MiniProgramPhoneLoginRequest)(nil), // 7: user.v1.MiniProgramPhoneLoginRequest
+	(*GetProfileRequest)(nil),            // 8: user.v1.GetProfileRequest
+	(*UpdateProfileRequest)(nil),         // 9: user.v1.UpdateProfileRequest
+	(*ChangePasswordRequest)(nil),        // 10: user.v1.ChangePasswordRequest
+	(*ResetPasswordRequest)(nil),         // 11: user.v1.ResetPasswordRequest
+	(*ListIdentitiesRequest)(nil),        // 12: user.v1.ListIdentitiesRequest
+	(*BindIdentityRequest)(nil),          // 13: user.v1.BindIdentityRequest
+	(*BindOAuthIdentityRequest)(nil),     // 14: user.v1.BindOAuthIdentityRequest
+	(*UnbindIdentityRequest)(nil),        // 15: user.v1.UnbindIdentityRequest
+	(*SendVerificationCodeRequest)(nil),  // 16: user.v1.SendVerificationCodeRequest
+	(*ListSessionsRequest)(nil),          // 17: user.v1.ListSessionsRequest
+	(*RevokeSessionRequest)(nil),         // 18: user.v1.RevokeSessionRequest
+	(*RevokeAllSessionsRequest)(nil),     // 19: user.v1.RevokeAllSessionsRequest
+	(*GetSessionRequest)(nil),            // 20: user.v1.GetSessionRequest
+	(*IssueSessionCodeRequest)(nil),      // 21: user.v1.IssueSessionCodeRequest
+	(*ExchangeSessionCodeRequest)(nil),   // 22: user.v1.ExchangeSessionCodeRequest
+	(*CreateUserRequest)(nil),            // 23: user.v1.CreateUserRequest
+	(*GetUserRequest)(nil),               // 24: user.v1.GetUserRequest
+	(*ListUsersRequest)(nil),             // 25: user.v1.ListUsersRequest
+	(*ListUsersPagedRequest)(nil),        // 26: user.v1.ListUsersPagedRequest
+	(*DisableUserRequest)(nil),           // 27: user.v1.DisableUserRequest
+	(*GetLoginLogsRequest)(nil),          // 28: user.v1.GetLoginLogsRequest
+	(*CreateGroupRequest)(nil),           // 29: user.v1.CreateGroupRequest
+	(*GetGroupRequest)(nil),              // 30: user.v1.GetGroupRequest
+	(*UpdateGroupRequest)(nil),           // 31: user.v1.UpdateGroupRequest
+	(*ListGroupsRequest)(nil),            // 32: user.v1.ListGroupsRequest
+	(*DeleteGroupRequest)(nil),           // 33: user.v1.DeleteGroupRequest
+	(*AddGroupMemberRequest)(nil),        // 34: user.v1.AddGroupMemberRequest
+	(*RemoveGroupMemberRequest)(nil),     // 35: user.v1.RemoveGroupMemberRequest
+	(*ListGroupMembersRequest)(nil),      // 36: user.v1.ListGroupMembersRequest
+	(*CreateRoleRequest)(nil),            // 37: user.v1.CreateRoleRequest
+	(*UpdateRoleRequest)(nil),            // 38: user.v1.UpdateRoleRequest
+	(*DeleteRoleRequest)(nil),            // 39: user.v1.DeleteRoleRequest
+	(*ListRolesRequest)(nil),             // 40: user.v1.ListRolesRequest
+	(*GetRoleRequest)(nil),               // 41: user.v1.GetRoleRequest
+	(*ListPermissionsRequest)(nil),       // 42: user.v1.ListPermissionsRequest
+	(*CreatePermissionRequest)(nil),      // 43: user.v1.CreatePermissionRequest
+	(*GetPermissionRequest)(nil),         // 44: user.v1.GetPermissionRequest
+	(*UpdatePermissionRequest)(nil),      // 45: user.v1.UpdatePermissionRequest
+	(*DeletePermissionRequest)(nil),      // 46: user.v1.DeletePermissionRequest
+	(*CreatePermissionGroupRequest)(nil), // 47: user.v1.CreatePermissionGroupRequest
+	(*GetPermissionGroupRequest)(nil),    // 48: user.v1.GetPermissionGroupRequest
+	(*UpdatePermissionGroupRequest)(nil), // 49: user.v1.UpdatePermissionGroupRequest
+	(*DeletePermissionGroupRequest)(nil), // 50: user.v1.DeletePermissionGroupRequest
+	(*ListPermissionGroupsRequest)(nil),  // 51: user.v1.ListPermissionGroupsRequest
+	(*AddGroupRoleRequest)(nil),          // 52: user.v1.AddGroupRoleRequest
+	(*RemoveGroupRoleRequest)(nil),       // 53: user.v1.RemoveGroupRoleRequest
+	(*ListGroupRolesRequest)(nil),        // 54: user.v1.ListGroupRolesRequest
+	(*AssignRoleRequest)(nil),            // 55: user.v1.AssignRoleRequest
+	(*RevokeRoleRequest)(nil),            // 56: user.v1.RevokeRoleRequest
+	(*ListUserRolesRequest)(nil),         // 57: user.v1.ListUserRolesRequest
+	(*v1.Pong)(nil),                      // 58: common.v1.Pong
+	(*RegisterResponse)(nil),             // 59: user.v1.RegisterResponse
+	(*LoginResponse)(nil),                // 60: user.v1.LoginResponse
+	(*GetOAuthURLResponse)(nil),          // 61: user.v1.GetOAuthURLResponse
+	(*User)(nil),                         // 62: user.v1.User
+	(*ListIdentitiesResponse)(nil),       // 63: user.v1.ListIdentitiesResponse
+	(*Identity)(nil),                     // 64: user.v1.Identity
+	(*BindOAuthIdentityResponse)(nil),    // 65: user.v1.BindOAuthIdentityResponse
+	(*SendVerificationCodeResponse)(nil), // 66: user.v1.SendVerificationCodeResponse
+	(*ListSessionsResponse)(nil),         // 67: user.v1.ListSessionsResponse
+	(*GetSessionResponse)(nil),           // 68: user.v1.GetSessionResponse
+	(*IssueSessionCodeResponse)(nil),     // 69: user.v1.IssueSessionCodeResponse
+	(*ExchangeSessionCodeResponse)(nil),  // 70: user.v1.ExchangeSessionCodeResponse
+	(*CreateUserResponse)(nil),           // 71: user.v1.CreateUserResponse
+	(*ListUsersResponse)(nil),            // 72: user.v1.ListUsersResponse
+	(*ListUsersPagedResponse)(nil),       // 73: user.v1.ListUsersPagedResponse
+	(*GetLoginLogsResponse)(nil),         // 74: user.v1.GetLoginLogsResponse
+	(*Group)(nil),                        // 75: user.v1.Group
+	(*ListGroupsResponse)(nil),           // 76: user.v1.ListGroupsResponse
+	(*ListGroupMembersResponse)(nil),     // 77: user.v1.ListGroupMembersResponse
+	(*Role)(nil),                         // 78: user.v1.Role
+	(*ListRolesResponse)(nil),            // 79: user.v1.ListRolesResponse
+	(*ListPermissionsResponse)(nil),      // 80: user.v1.ListPermissionsResponse
+	(*Permission)(nil),                   // 81: user.v1.Permission
+	(*PermissionGroup)(nil),              // 82: user.v1.PermissionGroup
+	(*ListPermissionGroupsResponse)(nil), // 83: user.v1.ListPermissionGroupsResponse
+	(*ListGroupRolesResponse)(nil),       // 84: user.v1.ListGroupRolesResponse
+	(*ListUserRolesResponse)(nil),        // 85: user.v1.ListUserRolesResponse
 }
 var file_user_v1_service_proto_depIdxs = []int32{
 	0,  // 0: user.v1.UserService.Ping:input_type -> google.protobuf.Empty
 	1,  // 1: user.v1.UserService.Register:input_type -> user.v1.RegisterRequest
 	2,  // 2: user.v1.UserService.Login:input_type -> user.v1.LoginRequest
 	3,  // 3: user.v1.UserService.Logout:input_type -> user.v1.LogoutRequest
-	4,  // 4: user.v1.UserService.RefreshSession:input_type -> user.v1.RefreshSessionRequest
-	5,  // 5: user.v1.UserService.GetOAuthURL:input_type -> user.v1.GetOAuthURLRequest
-	6,  // 6: user.v1.UserService.SocialLogin:input_type -> user.v1.SocialLoginRequest
-	7,  // 7: user.v1.UserService.MiniProgramLogin:input_type -> user.v1.MiniProgramLoginRequest
-	8,  // 8: user.v1.UserService.MiniProgramPhoneLogin:input_type -> user.v1.MiniProgramPhoneLoginRequest
-	9,  // 9: user.v1.UserService.GetProfile:input_type -> user.v1.GetProfileRequest
-	10, // 10: user.v1.UserService.UpdateProfile:input_type -> user.v1.UpdateProfileRequest
-	11, // 11: user.v1.UserService.ChangePassword:input_type -> user.v1.ChangePasswordRequest
-	12, // 12: user.v1.UserService.ResetPassword:input_type -> user.v1.ResetPasswordRequest
-	13, // 13: user.v1.UserService.ListIdentities:input_type -> user.v1.ListIdentitiesRequest
-	14, // 14: user.v1.UserService.BindIdentity:input_type -> user.v1.BindIdentityRequest
-	15, // 15: user.v1.UserService.BindOAuthIdentity:input_type -> user.v1.BindOAuthIdentityRequest
-	16, // 16: user.v1.UserService.UnbindIdentity:input_type -> user.v1.UnbindIdentityRequest
-	17, // 17: user.v1.UserService.SendVerificationCode:input_type -> user.v1.SendVerificationCodeRequest
-	18, // 18: user.v1.UserService.ListSessions:input_type -> user.v1.ListSessionsRequest
-	19, // 19: user.v1.UserService.RevokeSession:input_type -> user.v1.RevokeSessionRequest
-	20, // 20: user.v1.UserService.RevokeAllSessions:input_type -> user.v1.RevokeAllSessionsRequest
-	21, // 21: user.v1.UserService.GetSession:input_type -> user.v1.GetSessionRequest
-	22, // 22: user.v1.UserService.IssueSessionCode:input_type -> user.v1.IssueSessionCodeRequest
-	23, // 23: user.v1.UserService.ExchangeSessionCode:input_type -> user.v1.ExchangeSessionCodeRequest
-	24, // 24: user.v1.UserService.CreateUser:input_type -> user.v1.CreateUserRequest
-	25, // 25: user.v1.UserService.GetUser:input_type -> user.v1.GetUserRequest
-	26, // 26: user.v1.UserService.ListUsers:input_type -> user.v1.ListUsersRequest
-	27, // 27: user.v1.UserService.ListUsersPaged:input_type -> user.v1.ListUsersPagedRequest
-	28, // 28: user.v1.UserService.DisableUser:input_type -> user.v1.DisableUserRequest
-	29, // 29: user.v1.UserService.GetLoginLogs:input_type -> user.v1.GetLoginLogsRequest
-	30, // 30: user.v1.UserService.CreateGroup:input_type -> user.v1.CreateGroupRequest
-	31, // 31: user.v1.UserService.GetGroup:input_type -> user.v1.GetGroupRequest
-	32, // 32: user.v1.UserService.UpdateGroup:input_type -> user.v1.UpdateGroupRequest
-	33, // 33: user.v1.UserService.ListGroups:input_type -> user.v1.ListGroupsRequest
-	34, // 34: user.v1.UserService.DeleteGroup:input_type -> user.v1.DeleteGroupRequest
-	35, // 35: user.v1.UserService.AddGroupMember:input_type -> user.v1.AddGroupMemberRequest
-	36, // 36: user.v1.UserService.RemoveGroupMember:input_type -> user.v1.RemoveGroupMemberRequest
-	37, // 37: user.v1.UserService.ListGroupMembers:input_type -> user.v1.ListGroupMembersRequest
-	38, // 38: user.v1.UserService.CreateRole:input_type -> user.v1.CreateRoleRequest
-	39, // 39: user.v1.UserService.UpdateRole:input_type -> user.v1.UpdateRoleRequest
-	40, // 40: user.v1.UserService.DeleteRole:input_type -> user.v1.DeleteRoleRequest
-	41, // 41: user.v1.UserService.ListRoles:input_type -> user.v1.ListRolesRequest
-	42, // 42: user.v1.UserService.GetRole:input_type -> user.v1.GetRoleRequest
-	43, // 43: user.v1.UserService.ListPermissions:input_type -> user.v1.ListPermissionsRequest
-	44, // 44: user.v1.UserService.CreatePermission:input_type -> user.v1.CreatePermissionRequest
-	45, // 45: user.v1.UserService.GetPermission:input_type -> user.v1.GetPermissionRequest
-	46, // 46: user.v1.UserService.UpdatePermission:input_type -> user.v1.UpdatePermissionRequest
-	47, // 47: user.v1.UserService.DeletePermission:input_type -> user.v1.DeletePermissionRequest
-	48, // 48: user.v1.UserService.CreatePermissionGroup:input_type -> user.v1.CreatePermissionGroupRequest
-	49, // 49: user.v1.UserService.GetPermissionGroup:input_type -> user.v1.GetPermissionGroupRequest
-	50, // 50: user.v1.UserService.UpdatePermissionGroup:input_type -> user.v1.UpdatePermissionGroupRequest
-	51, // 51: user.v1.UserService.DeletePermissionGroup:input_type -> user.v1.DeletePermissionGroupRequest
-	52, // 52: user.v1.UserService.ListPermissionGroups:input_type -> user.v1.ListPermissionGroupsRequest
-	53, // 53: user.v1.UserService.AddGroupRole:input_type -> user.v1.AddGroupRoleRequest
-	54, // 54: user.v1.UserService.RemoveGroupRole:input_type -> user.v1.RemoveGroupRoleRequest
-	55, // 55: user.v1.UserService.ListGroupRoles:input_type -> user.v1.ListGroupRolesRequest
-	56, // 56: user.v1.UserService.AssignRole:input_type -> user.v1.AssignRoleRequest
-	57, // 57: user.v1.UserService.RevokeRole:input_type -> user.v1.RevokeRoleRequest
-	58, // 58: user.v1.UserService.ListUserRoles:input_type -> user.v1.ListUserRolesRequest
-	59, // 59: user.v1.UserService.Ping:output_type -> common.v1.Pong
-	60, // 60: user.v1.UserService.Register:output_type -> user.v1.RegisterResponse
-	61, // 61: user.v1.UserService.Login:output_type -> user.v1.LoginResponse
-	0,  // 62: user.v1.UserService.Logout:output_type -> google.protobuf.Empty
-	0,  // 63: user.v1.UserService.RefreshSession:output_type -> google.protobuf.Empty
-	62, // 64: user.v1.UserService.GetOAuthURL:output_type -> user.v1.GetOAuthURLResponse
-	61, // 65: user.v1.UserService.SocialLogin:output_type -> user.v1.LoginResponse
-	61, // 66: user.v1.UserService.MiniProgramLogin:output_type -> user.v1.LoginResponse
-	61, // 67: user.v1.UserService.MiniProgramPhoneLogin:output_type -> user.v1.LoginResponse
-	63, // 68: user.v1.UserService.GetProfile:output_type -> user.v1.User
-	63, // 69: user.v1.UserService.UpdateProfile:output_type -> user.v1.User
-	0,  // 70: user.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
-	0,  // 71: user.v1.UserService.ResetPassword:output_type -> google.protobuf.Empty
-	64, // 72: user.v1.UserService.ListIdentities:output_type -> user.v1.ListIdentitiesResponse
-	65, // 73: user.v1.UserService.BindIdentity:output_type -> user.v1.Identity
-	66, // 74: user.v1.UserService.BindOAuthIdentity:output_type -> user.v1.BindOAuthIdentityResponse
-	0,  // 75: user.v1.UserService.UnbindIdentity:output_type -> google.protobuf.Empty
-	67, // 76: user.v1.UserService.SendVerificationCode:output_type -> user.v1.SendVerificationCodeResponse
-	68, // 77: user.v1.UserService.ListSessions:output_type -> user.v1.ListSessionsResponse
-	0,  // 78: user.v1.UserService.RevokeSession:output_type -> google.protobuf.Empty
-	0,  // 79: user.v1.UserService.RevokeAllSessions:output_type -> google.protobuf.Empty
-	69, // 80: user.v1.UserService.GetSession:output_type -> user.v1.GetSessionResponse
-	70, // 81: user.v1.UserService.IssueSessionCode:output_type -> user.v1.IssueSessionCodeResponse
-	71, // 82: user.v1.UserService.ExchangeSessionCode:output_type -> user.v1.ExchangeSessionCodeResponse
-	72, // 83: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
-	63, // 84: user.v1.UserService.GetUser:output_type -> user.v1.User
-	73, // 85: user.v1.UserService.ListUsers:output_type -> user.v1.ListUsersResponse
-	74, // 86: user.v1.UserService.ListUsersPaged:output_type -> user.v1.ListUsersPagedResponse
-	63, // 87: user.v1.UserService.DisableUser:output_type -> user.v1.User
-	75, // 88: user.v1.UserService.GetLoginLogs:output_type -> user.v1.GetLoginLogsResponse
-	76, // 89: user.v1.UserService.CreateGroup:output_type -> user.v1.Group
-	76, // 90: user.v1.UserService.GetGroup:output_type -> user.v1.Group
-	76, // 91: user.v1.UserService.UpdateGroup:output_type -> user.v1.Group
-	77, // 92: user.v1.UserService.ListGroups:output_type -> user.v1.ListGroupsResponse
-	0,  // 93: user.v1.UserService.DeleteGroup:output_type -> google.protobuf.Empty
-	0,  // 94: user.v1.UserService.AddGroupMember:output_type -> google.protobuf.Empty
-	0,  // 95: user.v1.UserService.RemoveGroupMember:output_type -> google.protobuf.Empty
-	78, // 96: user.v1.UserService.ListGroupMembers:output_type -> user.v1.ListGroupMembersResponse
-	79, // 97: user.v1.UserService.CreateRole:output_type -> user.v1.Role
-	79, // 98: user.v1.UserService.UpdateRole:output_type -> user.v1.Role
-	0,  // 99: user.v1.UserService.DeleteRole:output_type -> google.protobuf.Empty
-	80, // 100: user.v1.UserService.ListRoles:output_type -> user.v1.ListRolesResponse
-	79, // 101: user.v1.UserService.GetRole:output_type -> user.v1.Role
-	81, // 102: user.v1.UserService.ListPermissions:output_type -> user.v1.ListPermissionsResponse
-	82, // 103: user.v1.UserService.CreatePermission:output_type -> user.v1.Permission
-	82, // 104: user.v1.UserService.GetPermission:output_type -> user.v1.Permission
-	82, // 105: user.v1.UserService.UpdatePermission:output_type -> user.v1.Permission
-	0,  // 106: user.v1.UserService.DeletePermission:output_type -> google.protobuf.Empty
-	83, // 107: user.v1.UserService.CreatePermissionGroup:output_type -> user.v1.PermissionGroup
-	83, // 108: user.v1.UserService.GetPermissionGroup:output_type -> user.v1.PermissionGroup
-	83, // 109: user.v1.UserService.UpdatePermissionGroup:output_type -> user.v1.PermissionGroup
-	0,  // 110: user.v1.UserService.DeletePermissionGroup:output_type -> google.protobuf.Empty
-	84, // 111: user.v1.UserService.ListPermissionGroups:output_type -> user.v1.ListPermissionGroupsResponse
-	0,  // 112: user.v1.UserService.AddGroupRole:output_type -> google.protobuf.Empty
-	0,  // 113: user.v1.UserService.RemoveGroupRole:output_type -> google.protobuf.Empty
-	85, // 114: user.v1.UserService.ListGroupRoles:output_type -> user.v1.ListGroupRolesResponse
-	0,  // 115: user.v1.UserService.AssignRole:output_type -> google.protobuf.Empty
-	0,  // 116: user.v1.UserService.RevokeRole:output_type -> google.protobuf.Empty
-	86, // 117: user.v1.UserService.ListUserRoles:output_type -> user.v1.ListUserRolesResponse
-	59, // [59:118] is the sub-list for method output_type
-	0,  // [0:59] is the sub-list for method input_type
+	4,  // 4: user.v1.UserService.GetOAuthURL:input_type -> user.v1.GetOAuthURLRequest
+	5,  // 5: user.v1.UserService.SocialLogin:input_type -> user.v1.SocialLoginRequest
+	6,  // 6: user.v1.UserService.MiniProgramLogin:input_type -> user.v1.MiniProgramLoginRequest
+	7,  // 7: user.v1.UserService.MiniProgramPhoneLogin:input_type -> user.v1.MiniProgramPhoneLoginRequest
+	8,  // 8: user.v1.UserService.GetProfile:input_type -> user.v1.GetProfileRequest
+	9,  // 9: user.v1.UserService.UpdateProfile:input_type -> user.v1.UpdateProfileRequest
+	10, // 10: user.v1.UserService.ChangePassword:input_type -> user.v1.ChangePasswordRequest
+	11, // 11: user.v1.UserService.ResetPassword:input_type -> user.v1.ResetPasswordRequest
+	12, // 12: user.v1.UserService.ListIdentities:input_type -> user.v1.ListIdentitiesRequest
+	13, // 13: user.v1.UserService.BindIdentity:input_type -> user.v1.BindIdentityRequest
+	14, // 14: user.v1.UserService.BindOAuthIdentity:input_type -> user.v1.BindOAuthIdentityRequest
+	15, // 15: user.v1.UserService.UnbindIdentity:input_type -> user.v1.UnbindIdentityRequest
+	16, // 16: user.v1.UserService.SendVerificationCode:input_type -> user.v1.SendVerificationCodeRequest
+	17, // 17: user.v1.UserService.ListSessions:input_type -> user.v1.ListSessionsRequest
+	18, // 18: user.v1.UserService.RevokeSession:input_type -> user.v1.RevokeSessionRequest
+	19, // 19: user.v1.UserService.RevokeAllSessions:input_type -> user.v1.RevokeAllSessionsRequest
+	20, // 20: user.v1.UserService.GetSession:input_type -> user.v1.GetSessionRequest
+	21, // 21: user.v1.UserService.IssueSessionCode:input_type -> user.v1.IssueSessionCodeRequest
+	22, // 22: user.v1.UserService.ExchangeSessionCode:input_type -> user.v1.ExchangeSessionCodeRequest
+	23, // 23: user.v1.UserService.CreateUser:input_type -> user.v1.CreateUserRequest
+	24, // 24: user.v1.UserService.GetUser:input_type -> user.v1.GetUserRequest
+	25, // 25: user.v1.UserService.ListUsers:input_type -> user.v1.ListUsersRequest
+	26, // 26: user.v1.UserService.ListUsersPaged:input_type -> user.v1.ListUsersPagedRequest
+	27, // 27: user.v1.UserService.DisableUser:input_type -> user.v1.DisableUserRequest
+	28, // 28: user.v1.UserService.GetLoginLogs:input_type -> user.v1.GetLoginLogsRequest
+	29, // 29: user.v1.UserService.CreateGroup:input_type -> user.v1.CreateGroupRequest
+	30, // 30: user.v1.UserService.GetGroup:input_type -> user.v1.GetGroupRequest
+	31, // 31: user.v1.UserService.UpdateGroup:input_type -> user.v1.UpdateGroupRequest
+	32, // 32: user.v1.UserService.ListGroups:input_type -> user.v1.ListGroupsRequest
+	33, // 33: user.v1.UserService.DeleteGroup:input_type -> user.v1.DeleteGroupRequest
+	34, // 34: user.v1.UserService.AddGroupMember:input_type -> user.v1.AddGroupMemberRequest
+	35, // 35: user.v1.UserService.RemoveGroupMember:input_type -> user.v1.RemoveGroupMemberRequest
+	36, // 36: user.v1.UserService.ListGroupMembers:input_type -> user.v1.ListGroupMembersRequest
+	37, // 37: user.v1.UserService.CreateRole:input_type -> user.v1.CreateRoleRequest
+	38, // 38: user.v1.UserService.UpdateRole:input_type -> user.v1.UpdateRoleRequest
+	39, // 39: user.v1.UserService.DeleteRole:input_type -> user.v1.DeleteRoleRequest
+	40, // 40: user.v1.UserService.ListRoles:input_type -> user.v1.ListRolesRequest
+	41, // 41: user.v1.UserService.GetRole:input_type -> user.v1.GetRoleRequest
+	42, // 42: user.v1.UserService.ListPermissions:input_type -> user.v1.ListPermissionsRequest
+	43, // 43: user.v1.UserService.CreatePermission:input_type -> user.v1.CreatePermissionRequest
+	44, // 44: user.v1.UserService.GetPermission:input_type -> user.v1.GetPermissionRequest
+	45, // 45: user.v1.UserService.UpdatePermission:input_type -> user.v1.UpdatePermissionRequest
+	46, // 46: user.v1.UserService.DeletePermission:input_type -> user.v1.DeletePermissionRequest
+	47, // 47: user.v1.UserService.CreatePermissionGroup:input_type -> user.v1.CreatePermissionGroupRequest
+	48, // 48: user.v1.UserService.GetPermissionGroup:input_type -> user.v1.GetPermissionGroupRequest
+	49, // 49: user.v1.UserService.UpdatePermissionGroup:input_type -> user.v1.UpdatePermissionGroupRequest
+	50, // 50: user.v1.UserService.DeletePermissionGroup:input_type -> user.v1.DeletePermissionGroupRequest
+	51, // 51: user.v1.UserService.ListPermissionGroups:input_type -> user.v1.ListPermissionGroupsRequest
+	52, // 52: user.v1.UserService.AddGroupRole:input_type -> user.v1.AddGroupRoleRequest
+	53, // 53: user.v1.UserService.RemoveGroupRole:input_type -> user.v1.RemoveGroupRoleRequest
+	54, // 54: user.v1.UserService.ListGroupRoles:input_type -> user.v1.ListGroupRolesRequest
+	55, // 55: user.v1.UserService.AssignRole:input_type -> user.v1.AssignRoleRequest
+	56, // 56: user.v1.UserService.RevokeRole:input_type -> user.v1.RevokeRoleRequest
+	57, // 57: user.v1.UserService.ListUserRoles:input_type -> user.v1.ListUserRolesRequest
+	58, // 58: user.v1.UserService.Ping:output_type -> common.v1.Pong
+	59, // 59: user.v1.UserService.Register:output_type -> user.v1.RegisterResponse
+	60, // 60: user.v1.UserService.Login:output_type -> user.v1.LoginResponse
+	0,  // 61: user.v1.UserService.Logout:output_type -> google.protobuf.Empty
+	61, // 62: user.v1.UserService.GetOAuthURL:output_type -> user.v1.GetOAuthURLResponse
+	60, // 63: user.v1.UserService.SocialLogin:output_type -> user.v1.LoginResponse
+	60, // 64: user.v1.UserService.MiniProgramLogin:output_type -> user.v1.LoginResponse
+	60, // 65: user.v1.UserService.MiniProgramPhoneLogin:output_type -> user.v1.LoginResponse
+	62, // 66: user.v1.UserService.GetProfile:output_type -> user.v1.User
+	62, // 67: user.v1.UserService.UpdateProfile:output_type -> user.v1.User
+	0,  // 68: user.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
+	0,  // 69: user.v1.UserService.ResetPassword:output_type -> google.protobuf.Empty
+	63, // 70: user.v1.UserService.ListIdentities:output_type -> user.v1.ListIdentitiesResponse
+	64, // 71: user.v1.UserService.BindIdentity:output_type -> user.v1.Identity
+	65, // 72: user.v1.UserService.BindOAuthIdentity:output_type -> user.v1.BindOAuthIdentityResponse
+	0,  // 73: user.v1.UserService.UnbindIdentity:output_type -> google.protobuf.Empty
+	66, // 74: user.v1.UserService.SendVerificationCode:output_type -> user.v1.SendVerificationCodeResponse
+	67, // 75: user.v1.UserService.ListSessions:output_type -> user.v1.ListSessionsResponse
+	0,  // 76: user.v1.UserService.RevokeSession:output_type -> google.protobuf.Empty
+	0,  // 77: user.v1.UserService.RevokeAllSessions:output_type -> google.protobuf.Empty
+	68, // 78: user.v1.UserService.GetSession:output_type -> user.v1.GetSessionResponse
+	69, // 79: user.v1.UserService.IssueSessionCode:output_type -> user.v1.IssueSessionCodeResponse
+	70, // 80: user.v1.UserService.ExchangeSessionCode:output_type -> user.v1.ExchangeSessionCodeResponse
+	71, // 81: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
+	62, // 82: user.v1.UserService.GetUser:output_type -> user.v1.User
+	72, // 83: user.v1.UserService.ListUsers:output_type -> user.v1.ListUsersResponse
+	73, // 84: user.v1.UserService.ListUsersPaged:output_type -> user.v1.ListUsersPagedResponse
+	62, // 85: user.v1.UserService.DisableUser:output_type -> user.v1.User
+	74, // 86: user.v1.UserService.GetLoginLogs:output_type -> user.v1.GetLoginLogsResponse
+	75, // 87: user.v1.UserService.CreateGroup:output_type -> user.v1.Group
+	75, // 88: user.v1.UserService.GetGroup:output_type -> user.v1.Group
+	75, // 89: user.v1.UserService.UpdateGroup:output_type -> user.v1.Group
+	76, // 90: user.v1.UserService.ListGroups:output_type -> user.v1.ListGroupsResponse
+	0,  // 91: user.v1.UserService.DeleteGroup:output_type -> google.protobuf.Empty
+	0,  // 92: user.v1.UserService.AddGroupMember:output_type -> google.protobuf.Empty
+	0,  // 93: user.v1.UserService.RemoveGroupMember:output_type -> google.protobuf.Empty
+	77, // 94: user.v1.UserService.ListGroupMembers:output_type -> user.v1.ListGroupMembersResponse
+	78, // 95: user.v1.UserService.CreateRole:output_type -> user.v1.Role
+	78, // 96: user.v1.UserService.UpdateRole:output_type -> user.v1.Role
+	0,  // 97: user.v1.UserService.DeleteRole:output_type -> google.protobuf.Empty
+	79, // 98: user.v1.UserService.ListRoles:output_type -> user.v1.ListRolesResponse
+	78, // 99: user.v1.UserService.GetRole:output_type -> user.v1.Role
+	80, // 100: user.v1.UserService.ListPermissions:output_type -> user.v1.ListPermissionsResponse
+	81, // 101: user.v1.UserService.CreatePermission:output_type -> user.v1.Permission
+	81, // 102: user.v1.UserService.GetPermission:output_type -> user.v1.Permission
+	81, // 103: user.v1.UserService.UpdatePermission:output_type -> user.v1.Permission
+	0,  // 104: user.v1.UserService.DeletePermission:output_type -> google.protobuf.Empty
+	82, // 105: user.v1.UserService.CreatePermissionGroup:output_type -> user.v1.PermissionGroup
+	82, // 106: user.v1.UserService.GetPermissionGroup:output_type -> user.v1.PermissionGroup
+	82, // 107: user.v1.UserService.UpdatePermissionGroup:output_type -> user.v1.PermissionGroup
+	0,  // 108: user.v1.UserService.DeletePermissionGroup:output_type -> google.protobuf.Empty
+	83, // 109: user.v1.UserService.ListPermissionGroups:output_type -> user.v1.ListPermissionGroupsResponse
+	0,  // 110: user.v1.UserService.AddGroupRole:output_type -> google.protobuf.Empty
+	0,  // 111: user.v1.UserService.RemoveGroupRole:output_type -> google.protobuf.Empty
+	84, // 112: user.v1.UserService.ListGroupRoles:output_type -> user.v1.ListGroupRolesResponse
+	0,  // 113: user.v1.UserService.AssignRole:output_type -> google.protobuf.Empty
+	0,  // 114: user.v1.UserService.RevokeRole:output_type -> google.protobuf.Empty
+	85, // 115: user.v1.UserService.ListUserRoles:output_type -> user.v1.ListUserRolesResponse
+	58, // [58:116] is the sub-list for method output_type
+	0,  // [0:58] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -27,7 +27,6 @@ const (
 	UserService_Register_FullMethodName              = "/user.v1.UserService/Register"
 	UserService_Login_FullMethodName                 = "/user.v1.UserService/Login"
 	UserService_Logout_FullMethodName                = "/user.v1.UserService/Logout"
-	UserService_RefreshSession_FullMethodName        = "/user.v1.UserService/RefreshSession"
 	UserService_GetOAuthURL_FullMethodName           = "/user.v1.UserService/GetOAuthURL"
 	UserService_SocialLogin_FullMethodName           = "/user.v1.UserService/SocialLogin"
 	UserService_MiniProgramLogin_FullMethodName      = "/user.v1.UserService/MiniProgramLogin"
@@ -111,10 +110,6 @@ type UserServiceClient interface {
 	// a no-op. To revoke other sessions (e.g. admin forcing logout), use
 	// RevokeSession / RevokeAllSessions.
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// RefreshSession extends the TTL of an unexpired session and updates
-	// last_active_at in the DB. Sliding-window model: call from the API
-	// gateway on each authenticated request, or periodically from clients.
-	RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// GetOAuthURL returns the OAuth authorization URL for redirect-based
 	// providers (GitHub, Google, WeChat web, Apple). The URL embeds the
 	// FIXED redirect URL configured at the provider (cfg.OAuth.{provider}.
@@ -205,7 +200,7 @@ type UserServiceClient interface {
 	// case: a BFF pulls session_id out of a cookie and needs user_id to inject
 	// into downstream user-service RPCs. Read-only against Redis — does not
 	// touch the DB. Side effect: like all session reads, slides the TTL forward
-	// (same sliding-window semantics as RefreshSession).
+	// (sliding-window semantics).
 	GetSession(ctx context.Context, in *GetSessionRequest, opts ...grpc.CallOption) (*GetSessionResponse, error)
 	// IssueSessionCode mints a one-time short code that references the given
 	// session_id. Used by the OAuth callback service to hand the session back
@@ -383,16 +378,6 @@ func (c *userServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, UserService_Logout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) RefreshSession(ctx context.Context, in *RefreshSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, UserService_RefreshSession_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -966,10 +951,6 @@ type UserServiceServer interface {
 	// a no-op. To revoke other sessions (e.g. admin forcing logout), use
 	// RevokeSession / RevokeAllSessions.
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
-	// RefreshSession extends the TTL of an unexpired session and updates
-	// last_active_at in the DB. Sliding-window model: call from the API
-	// gateway on each authenticated request, or periodically from clients.
-	RefreshSession(context.Context, *RefreshSessionRequest) (*emptypb.Empty, error)
 	// GetOAuthURL returns the OAuth authorization URL for redirect-based
 	// providers (GitHub, Google, WeChat web, Apple). The URL embeds the
 	// FIXED redirect URL configured at the provider (cfg.OAuth.{provider}.
@@ -1060,7 +1041,7 @@ type UserServiceServer interface {
 	// case: a BFF pulls session_id out of a cookie and needs user_id to inject
 	// into downstream user-service RPCs. Read-only against Redis — does not
 	// touch the DB. Side effect: like all session reads, slides the TTL forward
-	// (same sliding-window semantics as RefreshSession).
+	// (sliding-window semantics).
 	GetSession(context.Context, *GetSessionRequest) (*GetSessionResponse, error)
 	// IssueSessionCode mints a one-time short code that references the given
 	// session_id. Used by the OAuth callback service to hand the session back
@@ -1215,9 +1196,6 @@ func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*Lo
 }
 func (UnimplementedUserServiceServer) Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedUserServiceServer) RefreshSession(context.Context, *RefreshSessionRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method RefreshSession not implemented")
 }
 func (UnimplementedUserServiceServer) GetOAuthURL(context.Context, *GetOAuthURLRequest) (*GetOAuthURLResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetOAuthURL not implemented")
@@ -1470,24 +1448,6 @@ func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Logout(ctx, req.(*LogoutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_RefreshSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshSessionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).RefreshSession(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_RefreshSession_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RefreshSession(ctx, req.(*RefreshSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2486,10 +2446,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _UserService_Logout_Handler,
-		},
-		{
-			MethodName: "RefreshSession",
-			Handler:    _UserService_RefreshSession_Handler,
 		},
 		{
 			MethodName: "GetOAuthURL",

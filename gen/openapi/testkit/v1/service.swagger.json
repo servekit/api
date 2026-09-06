@@ -649,39 +649,6 @@
         ]
       }
     },
-    "/api/v1/auth/refresh": {
-      "post": {
-        "operationId": "RefreshSession",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1TokenResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "RefreshSessionRequest refreshes the caller's session. session_id is optional:\nwhen empty, the handler derives it from the authenticated context\n(auth.SessionIDFromCtx). The response is a freshly-issued JWT.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1RefreshSessionRequest"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/auth/register": {
       "post": {
         "operationId": "Register",
@@ -9005,15 +8972,6 @@
         }
       },
       "description": "QuotaInfo is an owner's storage quota (returned by GetMyQuota / SetOwnerQuota /\nAdmin*Quota). owner_type+owner_id are NOT here: GetMyQuota infers them from\nctx, the admin/owner-quota responses echo the request target implicitly."
-    },
-    "v1RefreshSessionRequest": {
-      "type": "object",
-      "properties": {
-        "sessionId": {
-          "type": "string"
-        }
-      },
-      "description": "RefreshSessionRequest refreshes the caller's session. session_id is optional:\nwhen empty, the handler derives it from the authenticated context\n(auth.SessionIDFromCtx). The response is a freshly-issued JWT."
     },
     "v1RegisterRequest": {
       "type": "object",

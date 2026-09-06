@@ -42,13 +42,6 @@ service TestkitService {
     option (google.api.http) = {post: "/api/v1/auth/logout"};
   }
 
-  rpc RefreshSession(RefreshSessionRequest) returns (TokenResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/auth/refresh"
-      body: "*"
-    };
-  }
-
   // ==================== P2 RPCs (53 forwarders to user-service) ====================
 
   // ---- Profile (P2) ----

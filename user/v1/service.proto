@@ -41,11 +41,6 @@ service UserService {
   // RevokeSession / RevokeAllSessions.
   rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
 
-  // RefreshSession extends the TTL of an unexpired session and updates
-  // last_active_at in the DB. Sliding-window model: call from the API
-  // gateway on each authenticated request, or periodically from clients.
-  rpc RefreshSession(RefreshSessionRequest) returns (google.protobuf.Empty);
-
   // ============================================================
   // Social Login — OAuth redirect + WeChat Mini Program.
   //
@@ -181,7 +176,7 @@ service UserService {
   // case: a BFF pulls session_id out of a cookie and needs user_id to inject
   // into downstream user-service RPCs. Read-only against Redis — does not
   // touch the DB. Side effect: like all session reads, slides the TTL forward
-  // (same sliding-window semantics as RefreshSession).
+  // (sliding-window semantics).
   rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
 
   // IssueSessionCode mints a one-time short code that references the given
