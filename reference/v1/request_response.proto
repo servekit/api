@@ -152,6 +152,7 @@ message GetCountryProfileResponse {
   repeated Currency currencies = 3; // currently valid in this country
   repeated Timezone timezones = 4;  // IANA zones covering this country
   string data_version = 5;
+}
 
 // ListCountriesByRegion returns every country under a UN M49 group,
 // recursively (a continent yields all its sub-regions' countries; a
@@ -206,5 +207,4 @@ message GetDataInfoResponse {
   int32 language_count = 5;
   int32 currency_count = 6;
   int32 region_group_count = 7;
-}
 }

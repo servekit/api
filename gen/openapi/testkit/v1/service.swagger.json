@@ -7152,6 +7152,10 @@
         "name": {
           "type": "string",
           "title": "display name in the request locale"
+        },
+        "exampleNumber": {
+          "type": "string",
+          "title": "libphonenumber example, e.g. \"+86 138 0013 8000\";"
         }
       },
       "description": "Country is one row of the ISO 3166-1 + E.164 directory."

@@ -30,11 +30,12 @@ const (
 // Country is one row of the ISO 3166-1 + E.164 directory.
 type Country struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                            // alpha-2, e.g. "CN"
-	Alpha_3       string                 `protobuf:"bytes,2,opt,name=alpha_3,json=alpha3,proto3" json:"alpha_3,omitempty"`          // alpha-3, e.g. "CHN"
-	DialCode      string                 `protobuf:"bytes,3,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`    // ITU E.164 with "+", e.g. "+86"
-	FlagEmoji     string                 `protobuf:"bytes,4,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"` // regional-indicator pair, e.g. "🇨🇳"
-	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                            // display name in the request locale
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                        // alpha-2, e.g. "CN"
+	Alpha_3       string                 `protobuf:"bytes,2,opt,name=alpha_3,json=alpha3,proto3" json:"alpha_3,omitempty"`                      // alpha-3, e.g. "CHN"
+	DialCode      string                 `protobuf:"bytes,3,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`                // ITU E.164 with "+", e.g. "+86"
+	FlagEmoji     string                 `protobuf:"bytes,4,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`             // regional-indicator pair, e.g. "🇨🇳"
+	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                                        // display name in the request locale
+	ExampleNumber string                 `protobuf:"bytes,7,opt,name=example_number,json=exampleNumber,proto3" json:"example_number,omitempty"` // libphonenumber example, e.g. "+86 138 0013 8000";
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -100,6 +101,13 @@ func (x *Country) GetFlagEmoji() string {
 func (x *Country) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *Country) GetExampleNumber() string {
+	if x != nil {
+		return x.ExampleNumber
 	}
 	return ""
 }
@@ -386,14 +394,15 @@ var File_reference_v1_message_proto protoreflect.FileDescriptor
 
 const file_reference_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x1areference/v1/message.proto\x12\freference.v1\"\x86\x01\n" +
+	"\x1areference/v1/message.proto\x12\freference.v1\"\xad\x01\n" +
 	"\aCountry\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x17\n" +
 	"\aalpha_3\x18\x02 \x01(\tR\x06alpha3\x12\x1b\n" +
 	"\tdial_code\x18\x03 \x01(\tR\bdialCode\x12\x1d\n" +
 	"\n" +
 	"flag_emoji\x18\x04 \x01(\tR\tflagEmoji\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\"m\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12%\n" +
+	"\x0eexample_number\x18\a \x01(\tR\rexampleNumber\"m\n" +
 	"\bTimezone\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\aaliases\x18\x02 \x03(\tR\aaliases\x12#\n" +

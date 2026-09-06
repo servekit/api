@@ -23,15 +23,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ReferenceService_Ping_FullMethodName              = "/reference.v1.ReferenceService/Ping"
-	ReferenceService_ListCountries_FullMethodName     = "/reference.v1.ReferenceService/ListCountries"
-	ReferenceService_ListTimezones_FullMethodName     = "/reference.v1.ReferenceService/ListTimezones"
-	ReferenceService_ListLanguages_FullMethodName     = "/reference.v1.ReferenceService/ListLanguages"
-	ReferenceService_ListCurrencies_FullMethodName    = "/reference.v1.ReferenceService/ListCurrencies"
-	ReferenceService_ListRegionGroups_FullMethodName  = "/reference.v1.ReferenceService/ListRegionGroups"
-	ReferenceService_ParsePhone_FullMethodName        = "/reference.v1.ReferenceService/ParsePhone"
-	ReferenceService_ResolveCodes_FullMethodName      = "/reference.v1.ReferenceService/ResolveCodes"
-	ReferenceService_GetCountryProfile_FullMethodName = "/reference.v1.ReferenceService/GetCountryProfile"
+	ReferenceService_Ping_FullMethodName                  = "/reference.v1.ReferenceService/Ping"
+	ReferenceService_ListCountries_FullMethodName         = "/reference.v1.ReferenceService/ListCountries"
+	ReferenceService_ListTimezones_FullMethodName         = "/reference.v1.ReferenceService/ListTimezones"
+	ReferenceService_ListLanguages_FullMethodName         = "/reference.v1.ReferenceService/ListLanguages"
+	ReferenceService_ListCurrencies_FullMethodName        = "/reference.v1.ReferenceService/ListCurrencies"
+	ReferenceService_ListRegionGroups_FullMethodName      = "/reference.v1.ReferenceService/ListRegionGroups"
+	ReferenceService_ParsePhone_FullMethodName            = "/reference.v1.ReferenceService/ParsePhone"
+	ReferenceService_ResolveCodes_FullMethodName          = "/reference.v1.ReferenceService/ResolveCodes"
+	ReferenceService_GetCountryProfile_FullMethodName     = "/reference.v1.ReferenceService/GetCountryProfile"
+	ReferenceService_ListCountriesByRegion_FullMethodName = "/reference.v1.ReferenceService/ListCountriesByRegion"
+	ReferenceService_GetCountryDefaults_FullMethodName    = "/reference.v1.ReferenceService/GetCountryDefaults"
+	ReferenceService_GetDataInfo_FullMethodName           = "/reference.v1.ReferenceService/GetDataInfo"
 )
 
 // ReferenceServiceClient is the client API for ReferenceService service.
@@ -55,6 +58,12 @@ type ReferenceServiceClient interface {
 	// GetCountryProfile aggregates the existing domains for one country:
 	// base info, continent/sub-region chain, currencies, timezones.
 	GetCountryProfile(ctx context.Context, in *GetCountryProfileRequest, opts ...grpc.CallOption) (*GetCountryProfileResponse, error)
+	// Hierarchy navigation: every country under a region group, recursively.
+	ListCountriesByRegion(ctx context.Context, in *ListCountriesByRegionRequest, opts ...grpc.CallOption) (*ListCountriesByRegionResponse, error)
+	// Auto-fill set for "user picked a country" forms.
+	GetCountryDefaults(ctx context.Context, in *GetCountryDefaultsRequest, opts ...grpc.CallOption) (*GetCountryDefaultsResponse, error)
+	// Compiled-snapshot metadata for cache freshness checks.
+	GetDataInfo(ctx context.Context, in *GetDataInfoRequest, opts ...grpc.CallOption) (*GetDataInfoResponse, error)
 }
 
 type referenceServiceClient struct {
@@ -155,6 +164,36 @@ func (c *referenceServiceClient) GetCountryProfile(ctx context.Context, in *GetC
 	return out, nil
 }
 
+func (c *referenceServiceClient) ListCountriesByRegion(ctx context.Context, in *ListCountriesByRegionRequest, opts ...grpc.CallOption) (*ListCountriesByRegionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListCountriesByRegionResponse)
+	err := c.cc.Invoke(ctx, ReferenceService_ListCountriesByRegion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referenceServiceClient) GetCountryDefaults(ctx context.Context, in *GetCountryDefaultsRequest, opts ...grpc.CallOption) (*GetCountryDefaultsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCountryDefaultsResponse)
+	err := c.cc.Invoke(ctx, ReferenceService_GetCountryDefaults_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referenceServiceClient) GetDataInfo(ctx context.Context, in *GetDataInfoRequest, opts ...grpc.CallOption) (*GetDataInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDataInfoResponse)
+	err := c.cc.Invoke(ctx, ReferenceService_GetDataInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReferenceServiceServer is the server API for ReferenceService service.
 // All implementations must embed UnimplementedReferenceServiceServer
 // for forward compatibility.
@@ -176,6 +215,12 @@ type ReferenceServiceServer interface {
 	// GetCountryProfile aggregates the existing domains for one country:
 	// base info, continent/sub-region chain, currencies, timezones.
 	GetCountryProfile(context.Context, *GetCountryProfileRequest) (*GetCountryProfileResponse, error)
+	// Hierarchy navigation: every country under a region group, recursively.
+	ListCountriesByRegion(context.Context, *ListCountriesByRegionRequest) (*ListCountriesByRegionResponse, error)
+	// Auto-fill set for "user picked a country" forms.
+	GetCountryDefaults(context.Context, *GetCountryDefaultsRequest) (*GetCountryDefaultsResponse, error)
+	// Compiled-snapshot metadata for cache freshness checks.
+	GetDataInfo(context.Context, *GetDataInfoRequest) (*GetDataInfoResponse, error)
 	mustEmbedUnimplementedReferenceServiceServer()
 }
 
@@ -212,6 +257,15 @@ func (UnimplementedReferenceServiceServer) ResolveCodes(context.Context, *Resolv
 }
 func (UnimplementedReferenceServiceServer) GetCountryProfile(context.Context, *GetCountryProfileRequest) (*GetCountryProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCountryProfile not implemented")
+}
+func (UnimplementedReferenceServiceServer) ListCountriesByRegion(context.Context, *ListCountriesByRegionRequest) (*ListCountriesByRegionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCountriesByRegion not implemented")
+}
+func (UnimplementedReferenceServiceServer) GetCountryDefaults(context.Context, *GetCountryDefaultsRequest) (*GetCountryDefaultsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCountryDefaults not implemented")
+}
+func (UnimplementedReferenceServiceServer) GetDataInfo(context.Context, *GetDataInfoRequest) (*GetDataInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataInfo not implemented")
 }
 func (UnimplementedReferenceServiceServer) mustEmbedUnimplementedReferenceServiceServer() {}
 func (UnimplementedReferenceServiceServer) testEmbeddedByValue()                          {}
@@ -396,6 +450,60 @@ func _ReferenceService_GetCountryProfile_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReferenceService_ListCountriesByRegion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCountriesByRegionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferenceServiceServer).ListCountriesByRegion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferenceService_ListCountriesByRegion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferenceServiceServer).ListCountriesByRegion(ctx, req.(*ListCountriesByRegionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferenceService_GetCountryDefaults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCountryDefaultsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferenceServiceServer).GetCountryDefaults(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferenceService_GetCountryDefaults_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferenceServiceServer).GetCountryDefaults(ctx, req.(*GetCountryDefaultsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferenceService_GetDataInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferenceServiceServer).GetDataInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferenceService_GetDataInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferenceServiceServer).GetDataInfo(ctx, req.(*GetDataInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReferenceService_ServiceDesc is the grpc.ServiceDesc for ReferenceService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -438,6 +546,18 @@ var ReferenceService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCountryProfile",
 			Handler:    _ReferenceService_GetCountryProfile_Handler,
+		},
+		{
+			MethodName: "ListCountriesByRegion",
+			Handler:    _ReferenceService_ListCountriesByRegion_Handler,
+		},
+		{
+			MethodName: "GetCountryDefaults",
+			Handler:    _ReferenceService_GetCountryDefaults_Handler,
+		},
+		{
+			MethodName: "GetDataInfo",
+			Handler:    _ReferenceService_GetDataInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
