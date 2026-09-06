@@ -1,0 +1,50 @@
+// Reference messages — entity shapes for the global reference directory.
+//
+// Names are single-field, resolved server-side to the request locale
+// (fallback: exact -> likelySubtags -> base language -> en). Consumers
+// needing two languages on screen make two locale-tagged calls.
+syntax = "proto3";
+
+package reference.v1;
+
+// Country is one row of the ISO 3166-1 + E.164 directory.
+message Country {
+  string code = 1;         // alpha-2, e.g. "CN"
+  string alpha_3 = 2;      // alpha-3, e.g. "CHN"
+  string dial_code = 3;    // ITU E.164 with "+", e.g. "+86"
+  string flag_emoji = 4;   // regional-indicator pair, e.g. "🇨🇳"
+  string name = 5;         // display name in the request locale
+}
+
+// Timezone is one canonical IANA zone with its tzdb backward links.
+message Timezone {
+  string id = 1;               // canonical, e.g. "Asia/Shanghai"
+  repeated string aliases = 2; // backward links, e.g. "PRC"; input
+                               // normalization only — never in pickers
+  repeated string country_codes = 3; // ISO alpha-2 members
+  string name = 4;             // CLDR exemplar city in the request locale
+}
+
+// Language is one selectable BCP 47 tag.
+message Language {
+  string tag = 1;   // e.g. "zh-Hans"
+  string name = 2;  // the language's name in the request locale
+}
+
+// Currency is one ISO 4217 currency.
+message Currency {
+  string code = 1;            // e.g. "CNY"
+  string symbol = 2;          // e.g. "¥"
+  int32 minor_units = 3;      // 0 (JPY) / 2 (CNY) / 3 (BHD)
+  repeated string country_codes = 4; // current official users
+  string name = 5;            // display name in the request locale
+}
+
+// RegionGroup is one UN M49 node (continent or sub-region). The world root
+// (001) is not served; top level (parent_code == "") is continents.
+message RegionGroup {
+  string code = 1;                  // UN M49, e.g. "142" (Asia)
+  string parent_code = 2;           // "" for top level
+  repeated string country_codes = 3; // direct members; recurse client-side
+  string name = 4;                  // e.g. "亚洲" / "Asia"
+}

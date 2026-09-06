@@ -1,0 +1,22 @@
+// Reference enums — value types shared across reference.v1 messages.
+syntax = "proto3";
+
+package reference.v1;
+
+// PhoneType classifies a parsed phone number by libphonenumber numbering
+// rules. Some regions cannot distinguish mobile from fixed line by prefix —
+// those report PHONE_TYPE_FIXED_LINE_OR_MOBILE.
+enum PhoneType {
+  PHONE_TYPE_UNSPECIFIED = 0;
+  PHONE_TYPE_MOBILE = 1;
+  PHONE_TYPE_FIXED_LINE = 2;
+  PHONE_TYPE_FIXED_LINE_OR_MOBILE = 3;
+  PHONE_TYPE_TOLL_FREE = 4;
+  PHONE_TYPE_PREMIUM_RATE = 5;
+  PHONE_TYPE_VOIP = 6;
+  PHONE_TYPE_PERSONAL_NUMBER = 7;
+  PHONE_TYPE_PAGER = 8;
+  PHONE_TYPE_UAN = 9;
+  PHONE_TYPE_VOICE_MAIL = 10;
+  PHONE_TYPE_UNKNOWN = 11;
+}
