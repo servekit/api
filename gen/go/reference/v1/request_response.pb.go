@@ -851,6 +851,151 @@ func (x *ResolveCodesResponse) GetDataVersion() string {
 	return ""
 }
 
+// GetCountryProfile aggregates everything the domains know about one
+// country: base info, its continent/sub-region chain, official languages,
+// currently-valid currencies, and IANA zones — a pure join over the
+// compiled tables.
+type GetCountryProfileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CountryCode   string                 `protobuf:"bytes,1,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCountryProfileRequest) Reset() {
+	*x = GetCountryProfileRequest{}
+	mi := &file_reference_v1_request_response_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCountryProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCountryProfileRequest) ProtoMessage() {}
+
+func (x *GetCountryProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_reference_v1_request_response_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCountryProfileRequest.ProtoReflect.Descriptor instead.
+func (*GetCountryProfileRequest) Descriptor() ([]byte, []int) {
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetCountryProfileRequest) GetCountryCode() string {
+	if x != nil {
+		return x.CountryCode
+	}
+	return ""
+}
+
+func (x *GetCountryProfileRequest) GetLocale() string {
+	if x != nil {
+		return x.Locale
+	}
+	return ""
+}
+
+type GetCountryProfileResponse struct {
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Country *Country               `protobuf:"bytes,1,opt,name=country,proto3" json:"country,omitempty"`
+	// The country's group chain, continent first then sub-regions
+	// (e.g. Asia -> Eastern Asia). Empty for territories outside the
+	// served hierarchy (e.g. Antarctica sits under the unserved world root).
+	RegionGroups []*RegionGroup `protobuf:"bytes,2,rep,name=region_groups,json=regionGroups,proto3" json:"region_groups,omitempty"`
+	// Official (incl. de facto official) languages, most-spoken first
+	// (CLDR territoryInfo); e.g. zh-Hans for CN.
+	Languages     []*Language `protobuf:"bytes,6,rep,name=languages,proto3" json:"languages,omitempty"`
+	Currencies    []*Currency `protobuf:"bytes,3,rep,name=currencies,proto3" json:"currencies,omitempty"` // currently valid in this country
+	Timezones     []*Timezone `protobuf:"bytes,4,rep,name=timezones,proto3" json:"timezones,omitempty"`   // IANA zones covering this country
+	DataVersion   string      `protobuf:"bytes,5,opt,name=data_version,json=dataVersion,proto3" json:"data_version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCountryProfileResponse) Reset() {
+	*x = GetCountryProfileResponse{}
+	mi := &file_reference_v1_request_response_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCountryProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCountryProfileResponse) ProtoMessage() {}
+
+func (x *GetCountryProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_reference_v1_request_response_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCountryProfileResponse.ProtoReflect.Descriptor instead.
+func (*GetCountryProfileResponse) Descriptor() ([]byte, []int) {
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetCountryProfileResponse) GetCountry() *Country {
+	if x != nil {
+		return x.Country
+	}
+	return nil
+}
+
+func (x *GetCountryProfileResponse) GetRegionGroups() []*RegionGroup {
+	if x != nil {
+		return x.RegionGroups
+	}
+	return nil
+}
+
+func (x *GetCountryProfileResponse) GetLanguages() []*Language {
+	if x != nil {
+		return x.Languages
+	}
+	return nil
+}
+
+func (x *GetCountryProfileResponse) GetCurrencies() []*Currency {
+	if x != nil {
+		return x.Currencies
+	}
+	return nil
+}
+
+func (x *GetCountryProfileResponse) GetTimezones() []*Timezone {
+	if x != nil {
+		return x.Timezones
+	}
+	return nil
+}
+
+func (x *GetCountryProfileResponse) GetDataVersion() string {
+	if x != nil {
+		return x.DataVersion
+	}
+	return ""
+}
+
 var File_reference_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_reference_v1_request_response_proto_rawDesc = "" +
@@ -916,7 +1061,20 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"\x11missing_timezones\x18\x06 \x03(\tR\x10missingTimezones\x12+\n" +
 	"\x11missing_languages\x18\a \x03(\tR\x10missingLanguages\x12-\n" +
 	"\x12missing_currencies\x18\b \x03(\tR\x11missingCurrencies\x12!\n" +
-	"\fdata_version\x18\t \x01(\tR\vdataVersionB\xb2\x01\n" +
+	"\fdata_version\x18\t \x01(\tR\vdataVersion\"\x97\x01\n" +
+	"\x18GetCountryProfileRequest\x124\n" +
+	"\fcountry_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
+	"^[A-Z]{2}$R\vcountryCode\x12E\n" +
+	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\xd3\x02\n" +
+	"\x19GetCountryProfileResponse\x12/\n" +
+	"\acountry\x18\x01 \x01(\v2\x15.reference.v1.CountryR\acountry\x12>\n" +
+	"\rregion_groups\x18\x02 \x03(\v2\x19.reference.v1.RegionGroupR\fregionGroups\x124\n" +
+	"\tlanguages\x18\x06 \x03(\v2\x16.reference.v1.LanguageR\tlanguages\x126\n" +
+	"\n" +
+	"currencies\x18\x03 \x03(\v2\x16.reference.v1.CurrencyR\n" +
+	"currencies\x124\n" +
+	"\ttimezones\x18\x04 \x03(\v2\x16.reference.v1.TimezoneR\ttimezones\x12!\n" +
+	"\fdata_version\x18\x05 \x01(\tR\vdataVersionB\xb2\x01\n" +
 	"\x10com.reference.v1B\x14RequestResponseProtoP\x01Z7github.com/servekit/api/gen/go/reference/v1;referencev1\xa2\x02\x03RXX\xaa\x02\fReference.V1\xca\x02\fReference\\V1\xe2\x02\x18Reference\\V1\\GPBMetadata\xea\x02\rReference::V1b\x06proto3"
 
 var (
@@ -931,45 +1089,52 @@ func file_reference_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_reference_v1_request_response_proto_rawDescData
 }
 
-var file_reference_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_reference_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_reference_v1_request_response_proto_goTypes = []any{
-	(*ListCountriesRequest)(nil),     // 0: reference.v1.ListCountriesRequest
-	(*ListCountriesResponse)(nil),    // 1: reference.v1.ListCountriesResponse
-	(*ListTimezonesRequest)(nil),     // 2: reference.v1.ListTimezonesRequest
-	(*ListTimezonesResponse)(nil),    // 3: reference.v1.ListTimezonesResponse
-	(*ListLanguagesRequest)(nil),     // 4: reference.v1.ListLanguagesRequest
-	(*ListLanguagesResponse)(nil),    // 5: reference.v1.ListLanguagesResponse
-	(*ListCurrenciesRequest)(nil),    // 6: reference.v1.ListCurrenciesRequest
-	(*ListCurrenciesResponse)(nil),   // 7: reference.v1.ListCurrenciesResponse
-	(*ListRegionGroupsRequest)(nil),  // 8: reference.v1.ListRegionGroupsRequest
-	(*ListRegionGroupsResponse)(nil), // 9: reference.v1.ListRegionGroupsResponse
-	(*ParsePhoneRequest)(nil),        // 10: reference.v1.ParsePhoneRequest
-	(*ParsePhoneResponse)(nil),       // 11: reference.v1.ParsePhoneResponse
-	(*ResolveCodesRequest)(nil),      // 12: reference.v1.ResolveCodesRequest
-	(*ResolveCodesResponse)(nil),     // 13: reference.v1.ResolveCodesResponse
-	(*Country)(nil),                  // 14: reference.v1.Country
-	(*Timezone)(nil),                 // 15: reference.v1.Timezone
-	(*Language)(nil),                 // 16: reference.v1.Language
-	(*Currency)(nil),                 // 17: reference.v1.Currency
-	(*RegionGroup)(nil),              // 18: reference.v1.RegionGroup
-	(PhoneType)(0),                   // 19: reference.v1.PhoneType
+	(*ListCountriesRequest)(nil),      // 0: reference.v1.ListCountriesRequest
+	(*ListCountriesResponse)(nil),     // 1: reference.v1.ListCountriesResponse
+	(*ListTimezonesRequest)(nil),      // 2: reference.v1.ListTimezonesRequest
+	(*ListTimezonesResponse)(nil),     // 3: reference.v1.ListTimezonesResponse
+	(*ListLanguagesRequest)(nil),      // 4: reference.v1.ListLanguagesRequest
+	(*ListLanguagesResponse)(nil),     // 5: reference.v1.ListLanguagesResponse
+	(*ListCurrenciesRequest)(nil),     // 6: reference.v1.ListCurrenciesRequest
+	(*ListCurrenciesResponse)(nil),    // 7: reference.v1.ListCurrenciesResponse
+	(*ListRegionGroupsRequest)(nil),   // 8: reference.v1.ListRegionGroupsRequest
+	(*ListRegionGroupsResponse)(nil),  // 9: reference.v1.ListRegionGroupsResponse
+	(*ParsePhoneRequest)(nil),         // 10: reference.v1.ParsePhoneRequest
+	(*ParsePhoneResponse)(nil),        // 11: reference.v1.ParsePhoneResponse
+	(*ResolveCodesRequest)(nil),       // 12: reference.v1.ResolveCodesRequest
+	(*ResolveCodesResponse)(nil),      // 13: reference.v1.ResolveCodesResponse
+	(*GetCountryProfileRequest)(nil),  // 14: reference.v1.GetCountryProfileRequest
+	(*GetCountryProfileResponse)(nil), // 15: reference.v1.GetCountryProfileResponse
+	(*Country)(nil),                   // 16: reference.v1.Country
+	(*Timezone)(nil),                  // 17: reference.v1.Timezone
+	(*Language)(nil),                  // 18: reference.v1.Language
+	(*Currency)(nil),                  // 19: reference.v1.Currency
+	(*RegionGroup)(nil),               // 20: reference.v1.RegionGroup
+	(PhoneType)(0),                    // 21: reference.v1.PhoneType
 }
 var file_reference_v1_request_response_proto_depIdxs = []int32{
-	14, // 0: reference.v1.ListCountriesResponse.countries:type_name -> reference.v1.Country
-	15, // 1: reference.v1.ListTimezonesResponse.timezones:type_name -> reference.v1.Timezone
-	16, // 2: reference.v1.ListLanguagesResponse.languages:type_name -> reference.v1.Language
-	17, // 3: reference.v1.ListCurrenciesResponse.currencies:type_name -> reference.v1.Currency
-	18, // 4: reference.v1.ListRegionGroupsResponse.region_groups:type_name -> reference.v1.RegionGroup
-	19, // 5: reference.v1.ParsePhoneResponse.type:type_name -> reference.v1.PhoneType
-	14, // 6: reference.v1.ResolveCodesResponse.countries:type_name -> reference.v1.Country
-	15, // 7: reference.v1.ResolveCodesResponse.timezones:type_name -> reference.v1.Timezone
-	16, // 8: reference.v1.ResolveCodesResponse.languages:type_name -> reference.v1.Language
-	17, // 9: reference.v1.ResolveCodesResponse.currencies:type_name -> reference.v1.Currency
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	16, // 0: reference.v1.ListCountriesResponse.countries:type_name -> reference.v1.Country
+	17, // 1: reference.v1.ListTimezonesResponse.timezones:type_name -> reference.v1.Timezone
+	18, // 2: reference.v1.ListLanguagesResponse.languages:type_name -> reference.v1.Language
+	19, // 3: reference.v1.ListCurrenciesResponse.currencies:type_name -> reference.v1.Currency
+	20, // 4: reference.v1.ListRegionGroupsResponse.region_groups:type_name -> reference.v1.RegionGroup
+	21, // 5: reference.v1.ParsePhoneResponse.type:type_name -> reference.v1.PhoneType
+	16, // 6: reference.v1.ResolveCodesResponse.countries:type_name -> reference.v1.Country
+	17, // 7: reference.v1.ResolveCodesResponse.timezones:type_name -> reference.v1.Timezone
+	18, // 8: reference.v1.ResolveCodesResponse.languages:type_name -> reference.v1.Language
+	19, // 9: reference.v1.ResolveCodesResponse.currencies:type_name -> reference.v1.Currency
+	16, // 10: reference.v1.GetCountryProfileResponse.country:type_name -> reference.v1.Country
+	20, // 11: reference.v1.GetCountryProfileResponse.region_groups:type_name -> reference.v1.RegionGroup
+	18, // 12: reference.v1.GetCountryProfileResponse.languages:type_name -> reference.v1.Language
+	19, // 13: reference.v1.GetCountryProfileResponse.currencies:type_name -> reference.v1.Currency
+	17, // 14: reference.v1.GetCountryProfileResponse.timezones:type_name -> reference.v1.Timezone
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_reference_v1_request_response_proto_init() }
@@ -985,7 +1150,7 @@ func file_reference_v1_request_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_reference_v1_request_response_proto_rawDesc), len(file_reference_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

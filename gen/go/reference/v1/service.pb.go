@@ -28,7 +28,7 @@ var File_reference_v1_service_proto protoreflect.FileDescriptor
 
 const file_reference_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1areference/v1/service.proto\x12\freference.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto2\xb9\x05\n" +
+	"\x1areference/v1/service.proto\x12\freference.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto2\x9f\x06\n" +
 	"\x10ReferenceService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12X\n" +
 	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\x12X\n" +
@@ -38,26 +38,29 @@ const file_reference_v1_service_proto_rawDesc = "" +
 	"\x10ListRegionGroups\x12%.reference.v1.ListRegionGroupsRequest\x1a&.reference.v1.ListRegionGroupsResponse\x12O\n" +
 	"\n" +
 	"ParsePhone\x12\x1f.reference.v1.ParsePhoneRequest\x1a .reference.v1.ParsePhoneResponse\x12U\n" +
-	"\fResolveCodes\x12!.reference.v1.ResolveCodesRequest\x1a\".reference.v1.ResolveCodesResponseB\xaa\x01\n" +
+	"\fResolveCodes\x12!.reference.v1.ResolveCodesRequest\x1a\".reference.v1.ResolveCodesResponse\x12d\n" +
+	"\x11GetCountryProfile\x12&.reference.v1.GetCountryProfileRequest\x1a'.reference.v1.GetCountryProfileResponseB\xaa\x01\n" +
 	"\x10com.reference.v1B\fServiceProtoP\x01Z7github.com/servekit/api/gen/go/reference/v1;referencev1\xa2\x02\x03RXX\xaa\x02\fReference.V1\xca\x02\fReference\\V1\xe2\x02\x18Reference\\V1\\GPBMetadata\xea\x02\rReference::V1b\x06proto3"
 
 var file_reference_v1_service_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),            // 0: google.protobuf.Empty
-	(*ListCountriesRequest)(nil),     // 1: reference.v1.ListCountriesRequest
-	(*ListTimezonesRequest)(nil),     // 2: reference.v1.ListTimezonesRequest
-	(*ListLanguagesRequest)(nil),     // 3: reference.v1.ListLanguagesRequest
-	(*ListCurrenciesRequest)(nil),    // 4: reference.v1.ListCurrenciesRequest
-	(*ListRegionGroupsRequest)(nil),  // 5: reference.v1.ListRegionGroupsRequest
-	(*ParsePhoneRequest)(nil),        // 6: reference.v1.ParsePhoneRequest
-	(*ResolveCodesRequest)(nil),      // 7: reference.v1.ResolveCodesRequest
-	(*v1.Pong)(nil),                  // 8: common.v1.Pong
-	(*ListCountriesResponse)(nil),    // 9: reference.v1.ListCountriesResponse
-	(*ListTimezonesResponse)(nil),    // 10: reference.v1.ListTimezonesResponse
-	(*ListLanguagesResponse)(nil),    // 11: reference.v1.ListLanguagesResponse
-	(*ListCurrenciesResponse)(nil),   // 12: reference.v1.ListCurrenciesResponse
-	(*ListRegionGroupsResponse)(nil), // 13: reference.v1.ListRegionGroupsResponse
-	(*ParsePhoneResponse)(nil),       // 14: reference.v1.ParsePhoneResponse
-	(*ResolveCodesResponse)(nil),     // 15: reference.v1.ResolveCodesResponse
+	(*emptypb.Empty)(nil),             // 0: google.protobuf.Empty
+	(*ListCountriesRequest)(nil),      // 1: reference.v1.ListCountriesRequest
+	(*ListTimezonesRequest)(nil),      // 2: reference.v1.ListTimezonesRequest
+	(*ListLanguagesRequest)(nil),      // 3: reference.v1.ListLanguagesRequest
+	(*ListCurrenciesRequest)(nil),     // 4: reference.v1.ListCurrenciesRequest
+	(*ListRegionGroupsRequest)(nil),   // 5: reference.v1.ListRegionGroupsRequest
+	(*ParsePhoneRequest)(nil),         // 6: reference.v1.ParsePhoneRequest
+	(*ResolveCodesRequest)(nil),       // 7: reference.v1.ResolveCodesRequest
+	(*GetCountryProfileRequest)(nil),  // 8: reference.v1.GetCountryProfileRequest
+	(*v1.Pong)(nil),                   // 9: common.v1.Pong
+	(*ListCountriesResponse)(nil),     // 10: reference.v1.ListCountriesResponse
+	(*ListTimezonesResponse)(nil),     // 11: reference.v1.ListTimezonesResponse
+	(*ListLanguagesResponse)(nil),     // 12: reference.v1.ListLanguagesResponse
+	(*ListCurrenciesResponse)(nil),    // 13: reference.v1.ListCurrenciesResponse
+	(*ListRegionGroupsResponse)(nil),  // 14: reference.v1.ListRegionGroupsResponse
+	(*ParsePhoneResponse)(nil),        // 15: reference.v1.ParsePhoneResponse
+	(*ResolveCodesResponse)(nil),      // 16: reference.v1.ResolveCodesResponse
+	(*GetCountryProfileResponse)(nil), // 17: reference.v1.GetCountryProfileResponse
 }
 var file_reference_v1_service_proto_depIdxs = []int32{
 	0,  // 0: reference.v1.ReferenceService.Ping:input_type -> google.protobuf.Empty
@@ -68,16 +71,18 @@ var file_reference_v1_service_proto_depIdxs = []int32{
 	5,  // 5: reference.v1.ReferenceService.ListRegionGroups:input_type -> reference.v1.ListRegionGroupsRequest
 	6,  // 6: reference.v1.ReferenceService.ParsePhone:input_type -> reference.v1.ParsePhoneRequest
 	7,  // 7: reference.v1.ReferenceService.ResolveCodes:input_type -> reference.v1.ResolveCodesRequest
-	8,  // 8: reference.v1.ReferenceService.Ping:output_type -> common.v1.Pong
-	9,  // 9: reference.v1.ReferenceService.ListCountries:output_type -> reference.v1.ListCountriesResponse
-	10, // 10: reference.v1.ReferenceService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse
-	11, // 11: reference.v1.ReferenceService.ListLanguages:output_type -> reference.v1.ListLanguagesResponse
-	12, // 12: reference.v1.ReferenceService.ListCurrencies:output_type -> reference.v1.ListCurrenciesResponse
-	13, // 13: reference.v1.ReferenceService.ListRegionGroups:output_type -> reference.v1.ListRegionGroupsResponse
-	14, // 14: reference.v1.ReferenceService.ParsePhone:output_type -> reference.v1.ParsePhoneResponse
-	15, // 15: reference.v1.ReferenceService.ResolveCodes:output_type -> reference.v1.ResolveCodesResponse
-	8,  // [8:16] is the sub-list for method output_type
-	0,  // [0:8] is the sub-list for method input_type
+	8,  // 8: reference.v1.ReferenceService.GetCountryProfile:input_type -> reference.v1.GetCountryProfileRequest
+	9,  // 9: reference.v1.ReferenceService.Ping:output_type -> common.v1.Pong
+	10, // 10: reference.v1.ReferenceService.ListCountries:output_type -> reference.v1.ListCountriesResponse
+	11, // 11: reference.v1.ReferenceService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse
+	12, // 12: reference.v1.ReferenceService.ListLanguages:output_type -> reference.v1.ListLanguagesResponse
+	13, // 13: reference.v1.ReferenceService.ListCurrencies:output_type -> reference.v1.ListCurrenciesResponse
+	14, // 14: reference.v1.ReferenceService.ListRegionGroups:output_type -> reference.v1.ListRegionGroupsResponse
+	15, // 15: reference.v1.ReferenceService.ParsePhone:output_type -> reference.v1.ParsePhoneResponse
+	16, // 16: reference.v1.ReferenceService.ResolveCodes:output_type -> reference.v1.ResolveCodesResponse
+	17, // 17: reference.v1.ReferenceService.GetCountryProfile:output_type -> reference.v1.GetCountryProfileResponse
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

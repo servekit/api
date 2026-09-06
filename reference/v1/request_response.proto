@@ -127,10 +127,11 @@ message ResolveCodesResponse {
   repeated string missing_languages = 7;
   repeated string missing_currencies = 8;
   string data_version = 9;
+}
 
-// GetCountryProfile aggregates everything the existing domains know about
-// one country: base info, its continent/sub-region chain, currently-valid
-// currencies, and IANA zones. No new data domains — pure join over the
+// GetCountryProfile aggregates everything the domains know about one
+// country: base info, its continent/sub-region chain, official languages,
+// currently-valid currencies, and IANA zones — a pure join over the
 // compiled tables.
 message GetCountryProfileRequest {
   string country_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
@@ -145,8 +146,10 @@ message GetCountryProfileResponse {
   // (e.g. Asia -> Eastern Asia). Empty for territories outside the
   // served hierarchy (e.g. Antarctica sits under the unserved world root).
   repeated RegionGroup region_groups = 2;
+  // Official (incl. de facto official) languages, most-spoken first
+  // (CLDR territoryInfo); e.g. zh-Hans for CN.
+  repeated Language languages = 6;
   repeated Currency currencies = 3; // currently valid in this country
   repeated Timezone timezones = 4;  // IANA zones covering this country
   string data_version = 5;
-}
 }
