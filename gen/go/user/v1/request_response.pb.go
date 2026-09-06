@@ -2430,9 +2430,10 @@ type ListUsersRequest struct {
 	PageSize int32  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	Cursor   string `protobuf:"bytes,4,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	// New filters
-	Gender           Gender                 `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	RegisterSource   IdentityProvider       `protobuf:"varint,6,opt,name=register_source,json=registerSource,proto3,enum=user.v1.IdentityProvider" json:"register_source,omitempty"`
-	RegisterDevice   DeviceType             `protobuf:"varint,7,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"`
+	Gender         Gender           `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	RegisterSource IdentityProvider `protobuf:"varint,6,opt,name=register_source,json=registerSource,proto3,enum=user.v1.IdentityProvider" json:"register_source,omitempty"`
+	// Deprecated: Marked as deprecated in user/v1/request_response.proto.
+	RegisterDevice   DeviceType             `protobuf:"varint,7,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"` // retired 2026-09-06: filters nothing since the column moved to user_register_profiles; server ignores it
 	Locale           string                 `protobuf:"bytes,8,opt,name=locale,proto3" json:"locale,omitempty"`
 	Timezone         string                 `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
 	RegisterIp       string                 `protobuf:"bytes,10,opt,name=register_ip,json=registerIp,proto3" json:"register_ip,omitempty"`
@@ -2528,6 +2529,7 @@ func (x *ListUsersRequest) GetRegisterSource() IdentityProvider {
 	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
 }
 
+// Deprecated: Marked as deprecated in user/v1/request_response.proto.
 func (x *ListUsersRequest) GetRegisterDevice() DeviceType {
 	if x != nil {
 		return x.RegisterDevice
@@ -2706,11 +2708,12 @@ func (x *ListUsersResponse) GetNextCursor() string {
 type ListUsersPagedRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Filters — same semantics as ListUsersRequest. Empty/zero means no filter.
-	Status           UserStatus             `protobuf:"varint,1,opt,name=status,proto3,enum=user.v1.UserStatus" json:"status,omitempty"`
-	Nickname         string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Gender           Gender                 `protobuf:"varint,3,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	RegisterSource   IdentityProvider       `protobuf:"varint,4,opt,name=register_source,json=registerSource,proto3,enum=user.v1.IdentityProvider" json:"register_source,omitempty"`
-	RegisterDevice   DeviceType             `protobuf:"varint,5,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"`
+	Status         UserStatus       `protobuf:"varint,1,opt,name=status,proto3,enum=user.v1.UserStatus" json:"status,omitempty"`
+	Nickname       string           `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Gender         Gender           `protobuf:"varint,3,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	RegisterSource IdentityProvider `protobuf:"varint,4,opt,name=register_source,json=registerSource,proto3,enum=user.v1.IdentityProvider" json:"register_source,omitempty"`
+	// Deprecated: Marked as deprecated in user/v1/request_response.proto.
+	RegisterDevice   DeviceType             `protobuf:"varint,5,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"` // retired 2026-09-06: filters nothing since the column moved to user_register_profiles; server ignores it
 	UserType         UserType               `protobuf:"varint,6,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
 	Locale           string                 `protobuf:"bytes,7,opt,name=locale,proto3" json:"locale,omitempty"`
 	Timezone         string                 `protobuf:"bytes,8,opt,name=timezone,proto3" json:"timezone,omitempty"`
@@ -2794,6 +2797,7 @@ func (x *ListUsersPagedRequest) GetRegisterSource() IdentityProvider {
 	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
 }
 
+// Deprecated: Marked as deprecated in user/v1/request_response.proto.
 func (x *ListUsersPagedRequest) GetRegisterDevice() DeviceType {
 	if x != nil {
 		return x.RegisterDevice
@@ -5406,15 +5410,15 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x12CreateUserResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xdc\b\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xe0\b\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
 	"\tpage_size\x18\x03 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
 	"\x06cursor\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12'\n" +
 	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
-	"\x0fregister_source\x18\x06 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12<\n" +
-	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12\x1f\n" +
+	"\x0fregister_source\x18\x06 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12@\n" +
+	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeB\x02\x18\x01R\x0eregisterDevice\x12\x1f\n" +
 	"\x06locale\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
 	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +
 	"\vregister_ip\x18\n" +
@@ -5440,13 +5444,13 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x11ListUsersResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xe9\b\n" +
+	"nextCursor\"\xed\b\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
 	"\x06gender\x18\x03 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
-	"\x0fregister_source\x18\x04 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12<\n" +
-	"\x0fregister_device\x18\x05 \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12.\n" +
+	"\x0fregister_source\x18\x04 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12@\n" +
+	"\x0fregister_device\x18\x05 \x01(\x0e2\x13.user.v1.DeviceTypeB\x02\x18\x01R\x0eregisterDevice\x12.\n" +
 	"\tuser_type\x18\x06 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\x12\x1f\n" +
 	"\x06locale\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
 	"\btimezone\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +

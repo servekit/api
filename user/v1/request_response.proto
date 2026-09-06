@@ -480,7 +480,7 @@ message ListUsersRequest {
   // New filters
   Gender gender = 5;
   IdentityProvider register_source = 6;
-  DeviceType register_device = 7;
+  DeviceType register_device = 7 [deprecated = true]; // retired 2026-09-06: filters nothing since the column moved to user_register_profiles; server ignores it
   string locale = 8 [(buf.validate.field).string.max_len = 16];
   string timezone = 9 [(buf.validate.field).string.max_len = 64];
   string register_ip = 10 [(buf.validate.field).string.max_len = 45];
@@ -522,7 +522,7 @@ message ListUsersPagedRequest {
   string nickname = 2 [(buf.validate.field).string.max_len = 64];
   Gender gender = 3;
   IdentityProvider register_source = 4;
-  DeviceType register_device = 5;
+  DeviceType register_device = 5 [deprecated = true]; // retired 2026-09-06: filters nothing since the column moved to user_register_profiles; server ignores it
   UserType user_type = 6;
   string locale = 7 [(buf.validate.field).string.max_len = 16];
   string timezone = 8 [(buf.validate.field).string.max_len = 64];

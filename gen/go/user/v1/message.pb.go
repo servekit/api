@@ -46,6 +46,12 @@ type User struct {
 	LastLoginAt    *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=last_login_at,json=lastLoginAt,proto3" json:"last_login_at,omitempty"`
 	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt      *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// Registration environment (admin-only, enriched by GetUser from the
+	// user_register_profiles table; zero on every other read path).
+	RegisterIp    string `protobuf:"bytes,23,opt,name=register_ip,json=registerIp,proto3" json:"register_ip,omitempty"`
+	RegisterAgent string `protobuf:"bytes,24,opt,name=register_agent,json=registerAgent,proto3" json:"register_agent,omitempty"`
+	// Derived from register_agent at read time (never stored).
+	RegisterDevice DeviceType `protobuf:"varint,25,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -211,6 +217,27 @@ func (x *User) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *User) GetRegisterIp() string {
+	if x != nil {
+		return x.RegisterIp
+	}
+	return ""
+}
+
+func (x *User) GetRegisterAgent() string {
+	if x != nil {
+		return x.RegisterAgent
+	}
+	return ""
+}
+
+func (x *User) GetRegisterDevice() DeviceType {
+	if x != nil {
+		return x.RegisterDevice
+	}
+	return DeviceType_DEVICE_TYPE_UNSPECIFIED
 }
 
 type Identity struct {
@@ -1144,7 +1171,7 @@ var File_user_v1_message_proto protoreflect.FileDescriptor
 
 const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xed\x05\n" +
+	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\x86\a\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1170,7 +1197,11 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xd5\x01\n" +
+	"updated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12(\n" +
+	"\vregister_ip\x18\x17 \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
+	"registerIp\x12/\n" +
+	"\x0eregister_agent\x18\x18 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\rregisterAgent\x12<\n" +
+	"\x0fregister_device\x18\x19 \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -1317,34 +1348,35 @@ var file_user_v1_message_proto_depIdxs = []int32{
 	14, // 4: user.v1.User.last_login_at:type_name -> google.protobuf.Timestamp
 	14, // 5: user.v1.User.created_at:type_name -> google.protobuf.Timestamp
 	14, // 6: user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	12, // 7: user.v1.Identity.provider:type_name -> user.v1.IdentityProvider
-	14, // 8: user.v1.Identity.created_at:type_name -> google.protobuf.Timestamp
-	15, // 9: user.v1.Session.device_type:type_name -> user.v1.DeviceType
-	14, // 10: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
-	14, // 11: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
-	16, // 12: user.v1.Session.status:type_name -> user.v1.SessionStatus
-	17, // 13: user.v1.Session.login_method:type_name -> user.v1.LoginMethod
-	12, // 14: user.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
-	12, // 15: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
-	18, // 16: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
-	19, // 17: user.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
-	15, // 18: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
-	14, // 19: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	17, // 20: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	14, // 21: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 22: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 23: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 24: user.v1.Role.permissions:type_name -> user.v1.Permission
-	8,  // 25: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 26: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 27: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 28: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 29: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	30, // [30:30] is the sub-list for method output_type
-	30, // [30:30] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	15, // 7: user.v1.User.register_device:type_name -> user.v1.DeviceType
+	12, // 8: user.v1.Identity.provider:type_name -> user.v1.IdentityProvider
+	14, // 9: user.v1.Identity.created_at:type_name -> google.protobuf.Timestamp
+	15, // 10: user.v1.Session.device_type:type_name -> user.v1.DeviceType
+	14, // 11: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
+	14, // 12: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
+	16, // 13: user.v1.Session.status:type_name -> user.v1.SessionStatus
+	17, // 14: user.v1.Session.login_method:type_name -> user.v1.LoginMethod
+	12, // 15: user.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
+	12, // 16: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
+	18, // 17: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
+	19, // 18: user.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
+	15, // 19: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
+	14, // 20: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
+	17, // 21: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	14, // 22: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	14, // 23: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 24: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 25: user.v1.Role.permissions:type_name -> user.v1.Permission
+	8,  // 26: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
+	14, // 27: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	14, // 28: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 29: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
+	14, // 30: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	31, // [31:31] is the sub-list for method output_type
+	31, // [31:31] is the sub-list for method input_type
+	31, // [31:31] is the sub-list for extension type_name
+	31, // [31:31] is the sub-list for extension extendee
+	0,  // [0:31] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }

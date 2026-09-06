@@ -32,6 +32,12 @@ message User {
   google.protobuf.Timestamp last_login_at = 16;
   google.protobuf.Timestamp created_at = 17;
   google.protobuf.Timestamp updated_at = 18;
+  // Registration environment (admin-only, enriched by GetUser from the
+  // user_register_profiles table; zero on every other read path).
+  string register_ip = 23 [(buf.validate.field).string.max_len = 45];
+  string register_agent = 24 [(buf.validate.field).string.max_len = 512];
+  // Derived from register_agent at read time (never stored).
+  DeviceType register_device = 25;
 }
 
 // ==================== Identity ====================
