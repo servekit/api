@@ -11,6 +11,7 @@ package testkitv1
 import (
 	context "context"
 	v1 "github.com/servekit/api/gen/go/common/v1"
+	v11 "github.com/servekit/api/gen/go/reference/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -157,6 +158,13 @@ const (
 	TestkitService_ReplaceEventRules_FullMethodName         = "/testkit.v1.TestkitService/ReplaceEventRules"
 	TestkitService_SetVersionBlocked_FullMethodName         = "/testkit.v1.TestkitService/SetVersionBlocked"
 	TestkitService_GetAppStats_FullMethodName               = "/testkit.v1.TestkitService/GetAppStats"
+	TestkitService_ListCountries_FullMethodName             = "/testkit.v1.TestkitService/ListCountries"
+	TestkitService_ListTimezones_FullMethodName             = "/testkit.v1.TestkitService/ListTimezones"
+	TestkitService_ListLanguages_FullMethodName             = "/testkit.v1.TestkitService/ListLanguages"
+	TestkitService_ListCurrencies_FullMethodName            = "/testkit.v1.TestkitService/ListCurrencies"
+	TestkitService_ListRegionGroups_FullMethodName          = "/testkit.v1.TestkitService/ListRegionGroups"
+	TestkitService_ParsePhone_FullMethodName                = "/testkit.v1.TestkitService/ParsePhone"
+	TestkitService_ResolveCodes_FullMethodName              = "/testkit.v1.TestkitService/ResolveCodes"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -322,6 +330,13 @@ type TestkitServiceClient interface {
 	ReplaceEventRules(ctx context.Context, in *ReplaceEventRulesRequest, opts ...grpc.CallOption) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(ctx context.Context, in *SetVersionBlockedRequest, opts ...grpc.CallOption) (*SetVersionBlockedResponse, error)
 	GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error)
+	ListCountries(ctx context.Context, in *v11.ListCountriesRequest, opts ...grpc.CallOption) (*v11.ListCountriesResponse, error)
+	ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error)
+	ListLanguages(ctx context.Context, in *v11.ListLanguagesRequest, opts ...grpc.CallOption) (*v11.ListLanguagesResponse, error)
+	ListCurrencies(ctx context.Context, in *v11.ListCurrenciesRequest, opts ...grpc.CallOption) (*v11.ListCurrenciesResponse, error)
+	ListRegionGroups(ctx context.Context, in *v11.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v11.ListRegionGroupsResponse, error)
+	ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error)
+	ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error)
 }
 
 type testkitServiceClient struct {
@@ -1672,6 +1687,76 @@ func (c *testkitServiceClient) GetAppStats(ctx context.Context, in *GetAppStatsR
 	return out, nil
 }
 
+func (c *testkitServiceClient) ListCountries(ctx context.Context, in *v11.ListCountriesRequest, opts ...grpc.CallOption) (*v11.ListCountriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListCountriesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListCountries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListTimezonesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListTimezones_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ListLanguages(ctx context.Context, in *v11.ListLanguagesRequest, opts ...grpc.CallOption) (*v11.ListLanguagesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListLanguagesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListLanguages_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ListCurrencies(ctx context.Context, in *v11.ListCurrenciesRequest, opts ...grpc.CallOption) (*v11.ListCurrenciesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListCurrenciesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListCurrencies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ListRegionGroups(ctx context.Context, in *v11.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v11.ListRegionGroupsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ListRegionGroupsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListRegionGroups_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ParsePhoneResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ParsePhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.ResolveCodesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ResolveCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TestkitServiceServer is the server API for TestkitService service.
 // All implementations must embed UnimplementedTestkitServiceServer
 // for forward compatibility.
@@ -1835,6 +1920,13 @@ type TestkitServiceServer interface {
 	ReplaceEventRules(context.Context, *ReplaceEventRulesRequest) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error)
 	GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error)
+	ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error)
+	ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error)
+	ListLanguages(context.Context, *v11.ListLanguagesRequest) (*v11.ListLanguagesResponse, error)
+	ListCurrencies(context.Context, *v11.ListCurrenciesRequest) (*v11.ListCurrenciesResponse, error)
+	ListRegionGroups(context.Context, *v11.ListRegionGroupsRequest) (*v11.ListRegionGroupsResponse, error)
+	ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error)
+	ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -2246,6 +2338,27 @@ func (UnimplementedTestkitServiceServer) SetVersionBlocked(context.Context, *Set
 }
 func (UnimplementedTestkitServiceServer) GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAppStats not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCountries not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTimezones not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListLanguages(context.Context, *v11.ListLanguagesRequest) (*v11.ListLanguagesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListLanguages not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListCurrencies(context.Context, *v11.ListCurrenciesRequest) (*v11.ListCurrenciesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCurrencies not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListRegionGroups(context.Context, *v11.ListRegionGroupsRequest) (*v11.ListRegionGroupsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListRegionGroups not implemented")
+}
+func (UnimplementedTestkitServiceServer) ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ParsePhone not implemented")
+}
+func (UnimplementedTestkitServiceServer) ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ResolveCodes not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
 func (UnimplementedTestkitServiceServer) testEmbeddedByValue()                        {}
@@ -4680,6 +4793,132 @@ func _TestkitService_GetAppStats_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_ListCountries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListCountriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListCountries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListCountries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListCountries(ctx, req.(*v11.ListCountriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ListTimezones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListTimezonesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListTimezones(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListTimezones_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListTimezones(ctx, req.(*v11.ListTimezonesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ListLanguages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListLanguagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListLanguages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListLanguages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListLanguages(ctx, req.(*v11.ListLanguagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ListCurrencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListCurrenciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListCurrencies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListCurrencies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListCurrencies(ctx, req.(*v11.ListCurrenciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ListRegionGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ListRegionGroupsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListRegionGroups(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListRegionGroups_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListRegionGroups(ctx, req.(*v11.ListRegionGroupsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ParsePhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ParsePhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ParsePhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ParsePhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ParsePhone(ctx, req.(*v11.ParsePhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ResolveCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.ResolveCodesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ResolveCodes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ResolveCodes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ResolveCodes(ctx, req.(*v11.ResolveCodesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TestkitService_ServiceDesc is the grpc.ServiceDesc for TestkitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -5222,6 +5461,34 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAppStats",
 			Handler:    _TestkitService_GetAppStats_Handler,
+		},
+		{
+			MethodName: "ListCountries",
+			Handler:    _TestkitService_ListCountries_Handler,
+		},
+		{
+			MethodName: "ListTimezones",
+			Handler:    _TestkitService_ListTimezones_Handler,
+		},
+		{
+			MethodName: "ListLanguages",
+			Handler:    _TestkitService_ListLanguages_Handler,
+		},
+		{
+			MethodName: "ListCurrencies",
+			Handler:    _TestkitService_ListCurrencies_Handler,
+		},
+		{
+			MethodName: "ListRegionGroups",
+			Handler:    _TestkitService_ListRegionGroups_Handler,
+		},
+		{
+			MethodName: "ParsePhone",
+			Handler:    _TestkitService_ParsePhone_Handler,
+		},
+		{
+			MethodName: "ResolveCodes",
+			Handler:    _TestkitService_ResolveCodes_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

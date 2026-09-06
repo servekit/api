@@ -9,7 +9,8 @@
 package testkitv1
 
 import (
-	v1 "github.com/servekit/api/gen/go/common/v1"
+	v11 "github.com/servekit/api/gen/go/common/v1"
+	v1 "github.com/servekit/api/gen/go/reference/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -30,7 +31,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2\x83\x7f\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2\x90\x86\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -181,7 +182,15 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\x10RevokeSigningKey\x12#.testkit.v1.RevokeSigningKeyRequest\x1a$.testkit.v1.RevokeSigningKeyResponse\"A\x82\xd3\xe4\x93\x02;*9/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}\x12\x97\x01\n" +
 	"\x11ReplaceEventRules\x12$.testkit.v1.ReplaceEventRulesRequest\x1a%.testkit.v1.ReplaceEventRulesResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\x1a*/api/v1/telemetry/admin/apps/{slug}/events\x12\xa3\x01\n" +
 	"\x11SetVersionBlocked\x12$.testkit.v1.SetVersionBlockedRequest\x1a%.testkit.v1.SetVersionBlockedResponse\"A\x82\xd3\xe4\x93\x02;:\x01*\x1a6/api/v1/telemetry/admin/apps/{slug}/versions/{version}\x12\x81\x01\n" +
-	"\vGetAppStats\x12\x1e.testkit.v1.GetAppStatsRequest\x1a\x1f.testkit.v1.GetAppStatsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/telemetry/admin/apps/{slug}/statsB\x9c\x01\n" +
+	"\vGetAppStats\x12\x1e.testkit.v1.GetAppStatsRequest\x1a\x1f.testkit.v1.GetAppStatsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/telemetry/admin/apps/{slug}/stats\x12}\n" +
+	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/countries\x12}\n" +
+	"\rListTimezones\x12\".reference.v1.ListTimezonesRequest\x1a#.reference.v1.ListTimezonesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/timezones\x12}\n" +
+	"\rListLanguages\x12\".reference.v1.ListLanguagesRequest\x1a#.reference.v1.ListLanguagesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/languages\x12\x81\x01\n" +
+	"\x0eListCurrencies\x12#.reference.v1.ListCurrenciesRequest\x1a$.reference.v1.ListCurrenciesResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1/reference/currencies\x12\x8a\x01\n" +
+	"\x10ListRegionGroups\x12%.reference.v1.ListRegionGroupsRequest\x1a&.reference.v1.ListRegionGroupsResponse\"'\x82\xd3\xe4\x93\x02!\x12\x1f/api/v1/reference/region-groups\x12y\n" +
+	"\n" +
+	"ParsePhone\x12\x1f.reference.v1.ParsePhoneRequest\x1a .reference.v1.ParsePhoneResponse\"(\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/api/v1/reference/phone:parse\x12\x81\x01\n" +
+	"\fResolveCodes\x12!.reference.v1.ResolveCodesRequest\x1a\".reference.v1.ResolveCodesResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/reference/codes:resolveB\x9c\x01\n" +
 	"\x0ecom.testkit.v1B\fServiceProtoP\x01Z3github.com/servekit/api/gen/go/testkit/v1;testkitv1\xa2\x02\x03TXX\xaa\x02\n" +
 	"Testkit.V1\xca\x02\n" +
 	"Testkit\\V1\xe2\x02\x16Testkit\\V1\\GPBMetadata\xea\x02\vTestkit::V1b\x06proto3"
@@ -317,103 +326,117 @@ var file_testkit_v1_service_proto_goTypes = []any{
 	(*ReplaceEventRulesRequest)(nil),          // 127: testkit.v1.ReplaceEventRulesRequest
 	(*SetVersionBlockedRequest)(nil),          // 128: testkit.v1.SetVersionBlockedRequest
 	(*GetAppStatsRequest)(nil),                // 129: testkit.v1.GetAppStatsRequest
-	(*v1.Pong)(nil),                           // 130: common.v1.Pong
-	(*TokenResponse)(nil),                     // 131: testkit.v1.TokenResponse
-	(*SendVerificationCodeResponse)(nil),      // 132: testkit.v1.SendVerificationCodeResponse
-	(*User)(nil),                              // 133: testkit.v1.User
-	(*ListIdentitiesResponse)(nil),            // 134: testkit.v1.ListIdentitiesResponse
-	(*Identity)(nil),                          // 135: testkit.v1.Identity
-	(*BindOAuthIdentityResponse)(nil),         // 136: testkit.v1.BindOAuthIdentityResponse
-	(*ListSessionsResponse)(nil),              // 137: testkit.v1.ListSessionsResponse
-	(*GetSessionResponse)(nil),                // 138: testkit.v1.GetSessionResponse
-	(*IssueSessionCodeResponse)(nil),          // 139: testkit.v1.IssueSessionCodeResponse
-	(*ExchangeSessionCodeResponse)(nil),       // 140: testkit.v1.ExchangeSessionCodeResponse
-	(*GetOAuthURLResponse)(nil),               // 141: testkit.v1.GetOAuthURLResponse
-	(*SocialLoginResponse)(nil),               // 142: testkit.v1.SocialLoginResponse
-	(*CreateUserResponse)(nil),                // 143: testkit.v1.CreateUserResponse
-	(*ListUsersResponse)(nil),                 // 144: testkit.v1.ListUsersResponse
-	(*ListUsersPagedResponse)(nil),            // 145: testkit.v1.ListUsersPagedResponse
-	(*GetLoginLogsResponse)(nil),              // 146: testkit.v1.GetLoginLogsResponse
-	(*Group)(nil),                             // 147: testkit.v1.Group
-	(*ListGroupsResponse)(nil),                // 148: testkit.v1.ListGroupsResponse
-	(*ListGroupMembersResponse)(nil),          // 149: testkit.v1.ListGroupMembersResponse
-	(*ListGroupRolesResponse)(nil),            // 150: testkit.v1.ListGroupRolesResponse
-	(*Role)(nil),                              // 151: testkit.v1.Role
-	(*ListRolesResponse)(nil),                 // 152: testkit.v1.ListRolesResponse
-	(*ListUserRolesResponse)(nil),             // 153: testkit.v1.ListUserRolesResponse
-	(*ListPermissionsResponse)(nil),           // 154: testkit.v1.ListPermissionsResponse
-	(*Permission)(nil),                        // 155: testkit.v1.Permission
-	(*PermissionGroup)(nil),                   // 156: testkit.v1.PermissionGroup
-	(*ListPermissionGroupsResponse)(nil),      // 157: testkit.v1.ListPermissionGroupsResponse
-	(*GenerateUploadURLResponse)(nil),         // 158: testkit.v1.GenerateUploadURLResponse
-	(*GetSTSCredentialResponse)(nil),          // 159: testkit.v1.GetSTSCredentialResponse
-	(*BatchGetSTSCredentialResponse)(nil),     // 160: testkit.v1.BatchGetSTSCredentialResponse
-	(*ConfirmUploadResponse)(nil),             // 161: testkit.v1.ConfirmUploadResponse
-	(*GenerateDownloadURLResponse)(nil),       // 162: testkit.v1.GenerateDownloadURLResponse
-	(*GenerateProcessURLResponse)(nil),        // 163: testkit.v1.GenerateProcessURLResponse
-	(*GenerateCDNURLResponse)(nil),            // 164: testkit.v1.GenerateCDNURLResponse
-	(*CreateFileLinkResponse)(nil),            // 165: testkit.v1.CreateFileLinkResponse
-	(*GetFileLinkDownloadResponse)(nil),       // 166: testkit.v1.GetFileLinkDownloadResponse
-	(*ListMyFilesResponse)(nil),               // 167: testkit.v1.ListMyFilesResponse
-	(*ListMyFilesPagedResponse)(nil),          // 168: testkit.v1.ListMyFilesPagedResponse
-	(*FileInfo)(nil),                          // 169: testkit.v1.FileInfo
-	(*BatchDeleteMyFilesResponse)(nil),        // 170: testkit.v1.BatchDeleteMyFilesResponse
-	(*QuotaInfo)(nil),                         // 171: testkit.v1.QuotaInfo
-	(*ListMyAuditLogsResponse)(nil),           // 172: testkit.v1.ListMyAuditLogsResponse
-	(*AdminListFilesResponse)(nil),            // 173: testkit.v1.AdminListFilesResponse
-	(*AdminFileInfo)(nil),                     // 174: testkit.v1.AdminFileInfo
-	(*AdminGetStatsResponse)(nil),             // 175: testkit.v1.AdminGetStatsResponse
-	(*AdminListProvidersResponse)(nil),        // 176: testkit.v1.AdminListProvidersResponse
-	(*AdminListBucketsResponse)(nil),          // 177: testkit.v1.AdminListBucketsResponse
-	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 178: testkit.v1.AdminSoftDeleteOwnerFilesResponse
-	(*AdminDeleteOwnerResponse)(nil),          // 179: testkit.v1.AdminDeleteOwnerResponse
-	(*AdminListAuditLogsResponse)(nil),        // 180: testkit.v1.AdminListAuditLogsResponse
-	(*SendResponse)(nil),                      // 181: testkit.v1.SendResponse
-	(*EmailRecord)(nil),                       // 182: testkit.v1.EmailRecord
-	(*ListEmailsResponse)(nil),                // 183: testkit.v1.ListEmailsResponse
-	(*ListEmailsByCursorResponse)(nil),        // 184: testkit.v1.ListEmailsByCursorResponse
-	(*EmailStatsResponse)(nil),                // 185: testkit.v1.EmailStatsResponse
-	(*ListEmailSendersResponse)(nil),          // 186: testkit.v1.ListEmailSendersResponse
-	(*SMSRecord)(nil),                         // 187: testkit.v1.SMSRecord
-	(*ListSMSResponse)(nil),                   // 188: testkit.v1.ListSMSResponse
-	(*ListSMSByCursorResponse)(nil),           // 189: testkit.v1.ListSMSByCursorResponse
-	(*SMSStatsResponse)(nil),                  // 190: testkit.v1.SMSStatsResponse
-	(*ListSMSRegionsResponse)(nil),            // 191: testkit.v1.ListSMSRegionsResponse
-	(*ListRegionCodesResponse)(nil),           // 192: testkit.v1.ListRegionCodesResponse
-	(*ListSMSSendersResponse)(nil),            // 193: testkit.v1.ListSMSSendersResponse
-	(*NextIDResponse)(nil),                    // 194: testkit.v1.NextIDResponse
-	(*BatchNextIDResponse)(nil),               // 195: testkit.v1.BatchNextIDResponse
-	(*DecomposeResponse)(nil),                 // 196: testkit.v1.DecomposeResponse
-	(*DashboardResponse)(nil),                 // 197: testkit.v1.DashboardResponse
-	(*ActivateResponse)(nil),                  // 198: testkit.v1.ActivateResponse
-	(*DeactivateResponse)(nil),                // 199: testkit.v1.DeactivateResponse
-	(*TrialStartResponse)(nil),                // 200: testkit.v1.TrialStartResponse
-	(*HealthResponse)(nil),                    // 201: testkit.v1.HealthResponse
-	(*CreateKeyResponse)(nil),                 // 202: testkit.v1.CreateKeyResponse
-	(*ShowKeyResponse)(nil),                   // 203: testkit.v1.ShowKeyResponse
-	(*ListKeysResponse)(nil),                  // 204: testkit.v1.ListKeysResponse
-	(*UpdateKeyResponse)(nil),                 // 205: testkit.v1.UpdateKeyResponse
-	(*RevokeKeyResponse)(nil),                 // 206: testkit.v1.RevokeKeyResponse
-	(*UnrevokeKeyResponse)(nil),               // 207: testkit.v1.UnrevokeKeyResponse
-	(*DeleteKeyResponse)(nil),                 // 208: testkit.v1.DeleteKeyResponse
-	(*GrantModuleResponse)(nil),               // 209: testkit.v1.GrantModuleResponse
-	(*RevokeModuleResponse)(nil),              // 210: testkit.v1.RevokeModuleResponse
-	(*ListKeyDevicesResponse)(nil),            // 211: testkit.v1.ListKeyDevicesResponse
-	(*KickDeviceResponse)(nil),                // 212: testkit.v1.KickDeviceResponse
-	(*ShowTrialResponse)(nil),                 // 213: testkit.v1.ShowTrialResponse
-	(*ResetTrialResponse)(nil),                // 214: testkit.v1.ResetTrialResponse
-	(*ShowPubKeyResponse)(nil),                // 215: testkit.v1.ShowPubKeyResponse
-	(*IngestResponse)(nil),                    // 216: testkit.v1.IngestResponse
-	(*CreateAppResponse)(nil),                 // 217: testkit.v1.CreateAppResponse
-	(*GetAppResponse)(nil),                    // 218: testkit.v1.GetAppResponse
-	(*UpdateAppResponse)(nil),                 // 219: testkit.v1.UpdateAppResponse
-	(*RotateTokenResponse)(nil),               // 220: testkit.v1.RotateTokenResponse
-	(*RevokeTokenResponse)(nil),               // 221: testkit.v1.RevokeTokenResponse
-	(*CreateSigningKeyResponse)(nil),          // 222: testkit.v1.CreateSigningKeyResponse
-	(*RevokeSigningKeyResponse)(nil),          // 223: testkit.v1.RevokeSigningKeyResponse
-	(*ReplaceEventRulesResponse)(nil),         // 224: testkit.v1.ReplaceEventRulesResponse
-	(*SetVersionBlockedResponse)(nil),         // 225: testkit.v1.SetVersionBlockedResponse
-	(*GetAppStatsResponse)(nil),               // 226: testkit.v1.GetAppStatsResponse
+	(*v1.ListCountriesRequest)(nil),           // 130: reference.v1.ListCountriesRequest
+	(*v1.ListTimezonesRequest)(nil),           // 131: reference.v1.ListTimezonesRequest
+	(*v1.ListLanguagesRequest)(nil),           // 132: reference.v1.ListLanguagesRequest
+	(*v1.ListCurrenciesRequest)(nil),          // 133: reference.v1.ListCurrenciesRequest
+	(*v1.ListRegionGroupsRequest)(nil),        // 134: reference.v1.ListRegionGroupsRequest
+	(*v1.ParsePhoneRequest)(nil),              // 135: reference.v1.ParsePhoneRequest
+	(*v1.ResolveCodesRequest)(nil),            // 136: reference.v1.ResolveCodesRequest
+	(*v11.Pong)(nil),                          // 137: common.v1.Pong
+	(*TokenResponse)(nil),                     // 138: testkit.v1.TokenResponse
+	(*SendVerificationCodeResponse)(nil),      // 139: testkit.v1.SendVerificationCodeResponse
+	(*User)(nil),                              // 140: testkit.v1.User
+	(*ListIdentitiesResponse)(nil),            // 141: testkit.v1.ListIdentitiesResponse
+	(*Identity)(nil),                          // 142: testkit.v1.Identity
+	(*BindOAuthIdentityResponse)(nil),         // 143: testkit.v1.BindOAuthIdentityResponse
+	(*ListSessionsResponse)(nil),              // 144: testkit.v1.ListSessionsResponse
+	(*GetSessionResponse)(nil),                // 145: testkit.v1.GetSessionResponse
+	(*IssueSessionCodeResponse)(nil),          // 146: testkit.v1.IssueSessionCodeResponse
+	(*ExchangeSessionCodeResponse)(nil),       // 147: testkit.v1.ExchangeSessionCodeResponse
+	(*GetOAuthURLResponse)(nil),               // 148: testkit.v1.GetOAuthURLResponse
+	(*SocialLoginResponse)(nil),               // 149: testkit.v1.SocialLoginResponse
+	(*CreateUserResponse)(nil),                // 150: testkit.v1.CreateUserResponse
+	(*ListUsersResponse)(nil),                 // 151: testkit.v1.ListUsersResponse
+	(*ListUsersPagedResponse)(nil),            // 152: testkit.v1.ListUsersPagedResponse
+	(*GetLoginLogsResponse)(nil),              // 153: testkit.v1.GetLoginLogsResponse
+	(*Group)(nil),                             // 154: testkit.v1.Group
+	(*ListGroupsResponse)(nil),                // 155: testkit.v1.ListGroupsResponse
+	(*ListGroupMembersResponse)(nil),          // 156: testkit.v1.ListGroupMembersResponse
+	(*ListGroupRolesResponse)(nil),            // 157: testkit.v1.ListGroupRolesResponse
+	(*Role)(nil),                              // 158: testkit.v1.Role
+	(*ListRolesResponse)(nil),                 // 159: testkit.v1.ListRolesResponse
+	(*ListUserRolesResponse)(nil),             // 160: testkit.v1.ListUserRolesResponse
+	(*ListPermissionsResponse)(nil),           // 161: testkit.v1.ListPermissionsResponse
+	(*Permission)(nil),                        // 162: testkit.v1.Permission
+	(*PermissionGroup)(nil),                   // 163: testkit.v1.PermissionGroup
+	(*ListPermissionGroupsResponse)(nil),      // 164: testkit.v1.ListPermissionGroupsResponse
+	(*GenerateUploadURLResponse)(nil),         // 165: testkit.v1.GenerateUploadURLResponse
+	(*GetSTSCredentialResponse)(nil),          // 166: testkit.v1.GetSTSCredentialResponse
+	(*BatchGetSTSCredentialResponse)(nil),     // 167: testkit.v1.BatchGetSTSCredentialResponse
+	(*ConfirmUploadResponse)(nil),             // 168: testkit.v1.ConfirmUploadResponse
+	(*GenerateDownloadURLResponse)(nil),       // 169: testkit.v1.GenerateDownloadURLResponse
+	(*GenerateProcessURLResponse)(nil),        // 170: testkit.v1.GenerateProcessURLResponse
+	(*GenerateCDNURLResponse)(nil),            // 171: testkit.v1.GenerateCDNURLResponse
+	(*CreateFileLinkResponse)(nil),            // 172: testkit.v1.CreateFileLinkResponse
+	(*GetFileLinkDownloadResponse)(nil),       // 173: testkit.v1.GetFileLinkDownloadResponse
+	(*ListMyFilesResponse)(nil),               // 174: testkit.v1.ListMyFilesResponse
+	(*ListMyFilesPagedResponse)(nil),          // 175: testkit.v1.ListMyFilesPagedResponse
+	(*FileInfo)(nil),                          // 176: testkit.v1.FileInfo
+	(*BatchDeleteMyFilesResponse)(nil),        // 177: testkit.v1.BatchDeleteMyFilesResponse
+	(*QuotaInfo)(nil),                         // 178: testkit.v1.QuotaInfo
+	(*ListMyAuditLogsResponse)(nil),           // 179: testkit.v1.ListMyAuditLogsResponse
+	(*AdminListFilesResponse)(nil),            // 180: testkit.v1.AdminListFilesResponse
+	(*AdminFileInfo)(nil),                     // 181: testkit.v1.AdminFileInfo
+	(*AdminGetStatsResponse)(nil),             // 182: testkit.v1.AdminGetStatsResponse
+	(*AdminListProvidersResponse)(nil),        // 183: testkit.v1.AdminListProvidersResponse
+	(*AdminListBucketsResponse)(nil),          // 184: testkit.v1.AdminListBucketsResponse
+	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 185: testkit.v1.AdminSoftDeleteOwnerFilesResponse
+	(*AdminDeleteOwnerResponse)(nil),          // 186: testkit.v1.AdminDeleteOwnerResponse
+	(*AdminListAuditLogsResponse)(nil),        // 187: testkit.v1.AdminListAuditLogsResponse
+	(*SendResponse)(nil),                      // 188: testkit.v1.SendResponse
+	(*EmailRecord)(nil),                       // 189: testkit.v1.EmailRecord
+	(*ListEmailsResponse)(nil),                // 190: testkit.v1.ListEmailsResponse
+	(*ListEmailsByCursorResponse)(nil),        // 191: testkit.v1.ListEmailsByCursorResponse
+	(*EmailStatsResponse)(nil),                // 192: testkit.v1.EmailStatsResponse
+	(*ListEmailSendersResponse)(nil),          // 193: testkit.v1.ListEmailSendersResponse
+	(*SMSRecord)(nil),                         // 194: testkit.v1.SMSRecord
+	(*ListSMSResponse)(nil),                   // 195: testkit.v1.ListSMSResponse
+	(*ListSMSByCursorResponse)(nil),           // 196: testkit.v1.ListSMSByCursorResponse
+	(*SMSStatsResponse)(nil),                  // 197: testkit.v1.SMSStatsResponse
+	(*ListSMSRegionsResponse)(nil),            // 198: testkit.v1.ListSMSRegionsResponse
+	(*ListRegionCodesResponse)(nil),           // 199: testkit.v1.ListRegionCodesResponse
+	(*ListSMSSendersResponse)(nil),            // 200: testkit.v1.ListSMSSendersResponse
+	(*NextIDResponse)(nil),                    // 201: testkit.v1.NextIDResponse
+	(*BatchNextIDResponse)(nil),               // 202: testkit.v1.BatchNextIDResponse
+	(*DecomposeResponse)(nil),                 // 203: testkit.v1.DecomposeResponse
+	(*DashboardResponse)(nil),                 // 204: testkit.v1.DashboardResponse
+	(*ActivateResponse)(nil),                  // 205: testkit.v1.ActivateResponse
+	(*DeactivateResponse)(nil),                // 206: testkit.v1.DeactivateResponse
+	(*TrialStartResponse)(nil),                // 207: testkit.v1.TrialStartResponse
+	(*HealthResponse)(nil),                    // 208: testkit.v1.HealthResponse
+	(*CreateKeyResponse)(nil),                 // 209: testkit.v1.CreateKeyResponse
+	(*ShowKeyResponse)(nil),                   // 210: testkit.v1.ShowKeyResponse
+	(*ListKeysResponse)(nil),                  // 211: testkit.v1.ListKeysResponse
+	(*UpdateKeyResponse)(nil),                 // 212: testkit.v1.UpdateKeyResponse
+	(*RevokeKeyResponse)(nil),                 // 213: testkit.v1.RevokeKeyResponse
+	(*UnrevokeKeyResponse)(nil),               // 214: testkit.v1.UnrevokeKeyResponse
+	(*DeleteKeyResponse)(nil),                 // 215: testkit.v1.DeleteKeyResponse
+	(*GrantModuleResponse)(nil),               // 216: testkit.v1.GrantModuleResponse
+	(*RevokeModuleResponse)(nil),              // 217: testkit.v1.RevokeModuleResponse
+	(*ListKeyDevicesResponse)(nil),            // 218: testkit.v1.ListKeyDevicesResponse
+	(*KickDeviceResponse)(nil),                // 219: testkit.v1.KickDeviceResponse
+	(*ShowTrialResponse)(nil),                 // 220: testkit.v1.ShowTrialResponse
+	(*ResetTrialResponse)(nil),                // 221: testkit.v1.ResetTrialResponse
+	(*ShowPubKeyResponse)(nil),                // 222: testkit.v1.ShowPubKeyResponse
+	(*IngestResponse)(nil),                    // 223: testkit.v1.IngestResponse
+	(*CreateAppResponse)(nil),                 // 224: testkit.v1.CreateAppResponse
+	(*GetAppResponse)(nil),                    // 225: testkit.v1.GetAppResponse
+	(*UpdateAppResponse)(nil),                 // 226: testkit.v1.UpdateAppResponse
+	(*RotateTokenResponse)(nil),               // 227: testkit.v1.RotateTokenResponse
+	(*RevokeTokenResponse)(nil),               // 228: testkit.v1.RevokeTokenResponse
+	(*CreateSigningKeyResponse)(nil),          // 229: testkit.v1.CreateSigningKeyResponse
+	(*RevokeSigningKeyResponse)(nil),          // 230: testkit.v1.RevokeSigningKeyResponse
+	(*ReplaceEventRulesResponse)(nil),         // 231: testkit.v1.ReplaceEventRulesResponse
+	(*SetVersionBlockedResponse)(nil),         // 232: testkit.v1.SetVersionBlockedResponse
+	(*GetAppStatsResponse)(nil),               // 233: testkit.v1.GetAppStatsResponse
+	(*v1.ListCountriesResponse)(nil),          // 234: reference.v1.ListCountriesResponse
+	(*v1.ListTimezonesResponse)(nil),          // 235: reference.v1.ListTimezonesResponse
+	(*v1.ListLanguagesResponse)(nil),          // 236: reference.v1.ListLanguagesResponse
+	(*v1.ListCurrenciesResponse)(nil),         // 237: reference.v1.ListCurrenciesResponse
+	(*v1.ListRegionGroupsResponse)(nil),       // 238: reference.v1.ListRegionGroupsResponse
+	(*v1.ParsePhoneResponse)(nil),             // 239: reference.v1.ParsePhoneResponse
+	(*v1.ResolveCodesResponse)(nil),           // 240: reference.v1.ResolveCodesResponse
 }
 var file_testkit_v1_service_proto_depIdxs = []int32{
 	0,   // 0: testkit.v1.TestkitService.Ping:input_type -> google.protobuf.Empty
@@ -550,142 +573,156 @@ var file_testkit_v1_service_proto_depIdxs = []int32{
 	127, // 131: testkit.v1.TestkitService.ReplaceEventRules:input_type -> testkit.v1.ReplaceEventRulesRequest
 	128, // 132: testkit.v1.TestkitService.SetVersionBlocked:input_type -> testkit.v1.SetVersionBlockedRequest
 	129, // 133: testkit.v1.TestkitService.GetAppStats:input_type -> testkit.v1.GetAppStatsRequest
-	130, // 134: testkit.v1.TestkitService.Ping:output_type -> common.v1.Pong
-	131, // 135: testkit.v1.TestkitService.Login:output_type -> testkit.v1.TokenResponse
-	131, // 136: testkit.v1.TestkitService.Register:output_type -> testkit.v1.TokenResponse
-	132, // 137: testkit.v1.TestkitService.SendVerificationCode:output_type -> testkit.v1.SendVerificationCodeResponse
-	0,   // 138: testkit.v1.TestkitService.Logout:output_type -> google.protobuf.Empty
-	133, // 139: testkit.v1.TestkitService.GetProfile:output_type -> testkit.v1.User
-	133, // 140: testkit.v1.TestkitService.UpdateProfile:output_type -> testkit.v1.User
-	0,   // 141: testkit.v1.TestkitService.ChangePassword:output_type -> google.protobuf.Empty
-	0,   // 142: testkit.v1.TestkitService.ResetPassword:output_type -> google.protobuf.Empty
-	134, // 143: testkit.v1.TestkitService.ListIdentities:output_type -> testkit.v1.ListIdentitiesResponse
-	135, // 144: testkit.v1.TestkitService.BindIdentity:output_type -> testkit.v1.Identity
-	136, // 145: testkit.v1.TestkitService.BindOAuthIdentity:output_type -> testkit.v1.BindOAuthIdentityResponse
-	0,   // 146: testkit.v1.TestkitService.UnbindIdentity:output_type -> google.protobuf.Empty
-	137, // 147: testkit.v1.TestkitService.ListSessions:output_type -> testkit.v1.ListSessionsResponse
-	0,   // 148: testkit.v1.TestkitService.RevokeSession:output_type -> google.protobuf.Empty
-	0,   // 149: testkit.v1.TestkitService.RevokeAllSessions:output_type -> google.protobuf.Empty
-	138, // 150: testkit.v1.TestkitService.GetSession:output_type -> testkit.v1.GetSessionResponse
-	139, // 151: testkit.v1.TestkitService.IssueSessionCode:output_type -> testkit.v1.IssueSessionCodeResponse
-	140, // 152: testkit.v1.TestkitService.ExchangeSessionCode:output_type -> testkit.v1.ExchangeSessionCodeResponse
-	141, // 153: testkit.v1.TestkitService.GetOAuthURL:output_type -> testkit.v1.GetOAuthURLResponse
-	142, // 154: testkit.v1.TestkitService.SocialLogin:output_type -> testkit.v1.SocialLoginResponse
-	142, // 155: testkit.v1.TestkitService.MiniProgramLogin:output_type -> testkit.v1.SocialLoginResponse
-	142, // 156: testkit.v1.TestkitService.MiniProgramPhoneLogin:output_type -> testkit.v1.SocialLoginResponse
-	143, // 157: testkit.v1.TestkitService.CreateUser:output_type -> testkit.v1.CreateUserResponse
-	133, // 158: testkit.v1.TestkitService.GetUser:output_type -> testkit.v1.User
-	144, // 159: testkit.v1.TestkitService.ListUsers:output_type -> testkit.v1.ListUsersResponse
-	145, // 160: testkit.v1.TestkitService.ListUsersPaged:output_type -> testkit.v1.ListUsersPagedResponse
-	133, // 161: testkit.v1.TestkitService.DisableUser:output_type -> testkit.v1.User
-	146, // 162: testkit.v1.TestkitService.GetLoginLogs:output_type -> testkit.v1.GetLoginLogsResponse
-	147, // 163: testkit.v1.TestkitService.CreateGroup:output_type -> testkit.v1.Group
-	147, // 164: testkit.v1.TestkitService.GetGroup:output_type -> testkit.v1.Group
-	147, // 165: testkit.v1.TestkitService.UpdateGroup:output_type -> testkit.v1.Group
-	148, // 166: testkit.v1.TestkitService.ListGroups:output_type -> testkit.v1.ListGroupsResponse
-	0,   // 167: testkit.v1.TestkitService.DeleteGroup:output_type -> google.protobuf.Empty
-	0,   // 168: testkit.v1.TestkitService.AddGroupMember:output_type -> google.protobuf.Empty
-	0,   // 169: testkit.v1.TestkitService.RemoveGroupMember:output_type -> google.protobuf.Empty
-	149, // 170: testkit.v1.TestkitService.ListGroupMembers:output_type -> testkit.v1.ListGroupMembersResponse
-	0,   // 171: testkit.v1.TestkitService.AddGroupRole:output_type -> google.protobuf.Empty
-	0,   // 172: testkit.v1.TestkitService.RemoveGroupRole:output_type -> google.protobuf.Empty
-	150, // 173: testkit.v1.TestkitService.ListGroupRoles:output_type -> testkit.v1.ListGroupRolesResponse
-	151, // 174: testkit.v1.TestkitService.CreateRole:output_type -> testkit.v1.Role
-	151, // 175: testkit.v1.TestkitService.GetRole:output_type -> testkit.v1.Role
-	151, // 176: testkit.v1.TestkitService.UpdateRole:output_type -> testkit.v1.Role
-	0,   // 177: testkit.v1.TestkitService.DeleteRole:output_type -> google.protobuf.Empty
-	152, // 178: testkit.v1.TestkitService.ListRoles:output_type -> testkit.v1.ListRolesResponse
-	0,   // 179: testkit.v1.TestkitService.AssignRole:output_type -> google.protobuf.Empty
-	0,   // 180: testkit.v1.TestkitService.RevokeRole:output_type -> google.protobuf.Empty
-	153, // 181: testkit.v1.TestkitService.ListUserRoles:output_type -> testkit.v1.ListUserRolesResponse
-	154, // 182: testkit.v1.TestkitService.ListPermissions:output_type -> testkit.v1.ListPermissionsResponse
-	155, // 183: testkit.v1.TestkitService.CreatePermission:output_type -> testkit.v1.Permission
-	155, // 184: testkit.v1.TestkitService.GetPermission:output_type -> testkit.v1.Permission
-	155, // 185: testkit.v1.TestkitService.UpdatePermission:output_type -> testkit.v1.Permission
-	0,   // 186: testkit.v1.TestkitService.DeletePermission:output_type -> google.protobuf.Empty
-	156, // 187: testkit.v1.TestkitService.CreatePermissionGroup:output_type -> testkit.v1.PermissionGroup
-	156, // 188: testkit.v1.TestkitService.GetPermissionGroup:output_type -> testkit.v1.PermissionGroup
-	156, // 189: testkit.v1.TestkitService.UpdatePermissionGroup:output_type -> testkit.v1.PermissionGroup
-	0,   // 190: testkit.v1.TestkitService.DeletePermissionGroup:output_type -> google.protobuf.Empty
-	157, // 191: testkit.v1.TestkitService.ListPermissionGroups:output_type -> testkit.v1.ListPermissionGroupsResponse
-	158, // 192: testkit.v1.TestkitService.GenerateUploadURL:output_type -> testkit.v1.GenerateUploadURLResponse
-	159, // 193: testkit.v1.TestkitService.GetSTSCredential:output_type -> testkit.v1.GetSTSCredentialResponse
-	160, // 194: testkit.v1.TestkitService.BatchGetSTSCredential:output_type -> testkit.v1.BatchGetSTSCredentialResponse
-	161, // 195: testkit.v1.TestkitService.ConfirmUpload:output_type -> testkit.v1.ConfirmUploadResponse
-	0,   // 196: testkit.v1.TestkitService.CancelUpload:output_type -> google.protobuf.Empty
-	162, // 197: testkit.v1.TestkitService.GenerateDownloadURL:output_type -> testkit.v1.GenerateDownloadURLResponse
-	163, // 198: testkit.v1.TestkitService.GenerateProcessURL:output_type -> testkit.v1.GenerateProcessURLResponse
-	164, // 199: testkit.v1.TestkitService.GenerateCDNURL:output_type -> testkit.v1.GenerateCDNURLResponse
-	165, // 200: testkit.v1.TestkitService.CreateFileLink:output_type -> testkit.v1.CreateFileLinkResponse
-	166, // 201: testkit.v1.TestkitService.GetFileLinkDownload:output_type -> testkit.v1.GetFileLinkDownloadResponse
-	167, // 202: testkit.v1.TestkitService.ListMyFiles:output_type -> testkit.v1.ListMyFilesResponse
-	168, // 203: testkit.v1.TestkitService.ListMyFilesPaged:output_type -> testkit.v1.ListMyFilesPagedResponse
-	169, // 204: testkit.v1.TestkitService.GetMyFile:output_type -> testkit.v1.FileInfo
-	169, // 205: testkit.v1.TestkitService.UpdateMyFile:output_type -> testkit.v1.FileInfo
-	0,   // 206: testkit.v1.TestkitService.DeleteMyFile:output_type -> google.protobuf.Empty
-	170, // 207: testkit.v1.TestkitService.BatchDeleteMyFiles:output_type -> testkit.v1.BatchDeleteMyFilesResponse
-	171, // 208: testkit.v1.TestkitService.GetMyQuota:output_type -> testkit.v1.QuotaInfo
-	172, // 209: testkit.v1.TestkitService.ListMyAuditLogs:output_type -> testkit.v1.ListMyAuditLogsResponse
-	173, // 210: testkit.v1.TestkitService.AdminListFiles:output_type -> testkit.v1.AdminListFilesResponse
-	174, // 211: testkit.v1.TestkitService.AdminGetFile:output_type -> testkit.v1.AdminFileInfo
-	0,   // 212: testkit.v1.TestkitService.AdminDeleteFile:output_type -> google.protobuf.Empty
-	171, // 213: testkit.v1.TestkitService.AdminGetQuota:output_type -> testkit.v1.QuotaInfo
-	171, // 214: testkit.v1.TestkitService.AdminSetQuota:output_type -> testkit.v1.QuotaInfo
-	175, // 215: testkit.v1.TestkitService.AdminGetStats:output_type -> testkit.v1.AdminGetStatsResponse
-	176, // 216: testkit.v1.TestkitService.AdminListProviders:output_type -> testkit.v1.AdminListProvidersResponse
-	177, // 217: testkit.v1.TestkitService.AdminListBuckets:output_type -> testkit.v1.AdminListBucketsResponse
-	178, // 218: testkit.v1.TestkitService.AdminSoftDeleteOwnerFiles:output_type -> testkit.v1.AdminSoftDeleteOwnerFilesResponse
-	179, // 219: testkit.v1.TestkitService.AdminDeleteOwner:output_type -> testkit.v1.AdminDeleteOwnerResponse
-	180, // 220: testkit.v1.TestkitService.AdminListAuditLogs:output_type -> testkit.v1.AdminListAuditLogsResponse
-	181, // 221: testkit.v1.TestkitService.SendEmail:output_type -> testkit.v1.SendResponse
-	181, // 222: testkit.v1.TestkitService.SendSMS:output_type -> testkit.v1.SendResponse
-	182, // 223: testkit.v1.TestkitService.GetEmail:output_type -> testkit.v1.EmailRecord
-	183, // 224: testkit.v1.TestkitService.ListEmails:output_type -> testkit.v1.ListEmailsResponse
-	184, // 225: testkit.v1.TestkitService.ListEmailsByCursor:output_type -> testkit.v1.ListEmailsByCursorResponse
-	185, // 226: testkit.v1.TestkitService.GetEmailStats:output_type -> testkit.v1.EmailStatsResponse
-	186, // 227: testkit.v1.TestkitService.ListEmailSenders:output_type -> testkit.v1.ListEmailSendersResponse
-	187, // 228: testkit.v1.TestkitService.GetSMS:output_type -> testkit.v1.SMSRecord
-	188, // 229: testkit.v1.TestkitService.ListSMS:output_type -> testkit.v1.ListSMSResponse
-	189, // 230: testkit.v1.TestkitService.ListSMSByCursor:output_type -> testkit.v1.ListSMSByCursorResponse
-	190, // 231: testkit.v1.TestkitService.GetSMSStats:output_type -> testkit.v1.SMSStatsResponse
-	191, // 232: testkit.v1.TestkitService.ListSMSRegions:output_type -> testkit.v1.ListSMSRegionsResponse
-	192, // 233: testkit.v1.TestkitService.ListRegionCodes:output_type -> testkit.v1.ListRegionCodesResponse
-	193, // 234: testkit.v1.TestkitService.ListSMSSenders:output_type -> testkit.v1.ListSMSSendersResponse
-	194, // 235: testkit.v1.TestkitService.NextID:output_type -> testkit.v1.NextIDResponse
-	195, // 236: testkit.v1.TestkitService.BatchNextID:output_type -> testkit.v1.BatchNextIDResponse
-	196, // 237: testkit.v1.TestkitService.Decompose:output_type -> testkit.v1.DecomposeResponse
-	197, // 238: testkit.v1.TestkitService.GetDashboard:output_type -> testkit.v1.DashboardResponse
-	198, // 239: testkit.v1.TestkitService.Activate:output_type -> testkit.v1.ActivateResponse
-	199, // 240: testkit.v1.TestkitService.Deactivate:output_type -> testkit.v1.DeactivateResponse
-	200, // 241: testkit.v1.TestkitService.TrialStart:output_type -> testkit.v1.TrialStartResponse
-	201, // 242: testkit.v1.TestkitService.Health:output_type -> testkit.v1.HealthResponse
-	202, // 243: testkit.v1.TestkitService.CreateKey:output_type -> testkit.v1.CreateKeyResponse
-	203, // 244: testkit.v1.TestkitService.ShowKey:output_type -> testkit.v1.ShowKeyResponse
-	204, // 245: testkit.v1.TestkitService.ListKeys:output_type -> testkit.v1.ListKeysResponse
-	205, // 246: testkit.v1.TestkitService.UpdateKey:output_type -> testkit.v1.UpdateKeyResponse
-	206, // 247: testkit.v1.TestkitService.RevokeKey:output_type -> testkit.v1.RevokeKeyResponse
-	207, // 248: testkit.v1.TestkitService.UnrevokeKey:output_type -> testkit.v1.UnrevokeKeyResponse
-	208, // 249: testkit.v1.TestkitService.DeleteKey:output_type -> testkit.v1.DeleteKeyResponse
-	209, // 250: testkit.v1.TestkitService.GrantModule:output_type -> testkit.v1.GrantModuleResponse
-	210, // 251: testkit.v1.TestkitService.RevokeModule:output_type -> testkit.v1.RevokeModuleResponse
-	211, // 252: testkit.v1.TestkitService.ListKeyDevices:output_type -> testkit.v1.ListKeyDevicesResponse
-	212, // 253: testkit.v1.TestkitService.KickDevice:output_type -> testkit.v1.KickDeviceResponse
-	213, // 254: testkit.v1.TestkitService.ShowTrial:output_type -> testkit.v1.ShowTrialResponse
-	214, // 255: testkit.v1.TestkitService.ResetTrial:output_type -> testkit.v1.ResetTrialResponse
-	215, // 256: testkit.v1.TestkitService.ShowPubKey:output_type -> testkit.v1.ShowPubKeyResponse
-	216, // 257: testkit.v1.TestkitService.Ingest:output_type -> testkit.v1.IngestResponse
-	217, // 258: testkit.v1.TestkitService.CreateApp:output_type -> testkit.v1.CreateAppResponse
-	218, // 259: testkit.v1.TestkitService.GetApp:output_type -> testkit.v1.GetAppResponse
-	219, // 260: testkit.v1.TestkitService.UpdateApp:output_type -> testkit.v1.UpdateAppResponse
-	220, // 261: testkit.v1.TestkitService.RotateToken:output_type -> testkit.v1.RotateTokenResponse
-	221, // 262: testkit.v1.TestkitService.RevokeToken:output_type -> testkit.v1.RevokeTokenResponse
-	222, // 263: testkit.v1.TestkitService.CreateSigningKey:output_type -> testkit.v1.CreateSigningKeyResponse
-	223, // 264: testkit.v1.TestkitService.RevokeSigningKey:output_type -> testkit.v1.RevokeSigningKeyResponse
-	224, // 265: testkit.v1.TestkitService.ReplaceEventRules:output_type -> testkit.v1.ReplaceEventRulesResponse
-	225, // 266: testkit.v1.TestkitService.SetVersionBlocked:output_type -> testkit.v1.SetVersionBlockedResponse
-	226, // 267: testkit.v1.TestkitService.GetAppStats:output_type -> testkit.v1.GetAppStatsResponse
-	134, // [134:268] is the sub-list for method output_type
-	0,   // [0:134] is the sub-list for method input_type
+	130, // 134: testkit.v1.TestkitService.ListCountries:input_type -> reference.v1.ListCountriesRequest
+	131, // 135: testkit.v1.TestkitService.ListTimezones:input_type -> reference.v1.ListTimezonesRequest
+	132, // 136: testkit.v1.TestkitService.ListLanguages:input_type -> reference.v1.ListLanguagesRequest
+	133, // 137: testkit.v1.TestkitService.ListCurrencies:input_type -> reference.v1.ListCurrenciesRequest
+	134, // 138: testkit.v1.TestkitService.ListRegionGroups:input_type -> reference.v1.ListRegionGroupsRequest
+	135, // 139: testkit.v1.TestkitService.ParsePhone:input_type -> reference.v1.ParsePhoneRequest
+	136, // 140: testkit.v1.TestkitService.ResolveCodes:input_type -> reference.v1.ResolveCodesRequest
+	137, // 141: testkit.v1.TestkitService.Ping:output_type -> common.v1.Pong
+	138, // 142: testkit.v1.TestkitService.Login:output_type -> testkit.v1.TokenResponse
+	138, // 143: testkit.v1.TestkitService.Register:output_type -> testkit.v1.TokenResponse
+	139, // 144: testkit.v1.TestkitService.SendVerificationCode:output_type -> testkit.v1.SendVerificationCodeResponse
+	0,   // 145: testkit.v1.TestkitService.Logout:output_type -> google.protobuf.Empty
+	140, // 146: testkit.v1.TestkitService.GetProfile:output_type -> testkit.v1.User
+	140, // 147: testkit.v1.TestkitService.UpdateProfile:output_type -> testkit.v1.User
+	0,   // 148: testkit.v1.TestkitService.ChangePassword:output_type -> google.protobuf.Empty
+	0,   // 149: testkit.v1.TestkitService.ResetPassword:output_type -> google.protobuf.Empty
+	141, // 150: testkit.v1.TestkitService.ListIdentities:output_type -> testkit.v1.ListIdentitiesResponse
+	142, // 151: testkit.v1.TestkitService.BindIdentity:output_type -> testkit.v1.Identity
+	143, // 152: testkit.v1.TestkitService.BindOAuthIdentity:output_type -> testkit.v1.BindOAuthIdentityResponse
+	0,   // 153: testkit.v1.TestkitService.UnbindIdentity:output_type -> google.protobuf.Empty
+	144, // 154: testkit.v1.TestkitService.ListSessions:output_type -> testkit.v1.ListSessionsResponse
+	0,   // 155: testkit.v1.TestkitService.RevokeSession:output_type -> google.protobuf.Empty
+	0,   // 156: testkit.v1.TestkitService.RevokeAllSessions:output_type -> google.protobuf.Empty
+	145, // 157: testkit.v1.TestkitService.GetSession:output_type -> testkit.v1.GetSessionResponse
+	146, // 158: testkit.v1.TestkitService.IssueSessionCode:output_type -> testkit.v1.IssueSessionCodeResponse
+	147, // 159: testkit.v1.TestkitService.ExchangeSessionCode:output_type -> testkit.v1.ExchangeSessionCodeResponse
+	148, // 160: testkit.v1.TestkitService.GetOAuthURL:output_type -> testkit.v1.GetOAuthURLResponse
+	149, // 161: testkit.v1.TestkitService.SocialLogin:output_type -> testkit.v1.SocialLoginResponse
+	149, // 162: testkit.v1.TestkitService.MiniProgramLogin:output_type -> testkit.v1.SocialLoginResponse
+	149, // 163: testkit.v1.TestkitService.MiniProgramPhoneLogin:output_type -> testkit.v1.SocialLoginResponse
+	150, // 164: testkit.v1.TestkitService.CreateUser:output_type -> testkit.v1.CreateUserResponse
+	140, // 165: testkit.v1.TestkitService.GetUser:output_type -> testkit.v1.User
+	151, // 166: testkit.v1.TestkitService.ListUsers:output_type -> testkit.v1.ListUsersResponse
+	152, // 167: testkit.v1.TestkitService.ListUsersPaged:output_type -> testkit.v1.ListUsersPagedResponse
+	140, // 168: testkit.v1.TestkitService.DisableUser:output_type -> testkit.v1.User
+	153, // 169: testkit.v1.TestkitService.GetLoginLogs:output_type -> testkit.v1.GetLoginLogsResponse
+	154, // 170: testkit.v1.TestkitService.CreateGroup:output_type -> testkit.v1.Group
+	154, // 171: testkit.v1.TestkitService.GetGroup:output_type -> testkit.v1.Group
+	154, // 172: testkit.v1.TestkitService.UpdateGroup:output_type -> testkit.v1.Group
+	155, // 173: testkit.v1.TestkitService.ListGroups:output_type -> testkit.v1.ListGroupsResponse
+	0,   // 174: testkit.v1.TestkitService.DeleteGroup:output_type -> google.protobuf.Empty
+	0,   // 175: testkit.v1.TestkitService.AddGroupMember:output_type -> google.protobuf.Empty
+	0,   // 176: testkit.v1.TestkitService.RemoveGroupMember:output_type -> google.protobuf.Empty
+	156, // 177: testkit.v1.TestkitService.ListGroupMembers:output_type -> testkit.v1.ListGroupMembersResponse
+	0,   // 178: testkit.v1.TestkitService.AddGroupRole:output_type -> google.protobuf.Empty
+	0,   // 179: testkit.v1.TestkitService.RemoveGroupRole:output_type -> google.protobuf.Empty
+	157, // 180: testkit.v1.TestkitService.ListGroupRoles:output_type -> testkit.v1.ListGroupRolesResponse
+	158, // 181: testkit.v1.TestkitService.CreateRole:output_type -> testkit.v1.Role
+	158, // 182: testkit.v1.TestkitService.GetRole:output_type -> testkit.v1.Role
+	158, // 183: testkit.v1.TestkitService.UpdateRole:output_type -> testkit.v1.Role
+	0,   // 184: testkit.v1.TestkitService.DeleteRole:output_type -> google.protobuf.Empty
+	159, // 185: testkit.v1.TestkitService.ListRoles:output_type -> testkit.v1.ListRolesResponse
+	0,   // 186: testkit.v1.TestkitService.AssignRole:output_type -> google.protobuf.Empty
+	0,   // 187: testkit.v1.TestkitService.RevokeRole:output_type -> google.protobuf.Empty
+	160, // 188: testkit.v1.TestkitService.ListUserRoles:output_type -> testkit.v1.ListUserRolesResponse
+	161, // 189: testkit.v1.TestkitService.ListPermissions:output_type -> testkit.v1.ListPermissionsResponse
+	162, // 190: testkit.v1.TestkitService.CreatePermission:output_type -> testkit.v1.Permission
+	162, // 191: testkit.v1.TestkitService.GetPermission:output_type -> testkit.v1.Permission
+	162, // 192: testkit.v1.TestkitService.UpdatePermission:output_type -> testkit.v1.Permission
+	0,   // 193: testkit.v1.TestkitService.DeletePermission:output_type -> google.protobuf.Empty
+	163, // 194: testkit.v1.TestkitService.CreatePermissionGroup:output_type -> testkit.v1.PermissionGroup
+	163, // 195: testkit.v1.TestkitService.GetPermissionGroup:output_type -> testkit.v1.PermissionGroup
+	163, // 196: testkit.v1.TestkitService.UpdatePermissionGroup:output_type -> testkit.v1.PermissionGroup
+	0,   // 197: testkit.v1.TestkitService.DeletePermissionGroup:output_type -> google.protobuf.Empty
+	164, // 198: testkit.v1.TestkitService.ListPermissionGroups:output_type -> testkit.v1.ListPermissionGroupsResponse
+	165, // 199: testkit.v1.TestkitService.GenerateUploadURL:output_type -> testkit.v1.GenerateUploadURLResponse
+	166, // 200: testkit.v1.TestkitService.GetSTSCredential:output_type -> testkit.v1.GetSTSCredentialResponse
+	167, // 201: testkit.v1.TestkitService.BatchGetSTSCredential:output_type -> testkit.v1.BatchGetSTSCredentialResponse
+	168, // 202: testkit.v1.TestkitService.ConfirmUpload:output_type -> testkit.v1.ConfirmUploadResponse
+	0,   // 203: testkit.v1.TestkitService.CancelUpload:output_type -> google.protobuf.Empty
+	169, // 204: testkit.v1.TestkitService.GenerateDownloadURL:output_type -> testkit.v1.GenerateDownloadURLResponse
+	170, // 205: testkit.v1.TestkitService.GenerateProcessURL:output_type -> testkit.v1.GenerateProcessURLResponse
+	171, // 206: testkit.v1.TestkitService.GenerateCDNURL:output_type -> testkit.v1.GenerateCDNURLResponse
+	172, // 207: testkit.v1.TestkitService.CreateFileLink:output_type -> testkit.v1.CreateFileLinkResponse
+	173, // 208: testkit.v1.TestkitService.GetFileLinkDownload:output_type -> testkit.v1.GetFileLinkDownloadResponse
+	174, // 209: testkit.v1.TestkitService.ListMyFiles:output_type -> testkit.v1.ListMyFilesResponse
+	175, // 210: testkit.v1.TestkitService.ListMyFilesPaged:output_type -> testkit.v1.ListMyFilesPagedResponse
+	176, // 211: testkit.v1.TestkitService.GetMyFile:output_type -> testkit.v1.FileInfo
+	176, // 212: testkit.v1.TestkitService.UpdateMyFile:output_type -> testkit.v1.FileInfo
+	0,   // 213: testkit.v1.TestkitService.DeleteMyFile:output_type -> google.protobuf.Empty
+	177, // 214: testkit.v1.TestkitService.BatchDeleteMyFiles:output_type -> testkit.v1.BatchDeleteMyFilesResponse
+	178, // 215: testkit.v1.TestkitService.GetMyQuota:output_type -> testkit.v1.QuotaInfo
+	179, // 216: testkit.v1.TestkitService.ListMyAuditLogs:output_type -> testkit.v1.ListMyAuditLogsResponse
+	180, // 217: testkit.v1.TestkitService.AdminListFiles:output_type -> testkit.v1.AdminListFilesResponse
+	181, // 218: testkit.v1.TestkitService.AdminGetFile:output_type -> testkit.v1.AdminFileInfo
+	0,   // 219: testkit.v1.TestkitService.AdminDeleteFile:output_type -> google.protobuf.Empty
+	178, // 220: testkit.v1.TestkitService.AdminGetQuota:output_type -> testkit.v1.QuotaInfo
+	178, // 221: testkit.v1.TestkitService.AdminSetQuota:output_type -> testkit.v1.QuotaInfo
+	182, // 222: testkit.v1.TestkitService.AdminGetStats:output_type -> testkit.v1.AdminGetStatsResponse
+	183, // 223: testkit.v1.TestkitService.AdminListProviders:output_type -> testkit.v1.AdminListProvidersResponse
+	184, // 224: testkit.v1.TestkitService.AdminListBuckets:output_type -> testkit.v1.AdminListBucketsResponse
+	185, // 225: testkit.v1.TestkitService.AdminSoftDeleteOwnerFiles:output_type -> testkit.v1.AdminSoftDeleteOwnerFilesResponse
+	186, // 226: testkit.v1.TestkitService.AdminDeleteOwner:output_type -> testkit.v1.AdminDeleteOwnerResponse
+	187, // 227: testkit.v1.TestkitService.AdminListAuditLogs:output_type -> testkit.v1.AdminListAuditLogsResponse
+	188, // 228: testkit.v1.TestkitService.SendEmail:output_type -> testkit.v1.SendResponse
+	188, // 229: testkit.v1.TestkitService.SendSMS:output_type -> testkit.v1.SendResponse
+	189, // 230: testkit.v1.TestkitService.GetEmail:output_type -> testkit.v1.EmailRecord
+	190, // 231: testkit.v1.TestkitService.ListEmails:output_type -> testkit.v1.ListEmailsResponse
+	191, // 232: testkit.v1.TestkitService.ListEmailsByCursor:output_type -> testkit.v1.ListEmailsByCursorResponse
+	192, // 233: testkit.v1.TestkitService.GetEmailStats:output_type -> testkit.v1.EmailStatsResponse
+	193, // 234: testkit.v1.TestkitService.ListEmailSenders:output_type -> testkit.v1.ListEmailSendersResponse
+	194, // 235: testkit.v1.TestkitService.GetSMS:output_type -> testkit.v1.SMSRecord
+	195, // 236: testkit.v1.TestkitService.ListSMS:output_type -> testkit.v1.ListSMSResponse
+	196, // 237: testkit.v1.TestkitService.ListSMSByCursor:output_type -> testkit.v1.ListSMSByCursorResponse
+	197, // 238: testkit.v1.TestkitService.GetSMSStats:output_type -> testkit.v1.SMSStatsResponse
+	198, // 239: testkit.v1.TestkitService.ListSMSRegions:output_type -> testkit.v1.ListSMSRegionsResponse
+	199, // 240: testkit.v1.TestkitService.ListRegionCodes:output_type -> testkit.v1.ListRegionCodesResponse
+	200, // 241: testkit.v1.TestkitService.ListSMSSenders:output_type -> testkit.v1.ListSMSSendersResponse
+	201, // 242: testkit.v1.TestkitService.NextID:output_type -> testkit.v1.NextIDResponse
+	202, // 243: testkit.v1.TestkitService.BatchNextID:output_type -> testkit.v1.BatchNextIDResponse
+	203, // 244: testkit.v1.TestkitService.Decompose:output_type -> testkit.v1.DecomposeResponse
+	204, // 245: testkit.v1.TestkitService.GetDashboard:output_type -> testkit.v1.DashboardResponse
+	205, // 246: testkit.v1.TestkitService.Activate:output_type -> testkit.v1.ActivateResponse
+	206, // 247: testkit.v1.TestkitService.Deactivate:output_type -> testkit.v1.DeactivateResponse
+	207, // 248: testkit.v1.TestkitService.TrialStart:output_type -> testkit.v1.TrialStartResponse
+	208, // 249: testkit.v1.TestkitService.Health:output_type -> testkit.v1.HealthResponse
+	209, // 250: testkit.v1.TestkitService.CreateKey:output_type -> testkit.v1.CreateKeyResponse
+	210, // 251: testkit.v1.TestkitService.ShowKey:output_type -> testkit.v1.ShowKeyResponse
+	211, // 252: testkit.v1.TestkitService.ListKeys:output_type -> testkit.v1.ListKeysResponse
+	212, // 253: testkit.v1.TestkitService.UpdateKey:output_type -> testkit.v1.UpdateKeyResponse
+	213, // 254: testkit.v1.TestkitService.RevokeKey:output_type -> testkit.v1.RevokeKeyResponse
+	214, // 255: testkit.v1.TestkitService.UnrevokeKey:output_type -> testkit.v1.UnrevokeKeyResponse
+	215, // 256: testkit.v1.TestkitService.DeleteKey:output_type -> testkit.v1.DeleteKeyResponse
+	216, // 257: testkit.v1.TestkitService.GrantModule:output_type -> testkit.v1.GrantModuleResponse
+	217, // 258: testkit.v1.TestkitService.RevokeModule:output_type -> testkit.v1.RevokeModuleResponse
+	218, // 259: testkit.v1.TestkitService.ListKeyDevices:output_type -> testkit.v1.ListKeyDevicesResponse
+	219, // 260: testkit.v1.TestkitService.KickDevice:output_type -> testkit.v1.KickDeviceResponse
+	220, // 261: testkit.v1.TestkitService.ShowTrial:output_type -> testkit.v1.ShowTrialResponse
+	221, // 262: testkit.v1.TestkitService.ResetTrial:output_type -> testkit.v1.ResetTrialResponse
+	222, // 263: testkit.v1.TestkitService.ShowPubKey:output_type -> testkit.v1.ShowPubKeyResponse
+	223, // 264: testkit.v1.TestkitService.Ingest:output_type -> testkit.v1.IngestResponse
+	224, // 265: testkit.v1.TestkitService.CreateApp:output_type -> testkit.v1.CreateAppResponse
+	225, // 266: testkit.v1.TestkitService.GetApp:output_type -> testkit.v1.GetAppResponse
+	226, // 267: testkit.v1.TestkitService.UpdateApp:output_type -> testkit.v1.UpdateAppResponse
+	227, // 268: testkit.v1.TestkitService.RotateToken:output_type -> testkit.v1.RotateTokenResponse
+	228, // 269: testkit.v1.TestkitService.RevokeToken:output_type -> testkit.v1.RevokeTokenResponse
+	229, // 270: testkit.v1.TestkitService.CreateSigningKey:output_type -> testkit.v1.CreateSigningKeyResponse
+	230, // 271: testkit.v1.TestkitService.RevokeSigningKey:output_type -> testkit.v1.RevokeSigningKeyResponse
+	231, // 272: testkit.v1.TestkitService.ReplaceEventRules:output_type -> testkit.v1.ReplaceEventRulesResponse
+	232, // 273: testkit.v1.TestkitService.SetVersionBlocked:output_type -> testkit.v1.SetVersionBlockedResponse
+	233, // 274: testkit.v1.TestkitService.GetAppStats:output_type -> testkit.v1.GetAppStatsResponse
+	234, // 275: testkit.v1.TestkitService.ListCountries:output_type -> reference.v1.ListCountriesResponse
+	235, // 276: testkit.v1.TestkitService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse
+	236, // 277: testkit.v1.TestkitService.ListLanguages:output_type -> reference.v1.ListLanguagesResponse
+	237, // 278: testkit.v1.TestkitService.ListCurrencies:output_type -> reference.v1.ListCurrenciesResponse
+	238, // 279: testkit.v1.TestkitService.ListRegionGroups:output_type -> reference.v1.ListRegionGroupsResponse
+	239, // 280: testkit.v1.TestkitService.ParsePhone:output_type -> reference.v1.ParsePhoneResponse
+	240, // 281: testkit.v1.TestkitService.ResolveCodes:output_type -> reference.v1.ResolveCodesResponse
+	141, // [141:282] is the sub-list for method output_type
+	0,   // [0:141] is the sub-list for method input_type
 	0,   // [0:0] is the sub-list for extension type_name
 	0,   // [0:0] is the sub-list for extension extendee
 	0,   // [0:0] is the sub-list for field type_name

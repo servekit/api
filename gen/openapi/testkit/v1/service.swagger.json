@@ -3802,6 +3802,222 @@
         ]
       }
     },
+    "/api/v1/reference/codes:resolve": {
+      "post": {
+        "operationId": "ResolveCodes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ResolveCodesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "ResolveCodes is the batch by-code lookup across domains — one call serves\na registration form's validate-and-fetch. Timezone ids accept backward\naliases (normalized to canonical). Unresolved inputs land in missing_*;\nthe call itself never errors on unknown codes.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ResolveCodesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/countries": {
+      "get": {
+        "operationId": "ListCountries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListCountriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/currencies": {
+      "get": {
+        "operationId": "ListCurrencies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListCurrenciesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/languages": {
+      "get": {
+        "operationId": "ListLanguages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListLanguagesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/phone:parse": {
+      "post": {
+        "operationId": "ParsePhone",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ParsePhoneResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (country_code/dial_code) are still filled when the\ncountry is inferable.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ParsePhoneRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/region-groups": {
+      "get": {
+        "operationId": "ListRegionGroups",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListRegionGroupsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/reference/timezones": {
+      "get": {
+        "operationId": "ListTimezones",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTimezonesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/region-codes": {
       "get": {
         "operationId": "ListRegionCodes",
@@ -6878,6 +7094,32 @@
         }
       }
     },
+    "v1Country": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "alpha-2, e.g. \"CN\""
+        },
+        "alpha3": {
+          "type": "string",
+          "title": "alpha-3, e.g. \"CHN\""
+        },
+        "dialCode": {
+          "type": "string",
+          "title": "ITU E.164 with \"+\", e.g. \"+86\""
+        },
+        "flagEmoji": {
+          "type": "string",
+          "title": "regional-indicator pair, e.g. \"🇨🇳\""
+        },
+        "name": {
+          "type": "string",
+          "title": "display name in the request locale"
+        }
+      },
+      "description": "Country is one row of the ISO 3166-1 + E.164 directory."
+    },
     "v1CreateAppRequest": {
       "type": "object",
       "properties": {
@@ -7077,6 +7319,36 @@
           "$ref": "#/definitions/v1User"
         }
       }
+    },
+    "v1Currency": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "e.g. \"CNY\""
+        },
+        "symbol": {
+          "type": "string",
+          "title": "e.g. \"¥\""
+        },
+        "minorUnits": {
+          "type": "integer",
+          "format": "int32",
+          "title": "0 (JPY) / 2 (CNY) / 3 (BHD)"
+        },
+        "countryCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "current official users"
+        },
+        "name": {
+          "type": "string",
+          "title": "display name in the request locale"
+        }
+      },
+      "description": "Currency is one ISO 4217 currency."
     },
     "v1DailyStat": {
       "type": "object",
@@ -8290,6 +8562,52 @@
         }
       }
     },
+    "v1Language": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "title": "e.g. \"zh-Hans\""
+        },
+        "name": {
+          "type": "string",
+          "title": "the language's name in the request locale"
+        }
+      },
+      "description": "Language is one selectable BCP 47 tag."
+    },
+    "v1ListCountriesResponse": {
+      "type": "object",
+      "properties": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Country"
+          },
+          "title": "name-sorted in the request locale"
+        },
+        "dataVersion": {
+          "type": "string",
+          "title": "generation stamp, e.g. \"2026-09-06\""
+        }
+      }
+    },
+    "v1ListCurrenciesResponse": {
+      "type": "object",
+      "properties": {
+        "currencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Currency"
+          }
+        },
+        "dataVersion": {
+          "type": "string"
+        }
+      }
+    },
     "v1ListEmailSendersResponse": {
       "type": "object",
       "properties": {
@@ -8429,6 +8747,21 @@
         }
       }
     },
+    "v1ListLanguagesResponse": {
+      "type": "object",
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Language"
+          }
+        },
+        "dataVersion": {
+          "type": "string"
+        }
+      }
+    },
     "v1ListMyAuditLogsResponse": {
       "type": "object",
       "properties": {
@@ -8540,6 +8873,22 @@
         }
       }
     },
+    "v1ListRegionGroupsResponse": {
+      "type": "object",
+      "properties": {
+        "regionGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RegionGroup"
+          },
+          "title": "top level first, then depth"
+        },
+        "dataVersion": {
+          "type": "string"
+        }
+      }
+    },
     "v1ListRolesResponse": {
       "type": "object",
       "properties": {
@@ -8634,6 +8983,21 @@
           }
         },
         "nextCursor": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ListTimezonesResponse": {
+      "type": "object",
+      "properties": {
+        "timezones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Timezone"
+          }
+        },
+        "dataVersion": {
           "type": "string"
         }
       }
@@ -8927,6 +9291,53 @@
       "default": "OWNER_TYPE_UNSPECIFIED",
       "description": "OwnerType classifies who owns a file (user, system, group, etc.)."
     },
+    "v1ParsePhoneRequest": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "string"
+        },
+        "defaultRegion": {
+          "type": "string",
+          "title": "alpha-2; disambiguates local-format input; empty = international format only"
+        }
+      },
+      "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (country_code/dial_code) are still filled when the\ncountry is inferable."
+    },
+    "v1ParsePhoneResponse": {
+      "type": "object",
+      "properties": {
+        "isValid": {
+          "type": "boolean"
+        },
+        "e164": {
+          "type": "string",
+          "title": "canonical E.164 when parseable"
+        },
+        "countryCode": {
+          "type": "string",
+          "title": "inferred alpha-2, \"\" when unknown"
+        },
+        "dialCode": {
+          "type": "string",
+          "title": "e.g. \"+86\", \"\" when unknown"
+        },
+        "nationalNumber": {
+          "type": "string"
+        },
+        "formattedInternational": {
+          "type": "string",
+          "title": "E.123 international display form"
+        },
+        "type": {
+          "$ref": "#/definitions/v1PhoneType"
+        },
+        "errorReason": {
+          "type": "string",
+          "title": "set when is_valid=false"
+        }
+      }
+    },
     "v1Permission": {
       "type": "object",
       "properties": {
@@ -8974,6 +9385,26 @@
         }
       },
       "description": "PermissionGroup is a named bundle of permissions."
+    },
+    "v1PhoneType": {
+      "type": "string",
+      "enum": [
+        "PHONE_TYPE_UNSPECIFIED",
+        "PHONE_TYPE_MOBILE",
+        "PHONE_TYPE_FIXED_LINE",
+        "PHONE_TYPE_FIXED_LINE_OR_MOBILE",
+        "PHONE_TYPE_TOLL_FREE",
+        "PHONE_TYPE_PREMIUM_RATE",
+        "PHONE_TYPE_SHARED_COST",
+        "PHONE_TYPE_VOIP",
+        "PHONE_TYPE_PERSONAL_NUMBER",
+        "PHONE_TYPE_PAGER",
+        "PHONE_TYPE_UAN",
+        "PHONE_TYPE_VOICE_MAIL",
+        "PHONE_TYPE_UNKNOWN"
+      ],
+      "default": "PHONE_TYPE_UNSPECIFIED",
+      "description": "PhoneType classifies a parsed phone number by libphonenumber numbering\nrules. Some regions cannot distinguish mobile from fixed line by prefix —\nthose report PHONE_TYPE_FIXED_LINE_OR_MOBILE."
     },
     "v1Pong": {
       "type": "object",
@@ -9093,6 +9524,31 @@
       },
       "description": "RegionCode mirrors messaging.v1.RegionCode (see user.v1-style mirroring:\ntestkit owns its wire types; the mapping layer is a plain field copy)."
     },
+    "v1RegionGroup": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "UN M49, e.g. \"142\" (Asia)"
+        },
+        "parentCode": {
+          "type": "string",
+          "title": "\"\" for top level"
+        },
+        "countryCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "direct members; recurse client-side"
+        },
+        "name": {
+          "type": "string",
+          "title": "e.g. \"亚洲\" / \"Asia\""
+        }
+      },
+      "description": "RegionGroup is one UN M49 node (continent or sub-region). The world root\n(001) is not served; top level (parent_code == \"\") is continents."
+    },
     "v1RegisterRequest": {
       "type": "object",
       "properties": {
@@ -9174,6 +9630,99 @@
       "properties": {
         "reset": {
           "type": "boolean"
+        }
+      }
+    },
+    "v1ResolveCodesRequest": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string"
+        },
+        "countryCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timezoneIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "languageTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "currencyCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "ResolveCodes is the batch by-code lookup across domains — one call serves\na registration form's validate-and-fetch. Timezone ids accept backward\naliases (normalized to canonical). Unresolved inputs land in missing_*;\nthe call itself never errors on unknown codes."
+    },
+    "v1ResolveCodesResponse": {
+      "type": "object",
+      "properties": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Country"
+          }
+        },
+        "timezones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Timezone"
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Language"
+          }
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Currency"
+          }
+        },
+        "missingCountries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missingTimezones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missingLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missingCurrencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataVersion": {
+          "type": "string"
         }
       }
     },
@@ -9802,6 +10351,35 @@
           "format": "date-time"
         }
       }
+    },
+    "v1Timezone": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "canonical, e.g. \"Asia/Shanghai\""
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "backward links, e.g. \"PRC\"; input"
+        },
+        "countryCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "ISO alpha-2 members",
+          "title": "normalization only — never in pickers"
+        },
+        "name": {
+          "type": "string",
+          "title": "CLDR exemplar city in the request locale"
+        }
+      },
+      "description": "Timezone is one canonical IANA zone with its tzdb backward links."
     },
     "v1TokenResponse": {
       "type": "object",

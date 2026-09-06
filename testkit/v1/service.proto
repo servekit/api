@@ -6,6 +6,7 @@ package testkit.v1;
 import "common/v1/pong.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "reference/v1/request_response.proto";
 import "testkit/v1/message.proto";
 import "testkit/v1/request_response.proto";
 
@@ -695,5 +696,40 @@ service TestkitService {
 
   rpc GetAppStats(GetAppStatsRequest) returns (GetAppStatsResponse) {
     option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{slug}/stats"};
+  }
+
+  // ==================== P7 reference-service forwarders ====================
+  //
+  // 1:1 forwards of the reference.v1 contract — same request/response types,
+  // no mirrored DTOs (types import across domains like the user/storage
+  // enums in message.proto). Static data from the module-mode embed; the
+  // pre-login register page keeps its own public /api/v1/region-codes.
+
+  rpc ListCountries(reference.v1.ListCountriesRequest) returns (reference.v1.ListCountriesResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/countries"};
+  }
+  rpc ListTimezones(reference.v1.ListTimezonesRequest) returns (reference.v1.ListTimezonesResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/timezones"};
+  }
+  rpc ListLanguages(reference.v1.ListLanguagesRequest) returns (reference.v1.ListLanguagesResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/languages"};
+  }
+  rpc ListCurrencies(reference.v1.ListCurrenciesRequest) returns (reference.v1.ListCurrenciesResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/currencies"};
+  }
+  rpc ListRegionGroups(reference.v1.ListRegionGroupsRequest) returns (reference.v1.ListRegionGroupsResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/region-groups"};
+  }
+  rpc ParsePhone(reference.v1.ParsePhoneRequest) returns (reference.v1.ParsePhoneResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/reference/phone:parse"
+      body: "*"
+    };
+  }
+  rpc ResolveCodes(reference.v1.ResolveCodesRequest) returns (reference.v1.ResolveCodesResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/reference/codes:resolve"
+      body: "*"
+    };
   }
 }
