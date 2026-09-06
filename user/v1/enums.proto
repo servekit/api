@@ -105,6 +105,18 @@ enum SessionStatus {
   SESSION_STATUS_EXPIRED = 3; // not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap
 }
 
+// AuthTargetType names WHAT the caller tried to authenticate as, so audit
+// rows read like "phone 17000000000" or "username alice" instead of a bare
+// fail reason with no subject.
+enum AuthTargetType {
+  AUTH_TARGET_TYPE_UNSPECIFIED = 0;
+  AUTH_TARGET_USERNAME = 1;
+  AUTH_TARGET_EMAIL = 2;
+  AUTH_TARGET_PHONE = 3;
+  // Social/mini-program logins authenticate by the provider's opaque uid.
+  AUTH_TARGET_OAUTH_UID = 4;
+}
+
 // LoginAction classifies an entry in the login audit log (UserLoginLog.action).
 // Set by user-service at login time — callers never pass this value.
 enum LoginAction {
