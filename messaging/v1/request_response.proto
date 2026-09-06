@@ -302,22 +302,6 @@ message SMSStatsResponse {
 
 // ListSMSRegionsRequest is empty — region sets are low-cardinality and the
 // distinct query is cheap, so callers filter client-side if they need to.
-message ListRegionCodesRequest {}
-
-message ListRegionCodesResponse {
-  repeated RegionCode region_codes = 1;
-}
-
-// RegionCode is one entry of the international dial-code directory.
-message RegionCode {
-  // ISO 3166-1 alpha-2 (e.g. "CN") — the region_code SendSMS expects.
-  string code = 1;
-  // E.164 dial code WITH the leading "+" (e.g. "+86") — display form.
-  string dial_code = 2;
-  string name_zh = 3;
-  string name_en = 4;
-}
-
 message ListSMSRegionsRequest {}
 
 message ListSMSRegionsResponse {

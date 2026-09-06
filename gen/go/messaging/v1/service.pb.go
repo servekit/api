@@ -28,7 +28,7 @@ var File_messaging_v1_service_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1amessaging/v1/service.proto\x12\fmessaging.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1amessaging/v1/message.proto\x1a#messaging/v1/request_response.proto2\xdc\t\n" +
+	"\x1amessaging/v1/service.proto\x12\fmessaging.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1amessaging/v1/message.proto\x1a#messaging/v1/request_response.proto2\xfc\b\n" +
 	"\x0eMessageService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12G\n" +
 	"\tSendEmail\x12\x1e.messaging.v1.SendEmailRequest\x1a\x1a.messaging.v1.SendResponse\x12C\n" +
@@ -42,8 +42,7 @@ const file_messaging_v1_service_proto_rawDesc = "" +
 	"\aListSMS\x12\x1c.messaging.v1.ListSMSRequest\x1a\x1d.messaging.v1.ListSMSResponse\x12^\n" +
 	"\x0fListSMSByCursor\x12$.messaging.v1.ListSMSByCursorRequest\x1a%.messaging.v1.ListSMSByCursorResponse\x12O\n" +
 	"\vGetSMSStats\x12 .messaging.v1.GetSMSStatsRequest\x1a\x1e.messaging.v1.SMSStatsResponse\x12[\n" +
-	"\x0eListSMSRegions\x12#.messaging.v1.ListSMSRegionsRequest\x1a$.messaging.v1.ListSMSRegionsResponse\x12^\n" +
-	"\x0fListRegionCodes\x12$.messaging.v1.ListRegionCodesRequest\x1a%.messaging.v1.ListRegionCodesResponse\x12[\n" +
+	"\x0eListSMSRegions\x12#.messaging.v1.ListSMSRegionsRequest\x1a$.messaging.v1.ListSMSRegionsResponse\x12[\n" +
 	"\x0eListSMSSenders\x12#.messaging.v1.ListSMSSendersRequest\x1a$.messaging.v1.ListSMSSendersResponse\x12a\n" +
 	"\x10ListEmailSenders\x12%.messaging.v1.ListEmailSendersRequest\x1a&.messaging.v1.ListEmailSendersResponseB\xaa\x01\n" +
 	"\x10com.messaging.v1B\fServiceProtoP\x01Z7github.com/servekit/api/gen/go/messaging/v1;messagingv1\xa2\x02\x03MXX\xaa\x02\fMessaging.V1\xca\x02\fMessaging\\V1\xe2\x02\x18Messaging\\V1\\GPBMetadata\xea\x02\rMessaging::V1b\x06proto3"
@@ -61,23 +60,21 @@ var file_messaging_v1_service_proto_goTypes = []any{
 	(*ListSMSByCursorRequest)(nil),     // 9: messaging.v1.ListSMSByCursorRequest
 	(*GetSMSStatsRequest)(nil),         // 10: messaging.v1.GetSMSStatsRequest
 	(*ListSMSRegionsRequest)(nil),      // 11: messaging.v1.ListSMSRegionsRequest
-	(*ListRegionCodesRequest)(nil),     // 12: messaging.v1.ListRegionCodesRequest
-	(*ListSMSSendersRequest)(nil),      // 13: messaging.v1.ListSMSSendersRequest
-	(*ListEmailSendersRequest)(nil),    // 14: messaging.v1.ListEmailSendersRequest
-	(*v1.Pong)(nil),                    // 15: common.v1.Pong
-	(*SendResponse)(nil),               // 16: messaging.v1.SendResponse
-	(*EmailRecord)(nil),                // 17: messaging.v1.EmailRecord
-	(*ListEmailsResponse)(nil),         // 18: messaging.v1.ListEmailsResponse
-	(*ListEmailsByCursorResponse)(nil), // 19: messaging.v1.ListEmailsByCursorResponse
-	(*EmailStatsResponse)(nil),         // 20: messaging.v1.EmailStatsResponse
-	(*SMSRecord)(nil),                  // 21: messaging.v1.SMSRecord
-	(*ListSMSResponse)(nil),            // 22: messaging.v1.ListSMSResponse
-	(*ListSMSByCursorResponse)(nil),    // 23: messaging.v1.ListSMSByCursorResponse
-	(*SMSStatsResponse)(nil),           // 24: messaging.v1.SMSStatsResponse
-	(*ListSMSRegionsResponse)(nil),     // 25: messaging.v1.ListSMSRegionsResponse
-	(*ListRegionCodesResponse)(nil),    // 26: messaging.v1.ListRegionCodesResponse
-	(*ListSMSSendersResponse)(nil),     // 27: messaging.v1.ListSMSSendersResponse
-	(*ListEmailSendersResponse)(nil),   // 28: messaging.v1.ListEmailSendersResponse
+	(*ListSMSSendersRequest)(nil),      // 12: messaging.v1.ListSMSSendersRequest
+	(*ListEmailSendersRequest)(nil),    // 13: messaging.v1.ListEmailSendersRequest
+	(*v1.Pong)(nil),                    // 14: common.v1.Pong
+	(*SendResponse)(nil),               // 15: messaging.v1.SendResponse
+	(*EmailRecord)(nil),                // 16: messaging.v1.EmailRecord
+	(*ListEmailsResponse)(nil),         // 17: messaging.v1.ListEmailsResponse
+	(*ListEmailsByCursorResponse)(nil), // 18: messaging.v1.ListEmailsByCursorResponse
+	(*EmailStatsResponse)(nil),         // 19: messaging.v1.EmailStatsResponse
+	(*SMSRecord)(nil),                  // 20: messaging.v1.SMSRecord
+	(*ListSMSResponse)(nil),            // 21: messaging.v1.ListSMSResponse
+	(*ListSMSByCursorResponse)(nil),    // 22: messaging.v1.ListSMSByCursorResponse
+	(*SMSStatsResponse)(nil),           // 23: messaging.v1.SMSStatsResponse
+	(*ListSMSRegionsResponse)(nil),     // 24: messaging.v1.ListSMSRegionsResponse
+	(*ListSMSSendersResponse)(nil),     // 25: messaging.v1.ListSMSSendersResponse
+	(*ListEmailSendersResponse)(nil),   // 26: messaging.v1.ListEmailSendersResponse
 }
 var file_messaging_v1_service_proto_depIdxs = []int32{
 	0,  // 0: messaging.v1.MessageService.Ping:input_type -> google.protobuf.Empty
@@ -92,26 +89,24 @@ var file_messaging_v1_service_proto_depIdxs = []int32{
 	9,  // 9: messaging.v1.MessageService.ListSMSByCursor:input_type -> messaging.v1.ListSMSByCursorRequest
 	10, // 10: messaging.v1.MessageService.GetSMSStats:input_type -> messaging.v1.GetSMSStatsRequest
 	11, // 11: messaging.v1.MessageService.ListSMSRegions:input_type -> messaging.v1.ListSMSRegionsRequest
-	12, // 12: messaging.v1.MessageService.ListRegionCodes:input_type -> messaging.v1.ListRegionCodesRequest
-	13, // 13: messaging.v1.MessageService.ListSMSSenders:input_type -> messaging.v1.ListSMSSendersRequest
-	14, // 14: messaging.v1.MessageService.ListEmailSenders:input_type -> messaging.v1.ListEmailSendersRequest
-	15, // 15: messaging.v1.MessageService.Ping:output_type -> common.v1.Pong
-	16, // 16: messaging.v1.MessageService.SendEmail:output_type -> messaging.v1.SendResponse
-	16, // 17: messaging.v1.MessageService.SendSMS:output_type -> messaging.v1.SendResponse
-	17, // 18: messaging.v1.MessageService.GetEmail:output_type -> messaging.v1.EmailRecord
-	18, // 19: messaging.v1.MessageService.ListEmails:output_type -> messaging.v1.ListEmailsResponse
-	19, // 20: messaging.v1.MessageService.ListEmailsByCursor:output_type -> messaging.v1.ListEmailsByCursorResponse
-	20, // 21: messaging.v1.MessageService.GetEmailStats:output_type -> messaging.v1.EmailStatsResponse
-	21, // 22: messaging.v1.MessageService.GetSMS:output_type -> messaging.v1.SMSRecord
-	22, // 23: messaging.v1.MessageService.ListSMS:output_type -> messaging.v1.ListSMSResponse
-	23, // 24: messaging.v1.MessageService.ListSMSByCursor:output_type -> messaging.v1.ListSMSByCursorResponse
-	24, // 25: messaging.v1.MessageService.GetSMSStats:output_type -> messaging.v1.SMSStatsResponse
-	25, // 26: messaging.v1.MessageService.ListSMSRegions:output_type -> messaging.v1.ListSMSRegionsResponse
-	26, // 27: messaging.v1.MessageService.ListRegionCodes:output_type -> messaging.v1.ListRegionCodesResponse
-	27, // 28: messaging.v1.MessageService.ListSMSSenders:output_type -> messaging.v1.ListSMSSendersResponse
-	28, // 29: messaging.v1.MessageService.ListEmailSenders:output_type -> messaging.v1.ListEmailSendersResponse
-	15, // [15:30] is the sub-list for method output_type
-	0,  // [0:15] is the sub-list for method input_type
+	12, // 12: messaging.v1.MessageService.ListSMSSenders:input_type -> messaging.v1.ListSMSSendersRequest
+	13, // 13: messaging.v1.MessageService.ListEmailSenders:input_type -> messaging.v1.ListEmailSendersRequest
+	14, // 14: messaging.v1.MessageService.Ping:output_type -> common.v1.Pong
+	15, // 15: messaging.v1.MessageService.SendEmail:output_type -> messaging.v1.SendResponse
+	15, // 16: messaging.v1.MessageService.SendSMS:output_type -> messaging.v1.SendResponse
+	16, // 17: messaging.v1.MessageService.GetEmail:output_type -> messaging.v1.EmailRecord
+	17, // 18: messaging.v1.MessageService.ListEmails:output_type -> messaging.v1.ListEmailsResponse
+	18, // 19: messaging.v1.MessageService.ListEmailsByCursor:output_type -> messaging.v1.ListEmailsByCursorResponse
+	19, // 20: messaging.v1.MessageService.GetEmailStats:output_type -> messaging.v1.EmailStatsResponse
+	20, // 21: messaging.v1.MessageService.GetSMS:output_type -> messaging.v1.SMSRecord
+	21, // 22: messaging.v1.MessageService.ListSMS:output_type -> messaging.v1.ListSMSResponse
+	22, // 23: messaging.v1.MessageService.ListSMSByCursor:output_type -> messaging.v1.ListSMSByCursorResponse
+	23, // 24: messaging.v1.MessageService.GetSMSStats:output_type -> messaging.v1.SMSStatsResponse
+	24, // 25: messaging.v1.MessageService.ListSMSRegions:output_type -> messaging.v1.ListSMSRegionsResponse
+	25, // 26: messaging.v1.MessageService.ListSMSSenders:output_type -> messaging.v1.ListSMSSendersResponse
+	26, // 27: messaging.v1.MessageService.ListEmailSenders:output_type -> messaging.v1.ListEmailSendersResponse
+	14, // [14:28] is the sub-list for method output_type
+	0,  // [0:14] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

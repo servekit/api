@@ -101,11 +101,6 @@ service MessageService {
   // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
   rpc ListSMSRegions(ListSMSRegionsRequest) returns (ListSMSRegionsResponse);
 
-  // ListRegionCodes returns the full international dial-code directory
-  // (ISO 3166-1 alpha-2 + E.164 dial code + display names) — the data source
-  // for region pickers on the business side. Static reference data; no DB.
-  rpc ListRegionCodes(ListRegionCodesRequest) returns (ListRegionCodesResponse);
-
   // ListSMSSenders returns distinct sender_id values across SMS records, for
   // populating frontend filter dropdowns.
   // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
