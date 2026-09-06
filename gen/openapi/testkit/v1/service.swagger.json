@@ -3833,6 +3833,20 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "status",
+            "description": "Optional status filter (see user.v1): ACTIVE = live rows only;\nREVOKED/EXPIRED page the matching tombstones.\n\n - SESSION_STATUS_ACTIVE: in Redis; the sliding window is alive\n - SESSION_STATUS_REVOKED: explicit logout / revoke (revoked_at set)\n - SESSION_STATUS_EXPIRED: not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "SESSION_STATUS_UNSPECIFIED",
+              "SESSION_STATUS_ACTIVE",
+              "SESSION_STATUS_REVOKED",
+              "SESSION_STATUS_EXPIRED"
+            ],
+            "default": "SESSION_STATUS_UNSPECIFIED"
           }
         ],
         "tags": [

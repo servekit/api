@@ -257,6 +257,9 @@ message ListSessionsRequest { // user_id from ctx
     lte: 100
   }];
   string cursor = 2 [(buf.validate.field).string.max_len = 64];
+  // Optional status filter (see user.v1): ACTIVE = live rows only;
+  // REVOKED/EXPIRED page the matching tombstones.
+  user.v1.SessionStatus status = 3 [(buf.validate.field).enum.defined_only = true];
 }
 
 message ListSessionsResponse {

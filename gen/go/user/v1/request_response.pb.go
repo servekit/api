@@ -1625,8 +1625,11 @@ type ListSessionsRequest struct {
 	UserId int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// History pages are cursor-based (created_at descending). The first call
 	// (empty cursor) also returns the LIVE sessions ahead of the history.
-	PageSize      int32  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Cursor        string `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	PageSize int32  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Cursor   string `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	// Optional status filter. ACTIVE returns the live rows only (always the
+	// first page, no cursor); REVOKED/EXPIRED page the matching tombstones.
+	Status        SessionStatus `protobuf:"varint,4,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1680,6 +1683,13 @@ func (x *ListSessionsRequest) GetCursor() string {
 		return x.Cursor
 	}
 	return ""
+}
+
+func (x *ListSessionsRequest) GetStatus() SessionStatus {
+	if x != nil {
+		return x.Status
+	}
+	return SessionStatus_SESSION_STATUS_UNSPECIFIED
 }
 
 type ListSessionsResponse struct {
@@ -5274,11 +5284,12 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
-	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\x80\x01\n" +
+	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xba\x01\n" +
 	"\x13ListSessionsRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12&\n" +
 	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
-	"\x06cursor\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\"e\n" +
+	"\x06cursor\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x128\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x16.user.v1.SessionStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\"e\n" +
 	"\x14ListSessionsResponse\x12,\n" +
 	"\bsessions\x18\x01 \x03(\v2\x10.user.v1.SessionR\bsessions\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -5652,20 +5663,21 @@ var file_user_v1_request_response_proto_goTypes = []any{
 	(*Identity)(nil),                     // 82: user.v1.Identity
 	(VerificationChannel)(0),             // 83: user.v1.VerificationChannel
 	(VerificationPurpose)(0),             // 84: user.v1.VerificationPurpose
-	(*Session)(nil),                      // 85: user.v1.Session
-	(*timestamppb.Timestamp)(nil),        // 86: google.protobuf.Timestamp
-	(UserType)(0),                        // 87: user.v1.UserType
-	(UserStatus)(0),                      // 88: user.v1.UserStatus
-	(DeviceType)(0),                      // 89: user.v1.DeviceType
-	(UserSortField)(0),                   // 90: user.v1.UserSortField
-	(LoginAction)(0),                     // 91: user.v1.LoginAction
-	(*LoginLog)(nil),                     // 92: user.v1.LoginLog
-	(*Group)(nil),                        // 93: user.v1.Group
-	(*GroupMember)(nil),                  // 94: user.v1.GroupMember
-	(*Role)(nil),                         // 95: user.v1.Role
-	(*Permission)(nil),                   // 96: user.v1.Permission
-	(*PermissionGroup)(nil),              // 97: user.v1.PermissionGroup
-	(*UserRole)(nil),                     // 98: user.v1.UserRole
+	(SessionStatus)(0),                   // 85: user.v1.SessionStatus
+	(*Session)(nil),                      // 86: user.v1.Session
+	(*timestamppb.Timestamp)(nil),        // 87: google.protobuf.Timestamp
+	(UserType)(0),                        // 88: user.v1.UserType
+	(UserStatus)(0),                      // 89: user.v1.UserStatus
+	(DeviceType)(0),                      // 90: user.v1.DeviceType
+	(UserSortField)(0),                   // 91: user.v1.UserSortField
+	(LoginAction)(0),                     // 92: user.v1.LoginAction
+	(*LoginLog)(nil),                     // 93: user.v1.LoginLog
+	(*Group)(nil),                        // 94: user.v1.Group
+	(*GroupMember)(nil),                  // 95: user.v1.GroupMember
+	(*Role)(nil),                         // 96: user.v1.Role
+	(*Permission)(nil),                   // 97: user.v1.Permission
+	(*PermissionGroup)(nil),              // 98: user.v1.PermissionGroup
+	(*UserRole)(nil),                     // 99: user.v1.UserRole
 }
 var file_user_v1_request_response_proto_depIdxs = []int32{
 	78, // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
@@ -5682,50 +5694,51 @@ var file_user_v1_request_response_proto_depIdxs = []int32{
 	82, // 11: user.v1.BindOAuthIdentityResponse.identity:type_name -> user.v1.Identity
 	83, // 12: user.v1.SendVerificationCodeRequest.channel:type_name -> user.v1.VerificationChannel
 	84, // 13: user.v1.SendVerificationCodeRequest.purpose:type_name -> user.v1.VerificationPurpose
-	85, // 14: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
-	86, // 15: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
-	86, // 16: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
-	87, // 17: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
-	79, // 18: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
-	80, // 19: user.v1.CreateUserResponse.user:type_name -> user.v1.User
-	88, // 20: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
-	79, // 21: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
-	78, // 22: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
-	89, // 23: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
-	86, // 24: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	86, // 25: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	86, // 26: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	86, // 27: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	87, // 28: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
-	90, // 29: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 30: user.v1.ListUsersResponse.users:type_name -> user.v1.User
-	88, // 31: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
-	79, // 32: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
-	78, // 33: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
-	89, // 34: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
-	87, // 35: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
-	86, // 36: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	86, // 37: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	86, // 38: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	86, // 39: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	90, // 40: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 41: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
-	78, // 42: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	91, // 43: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
-	81, // 44: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
-	92, // 45: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
-	93, // 46: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
-	94, // 47: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
-	95, // 48: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
-	96, // 49: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
-	97, // 50: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
-	95, // 51: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
-	98, // 52: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
-	53, // [53:53] is the sub-list for method output_type
-	53, // [53:53] is the sub-list for method input_type
-	53, // [53:53] is the sub-list for extension type_name
-	53, // [53:53] is the sub-list for extension extendee
-	0,  // [0:53] is the sub-list for field type_name
+	85, // 14: user.v1.ListSessionsRequest.status:type_name -> user.v1.SessionStatus
+	86, // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
+	87, // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
+	87, // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
+	88, // 18: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
+	79, // 19: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
+	80, // 20: user.v1.CreateUserResponse.user:type_name -> user.v1.User
+	89, // 21: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
+	79, // 22: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
+	78, // 23: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
+	90, // 24: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
+	87, // 25: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	87, // 26: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	87, // 27: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	87, // 28: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	88, // 29: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
+	91, // 30: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
+	80, // 31: user.v1.ListUsersResponse.users:type_name -> user.v1.User
+	89, // 32: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
+	79, // 33: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
+	78, // 34: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
+	90, // 35: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
+	88, // 36: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
+	87, // 37: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	87, // 38: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	87, // 39: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	87, // 40: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	91, // 41: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
+	80, // 42: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
+	78, // 43: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
+	92, // 44: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	81, // 45: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	93, // 46: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
+	94, // 47: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
+	95, // 48: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
+	96, // 49: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
+	97, // 50: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
+	98, // 51: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
+	96, // 52: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
+	99, // 53: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
+	54, // [54:54] is the sub-list for method output_type
+	54, // [54:54] is the sub-list for method input_type
+	54, // [54:54] is the sub-list for extension type_name
+	54, // [54:54] is the sub-list for extension extendee
+	0,  // [0:54] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_request_response_proto_init() }
