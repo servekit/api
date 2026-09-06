@@ -305,18 +305,23 @@ func (x *Identity) GetCreatedAt() *timestamppb.Timestamp {
 
 // Session is an active login session for the "manage devices" UI.
 type Session struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Ip            string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
-	DeviceType    v1.DeviceType          `protobuf:"varint,3,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
-	Os            string                 `protobuf:"bytes,4,opt,name=os,proto3" json:"os,omitempty"`
-	Browser       string                 `protobuf:"bytes,5,opt,name=browser,proto3" json:"browser,omitempty"`
-	Country       string                 `protobuf:"bytes,6,opt,name=country,proto3" json:"country,omitempty"`
-	City          string                 `protobuf:"bytes,7,opt,name=city,proto3" json:"city,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	LastActiveAt  *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_active_at,json=lastActiveAt,proto3" json:"last_active_at,omitempty"`
-	Current       bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
-	Status        v1.SessionStatus       `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	Id           string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Ip           string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
+	DeviceType   v1.DeviceType          `protobuf:"varint,3,opt,name=device_type,json=deviceType,proto3,enum=user.v1.DeviceType" json:"device_type,omitempty"`
+	Os           string                 `protobuf:"bytes,4,opt,name=os,proto3" json:"os,omitempty"`
+	Browser      string                 `protobuf:"bytes,5,opt,name=browser,proto3" json:"browser,omitempty"`
+	Country      string                 `protobuf:"bytes,6,opt,name=country,proto3" json:"country,omitempty"`
+	City         string                 `protobuf:"bytes,7,opt,name=city,proto3" json:"city,omitempty"`
+	CreatedAt    *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	LastActiveAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_active_at,json=lastActiveAt,proto3" json:"last_active_at,omitempty"`
+	Current      bool                   `protobuf:"varint,10,opt,name=current,proto3" json:"current,omitempty"`
+	Status       v1.SessionStatus       `protobuf:"varint,11,opt,name=status,proto3,enum=user.v1.SessionStatus" json:"status,omitempty"`
+	// How this session authenticated (see user.v1): LOGIN_METHOD_* for
+	// credential logins, IDENTITY_PROVIDER_* for social/mini-program.
+	LoginMethod   string `protobuf:"bytes,12,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
+	LoginTarget   string `protobuf:"bytes,13,opt,name=login_target,json=loginTarget,proto3" json:"login_target,omitempty"`
+	Device        string `protobuf:"bytes,14,opt,name=device,proto3" json:"device,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -426,6 +431,27 @@ func (x *Session) GetStatus() v1.SessionStatus {
 		return x.Status
 	}
 	return v1.SessionStatus(0)
+}
+
+func (x *Session) GetLoginMethod() string {
+	if x != nil {
+		return x.LoginMethod
+	}
+	return ""
+}
+
+func (x *Session) GetLoginTarget() string {
+	if x != nil {
+		return x.LoginTarget
+	}
+	return ""
+}
+
+func (x *Session) GetDevice() string {
+	if x != nil {
+		return x.Device
+	}
+	return ""
 }
 
 // Group is an organizational unit; members inherit the group's roles.
@@ -4539,7 +4565,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\fprovider_uid\x18\x03 \x01(\tR\vproviderUid\x12\x1a\n" +
 	"\bverified\x18\x04 \x01(\bR\bverified\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x88\x03\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xe6\x03\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02ip\x18\x02 \x01(\tR\x02ip\x12>\n" +
@@ -4554,7 +4580,10 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x0elast_active_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\flastActiveAt\x12\x18\n" +
 	"\acurrent\x18\n" +
 	" \x01(\bR\acurrent\x12.\n" +
-	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\"\x9b\x02\n" +
+	"\x06status\x18\v \x01(\x0e2\x16.user.v1.SessionStatusR\x06status\x12!\n" +
+	"\flogin_method\x18\f \x01(\tR\vloginMethod\x12!\n" +
+	"\flogin_target\x18\r \x01(\tR\vloginTarget\x12\x16\n" +
+	"\x06device\x18\x0e \x01(\tR\x06device\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +

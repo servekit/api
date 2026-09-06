@@ -9506,6 +9506,16 @@
         },
         "status": {
           "$ref": "#/definitions/v1SessionStatus"
+        },
+        "loginMethod": {
+          "type": "string",
+          "description": "How this session authenticated (see user.v1): LOGIN_METHOD_* for\ncredential logins, IDENTITY_PROVIDER_* for social/mini-program."
+        },
+        "loginTarget": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string"
         }
       },
       "description": "Session is an active login session for the \"manage devices\" UI."

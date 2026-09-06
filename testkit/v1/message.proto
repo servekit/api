@@ -66,6 +66,11 @@ message Session {
   google.protobuf.Timestamp last_active_at = 9;
   bool current = 10;
   user.v1.SessionStatus status = 11;
+  // How this session authenticated (see user.v1): LOGIN_METHOD_* for
+  // credential logins, IDENTITY_PROVIDER_* for social/mini-program.
+  string login_method = 12;
+  string login_target = 13;
+  string device = 14;
 }
 
 // Group is an organizational unit; members inherit the group's roles.
