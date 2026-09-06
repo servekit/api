@@ -408,8 +408,9 @@ message ExchangeSessionCodeResponse {
 // session_id: user_id is the primary field for downstream RPCs; expires_at is
 // derived from the Redis TTL at read time; created_at / ip / user_agent / os /
 // browser / login_method come from the Redis session payload (no DB read).
-// last_active_at is intentionally omitted — that field lives in the
-// user_sessions DB table and would force a DB lookup on every BFF request.
+// last_active_at is omitted: for live sessions it derives from the per-user
+// ZSET expiry score (see ListSessions); beyond the live window it is
+// unknowable, so no field would be honest.
 message GetSessionResponse {
   int64 user_id = 1;
   google.protobuf.Timestamp expires_at = 2;

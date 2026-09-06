@@ -594,7 +594,7 @@
     },
     "/api/v1/auth/logout": {
       "post": {
-        "summary": "Logout revokes the caller's current session. session_id is NOT in the\nrequest — it is read from the authenticated context (set by the auth\ninterceptor from the JWT).",
+        "summary": "Logout revokes the caller's current session. session_id is NOT in the\nrequest — it is read from the authenticated context (set by the edge\nauth middleware from the verified session token).",
         "operationId": "Logout",
         "responses": {
           "200": {
@@ -9671,7 +9671,7 @@
           "type": "string"
         }
       },
-      "description": "SocialLoginResponse is the linkd response for all social-login RPCs.\ntoken = testkit-issued JWT (consumes the downstream session_id); session_id\nis ALSO returned so testers can target the session (RevokeSession /\nGetSession) without decoding the JWT."
+      "description": "SocialLoginResponse is the shared response for all social-login RPCs.\ntoken IS the session id; session_id mirrors it for direct targeting\n(RevokeSession / GetSession)."
     },
     "v1SortDirection": {
       "type": "string",
@@ -9723,8 +9723,7 @@
           "$ref": "#/definitions/v1User"
         },
         "sessionId": {
-          "type": "string",
-          "description": "session_id mirrors downstream Login/Register/SocialLogin responses so\ntesters can target a specific session (RevokeSession / GetSession)\nwithout decoding the JWT."
+          "type": "string"
         },
         "isNew": {
           "type": "boolean",
@@ -9735,7 +9734,7 @@
           "description": "return_to: business URL recorded at GetOAuthURL time (OAuth flows only;\nempty for password/code logins)."
         }
       },
-      "description": "TokenResponse is returned by every login-class RPC (Login, Register,\nRefreshSession). It carries the JWT (which embeds session_id internally) plus\nthe curated user. session_id is deliberately NOT surfaced — the frontend\nholds only the token (design spec §5.1/§11)."
+      "description": "TokenResponse is returned by every login-class RPC (Login, Register).\ntoken IS the user-service session id (an opaque session token); session_id\nmirrors it for testers targeting a specific session directly."
     },
     "v1TrialInfo": {
       "type": "object",

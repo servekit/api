@@ -109,16 +109,12 @@ message SendVerificationCodeResponse {
   string captcha_id = 1;
 }
 
-// TokenResponse is returned by every login-class RPC (Login, Register,
-// RefreshSession). It carries the JWT (which embeds session_id internally) plus
-// the curated user. session_id is deliberately NOT surfaced — the frontend
-// holds only the token (design spec §5.1/§11).
+// TokenResponse is returned by every login-class RPC (Login, Register).
+// token IS the user-service session id (an opaque session token); session_id
+// mirrors it for testers targeting a specific session directly.
 message TokenResponse {
   string token = 1;
   User user = 2;
-  // session_id mirrors downstream Login/Register/SocialLogin responses so
-  // testers can target a specific session (RevokeSession / GetSession)
-  // without decoding the JWT.
   string session_id = 3;
   // is_new: this login auto-registered the account (code-login/OAuth paths).
   bool is_new = 4;
@@ -318,9 +314,8 @@ message ExchangeSessionCodeResponse {
 }
 
 // ---- Social (P2) ----
-// All four are public (no caller user_id). SocialLogin / MiniProgram* consume
-// the downstream session_id to issue a testkit JWT — session_id is never
-// surfaced (design spec §5.1).
+// All four are public (no caller user_id). SocialLogin / MiniProgram* return
+// the downstream session id as the bearer token.
 message GetOAuthURLRequest {
   user.v1.IdentityProvider provider = 1 [(buf.validate.field).enum = {
     defined_only: true
@@ -360,10 +355,9 @@ message MiniProgramPhoneLoginRequest {
   string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
 }
 
-// SocialLoginResponse is the linkd response for all social-login RPCs.
-// token = testkit-issued JWT (consumes the downstream session_id); session_id
-// is ALSO returned so testers can target the session (RevokeSession /
-// GetSession) without decoding the JWT.
+// SocialLoginResponse is the shared response for all social-login RPCs.
+// token IS the session id; session_id mirrors it for direct targeting
+// (RevokeSession / GetSession).
 message SocialLoginResponse {
   string token = 1;
   User user = 2;

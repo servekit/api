@@ -469,18 +469,14 @@ func (x *SendVerificationCodeResponse) GetCaptchaId() string {
 	return ""
 }
 
-// TokenResponse is returned by every login-class RPC (Login, Register,
-// RefreshSession). It carries the JWT (which embeds session_id internally) plus
-// the curated user. session_id is deliberately NOT surfaced — the frontend
-// holds only the token (design spec §5.1/§11).
+// TokenResponse is returned by every login-class RPC (Login, Register).
+// token IS the user-service session id (an opaque session token); session_id
+// mirrors it for testers targeting a specific session directly.
 type TokenResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Token string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	User  *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
-	// session_id mirrors downstream Login/Register/SocialLogin responses so
-	// testers can target a specific session (RevokeSession / GetSession)
-	// without decoding the JWT.
-	SessionId string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Token     string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	User      *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	SessionId string                 `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// is_new: this login auto-registered the account (code-login/OAuth paths).
 	IsNew bool `protobuf:"varint,4,opt,name=is_new,json=isNew,proto3" json:"is_new,omitempty"`
 	// return_to: business URL recorded at GetOAuthURL time (OAuth flows only;
@@ -1675,9 +1671,8 @@ func (x *ExchangeSessionCodeResponse) GetUserId() int64 {
 }
 
 // ---- Social (P2) ----
-// All four are public (no caller user_id). SocialLogin / MiniProgram* consume
-// the downstream session_id to issue a testkit JWT — session_id is never
-// surfaced (design spec §5.1).
+// All four are public (no caller user_id). SocialLogin / MiniProgram* return
+// the downstream session id as the bearer token.
 type GetOAuthURLRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Provider      v1.IdentityProvider    `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
@@ -1978,10 +1973,9 @@ func (x *MiniProgramPhoneLoginRequest) GetAvatarUrl() string {
 	return ""
 }
 
-// SocialLoginResponse is the linkd response for all social-login RPCs.
-// token = testkit-issued JWT (consumes the downstream session_id); session_id
-// is ALSO returned so testers can target the session (RevokeSession /
-// GetSession) without decoding the JWT.
+// SocialLoginResponse is the shared response for all social-login RPCs.
+// token IS the session id; session_id mirrors it for direct targeting
+// (RevokeSession / GetSession).
 type SocialLoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`

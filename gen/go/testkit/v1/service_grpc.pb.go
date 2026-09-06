@@ -167,8 +167,8 @@ type TestkitServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	SendVerificationCode(ctx context.Context, in *SendVerificationCodeRequest, opts ...grpc.CallOption) (*SendVerificationCodeResponse, error)
 	// Logout revokes the caller's current session. session_id is NOT in the
-	// request — it is read from the authenticated context (set by the auth
-	// interceptor from the JWT).
+	// request — it is read from the authenticated context (set by the edge
+	// auth middleware from the verified session token).
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ---- Profile (P2) ----
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*User, error)
@@ -1669,8 +1669,8 @@ type TestkitServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*TokenResponse, error)
 	SendVerificationCode(context.Context, *SendVerificationCodeRequest) (*SendVerificationCodeResponse, error)
 	// Logout revokes the caller's current session. session_id is NOT in the
-	// request — it is read from the authenticated context (set by the auth
-	// interceptor from the JWT).
+	// request — it is read from the authenticated context (set by the edge
+	// auth middleware from the verified session token).
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// ---- Profile (P2) ----
 	GetProfile(context.Context, *GetProfileRequest) (*User, error)

@@ -36,8 +36,8 @@ service TestkitService {
   }
 
   // Logout revokes the caller's current session. session_id is NOT in the
-  // request — it is read from the authenticated context (set by the auth
-  // interceptor from the JWT).
+  // request — it is read from the authenticated context (set by the edge
+  // auth middleware from the verified session token).
   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/api/v1/auth/logout"};
   }
