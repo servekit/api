@@ -15,11 +15,13 @@ import "messaging/v1/enums.proto";
 // ---- Apps ----
 
 message CreateAppRequest {
-  // app_key must be a stable slug identifying the calling service
-  // (e.g. "testkit", "user-service"). Unique. Immutable after creation.
-  string app_key = 1 [(buf.validate.field).string = {
-    pattern: "^[a-z][a-z0-9-]{0,63}$"
-  }];
+  // app_key optionally carries a caller-chosen slug (e.g. "testkit").
+  // Empty = the server generates one ("app_" + 8 random chars). Unique and
+  // immutable after creation either way.
+  string app_key = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
+  ];
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200

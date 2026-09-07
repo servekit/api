@@ -8187,12 +8187,18 @@ type SendEmailRequest struct {
 	ReplyTo *EmailAddress          `protobuf:"bytes,4,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
 	// Scene selects the message-service send policy (required).
 	Scene v12.EmailScene `protobuf:"varint,5,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
-	// TemplateParams feed the policy template's {{param}} placeholders.
+	// TemplateParams render {{param}} placeholders — in the policy template
+	// (template mode) or in the free-form content below.
 	TemplateParams map[string]string  `protobuf:"bytes,6,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	IdempotencyKey string             `protobuf:"bytes,7,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	Attachments    []*EmailAttachment `protobuf:"bytes,8,rep,name=attachments,proto3" json:"attachments,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Free-form content: subject non-empty → content comes from these fields
+	// ({{param}} still rendered); subject empty → policy template renders.
+	Subject       string `protobuf:"bytes,9,opt,name=subject,proto3" json:"subject,omitempty"`
+	Body          string `protobuf:"bytes,10,opt,name=body,proto3" json:"body,omitempty"`
+	HtmlBody      string `protobuf:"bytes,11,opt,name=html_body,json=htmlBody,proto3" json:"html_body,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendEmailRequest) Reset() {
@@ -8279,6 +8285,27 @@ func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
 		return x.Attachments
 	}
 	return nil
+}
+
+func (x *SendEmailRequest) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetHtmlBody() string {
+	if x != nil {
+		return x.HtmlBody
+	}
+	return ""
 }
 
 type SendSMSRequest struct {
@@ -14108,7 +14135,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x04logs\x18\x01 \x03(\v2\x19.testkit.v1.AuditLogEntryR\x04logs\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xcb\x04\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x96\x05\n" +
 	"\x10SendEmailRequest\x122\n" +
 	"\x02to\x18\x01 \x03(\v2\x18.testkit.v1.EmailAddressB\b\xbaH\x05\x92\x01\x02\b\x01R\x02to\x12(\n" +
 	"\x02cc\x18\x02 \x03(\v2\x18.testkit.v1.EmailAddressR\x02cc\x12*\n" +
@@ -14117,7 +14144,11 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x05scene\x18\x05 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x12Y\n" +
 	"\x0ftemplate_params\x18\x06 \x03(\v20.testkit.v1.SendEmailRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
 	"\x0fidempotency_key\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12=\n" +
-	"\vattachments\x18\b \x03(\v2\x1b.testkit.v1.EmailAttachmentR\vattachments\x1aA\n" +
+	"\vattachments\x18\b \x03(\v2\x1b.testkit.v1.EmailAttachmentR\vattachments\x12\x18\n" +
+	"\asubject\x18\t \x01(\tR\asubject\x12\x12\n" +
+	"\x04body\x18\n" +
+	" \x01(\tR\x04body\x12\x1b\n" +
+	"\thtml_body\x18\v \x01(\tR\bhtmlBody\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +

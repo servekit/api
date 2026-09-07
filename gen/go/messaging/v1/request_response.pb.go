@@ -51,7 +51,17 @@ type SendEmailRequest struct {
 	// parts; url-only attachments are pure references (caller-managed download
 	// links) whose metadata is persisted for record queries. Mixed lists are
 	// allowed.
-	Attachments   []*EmailAttachment `protobuf:"bytes,8,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	Attachments []*EmailAttachment `protobuf:"bytes,8,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	// Free-form content (dual-mode send): when subject is non-empty, the
+	// email content comes from these fields instead of the policy template
+	// — the console compose page uses this. {{param}} placeholders inside
+	// the free-form content are STILL rendered with template_params. When
+	// subject is empty, template mode applies: the policy template is
+	// rendered and its required params are enforced. Routing (route chain,
+	// quota, idempotency) is identical in both modes.
+	Subject       string `protobuf:"bytes,9,opt,name=subject,proto3" json:"subject,omitempty"`
+	Body          string `protobuf:"bytes,10,opt,name=body,proto3" json:"body,omitempty"`
+	HtmlBody      string `protobuf:"bytes,11,opt,name=html_body,json=htmlBody,proto3" json:"html_body,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -140,6 +150,27 @@ func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
 		return x.Attachments
 	}
 	return nil
+}
+
+func (x *SendEmailRequest) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+func (x *SendEmailRequest) GetHtmlBody() string {
+	if x != nil {
+		return x.HtmlBody
+	}
+	return ""
 }
 
 // SendSMSRequest is the request to send an SMS.
@@ -1601,7 +1632,7 @@ var File_messaging_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\n" +
-	"#messaging/v1/request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\x1a\x1amessaging/v1/message.proto\"\xd7\x04\n" +
+	"#messaging/v1/request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\x1a\x1amessaging/v1/message.proto\"\x8d\x06\n" +
 	"\x10SendEmailRequest\x124\n" +
 	"\x02to\x18\x01 \x03(\v2\x1a.messaging.v1.EmailAddressB\b\xbaH\x05\x92\x01\x02\b\x01R\x02to\x12*\n" +
 	"\x02cc\x18\x02 \x03(\v2\x1a.messaging.v1.EmailAddressR\x02cc\x12,\n" +
@@ -1610,11 +1641,16 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x05scene\x18\x05 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x12[\n" +
 	"\x0ftemplate_params\x18\x06 \x03(\v22.messaging.v1.SendEmailRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
 	"\x0fidempotency_key\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12?\n" +
-	"\vattachments\x18\b \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x1aA\n" +
+	"\vattachments\x18\b \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x12\x18\n" +
+	"\asubject\x18\t \x01(\tR\asubject\x12\x12\n" +
+	"\x04body\x18\n" +
+	" \x01(\tR\x04body\x12\x1b\n" +
+	"\thtml_body\x18\v \x01(\tR\bhtmlBody\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +
-	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xf6\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\xa3\x01\xbaH\x9f\x01\x1a4\n" +
+	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1ag\n" +
+	"\fcontent_pair\x120free-form mode requires body when subject is set\x1a%this.subject == '' || this.body != ''\"\xf6\x02\n" +
 	"\x0eSendSMSRequest\x12+\n" +
 	"\x02to\x18\x01 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$R\x02to\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x12Y\n" +

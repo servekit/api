@@ -7593,7 +7593,7 @@
       "properties": {
         "appKey": {
           "type": "string",
-          "description": "app_key must be a stable slug identifying the calling service\n(e.g. \"testkit\", \"user-service\"). Unique. Immutable after creation."
+          "description": "app_key optionally carries a caller-chosen slug (e.g. \"testkit\").\nEmpty = the server generates one (\"app_\" + 8 random chars). Unique and\nimmutable after creation either way."
         },
         "name": {
           "type": "string"
@@ -12024,7 +12024,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "TemplateParams feed the policy template's {{param}} placeholders."
+          "description": "TemplateParams render {{param}} placeholders — in the policy template\n(template mode) or in the free-form content below."
         },
         "idempotencyKey": {
           "type": "string"
@@ -12035,6 +12035,16 @@
             "type": "object",
             "$ref": "#/definitions/v1EmailAttachment"
           }
+        },
+        "subject": {
+          "type": "string",
+          "description": "Free-form content: subject non-empty → content comes from these fields\n({{param}} still rendered); subject empty → policy template renders."
+        },
+        "body": {
+          "type": "string"
+        },
+        "htmlBody": {
+          "type": "string"
         }
       }
     },

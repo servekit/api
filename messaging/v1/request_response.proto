@@ -37,10 +37,26 @@ message SendEmailRequest {
   // allowed.
   repeated EmailAttachment attachments = 8;
 
+  // Free-form content (dual-mode send): when subject is non-empty, the
+  // email content comes from these fields instead of the policy template
+  // — the console compose page uses this. {{param}} placeholders inside
+  // the free-form content are STILL rendered with template_params. When
+  // subject is empty, template mode applies: the policy template is
+  // rendered and its required params are enforced. Routing (route chain,
+  // quota, idempotency) is identical in both modes.
+  string subject = 9;
+  string body = 10;
+  string html_body = 11;
+
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"
     expression: "this.scene != 0"
+  };
+  option (buf.validate.message).cel = {
+    id: "content_pair"
+    message: "free-form mode requires body when subject is set"
+    expression: "this.subject == '' || this.body != ''"
   };
 }
 

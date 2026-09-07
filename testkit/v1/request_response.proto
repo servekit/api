@@ -1261,10 +1261,16 @@ message SendEmailRequest {
   EmailAddress reply_to = 4;
   // Scene selects the message-service send policy (required).
   messaging.v1.EmailScene scene = 5;
-  // TemplateParams feed the policy template's {{param}} placeholders.
+  // TemplateParams render {{param}} placeholders — in the policy template
+  // (template mode) or in the free-form content below.
   map<string, string> template_params = 6;
   string idempotency_key = 7 [(buf.validate.field).string.max_len = 64];
   repeated EmailAttachment attachments = 8;
+  // Free-form content: subject non-empty → content comes from these fields
+  // ({{param}} still rendered); subject empty → policy template renders.
+  string subject = 9;
+  string body = 10;
+  string html_body = 11;
 
   option (buf.validate.message).cel = {
     id: "scene_required"

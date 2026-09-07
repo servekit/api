@@ -26,8 +26,9 @@ const (
 
 type CreateAppRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key must be a stable slug identifying the calling service
-	// (e.g. "testkit", "user-service"). Unique. Immutable after creation.
+	// app_key optionally carries a caller-chosen slug (e.g. "testkit").
+	// Empty = the server generates one ("app_" + 8 random chars). Unique and
+	// immutable after creation either way.
 	AppKey          string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Name            string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	SmsDailyLimit   int64  `protobuf:"varint,3,opt,name=sms_daily_limit,json=smsDailyLimit,proto3" json:"sms_daily_limit,omitempty"`
@@ -2152,9 +2153,9 @@ var File_messaging_v1_admin_request_response_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\n" +
-	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xbe\x01\n" +
-	"\x10CreateAppRequest\x126\n" +
-	"\aapp_key\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xc1\x01\n" +
+	"\x10CreateAppRequest\x129\n" +
+	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12&\n" +
 	"\x0fsms_daily_limit\x18\x03 \x01(\x03R\rsmsDailyLimit\x12*\n" +
