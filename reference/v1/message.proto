@@ -17,6 +17,11 @@ message Country {
   string example_number = 7; // libphonenumber example, e.g. "+86 138 0013 8000";
                              // "" when the metadata has none — use as a phone
                              // input placeholder / format hint
+  repeated string language_tags = 8; // official languages, most-spoken first
+                                     // (official and de facto official;
+                                     // territories whose CLDR entries carry
+                                     // no official status fall back to plain
+                                     // population ranking — AC/TA -> en)
 }
 
 // Timezone is one canonical IANA zone with its tzdb backward links.
