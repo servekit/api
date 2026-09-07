@@ -211,8 +211,8 @@ func (SmsVendor) EnumDescriptor() ([]byte, []int) {
 }
 
 // EmailScene represents the business purpose of an email. Required on every
-// send. Used for audit, filtering, and stats grouping — NOT for routing
-// (vendor selection is independent of scene).
+// send. Drives policy routing: (app, channel, scene) resolves the send policy
+// (template + ordered provider routes).
 type EmailScene int32
 
 const (
@@ -224,6 +224,7 @@ const (
 	EmailScene_EMAIL_SCENE_BIND_ACCOUNT    EmailScene = 5 // Bind a new email/identity to an account.
 	EmailScene_EMAIL_SCENE_NOTIFICATION    EmailScene = 6 // Generic transactional notification.
 	EmailScene_EMAIL_SCENE_VERIFY_EMAIL    EmailScene = 7 // Verify ownership of an email address.
+	EmailScene_EMAIL_SCENE_TEST            EmailScene = 8 // Ops-console test send (message admin UI).
 )
 
 // Enum value maps for EmailScene.
@@ -237,6 +238,7 @@ var (
 		5: "EMAIL_SCENE_BIND_ACCOUNT",
 		6: "EMAIL_SCENE_NOTIFICATION",
 		7: "EMAIL_SCENE_VERIFY_EMAIL",
+		8: "EMAIL_SCENE_TEST",
 	}
 	EmailScene_value = map[string]int32{
 		"EMAIL_SCENE_UNSPECIFIED":     0,
@@ -247,6 +249,7 @@ var (
 		"EMAIL_SCENE_BIND_ACCOUNT":    5,
 		"EMAIL_SCENE_NOTIFICATION":    6,
 		"EMAIL_SCENE_VERIFY_EMAIL":    7,
+		"EMAIL_SCENE_TEST":            8,
 	}
 )
 
@@ -290,6 +293,7 @@ const (
 	SmsScene_SMS_SCENE_CHANGE_PASSWORD SmsScene = 4 // Confirmation of password change.
 	SmsScene_SMS_SCENE_BIND_ACCOUNT    SmsScene = 5 // Bind a new phone to an account.
 	SmsScene_SMS_SCENE_VERIFY_PHONE    SmsScene = 6 // Verify ownership of a phone number.
+	SmsScene_SMS_SCENE_TEST            SmsScene = 7 // Ops-console test send (message admin UI).
 )
 
 // Enum value maps for SmsScene.
@@ -302,6 +306,7 @@ var (
 		4: "SMS_SCENE_CHANGE_PASSWORD",
 		5: "SMS_SCENE_BIND_ACCOUNT",
 		6: "SMS_SCENE_VERIFY_PHONE",
+		7: "SMS_SCENE_TEST",
 	}
 	SmsScene_value = map[string]int32{
 		"SMS_SCENE_UNSPECIFIED":     0,
@@ -311,6 +316,7 @@ var (
 		"SMS_SCENE_CHANGE_PASSWORD": 4,
 		"SMS_SCENE_BIND_ACCOUNT":    5,
 		"SMS_SCENE_VERIFY_PHONE":    6,
+		"SMS_SCENE_TEST":            7,
 	}
 )
 
@@ -339,6 +345,115 @@ func (x SmsScene) Number() protoreflect.EnumNumber {
 // Deprecated: Use SmsScene.Descriptor instead.
 func (SmsScene) EnumDescriptor() ([]byte, []int) {
 	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{4}
+}
+
+// TemplateChannel selects which send channel a template/policy belongs to.
+type TemplateChannel int32
+
+const (
+	TemplateChannel_TEMPLATE_CHANNEL_UNSPECIFIED TemplateChannel = 0
+	TemplateChannel_TEMPLATE_CHANNEL_EMAIL       TemplateChannel = 1
+	TemplateChannel_TEMPLATE_CHANNEL_SMS         TemplateChannel = 2
+)
+
+// Enum value maps for TemplateChannel.
+var (
+	TemplateChannel_name = map[int32]string{
+		0: "TEMPLATE_CHANNEL_UNSPECIFIED",
+		1: "TEMPLATE_CHANNEL_EMAIL",
+		2: "TEMPLATE_CHANNEL_SMS",
+	}
+	TemplateChannel_value = map[string]int32{
+		"TEMPLATE_CHANNEL_UNSPECIFIED": 0,
+		"TEMPLATE_CHANNEL_EMAIL":       1,
+		"TEMPLATE_CHANNEL_SMS":         2,
+	}
+)
+
+func (x TemplateChannel) Enum() *TemplateChannel {
+	p := new(TemplateChannel)
+	*p = x
+	return p
+}
+
+func (x TemplateChannel) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TemplateChannel) Descriptor() protoreflect.EnumDescriptor {
+	return file_messaging_v1_enums_proto_enumTypes[5].Descriptor()
+}
+
+func (TemplateChannel) Type() protoreflect.EnumType {
+	return &file_messaging_v1_enums_proto_enumTypes[5]
+}
+
+func (x TemplateChannel) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TemplateChannel.Descriptor instead.
+func (TemplateChannel) EnumDescriptor() ([]byte, []int) {
+	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{5}
+}
+
+// TemplateKind selects how template content is stored and rendered.
+type TemplateKind int32
+
+const (
+	TemplateKind_TEMPLATE_KIND_UNSPECIFIED TemplateKind = 0
+	// Email: platform renders subject/text/html with {{param}} substitution.
+	TemplateKind_TEMPLATE_KIND_EMAIL_RENDER TemplateKind = 1
+	// Domestic (CN) SMS: content lives at the vendor — the platform stores the
+	// per-vendor template-code mapping only (regulatory: CN templates must be
+	// pre-registered in each vendor console).
+	TemplateKind_TEMPLATE_KIND_SMS_VENDOR_CODES TemplateKind = 2
+	// International SMS: platform renders raw content with {{param}}
+	// substitution for raw-content vendors.
+	TemplateKind_TEMPLATE_KIND_SMS_CONTENT TemplateKind = 3
+)
+
+// Enum value maps for TemplateKind.
+var (
+	TemplateKind_name = map[int32]string{
+		0: "TEMPLATE_KIND_UNSPECIFIED",
+		1: "TEMPLATE_KIND_EMAIL_RENDER",
+		2: "TEMPLATE_KIND_SMS_VENDOR_CODES",
+		3: "TEMPLATE_KIND_SMS_CONTENT",
+	}
+	TemplateKind_value = map[string]int32{
+		"TEMPLATE_KIND_UNSPECIFIED":      0,
+		"TEMPLATE_KIND_EMAIL_RENDER":     1,
+		"TEMPLATE_KIND_SMS_VENDOR_CODES": 2,
+		"TEMPLATE_KIND_SMS_CONTENT":      3,
+	}
+)
+
+func (x TemplateKind) Enum() *TemplateKind {
+	p := new(TemplateKind)
+	*p = x
+	return p
+}
+
+func (x TemplateKind) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TemplateKind) Descriptor() protoreflect.EnumDescriptor {
+	return file_messaging_v1_enums_proto_enumTypes[6].Descriptor()
+}
+
+func (TemplateKind) Type() protoreflect.EnumType {
+	return &file_messaging_v1_enums_proto_enumTypes[6]
+}
+
+func (x TemplateKind) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TemplateKind.Descriptor instead.
+func (TemplateKind) EnumDescriptor() ([]byte, []int) {
+	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{6}
 }
 
 // SortField selects the column used to order List responses.
@@ -373,11 +488,11 @@ func (x SortField) String() string {
 }
 
 func (SortField) Descriptor() protoreflect.EnumDescriptor {
-	return file_messaging_v1_enums_proto_enumTypes[5].Descriptor()
+	return file_messaging_v1_enums_proto_enumTypes[7].Descriptor()
 }
 
 func (SortField) Type() protoreflect.EnumType {
-	return &file_messaging_v1_enums_proto_enumTypes[5]
+	return &file_messaging_v1_enums_proto_enumTypes[7]
 }
 
 func (x SortField) Number() protoreflect.EnumNumber {
@@ -386,7 +501,7 @@ func (x SortField) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SortField.Descriptor instead.
 func (SortField) EnumDescriptor() ([]byte, []int) {
-	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{5}
+	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{7}
 }
 
 // SortDirection selects ascending or descending order. UNSPECIFIED must be
@@ -424,11 +539,11 @@ func (x SortDirection) String() string {
 }
 
 func (SortDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_messaging_v1_enums_proto_enumTypes[6].Descriptor()
+	return file_messaging_v1_enums_proto_enumTypes[8].Descriptor()
 }
 
 func (SortDirection) Type() protoreflect.EnumType {
-	return &file_messaging_v1_enums_proto_enumTypes[6]
+	return &file_messaging_v1_enums_proto_enumTypes[8]
 }
 
 func (x SortDirection) Number() protoreflect.EnumNumber {
@@ -437,7 +552,7 @@ func (x SortDirection) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SortDirection.Descriptor instead.
 func (SortDirection) EnumDescriptor() ([]byte, []int) {
-	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{6}
+	return file_messaging_v1_enums_proto_rawDescGZIP(), []int{8}
 }
 
 var File_messaging_v1_enums_proto protoreflect.FileDescriptor
@@ -461,7 +576,7 @@ const file_messaging_v1_enums_proto_rawDesc = "" +
 	"\x12SMS_VENDOR_TENCENT\x10\x02\x12\x19\n" +
 	"\x15SMS_VENDOR_VOLCENGINE\x10\x03\x12\x17\n" +
 	"\x13SMS_VENDOR_BYTEPLUS\x10\x04\x12\x15\n" +
-	"\x11SMS_VENDOR_HUAWEI\x10\x05*\xfb\x01\n" +
+	"\x11SMS_VENDOR_HUAWEI\x10\x05*\x91\x02\n" +
 	"\n" +
 	"EmailScene\x12\x1b\n" +
 	"\x17EMAIL_SCENE_UNSPECIFIED\x10\x00\x12\x1a\n" +
@@ -471,7 +586,8 @@ const file_messaging_v1_enums_proto_rawDesc = "" +
 	"\x1bEMAIL_SCENE_CHANGE_PASSWORD\x10\x04\x12\x1c\n" +
 	"\x18EMAIL_SCENE_BIND_ACCOUNT\x10\x05\x12\x1c\n" +
 	"\x18EMAIL_SCENE_NOTIFICATION\x10\x06\x12\x1c\n" +
-	"\x18EMAIL_SCENE_VERIFY_EMAIL\x10\a*\xcd\x01\n" +
+	"\x18EMAIL_SCENE_VERIFY_EMAIL\x10\a\x12\x14\n" +
+	"\x10EMAIL_SCENE_TEST\x10\b*\xe1\x01\n" +
 	"\bSmsScene\x12\x19\n" +
 	"\x15SMS_SCENE_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14SMS_SCENE_LOGIN_CODE\x10\x01\x12\x1d\n" +
@@ -479,7 +595,17 @@ const file_messaging_v1_enums_proto_rawDesc = "" +
 	"\x12SMS_SCENE_REGISTER\x10\x03\x12\x1d\n" +
 	"\x19SMS_SCENE_CHANGE_PASSWORD\x10\x04\x12\x1a\n" +
 	"\x16SMS_SCENE_BIND_ACCOUNT\x10\x05\x12\x1a\n" +
-	"\x16SMS_SCENE_VERIFY_PHONE\x10\x06*B\n" +
+	"\x16SMS_SCENE_VERIFY_PHONE\x10\x06\x12\x12\n" +
+	"\x0eSMS_SCENE_TEST\x10\a*i\n" +
+	"\x0fTemplateChannel\x12 \n" +
+	"\x1cTEMPLATE_CHANNEL_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16TEMPLATE_CHANNEL_EMAIL\x10\x01\x12\x18\n" +
+	"\x14TEMPLATE_CHANNEL_SMS\x10\x02*\x90\x01\n" +
+	"\fTemplateKind\x12\x1d\n" +
+	"\x19TEMPLATE_KIND_UNSPECIFIED\x10\x00\x12\x1e\n" +
+	"\x1aTEMPLATE_KIND_EMAIL_RENDER\x10\x01\x12\"\n" +
+	"\x1eTEMPLATE_KIND_SMS_VENDOR_CODES\x10\x02\x12\x1d\n" +
+	"\x19TEMPLATE_KIND_SMS_CONTENT\x10\x03*B\n" +
 	"\tSortField\x12\x1a\n" +
 	"\x16SORT_FIELD_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SORT_FIELD_CREATED_AT\x10\x01*`\n" +
@@ -502,15 +628,17 @@ func file_messaging_v1_enums_proto_rawDescGZIP() []byte {
 	return file_messaging_v1_enums_proto_rawDescData
 }
 
-var file_messaging_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
+var file_messaging_v1_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
 var file_messaging_v1_enums_proto_goTypes = []any{
-	(MessageStatus)(0), // 0: messaging.v1.MessageStatus
-	(EmailVendor)(0),   // 1: messaging.v1.EmailVendor
-	(SmsVendor)(0),     // 2: messaging.v1.SmsVendor
-	(EmailScene)(0),    // 3: messaging.v1.EmailScene
-	(SmsScene)(0),      // 4: messaging.v1.SmsScene
-	(SortField)(0),     // 5: messaging.v1.SortField
-	(SortDirection)(0), // 6: messaging.v1.SortDirection
+	(MessageStatus)(0),   // 0: messaging.v1.MessageStatus
+	(EmailVendor)(0),     // 1: messaging.v1.EmailVendor
+	(SmsVendor)(0),       // 2: messaging.v1.SmsVendor
+	(EmailScene)(0),      // 3: messaging.v1.EmailScene
+	(SmsScene)(0),        // 4: messaging.v1.SmsScene
+	(TemplateChannel)(0), // 5: messaging.v1.TemplateChannel
+	(TemplateKind)(0),    // 6: messaging.v1.TemplateKind
+	(SortField)(0),       // 7: messaging.v1.SortField
+	(SortDirection)(0),   // 8: messaging.v1.SortDirection
 }
 var file_messaging_v1_enums_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -530,7 +658,7 @@ func file_messaging_v1_enums_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_messaging_v1_enums_proto_rawDesc), len(file_messaging_v1_enums_proto_rawDesc)),
-			NumEnums:      7,
+			NumEnums:      9,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

@@ -1389,65 +1389,20 @@ func (x *UnbindIdentityRequest) GetCode() string {
 	return ""
 }
 
+// SendVerificationCodeRequest carries ONLY the target and intent — all
+// delivery content (templates, signatures, provider routing) is owned by
+// message-service policies configured on its admin surface. user-service
+// sends template_params {"code": <generated code>} and message-service
+// resolves the (app, scene) policy.
 type SendVerificationCodeRequest struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	Email   string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Channel VerificationChannel    `protobuf:"varint,2,opt,name=channel,proto3,enum=user.v1.VerificationChannel" json:"channel,omitempty"`
 	Purpose VerificationPurpose    `protobuf:"varint,3,opt,name=purpose,proto3,enum=user.v1.VerificationPurpose" json:"purpose,omitempty"`
 	// phone is the E.164 international format ("+8613800138000") — the SMS
-	// destination; the destination country (which decides the domestic vs
-	// international vendor path) is derived from it.
-	Phone string `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
-	// sender_id identifies the audit actor triggering this send (user ID,
-	// service name, platform identifier, ...). Required: user-service is
-	// stateless and passes this through to message-service verbatim — it does
-	// not derive, transform, or default the value.
-	SenderId string `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	// SMS delivery — required when channel=SMS. Path is decided by the
-	// destination country parsed from the E.164 phone (mirrors
-	// message-service's routing):
-	//   - destination "CN" (domestic): sms_template_id + sms_code_param_key +
-	//     sign_name are required. Domestic vendors reject raw content for
-	//     regulatory reasons — every SMS must use a vendor pre-registered
-	//     template. sms_code_param_key is the param-name under which the code is
-	//     placed in template_params; the name is fixed at the vendor's template-
-	//     registration time (e.g. "code", "param1", "verify_code") — caller must
-	//     match it. Empty defaults to "code".
-	//   - other destinations (international): caller picks ONE of
-	//     sms_template_id (vendor that requires templates even for intl, e.g.
-	//     Byteplus / Tencent-intl) OR sms_content (vendor that accepts raw
-	//     text, e.g. Aliyun SendMessageToGlobe, Twilio).
-	//
-	// {code} placeholder convention: sms_content may contain the literal
-	// substring "{code}", which user-service replaces with the actual generated
-	// code before forwarding to message-service. If sms_content does NOT
-	// contain "{code}", the substitution is a no-op and the code is silently
-	// dropped — caller's responsibility to include it.
-	SmsTemplateId   string `protobuf:"bytes,7,opt,name=sms_template_id,json=smsTemplateId,proto3" json:"sms_template_id,omitempty"`
-	SmsCodeParamKey string `protobuf:"bytes,8,opt,name=sms_code_param_key,json=smsCodeParamKey,proto3" json:"sms_code_param_key,omitempty"`
-	SmsContent      string `protobuf:"bytes,9,opt,name=sms_content,json=smsContent,proto3" json:"sms_content,omitempty"`
-	// Email delivery — required when channel=EMAIL. email_subject and email_body
-	// are always required; email_html_body is optional.
-	//
-	// When email_html_body is set, message-service sends the email as MIME
-	// multipart/alternative with both representations — HTML-capable clients
-	// (Gmail, Outlook, mobile mail) render the pretty HTML; plain-text-only
-	// clients (terminal mutt, some accessibility tools) fall back to email_body.
-	// When email_html_body is empty, only the plain text body is sent.
-	//
-	// All three fields may use the "{code}" placeholder convention (see
-	// sms_content above): user-service replaces the literal substring "{code}"
-	// with the actual code before forwarding. Missing "{code}" is a no-op —
-	// the code is silently dropped. Typically only email_body / email_html_body
-	// include it; subject rarely does (it's a header).
-	EmailSubject  string `protobuf:"bytes,10,opt,name=email_subject,json=emailSubject,proto3" json:"email_subject,omitempty"`
-	EmailBody     string `protobuf:"bytes,11,opt,name=email_body,json=emailBody,proto3" json:"email_body,omitempty"`
-	EmailHtmlBody string `protobuf:"bytes,13,opt,name=email_html_body,json=emailHtmlBody,proto3" json:"email_html_body,omitempty"`
-	// sign_name is the SMS signature passed through verbatim to message-service
-	// when channel=SMS. Required for CN (domestic) SMS — domestic vendors reject
-	// sends without it. Treated as sender ID for international SMS (vendor- and
-	// region-specific semantics).
-	SignName      string `protobuf:"bytes,12,opt,name=sign_name,json=signName,proto3" json:"sign_name,omitempty"`
+	// destination; the destination country (which decides the CN vs
+	// international route chain) is derived from it.
+	Phone         string `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1506,62 +1461,6 @@ func (x *SendVerificationCodeRequest) GetPurpose() VerificationPurpose {
 func (x *SendVerificationCodeRequest) GetPhone() string {
 	if x != nil {
 		return x.Phone
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetSenderId() string {
-	if x != nil {
-		return x.SenderId
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetSmsTemplateId() string {
-	if x != nil {
-		return x.SmsTemplateId
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetSmsCodeParamKey() string {
-	if x != nil {
-		return x.SmsCodeParamKey
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetSmsContent() string {
-	if x != nil {
-		return x.SmsContent
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetEmailSubject() string {
-	if x != nil {
-		return x.EmailSubject
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetEmailBody() string {
-	if x != nil {
-		return x.EmailBody
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetEmailHtmlBody() string {
-	if x != nil {
-		return x.EmailHtmlBody
-	}
-	return ""
-}
-
-func (x *SendVerificationCodeRequest) GetSignName() string {
-	if x != nil {
-		return x.SignName
 	}
 	return ""
 }
@@ -5294,7 +5193,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12(\n" +
 	"\videntity_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\n" +
 	"identityId\x12\x1b\n" +
-	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\x87\x06\n" +
+	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\xbd\x04\n" +
 	"\x1bSendVerificationCodeRequest\x12#\n" +
 	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12B\n" +
@@ -5302,20 +5201,11 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\achannel\x12B\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x1c.user.v1.VerificationPurposeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\apurpose\x124\n" +
-	"\x05phone\x18\x05 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12'\n" +
-	"\tsender_id\x18\x06 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\bsenderId\x120\n" +
-	"\x0fsms_template_id\x18\a \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\rsmsTemplateId\x124\n" +
-	"\x12sms_code_param_key\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\x0fsmsCodeParamKey\x12)\n" +
-	"\vsms_content\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\bR\n" +
-	"smsContent\x12-\n" +
-	"\remail_subject\x18\n" +
-	" \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\femailSubject\x12(\n" +
-	"\n" +
-	"email_body\x18\v \x01(\tB\t\xbaH\x06r\x04\x18\x80\x80\x01R\temailBody\x121\n" +
-	"\x0femail_html_body\x18\r \x01(\tB\t\xbaH\x06r\x04\x18\x80\x80\x04R\remailHtmlBody\x12$\n" +
-	"\tsign_name\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\bsignName:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
-	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"=\n" +
+	"\x05phone\x18\x05 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')J\x04\b\x06\x10\aJ\x04\b\a\x10\bJ\x04\b\b\x10\tJ\x04\b\t\x10\n" +
+	"J\x04\b\n" +
+	"\x10\vJ\x04\b\v\x10\fJ\x04\b\f\x10\rJ\x04\b\r\x10\x0eR\tsender_idR\x0fsms_template_idR\x12sms_code_param_keyR\vsms_contentR\remail_subjectR\n" +
+	"email_bodyR\x0femail_html_bodyR\tsign_name\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
 	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xba\x01\n" +

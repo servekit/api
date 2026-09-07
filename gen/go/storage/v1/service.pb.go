@@ -29,7 +29,7 @@ var File_storage_v1_service_proto protoreflect.FileDescriptor
 const file_storage_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18storage/v1/service.proto\x12\n" +
-	"storage.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18storage/v1/message.proto\x1a!storage/v1/request_response.proto2\xdb\x15\n" +
+	"storage.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18storage/v1/message.proto\x1a!storage/v1/request_response.proto2\xfe\x1a\n" +
 	"\x0eStorageService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12`\n" +
 	"\x11GenerateUploadURL\x12$.storage.v1.GenerateUploadURLRequest\x1a%.storage.v1.GenerateUploadURLResponse\x12]\n" +
@@ -57,7 +57,14 @@ const file_storage_v1_service_proto_rawDesc = "" +
 	"\rAdminSetQuota\x12 .storage.v1.AdminSetQuotaRequest\x1a\x15.storage.v1.QuotaInfo\x12T\n" +
 	"\rAdminGetStats\x12 .storage.v1.AdminGetStatsRequest\x1a!.storage.v1.AdminGetStatsResponse\x12T\n" +
 	"\x12AdminListProviders\x12\x16.google.protobuf.Empty\x1a&.storage.v1.AdminListProvidersResponse\x12P\n" +
-	"\x10AdminListBuckets\x12\x16.google.protobuf.Empty\x1a$.storage.v1.AdminListBucketsResponse\x12x\n" +
+	"\x10AdminListBuckets\x12\x16.google.protobuf.Empty\x1a$.storage.v1.AdminListBucketsResponse\x12f\n" +
+	"\x13AdminCreateProvider\x12&.storage.v1.AdminCreateProviderRequest\x1a'.storage.v1.AdminCreateProviderResponse\x12f\n" +
+	"\x13AdminUpdateProvider\x12&.storage.v1.AdminUpdateProviderRequest\x1a'.storage.v1.AdminUpdateProviderResponse\x12U\n" +
+	"\x13AdminDeleteProvider\x12&.storage.v1.AdminDeleteProviderRequest\x1a\x16.google.protobuf.Empty\x12`\n" +
+	"\x11AdminUpsertBucket\x12$.storage.v1.AdminUpsertBucketRequest\x1a%.storage.v1.AdminUpsertBucketResponse\x12Q\n" +
+	"\x11AdminDeleteBucket\x12$.storage.v1.AdminDeleteBucketRequest\x1a\x16.google.protobuf.Empty\x12]\n" +
+	"\x10AdminGetSettings\x12#.storage.v1.AdminGetSettingsRequest\x1a$.storage.v1.AdminGetSettingsResponse\x12f\n" +
+	"\x13AdminUpdateSettings\x12&.storage.v1.AdminUpdateSettingsRequest\x1a'.storage.v1.AdminUpdateSettingsResponse\x12x\n" +
 	"\x19AdminSoftDeleteOwnerFiles\x12,.storage.v1.AdminSoftDeleteOwnerFilesRequest\x1a-.storage.v1.AdminSoftDeleteOwnerFilesResponse\x12]\n" +
 	"\x10AdminDeleteOwner\x12#.storage.v1.AdminDeleteOwnerRequest\x1a$.storage.v1.AdminDeleteOwnerResponse\x12Z\n" +
 	"\x0fListMyAuditLogs\x12\".storage.v1.ListMyAuditLogsRequest\x1a#.storage.v1.ListMyAuditLogsResponse\x12c\n" +
@@ -93,36 +100,48 @@ var file_storage_v1_service_proto_goTypes = []any{
 	(*AdminGetQuotaRequest)(nil),              // 21: storage.v1.AdminGetQuotaRequest
 	(*AdminSetQuotaRequest)(nil),              // 22: storage.v1.AdminSetQuotaRequest
 	(*AdminGetStatsRequest)(nil),              // 23: storage.v1.AdminGetStatsRequest
-	(*AdminSoftDeleteOwnerFilesRequest)(nil),  // 24: storage.v1.AdminSoftDeleteOwnerFilesRequest
-	(*AdminDeleteOwnerRequest)(nil),           // 25: storage.v1.AdminDeleteOwnerRequest
-	(*ListMyAuditLogsRequest)(nil),            // 26: storage.v1.ListMyAuditLogsRequest
-	(*AdminListAuditLogsRequest)(nil),         // 27: storage.v1.AdminListAuditLogsRequest
-	(*SetOwnerQuotaRequest)(nil),              // 28: storage.v1.SetOwnerQuotaRequest
-	(*AddOwnerQuotaRequest)(nil),              // 29: storage.v1.AddOwnerQuotaRequest
-	(*v1.Pong)(nil),                           // 30: common.v1.Pong
-	(*GenerateUploadURLResponse)(nil),         // 31: storage.v1.GenerateUploadURLResponse
-	(*GetSTSCredentialResponse)(nil),          // 32: storage.v1.GetSTSCredentialResponse
-	(*BatchGetSTSCredentialResponse)(nil),     // 33: storage.v1.BatchGetSTSCredentialResponse
-	(*ConfirmUploadResponse)(nil),             // 34: storage.v1.ConfirmUploadResponse
-	(*GenerateDownloadURLResponse)(nil),       // 35: storage.v1.GenerateDownloadURLResponse
-	(*CreateFileLinkResponse)(nil),            // 36: storage.v1.CreateFileLinkResponse
-	(*GetFileLinkDownloadResponse)(nil),       // 37: storage.v1.GetFileLinkDownloadResponse
-	(*ListMyFilesResponse)(nil),               // 38: storage.v1.ListMyFilesResponse
-	(*ListMyFilesPagedResponse)(nil),          // 39: storage.v1.ListMyFilesPagedResponse
-	(*UserFileInfo)(nil),                      // 40: storage.v1.UserFileInfo
-	(*BatchDeleteMyFilesResponse)(nil),        // 41: storage.v1.BatchDeleteMyFilesResponse
-	(*GenerateProcessURLResponse)(nil),        // 42: storage.v1.GenerateProcessURLResponse
-	(*GenerateCDNURLResponse)(nil),            // 43: storage.v1.GenerateCDNURLResponse
-	(*QuotaInfo)(nil),                         // 44: storage.v1.QuotaInfo
-	(*AdminListFilesResponse)(nil),            // 45: storage.v1.AdminListFilesResponse
-	(*AdminFileInfo)(nil),                     // 46: storage.v1.AdminFileInfo
-	(*AdminGetStatsResponse)(nil),             // 47: storage.v1.AdminGetStatsResponse
-	(*AdminListProvidersResponse)(nil),        // 48: storage.v1.AdminListProvidersResponse
-	(*AdminListBucketsResponse)(nil),          // 49: storage.v1.AdminListBucketsResponse
-	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 50: storage.v1.AdminSoftDeleteOwnerFilesResponse
-	(*AdminDeleteOwnerResponse)(nil),          // 51: storage.v1.AdminDeleteOwnerResponse
-	(*ListMyAuditLogsResponse)(nil),           // 52: storage.v1.ListMyAuditLogsResponse
-	(*AdminListAuditLogsResponse)(nil),        // 53: storage.v1.AdminListAuditLogsResponse
+	(*AdminCreateProviderRequest)(nil),        // 24: storage.v1.AdminCreateProviderRequest
+	(*AdminUpdateProviderRequest)(nil),        // 25: storage.v1.AdminUpdateProviderRequest
+	(*AdminDeleteProviderRequest)(nil),        // 26: storage.v1.AdminDeleteProviderRequest
+	(*AdminUpsertBucketRequest)(nil),          // 27: storage.v1.AdminUpsertBucketRequest
+	(*AdminDeleteBucketRequest)(nil),          // 28: storage.v1.AdminDeleteBucketRequest
+	(*AdminGetSettingsRequest)(nil),           // 29: storage.v1.AdminGetSettingsRequest
+	(*AdminUpdateSettingsRequest)(nil),        // 30: storage.v1.AdminUpdateSettingsRequest
+	(*AdminSoftDeleteOwnerFilesRequest)(nil),  // 31: storage.v1.AdminSoftDeleteOwnerFilesRequest
+	(*AdminDeleteOwnerRequest)(nil),           // 32: storage.v1.AdminDeleteOwnerRequest
+	(*ListMyAuditLogsRequest)(nil),            // 33: storage.v1.ListMyAuditLogsRequest
+	(*AdminListAuditLogsRequest)(nil),         // 34: storage.v1.AdminListAuditLogsRequest
+	(*SetOwnerQuotaRequest)(nil),              // 35: storage.v1.SetOwnerQuotaRequest
+	(*AddOwnerQuotaRequest)(nil),              // 36: storage.v1.AddOwnerQuotaRequest
+	(*v1.Pong)(nil),                           // 37: common.v1.Pong
+	(*GenerateUploadURLResponse)(nil),         // 38: storage.v1.GenerateUploadURLResponse
+	(*GetSTSCredentialResponse)(nil),          // 39: storage.v1.GetSTSCredentialResponse
+	(*BatchGetSTSCredentialResponse)(nil),     // 40: storage.v1.BatchGetSTSCredentialResponse
+	(*ConfirmUploadResponse)(nil),             // 41: storage.v1.ConfirmUploadResponse
+	(*GenerateDownloadURLResponse)(nil),       // 42: storage.v1.GenerateDownloadURLResponse
+	(*CreateFileLinkResponse)(nil),            // 43: storage.v1.CreateFileLinkResponse
+	(*GetFileLinkDownloadResponse)(nil),       // 44: storage.v1.GetFileLinkDownloadResponse
+	(*ListMyFilesResponse)(nil),               // 45: storage.v1.ListMyFilesResponse
+	(*ListMyFilesPagedResponse)(nil),          // 46: storage.v1.ListMyFilesPagedResponse
+	(*UserFileInfo)(nil),                      // 47: storage.v1.UserFileInfo
+	(*BatchDeleteMyFilesResponse)(nil),        // 48: storage.v1.BatchDeleteMyFilesResponse
+	(*GenerateProcessURLResponse)(nil),        // 49: storage.v1.GenerateProcessURLResponse
+	(*GenerateCDNURLResponse)(nil),            // 50: storage.v1.GenerateCDNURLResponse
+	(*QuotaInfo)(nil),                         // 51: storage.v1.QuotaInfo
+	(*AdminListFilesResponse)(nil),            // 52: storage.v1.AdminListFilesResponse
+	(*AdminFileInfo)(nil),                     // 53: storage.v1.AdminFileInfo
+	(*AdminGetStatsResponse)(nil),             // 54: storage.v1.AdminGetStatsResponse
+	(*AdminListProvidersResponse)(nil),        // 55: storage.v1.AdminListProvidersResponse
+	(*AdminListBucketsResponse)(nil),          // 56: storage.v1.AdminListBucketsResponse
+	(*AdminCreateProviderResponse)(nil),       // 57: storage.v1.AdminCreateProviderResponse
+	(*AdminUpdateProviderResponse)(nil),       // 58: storage.v1.AdminUpdateProviderResponse
+	(*AdminUpsertBucketResponse)(nil),         // 59: storage.v1.AdminUpsertBucketResponse
+	(*AdminGetSettingsResponse)(nil),          // 60: storage.v1.AdminGetSettingsResponse
+	(*AdminUpdateSettingsResponse)(nil),       // 61: storage.v1.AdminUpdateSettingsResponse
+	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 62: storage.v1.AdminSoftDeleteOwnerFilesResponse
+	(*AdminDeleteOwnerResponse)(nil),          // 63: storage.v1.AdminDeleteOwnerResponse
+	(*ListMyAuditLogsResponse)(nil),           // 64: storage.v1.ListMyAuditLogsResponse
+	(*AdminListAuditLogsResponse)(nil),        // 65: storage.v1.AdminListAuditLogsResponse
 }
 var file_storage_v1_service_proto_depIdxs = []int32{
 	0,  // 0: storage.v1.StorageService.Ping:input_type -> google.protobuf.Empty
@@ -151,46 +170,60 @@ var file_storage_v1_service_proto_depIdxs = []int32{
 	23, // 23: storage.v1.StorageService.AdminGetStats:input_type -> storage.v1.AdminGetStatsRequest
 	0,  // 24: storage.v1.StorageService.AdminListProviders:input_type -> google.protobuf.Empty
 	0,  // 25: storage.v1.StorageService.AdminListBuckets:input_type -> google.protobuf.Empty
-	24, // 26: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:input_type -> storage.v1.AdminSoftDeleteOwnerFilesRequest
-	25, // 27: storage.v1.StorageService.AdminDeleteOwner:input_type -> storage.v1.AdminDeleteOwnerRequest
-	26, // 28: storage.v1.StorageService.ListMyAuditLogs:input_type -> storage.v1.ListMyAuditLogsRequest
-	27, // 29: storage.v1.StorageService.AdminListAuditLogs:input_type -> storage.v1.AdminListAuditLogsRequest
-	28, // 30: storage.v1.StorageService.SetOwnerQuota:input_type -> storage.v1.SetOwnerQuotaRequest
-	29, // 31: storage.v1.StorageService.AddOwnerQuota:input_type -> storage.v1.AddOwnerQuotaRequest
-	30, // 32: storage.v1.StorageService.Ping:output_type -> common.v1.Pong
-	31, // 33: storage.v1.StorageService.GenerateUploadURL:output_type -> storage.v1.GenerateUploadURLResponse
-	32, // 34: storage.v1.StorageService.GetSTSCredential:output_type -> storage.v1.GetSTSCredentialResponse
-	33, // 35: storage.v1.StorageService.BatchGetSTSCredential:output_type -> storage.v1.BatchGetSTSCredentialResponse
-	34, // 36: storage.v1.StorageService.ConfirmUpload:output_type -> storage.v1.ConfirmUploadResponse
-	0,  // 37: storage.v1.StorageService.CancelUpload:output_type -> google.protobuf.Empty
-	35, // 38: storage.v1.StorageService.GenerateDownloadURL:output_type -> storage.v1.GenerateDownloadURLResponse
-	36, // 39: storage.v1.StorageService.CreateFileLink:output_type -> storage.v1.CreateFileLinkResponse
-	37, // 40: storage.v1.StorageService.GetFileLinkDownload:output_type -> storage.v1.GetFileLinkDownloadResponse
-	38, // 41: storage.v1.StorageService.ListMyFiles:output_type -> storage.v1.ListMyFilesResponse
-	39, // 42: storage.v1.StorageService.ListMyFilesPaged:output_type -> storage.v1.ListMyFilesPagedResponse
-	40, // 43: storage.v1.StorageService.GetMyFile:output_type -> storage.v1.UserFileInfo
-	40, // 44: storage.v1.StorageService.UpdateMyFile:output_type -> storage.v1.UserFileInfo
-	0,  // 45: storage.v1.StorageService.DeleteMyFile:output_type -> google.protobuf.Empty
-	41, // 46: storage.v1.StorageService.BatchDeleteMyFiles:output_type -> storage.v1.BatchDeleteMyFilesResponse
-	42, // 47: storage.v1.StorageService.GenerateProcessURL:output_type -> storage.v1.GenerateProcessURLResponse
-	43, // 48: storage.v1.StorageService.GenerateCDNURL:output_type -> storage.v1.GenerateCDNURLResponse
-	44, // 49: storage.v1.StorageService.GetMyQuota:output_type -> storage.v1.QuotaInfo
-	45, // 50: storage.v1.StorageService.AdminListFiles:output_type -> storage.v1.AdminListFilesResponse
-	46, // 51: storage.v1.StorageService.AdminGetFile:output_type -> storage.v1.AdminFileInfo
-	0,  // 52: storage.v1.StorageService.AdminDeleteFile:output_type -> google.protobuf.Empty
-	44, // 53: storage.v1.StorageService.AdminGetQuota:output_type -> storage.v1.QuotaInfo
-	44, // 54: storage.v1.StorageService.AdminSetQuota:output_type -> storage.v1.QuotaInfo
-	47, // 55: storage.v1.StorageService.AdminGetStats:output_type -> storage.v1.AdminGetStatsResponse
-	48, // 56: storage.v1.StorageService.AdminListProviders:output_type -> storage.v1.AdminListProvidersResponse
-	49, // 57: storage.v1.StorageService.AdminListBuckets:output_type -> storage.v1.AdminListBucketsResponse
-	50, // 58: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:output_type -> storage.v1.AdminSoftDeleteOwnerFilesResponse
-	51, // 59: storage.v1.StorageService.AdminDeleteOwner:output_type -> storage.v1.AdminDeleteOwnerResponse
-	52, // 60: storage.v1.StorageService.ListMyAuditLogs:output_type -> storage.v1.ListMyAuditLogsResponse
-	53, // 61: storage.v1.StorageService.AdminListAuditLogs:output_type -> storage.v1.AdminListAuditLogsResponse
-	44, // 62: storage.v1.StorageService.SetOwnerQuota:output_type -> storage.v1.QuotaInfo
-	44, // 63: storage.v1.StorageService.AddOwnerQuota:output_type -> storage.v1.QuotaInfo
-	32, // [32:64] is the sub-list for method output_type
-	0,  // [0:32] is the sub-list for method input_type
+	24, // 26: storage.v1.StorageService.AdminCreateProvider:input_type -> storage.v1.AdminCreateProviderRequest
+	25, // 27: storage.v1.StorageService.AdminUpdateProvider:input_type -> storage.v1.AdminUpdateProviderRequest
+	26, // 28: storage.v1.StorageService.AdminDeleteProvider:input_type -> storage.v1.AdminDeleteProviderRequest
+	27, // 29: storage.v1.StorageService.AdminUpsertBucket:input_type -> storage.v1.AdminUpsertBucketRequest
+	28, // 30: storage.v1.StorageService.AdminDeleteBucket:input_type -> storage.v1.AdminDeleteBucketRequest
+	29, // 31: storage.v1.StorageService.AdminGetSettings:input_type -> storage.v1.AdminGetSettingsRequest
+	30, // 32: storage.v1.StorageService.AdminUpdateSettings:input_type -> storage.v1.AdminUpdateSettingsRequest
+	31, // 33: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:input_type -> storage.v1.AdminSoftDeleteOwnerFilesRequest
+	32, // 34: storage.v1.StorageService.AdminDeleteOwner:input_type -> storage.v1.AdminDeleteOwnerRequest
+	33, // 35: storage.v1.StorageService.ListMyAuditLogs:input_type -> storage.v1.ListMyAuditLogsRequest
+	34, // 36: storage.v1.StorageService.AdminListAuditLogs:input_type -> storage.v1.AdminListAuditLogsRequest
+	35, // 37: storage.v1.StorageService.SetOwnerQuota:input_type -> storage.v1.SetOwnerQuotaRequest
+	36, // 38: storage.v1.StorageService.AddOwnerQuota:input_type -> storage.v1.AddOwnerQuotaRequest
+	37, // 39: storage.v1.StorageService.Ping:output_type -> common.v1.Pong
+	38, // 40: storage.v1.StorageService.GenerateUploadURL:output_type -> storage.v1.GenerateUploadURLResponse
+	39, // 41: storage.v1.StorageService.GetSTSCredential:output_type -> storage.v1.GetSTSCredentialResponse
+	40, // 42: storage.v1.StorageService.BatchGetSTSCredential:output_type -> storage.v1.BatchGetSTSCredentialResponse
+	41, // 43: storage.v1.StorageService.ConfirmUpload:output_type -> storage.v1.ConfirmUploadResponse
+	0,  // 44: storage.v1.StorageService.CancelUpload:output_type -> google.protobuf.Empty
+	42, // 45: storage.v1.StorageService.GenerateDownloadURL:output_type -> storage.v1.GenerateDownloadURLResponse
+	43, // 46: storage.v1.StorageService.CreateFileLink:output_type -> storage.v1.CreateFileLinkResponse
+	44, // 47: storage.v1.StorageService.GetFileLinkDownload:output_type -> storage.v1.GetFileLinkDownloadResponse
+	45, // 48: storage.v1.StorageService.ListMyFiles:output_type -> storage.v1.ListMyFilesResponse
+	46, // 49: storage.v1.StorageService.ListMyFilesPaged:output_type -> storage.v1.ListMyFilesPagedResponse
+	47, // 50: storage.v1.StorageService.GetMyFile:output_type -> storage.v1.UserFileInfo
+	47, // 51: storage.v1.StorageService.UpdateMyFile:output_type -> storage.v1.UserFileInfo
+	0,  // 52: storage.v1.StorageService.DeleteMyFile:output_type -> google.protobuf.Empty
+	48, // 53: storage.v1.StorageService.BatchDeleteMyFiles:output_type -> storage.v1.BatchDeleteMyFilesResponse
+	49, // 54: storage.v1.StorageService.GenerateProcessURL:output_type -> storage.v1.GenerateProcessURLResponse
+	50, // 55: storage.v1.StorageService.GenerateCDNURL:output_type -> storage.v1.GenerateCDNURLResponse
+	51, // 56: storage.v1.StorageService.GetMyQuota:output_type -> storage.v1.QuotaInfo
+	52, // 57: storage.v1.StorageService.AdminListFiles:output_type -> storage.v1.AdminListFilesResponse
+	53, // 58: storage.v1.StorageService.AdminGetFile:output_type -> storage.v1.AdminFileInfo
+	0,  // 59: storage.v1.StorageService.AdminDeleteFile:output_type -> google.protobuf.Empty
+	51, // 60: storage.v1.StorageService.AdminGetQuota:output_type -> storage.v1.QuotaInfo
+	51, // 61: storage.v1.StorageService.AdminSetQuota:output_type -> storage.v1.QuotaInfo
+	54, // 62: storage.v1.StorageService.AdminGetStats:output_type -> storage.v1.AdminGetStatsResponse
+	55, // 63: storage.v1.StorageService.AdminListProviders:output_type -> storage.v1.AdminListProvidersResponse
+	56, // 64: storage.v1.StorageService.AdminListBuckets:output_type -> storage.v1.AdminListBucketsResponse
+	57, // 65: storage.v1.StorageService.AdminCreateProvider:output_type -> storage.v1.AdminCreateProviderResponse
+	58, // 66: storage.v1.StorageService.AdminUpdateProvider:output_type -> storage.v1.AdminUpdateProviderResponse
+	0,  // 67: storage.v1.StorageService.AdminDeleteProvider:output_type -> google.protobuf.Empty
+	59, // 68: storage.v1.StorageService.AdminUpsertBucket:output_type -> storage.v1.AdminUpsertBucketResponse
+	0,  // 69: storage.v1.StorageService.AdminDeleteBucket:output_type -> google.protobuf.Empty
+	60, // 70: storage.v1.StorageService.AdminGetSettings:output_type -> storage.v1.AdminGetSettingsResponse
+	61, // 71: storage.v1.StorageService.AdminUpdateSettings:output_type -> storage.v1.AdminUpdateSettingsResponse
+	62, // 72: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:output_type -> storage.v1.AdminSoftDeleteOwnerFilesResponse
+	63, // 73: storage.v1.StorageService.AdminDeleteOwner:output_type -> storage.v1.AdminDeleteOwnerResponse
+	64, // 74: storage.v1.StorageService.ListMyAuditLogs:output_type -> storage.v1.ListMyAuditLogsResponse
+	65, // 75: storage.v1.StorageService.AdminListAuditLogs:output_type -> storage.v1.AdminListAuditLogsResponse
+	51, // 76: storage.v1.StorageService.SetOwnerQuota:output_type -> storage.v1.QuotaInfo
+	51, // 77: storage.v1.StorageService.AddOwnerQuota:output_type -> storage.v1.QuotaInfo
+	39, // [39:78] is the sub-list for method output_type
+	0,  // [0:39] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

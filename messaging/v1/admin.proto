@@ -1,0 +1,260 @@
+// Messaging admin entities — the platform resource model managed via
+// MessageAdminService (see admin_service.proto). These are internal-network
+// trusted RPCs; the enforcement point for human access is the gateway
+// (testkit) with its login / future RBAC + rules engine.
+syntax = "proto3";
+
+package messaging.v1;
+
+import "buf/validate/validate.proto";
+import "messaging/v1/enums.proto";
+
+// MessageAppInfo is a registered calling application (the x-app-key
+// identity). Apps own policies; quotas and idempotency namespaces hang off
+// the app_key.
+message MessageAppInfo {
+  int64 id = 1;
+  // app_key is the public credential identifier passed in x-app-key
+  // metadata (e.g. "testkit"). Unique.
+  string app_key = 2;
+  string name = 3;
+  // disabled apps fail every send with ErrAppUnauthorized.
+  bool disabled = 4;
+  // Daily send-attempt caps (0 = unlimited). Counts attempts, not
+  // deliveries; protects vendor accounts from runaway loops.
+  int64 sms_daily_limit = 5;
+  int64 email_daily_limit = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+}
+
+// ---- Channel accounts (platform-level vendor credentials) ----
+
+// AliyunSmsCredentials configures an Aliyun SMS account.
+message AliyunSmsCredentials {
+  string access_key_id = 1 [(buf.validate.field).string.min_len = 1];
+  string access_key_secret = 2 [(buf.validate.field).string.min_len = 1];
+  // region_id defaults to "cn-hangzhou" server-side when empty.
+  string region_id = 3;
+}
+
+// TencentSmsCredentials configures a Tencent Cloud SMS account.
+message TencentSmsCredentials {
+  string secret_id = 1 [(buf.validate.field).string.min_len = 1];
+  string secret_key = 2 [(buf.validate.field).string.min_len = 1];
+  string sms_sdk_app_id = 3 [(buf.validate.field).string.min_len = 1];
+  // region defaults to "ap-guangzhou" server-side when empty.
+  string region = 4;
+  // endpoint is optional (e.g. a dedicated intl endpoint).
+  string endpoint = 5;
+}
+
+// VolcengineSmsCredentials configures a Volcengine SMS account.
+message VolcengineSmsCredentials {
+  string access_key = 1 [(buf.validate.field).string.min_len = 1];
+  string secret_key = 2 [(buf.validate.field).string.min_len = 1];
+  string sms_account = 3 [(buf.validate.field).string.min_len = 1];
+  // region defaults to "cn-north-1" server-side when empty.
+  string region = 4;
+}
+
+// ByteplusSmsCredentials configures a Byteplus (intl) SMS account.
+message ByteplusSmsCredentials {
+  string access_key = 1 [(buf.validate.field).string.min_len = 1];
+  string secret_key = 2 [(buf.validate.field).string.min_len = 1];
+  string sms_account = 3 [(buf.validate.field).string.min_len = 1];
+  // region defaults to "ap-singapore-1" server-side when empty.
+  string region = 4;
+}
+
+// HuaweiSmsCredentials configures a Huawei Cloud SMS account.
+message HuaweiSmsCredentials {
+  string app_key = 1 [(buf.validate.field).string.min_len = 1];
+  string app_secret = 2 [(buf.validate.field).string.min_len = 1];
+  // sign is the default signature bound to the Huawei app (Huawei carries
+  // the sign on the account, not per request).
+  string sign = 3 [(buf.validate.field).string.min_len = 1];
+  // endpoint defaults to
+  // "https://smsapi.cn-north-4.myhuaweicloud.com" server-side when empty.
+  string endpoint = 4;
+  string region = 5;
+}
+
+// SmtpEmailCredentials configures an SMTP email account. brand is an audit
+// label (which ESP the mailbox belongs to); transport is always SMTP.
+message SmtpEmailCredentials {
+  EmailVendor brand = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string host = 2 [(buf.validate.field).string.min_len = 1];
+  // port defaults to 587 server-side when zero.
+  int32 port = 3;
+  string username = 4 [(buf.validate.field).string.min_len = 1];
+  string password = 5 [(buf.validate.field).string.min_len = 1];
+  string from_address = 6 [(buf.validate.field).string.email = true];
+}
+
+// ChannelAccountCredentials carries the per-vendor credential set. Exactly
+// one arm is set; the vendor enum is implied by the arm. Secret fields
+// (keys/passwords) are echoed EMPTY on read — they are write-only.
+message ChannelAccountCredentials {
+  oneof credentials {
+    AliyunSmsCredentials aliyun_sms = 1;
+    TencentSmsCredentials tencent_sms = 2;
+    VolcengineSmsCredentials volcengine_sms = 3;
+    ByteplusSmsCredentials byteplus_sms = 4;
+    HuaweiSmsCredentials huawei_sms = 5;
+    SmtpEmailCredentials smtp = 6;
+  }
+}
+
+// ChannelAccountInfo is a vendor account in the platform channel pool.
+message ChannelAccountInfo {
+  int64 id = 1;
+  // name uniquely identifies the account (referenced by policies), e.g.
+  // "aliyun-main". Unique across all vendors.
+  string name = 2;
+  bool disabled = 3;
+  string remark = 4;
+  // vendor is derived from the credentials oneof; echoed for convenience.
+  oneof vendor {
+    SmsVendor sms_vendor = 5;
+    EmailVendor email_vendor = 6;
+  }
+  // credentials with secret fields EMPTY on read.
+  ChannelAccountCredentials credentials = 7;
+  int64 created_at = 8;
+  int64 updated_at = 9;
+}
+
+// ---- Signatures ----
+
+// SignatureInfo is an SMS signature (CN) / sender ID (intl), with the
+// accounts it has been pre-registered on (报备). A signature may only be
+// used with a bound account in a policy route.
+message SignatureInfo {
+  int64 id = 1;
+  // name is the signature string itself (e.g. "XX科技") or the intl
+  // sender ID (e.g. "MyApp"). Unique.
+  string name = 2;
+  bool disabled = 3;
+  string remark = 4;
+  // account_ids lists the channel accounts this signature is registered on.
+  repeated int64 account_ids = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+// ---- Templates ----
+
+// TemplateParamSpec declares one {{param}} placeholder of a template.
+message TemplateParamSpec {
+  string name = 1 [(buf.validate.field).string.pattern = "^[a-zA-Z][a-zA-Z0-9_]{0,63}$"];
+  // required params must be present in template_params on every send.
+  bool required = 2;
+  string description = 3;
+}
+
+// EmailTemplateContent is the EMAIL_RENDER template body. All three fields
+// support {{param}} substitution. html_body optional (plain-text-only send
+// when empty).
+message EmailTemplateContent {
+  string subject = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  string text_body = 2 [(buf.validate.field).string.min_len = 1];
+  string html_body = 3 [(buf.validate.field).string.max_len = 65536];
+}
+
+// VendorTemplateCode maps the template to one vendor's pre-registered
+// template code (CN domestic: codes live in each vendor console).
+message VendorTemplateCode {
+  SmsVendor vendor = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string template_code = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+// SmsVendorCodesContent is the SMS_VENDOR_CODES template body: the
+// per-vendor code mapping. The params spec still applies — the same params
+// feed every vendor's template.
+message SmsVendorCodesContent {
+  repeated VendorTemplateCode codes = 1 [(buf.validate.field).repeated.min_items = 1];
+}
+
+// SmsContentTemplate is the SMS_CONTENT template body (intl raw-content
+// vendors), rendered platform-side with {{param}} substitution.
+message SmsContentTemplate {
+  string content = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 1024
+  }];
+}
+
+// TemplateInfo is a message template. app_id = 0 means shared across all
+// apps; otherwise the template belongs to that app's namespace.
+message TemplateInfo {
+  int64 id = 1;
+  int64 app_id = 2;
+  string name = 3;
+  TemplateChannel channel = 4 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  TemplateKind kind = 5 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  repeated TemplateParamSpec params = 6;
+  bool disabled = 7;
+  // content shape is determined by (channel, kind); the server validates
+  // the pairing.
+  oneof content {
+    EmailTemplateContent email = 10;
+    SmsVendorCodesContent vendor_codes = 11;
+    SmsContentTemplate sms_content = 12;
+  }
+  int64 created_at = 8;
+  int64 updated_at = 9;
+}
+
+// ---- Policies ----
+
+// RouteRule is one entry of a policy route chain. Chains are ordered;
+// the send picks a start by weight, then falls back along the list order.
+message RouteRule {
+  // account_id references a channel account (the vendor pool entry).
+  int64 account_id = 1 [(buf.validate.field).int64.gt = 0];
+  // signature_id references the signature used with that account.
+  // Required for SMS routes (0 is invalid); unused for email routes.
+  int64 signature_id = 2;
+  // weight >= 1; higher weight = higher start probability. Default 1.
+  int32 weight = 3 [(buf.validate.field).int32.gte = 1];
+}
+
+// PolicyInfo binds (app, channel, scene) to a template and route chains.
+// Exactly one of email_scene / sms_scene is set, matching channel.
+message PolicyInfo {
+  int64 id = 1;
+  int64 app_id = 2;
+  TemplateChannel channel = 3 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  EmailScene email_scene = 4;
+  SmsScene sms_scene = 5;
+  // template_id references the template rendered for every send of this
+  // policy. Its channel must match.
+  int64 template_id = 6 [(buf.validate.field).int64.gt = 0];
+  // routes is the ordered route chain for EMAIL and for CN-domestic SMS.
+  repeated RouteRule routes = 7 [(buf.validate.field).repeated.min_items = 1];
+  // intl_routes is the ordered route chain for international SMS
+  // (destination country != CN). Unused for email.
+  repeated RouteRule intl_routes = 8;
+  bool disabled = 9;
+  int64 created_at = 10;
+  int64 updated_at = 11;
+}

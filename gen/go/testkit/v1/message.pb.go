@@ -2300,13 +2300,16 @@ func (x *BucketStats) GetFileCount() int64 {
 	return 0
 }
 
-// ProviderInfo / BucketInfo are admin catalog entities.
+// ProviderInfo / BucketInfo are admin catalog entities (live registry view).
 type ProviderInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Vendor        v11.Vendor             `protobuf:"varint,2,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"`
 	Endpoint      string                 `protobuf:"bytes,3,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
 	Region        string                 `protobuf:"bytes,4,opt,name=region,proto3" json:"region,omitempty"`
+	Disabled      bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	StsEnabled    bool                   `protobuf:"varint,6,opt,name=sts_enabled,json=stsEnabled,proto3" json:"sts_enabled,omitempty"`
+	BucketCount   int32                  `protobuf:"varint,7,opt,name=bucket_count,json=bucketCount,proto3" json:"bucket_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2369,13 +2372,36 @@ func (x *ProviderInfo) GetRegion() string {
 	return ""
 }
 
+func (x *ProviderInfo) GetDisabled() bool {
+	if x != nil {
+		return x.Disabled
+	}
+	return false
+}
+
+func (x *ProviderInfo) GetStsEnabled() bool {
+	if x != nil {
+		return x.StsEnabled
+	}
+	return false
+}
+
+func (x *ProviderInfo) GetBucketCount() int32 {
+	if x != nil {
+		return x.BucketCount
+	}
+	return 0
+}
+
 type BucketInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Provider      string                 `protobuf:"bytes,2,opt,name=provider,proto3" json:"provider,omitempty"`
-	KeyPrefix     string                 `protobuf:"bytes,3,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
-	Acl           v11.BucketACL          `protobuf:"varint,4,opt,name=acl,proto3,enum=storage.v1.BucketACL" json:"acl,omitempty"`
-	Vendor        v11.Vendor             `protobuf:"varint,5,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Name      string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Provider  string                 `protobuf:"bytes,2,opt,name=provider,proto3" json:"provider,omitempty"`
+	KeyPrefix string                 `protobuf:"bytes,3,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
+	Acl       v11.BucketACL          `protobuf:"varint,4,opt,name=acl,proto3,enum=storage.v1.BucketACL" json:"acl,omitempty"`
+	Vendor    v11.Vendor             `protobuf:"varint,5,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"`
+	// cdn is the bucket's CDN fronting config; null = CDN disabled.
+	Cdn           *v11.CDNConfig `protobuf:"bytes,6,opt,name=cdn,proto3" json:"cdn,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2443,6 +2469,13 @@ func (x *BucketInfo) GetVendor() v11.Vendor {
 		return x.Vendor
 	}
 	return v11.Vendor(0)
+}
+
+func (x *BucketInfo) GetCdn() *v11.CDNConfig {
+	if x != nil {
+		return x.Cdn
+	}
+	return nil
 }
 
 // EmailAddress mirrors the downstream message (email + display_name).
@@ -2725,28 +2758,29 @@ func (x *SmsVendorStats) GetFailed() int64 {
 }
 
 type EmailRecord struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Vendor         v12.EmailVendor        `protobuf:"varint,2,opt,name=vendor,proto3,enum=messaging.v1.EmailVendor" json:"vendor,omitempty"`
-	Account        string                 `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
-	Scene          v12.EmailScene         `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
-	Status         v12.MessageStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
-	Target         *EmailAddress          `protobuf:"bytes,6,opt,name=target,proto3" json:"target,omitempty"`
-	SenderId       string                 `protobuf:"bytes,7,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"` // read-only echo (testkit's sends echo cfg.Message.SenderID)
-	Cc             []*EmailAddress        `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc            []*EmailAddress        `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject        string                 `protobuf:"bytes,10,opt,name=subject,proto3" json:"subject,omitempty"`
-	Content        string                 `protobuf:"bytes,11,opt,name=content,proto3" json:"content,omitempty"`
-	HtmlBody       string                 `protobuf:"bytes,12,opt,name=html_body,json=htmlBody,proto3" json:"html_body,omitempty"`
-	ReplyTo        *EmailAddress          `protobuf:"bytes,13,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
-	TemplateId     string                 `protobuf:"bytes,14,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	TemplateParams map[string]string      `protobuf:"bytes,15,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	ErrorMessage   string                 `protobuf:"bytes,16,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
-	Attempts       int32                  `protobuf:"varint,17,opt,name=attempts,proto3" json:"attempts,omitempty"`
-	SentAt         int64                  `protobuf:"varint,18,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
-	CreatedAt      int64                  `protobuf:"varint,19,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt      int64                  `protobuf:"varint,20,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	Attachments    []*EmailAttachment     `protobuf:"bytes,21,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Id      int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Vendor  v12.EmailVendor        `protobuf:"varint,2,opt,name=vendor,proto3,enum=messaging.v1.EmailVendor" json:"vendor,omitempty"`
+	Account string                 `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
+	Scene   v12.EmailScene         `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
+	Status  v12.MessageStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
+	Target  *EmailAddress          `protobuf:"bytes,6,opt,name=target,proto3" json:"target,omitempty"`
+	// app_key identifies the calling app (authenticated sender identity).
+	AppKey         string             `protobuf:"bytes,7,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Cc             []*EmailAddress    `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc,omitempty"`
+	Bcc            []*EmailAddress    `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc,omitempty"`
+	Subject        string             `protobuf:"bytes,10,opt,name=subject,proto3" json:"subject,omitempty"`
+	Content        string             `protobuf:"bytes,11,opt,name=content,proto3" json:"content,omitempty"`
+	HtmlBody       string             `protobuf:"bytes,12,opt,name=html_body,json=htmlBody,proto3" json:"html_body,omitempty"`
+	ReplyTo        *EmailAddress      `protobuf:"bytes,13,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
+	TemplateId     string             `protobuf:"bytes,14,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	TemplateParams map[string]string  `protobuf:"bytes,15,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ErrorMessage   string             `protobuf:"bytes,16,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
+	Attempts       int32              `protobuf:"varint,17,opt,name=attempts,proto3" json:"attempts,omitempty"`
+	SentAt         int64              `protobuf:"varint,18,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
+	CreatedAt      int64              `protobuf:"varint,19,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt      int64              `protobuf:"varint,20,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Attachments    []*EmailAttachment `protobuf:"bytes,21,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2823,9 +2857,9 @@ func (x *EmailRecord) GetTarget() *EmailAddress {
 	return nil
 }
 
-func (x *EmailRecord) GetSenderId() string {
+func (x *EmailRecord) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -2929,25 +2963,28 @@ func (x *EmailRecord) GetAttachments() []*EmailAttachment {
 }
 
 type SMSRecord struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Vendor         v12.SmsVendor          `protobuf:"varint,2,opt,name=vendor,proto3,enum=messaging.v1.SmsVendor" json:"vendor,omitempty"`
-	Account        string                 `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
-	Scene          v12.SmsScene           `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.SmsScene" json:"scene,omitempty"`
-	Status         v12.MessageStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
-	RegionCode     string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone          string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
-	SenderId       string                 `protobuf:"bytes,8,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	Content        string                 `protobuf:"bytes,9,opt,name=content,proto3" json:"content,omitempty"`
-	TemplateId     string                 `protobuf:"bytes,10,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	TemplateParams map[string]string      `protobuf:"bytes,11,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	ErrorMessage   string                 `protobuf:"bytes,12,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
-	Attempts       int32                  `protobuf:"varint,13,opt,name=attempts,proto3" json:"attempts,omitempty"`
-	SentAt         int64                  `protobuf:"varint,14,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
-	CreatedAt      int64                  `protobuf:"varint,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt      int64                  `protobuf:"varint,16,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Id         int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Vendor     v12.SmsVendor          `protobuf:"varint,2,opt,name=vendor,proto3,enum=messaging.v1.SmsVendor" json:"vendor,omitempty"`
+	Account    string                 `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
+	Scene      v12.SmsScene           `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.SmsScene" json:"scene,omitempty"`
+	Status     v12.MessageStatus      `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
+	RegionCode string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	Phone      string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
+	// app_key identifies the calling app (authenticated sender identity).
+	AppKey         string            `protobuf:"bytes,8,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Content        string            `protobuf:"bytes,9,opt,name=content,proto3" json:"content,omitempty"`
+	TemplateId     string            `protobuf:"bytes,10,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	TemplateParams map[string]string `protobuf:"bytes,11,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ErrorMessage   string            `protobuf:"bytes,12,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
+	Attempts       int32             `protobuf:"varint,13,opt,name=attempts,proto3" json:"attempts,omitempty"`
+	SentAt         int64             `protobuf:"varint,14,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
+	CreatedAt      int64             `protobuf:"varint,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt      int64             `protobuf:"varint,16,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// sign_name is the SMS signature / intl sender ID the policy route used.
+	SignName      string `protobuf:"bytes,17,opt,name=sign_name,json=signName,proto3" json:"sign_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SMSRecord) Reset() {
@@ -3029,9 +3066,9 @@ func (x *SMSRecord) GetPhone() string {
 	return ""
 }
 
-func (x *SMSRecord) GetSenderId() string {
+func (x *SMSRecord) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -3090,6 +3127,13 @@ func (x *SMSRecord) GetUpdatedAt() int64 {
 		return x.UpdatedAt
 	}
 	return 0
+}
+
+func (x *SMSRecord) GetSignName() string {
+	if x != nil {
+		return x.SignName
+	}
+	return ""
 }
 
 // EmailStats mirrors message.EmailStatsResponse (read-only snapshot).
@@ -4570,7 +4614,7 @@ var File_testkit_v1_message_proto protoreflect.FileDescriptor
 const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/message.proto\x12\n" +
-	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\x91\b\n" +
+	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18storage/v1/message.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\x91\b\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -4834,12 +4878,16 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\vtotal_bytes\x18\x03 \x01(\x03R\n" +
 	"totalBytes\x12\x1d\n" +
 	"\n" +
-	"file_count\x18\x04 \x01(\x03R\tfileCount\"\x82\x01\n" +
+	"file_count\x18\x04 \x01(\x03R\tfileCount\"\xe2\x01\n" +
 	"\fProviderInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12*\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12\x1a\n" +
 	"\bendpoint\x18\x03 \x01(\tR\bendpoint\x12\x16\n" +
-	"\x06region\x18\x04 \x01(\tR\x06region\"\xb0\x01\n" +
+	"\x06region\x18\x04 \x01(\tR\x06region\x12\x1a\n" +
+	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x12\x1f\n" +
+	"\vsts_enabled\x18\x06 \x01(\bR\n" +
+	"stsEnabled\x12!\n" +
+	"\fbucket_count\x18\a \x01(\x05R\vbucketCount\"\xd9\x01\n" +
 	"\n" +
 	"BucketInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
@@ -4847,7 +4895,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"key_prefix\x18\x03 \x01(\tR\tkeyPrefix\x12'\n" +
 	"\x03acl\x18\x04 \x01(\x0e2\x15.storage.v1.BucketACLR\x03acl\x12*\n" +
-	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\"P\n" +
+	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12'\n" +
+	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdn\"P\n" +
 	"\fEmailAddress\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xc6\x01\n" +
@@ -4868,15 +4917,15 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04sent\x18\x03 \x01(\x03R\x04sent\x12\x16\n" +
-	"\x06failed\x18\x04 \x01(\x03R\x06failed\"\x8b\a\n" +
+	"\x06failed\x18\x04 \x01(\x03R\x06failed\"\x87\a\n" +
 	"\vEmailRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x121\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x19.messaging.v1.EmailVendorR\x06vendor\x12\x18\n" +
 	"\aaccount\x18\x03 \x01(\tR\aaccount\x12.\n" +
 	"\x05scene\x18\x04 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x123\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x120\n" +
-	"\x06target\x18\x06 \x01(\v2\x18.testkit.v1.EmailAddressR\x06target\x12\x1b\n" +
-	"\tsender_id\x18\a \x01(\tR\bsenderId\x12(\n" +
+	"\x06target\x18\x06 \x01(\v2\x18.testkit.v1.EmailAddressR\x06target\x12\x17\n" +
+	"\aapp_key\x18\a \x01(\tR\x06appKey\x12(\n" +
 	"\x02cc\x18\b \x03(\v2\x18.testkit.v1.EmailAddressR\x02cc\x12*\n" +
 	"\x03bcc\x18\t \x03(\v2\x18.testkit.v1.EmailAddressR\x03bcc\x12\x18\n" +
 	"\asubject\x18\n" +
@@ -4897,7 +4946,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\vattachments\x18\x15 \x03(\v2\x1b.testkit.v1.EmailAttachmentR\vattachments\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xbf\x05\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd8\x05\n" +
 	"\tSMSRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x18\n" +
@@ -4907,8 +4956,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x126\n" +
-	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
-	"\tsender_id\x18\b \x01(\tR\bsenderId\x12\x18\n" +
+	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x17\n" +
+	"\aapp_key\x18\b \x01(\tR\x06appKey\x12\x18\n" +
 	"\acontent\x18\t \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\n" +
 	" \x01(\tR\n" +
@@ -4920,7 +4969,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x0f \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x10 \x01(\x03R\tupdatedAt\x1aA\n" +
+	"updated_at\x18\x10 \x01(\x03R\tupdatedAt\x12\x1b\n" +
+	"\tsign_name\x18\x11 \x01(\tR\bsignName\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa9\x01\n" +
@@ -5163,15 +5213,16 @@ var file_testkit_v1_message_proto_goTypes = []any{
 	(v11.AuditLogStatus)(0),         // 73: storage.v1.AuditLogStatus
 	(v11.Vendor)(0),                 // 74: storage.v1.Vendor
 	(v11.BucketACL)(0),              // 75: storage.v1.BucketACL
-	(v12.EmailVendor)(0),            // 76: messaging.v1.EmailVendor
-	(v12.SmsVendor)(0),              // 77: messaging.v1.SmsVendor
-	(v12.EmailScene)(0),             // 78: messaging.v1.EmailScene
-	(v12.MessageStatus)(0),          // 79: messaging.v1.MessageStatus
-	(v12.SmsScene)(0),               // 80: messaging.v1.SmsScene
-	(v13.Module)(0),                 // 81: license.v1.Module
-	(v13.EntitlementKind)(0),        // 82: license.v1.EntitlementKind
-	(v13.KeyStatus)(0),              // 83: license.v1.KeyStatus
-	(v14.AuthMode)(0),               // 84: telemetry.v1.AuthMode
+	(*v11.CDNConfig)(nil),           // 76: storage.v1.CDNConfig
+	(v12.EmailVendor)(0),            // 77: messaging.v1.EmailVendor
+	(v12.SmsVendor)(0),              // 78: messaging.v1.SmsVendor
+	(v12.EmailScene)(0),             // 79: messaging.v1.EmailScene
+	(v12.MessageStatus)(0),          // 80: messaging.v1.MessageStatus
+	(v12.SmsScene)(0),               // 81: messaging.v1.SmsScene
+	(v13.Module)(0),                 // 82: license.v1.Module
+	(v13.EntitlementKind)(0),        // 83: license.v1.EntitlementKind
+	(v13.KeyStatus)(0),              // 84: license.v1.KeyStatus
+	(v14.AuthMode)(0),               // 85: telemetry.v1.AuthMode
 }
 var file_testkit_v1_message_proto_depIdxs = []int32{
 	56, // 0: testkit.v1.User.gender:type_name -> user.v1.Gender
@@ -5224,56 +5275,57 @@ var file_testkit_v1_message_proto_depIdxs = []int32{
 	74, // 47: testkit.v1.ProviderInfo.vendor:type_name -> storage.v1.Vendor
 	75, // 48: testkit.v1.BucketInfo.acl:type_name -> storage.v1.BucketACL
 	74, // 49: testkit.v1.BucketInfo.vendor:type_name -> storage.v1.Vendor
-	76, // 50: testkit.v1.EmailVendorStats.vendor:type_name -> messaging.v1.EmailVendor
-	77, // 51: testkit.v1.SmsVendorStats.vendor:type_name -> messaging.v1.SmsVendor
-	76, // 52: testkit.v1.EmailRecord.vendor:type_name -> messaging.v1.EmailVendor
-	78, // 53: testkit.v1.EmailRecord.scene:type_name -> messaging.v1.EmailScene
-	79, // 54: testkit.v1.EmailRecord.status:type_name -> messaging.v1.MessageStatus
-	24, // 55: testkit.v1.EmailRecord.target:type_name -> testkit.v1.EmailAddress
-	24, // 56: testkit.v1.EmailRecord.cc:type_name -> testkit.v1.EmailAddress
-	24, // 57: testkit.v1.EmailRecord.bcc:type_name -> testkit.v1.EmailAddress
-	24, // 58: testkit.v1.EmailRecord.reply_to:type_name -> testkit.v1.EmailAddress
-	54, // 59: testkit.v1.EmailRecord.template_params:type_name -> testkit.v1.EmailRecord.TemplateParamsEntry
-	25, // 60: testkit.v1.EmailRecord.attachments:type_name -> testkit.v1.EmailAttachment
-	77, // 61: testkit.v1.SMSRecord.vendor:type_name -> messaging.v1.SmsVendor
-	80, // 62: testkit.v1.SMSRecord.scene:type_name -> messaging.v1.SmsScene
-	79, // 63: testkit.v1.SMSRecord.status:type_name -> messaging.v1.MessageStatus
-	55, // 64: testkit.v1.SMSRecord.template_params:type_name -> testkit.v1.SMSRecord.TemplateParamsEntry
-	26, // 65: testkit.v1.EmailStats.vendors:type_name -> testkit.v1.EmailVendorStats
-	27, // 66: testkit.v1.SMSStats.vendors:type_name -> testkit.v1.SmsVendorStats
-	60, // 67: testkit.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
-	60, // 68: testkit.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
-	34, // 69: testkit.v1.SlotSummary.devices:type_name -> testkit.v1.DeviceSlotInfo
-	34, // 70: testkit.v1.SlotLimitInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
-	81, // 71: testkit.v1.EntitlementInput.module:type_name -> license.v1.Module
-	82, // 72: testkit.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
-	60, // 73: testkit.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
-	81, // 74: testkit.v1.EntitlementInfo.module:type_name -> license.v1.Module
-	82, // 75: testkit.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
-	60, // 76: testkit.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
-	60, // 77: testkit.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
-	83, // 78: testkit.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
-	60, // 79: testkit.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 80: testkit.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
-	40, // 81: testkit.v1.KeyInfo.entitlements:type_name -> testkit.v1.EntitlementInfo
-	34, // 82: testkit.v1.KeyInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
-	81, // 83: testkit.v1.TrialInfo.module:type_name -> license.v1.Module
-	60, // 84: testkit.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
-	60, // 85: testkit.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
-	84, // 86: testkit.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
-	60, // 87: testkit.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
-	60, // 88: testkit.v1.App.created_at:type_name -> google.protobuf.Timestamp
-	60, // 89: testkit.v1.App.updated_at:type_name -> google.protobuf.Timestamp
-	60, // 90: testkit.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 91: testkit.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
-	60, // 92: testkit.v1.TelemetrySigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp
-	60, // 93: testkit.v1.TelemetrySigningKeyInfo.last_used_at:type_name -> google.protobuf.Timestamp
-	60, // 94: testkit.v1.VersionInfo.last_seen_at:type_name -> google.protobuf.Timestamp
-	95, // [95:95] is the sub-list for method output_type
-	95, // [95:95] is the sub-list for method input_type
-	95, // [95:95] is the sub-list for extension type_name
-	95, // [95:95] is the sub-list for extension extendee
-	0,  // [0:95] is the sub-list for field type_name
+	76, // 50: testkit.v1.BucketInfo.cdn:type_name -> storage.v1.CDNConfig
+	77, // 51: testkit.v1.EmailVendorStats.vendor:type_name -> messaging.v1.EmailVendor
+	78, // 52: testkit.v1.SmsVendorStats.vendor:type_name -> messaging.v1.SmsVendor
+	77, // 53: testkit.v1.EmailRecord.vendor:type_name -> messaging.v1.EmailVendor
+	79, // 54: testkit.v1.EmailRecord.scene:type_name -> messaging.v1.EmailScene
+	80, // 55: testkit.v1.EmailRecord.status:type_name -> messaging.v1.MessageStatus
+	24, // 56: testkit.v1.EmailRecord.target:type_name -> testkit.v1.EmailAddress
+	24, // 57: testkit.v1.EmailRecord.cc:type_name -> testkit.v1.EmailAddress
+	24, // 58: testkit.v1.EmailRecord.bcc:type_name -> testkit.v1.EmailAddress
+	24, // 59: testkit.v1.EmailRecord.reply_to:type_name -> testkit.v1.EmailAddress
+	54, // 60: testkit.v1.EmailRecord.template_params:type_name -> testkit.v1.EmailRecord.TemplateParamsEntry
+	25, // 61: testkit.v1.EmailRecord.attachments:type_name -> testkit.v1.EmailAttachment
+	78, // 62: testkit.v1.SMSRecord.vendor:type_name -> messaging.v1.SmsVendor
+	81, // 63: testkit.v1.SMSRecord.scene:type_name -> messaging.v1.SmsScene
+	80, // 64: testkit.v1.SMSRecord.status:type_name -> messaging.v1.MessageStatus
+	55, // 65: testkit.v1.SMSRecord.template_params:type_name -> testkit.v1.SMSRecord.TemplateParamsEntry
+	26, // 66: testkit.v1.EmailStats.vendors:type_name -> testkit.v1.EmailVendorStats
+	27, // 67: testkit.v1.SMSStats.vendors:type_name -> testkit.v1.SmsVendorStats
+	60, // 68: testkit.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
+	60, // 69: testkit.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
+	34, // 70: testkit.v1.SlotSummary.devices:type_name -> testkit.v1.DeviceSlotInfo
+	34, // 71: testkit.v1.SlotLimitInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
+	82, // 72: testkit.v1.EntitlementInput.module:type_name -> license.v1.Module
+	83, // 73: testkit.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
+	60, // 74: testkit.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
+	82, // 75: testkit.v1.EntitlementInfo.module:type_name -> license.v1.Module
+	83, // 76: testkit.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
+	60, // 77: testkit.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
+	60, // 78: testkit.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
+	84, // 79: testkit.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
+	60, // 80: testkit.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 81: testkit.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
+	40, // 82: testkit.v1.KeyInfo.entitlements:type_name -> testkit.v1.EntitlementInfo
+	34, // 83: testkit.v1.KeyInfo.devices:type_name -> testkit.v1.DeviceSlotInfo
+	82, // 84: testkit.v1.TrialInfo.module:type_name -> license.v1.Module
+	60, // 85: testkit.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
+	60, // 86: testkit.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
+	85, // 87: testkit.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
+	60, // 88: testkit.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
+	60, // 89: testkit.v1.App.created_at:type_name -> google.protobuf.Timestamp
+	60, // 90: testkit.v1.App.updated_at:type_name -> google.protobuf.Timestamp
+	60, // 91: testkit.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 92: testkit.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
+	60, // 93: testkit.v1.TelemetrySigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp
+	60, // 94: testkit.v1.TelemetrySigningKeyInfo.last_used_at:type_name -> google.protobuf.Timestamp
+	60, // 95: testkit.v1.VersionInfo.last_seen_at:type_name -> google.protobuf.Timestamp
+	96, // [96:96] is the sub-list for method output_type
+	96, // [96:96] is the sub-list for method input_type
+	96, // [96:96] is the sub-list for extension type_name
+	96, // [96:96] is the sub-list for extension extendee
+	0,  // [0:96] is the sub-list for field type_name
 }
 
 func init() { file_testkit_v1_message_proto_init() }

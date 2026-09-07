@@ -101,6 +101,24 @@ service StorageService {
   rpc AdminListProviders(google.protobuf.Empty) returns (AdminListProvidersResponse);
   // AdminListBuckets lists all buckets (admin only).
   rpc AdminListBuckets(google.protobuf.Empty) returns (AdminListBucketsResponse);
+  // AdminCreateProvider adds a provider to the live registry (admin only).
+  rpc AdminCreateProvider(AdminCreateProviderRequest) returns (AdminCreateProviderResponse);
+  // AdminUpdateProvider edits a provider (credentials replace-on-present).
+  rpc AdminUpdateProvider(AdminUpdateProviderRequest) returns (AdminUpdateProviderResponse);
+  // AdminDeleteProvider removes a provider (rejected while buckets are
+  // still bound to it).
+  rpc AdminDeleteProvider(AdminDeleteProviderRequest) returns (google.protobuf.Empty);
+  // AdminUpsertBucket creates or fully replaces a bucket binding
+  // (rejected while the bucket still has objects and the provider changes).
+  rpc AdminUpsertBucket(AdminUpsertBucketRequest) returns (AdminUpsertBucketResponse);
+  // AdminDeleteBucket removes a bucket binding (rejected while the bucket
+  // still has objects).
+  rpc AdminDeleteBucket(AdminDeleteBucketRequest) returns (google.protobuf.Empty);
+  // AdminGetSettings returns the runtime settings row (default/public
+  // bucket).
+  rpc AdminGetSettings(AdminGetSettingsRequest) returns (AdminGetSettingsResponse);
+  // AdminUpdateSettings updates the runtime settings row.
+  rpc AdminUpdateSettings(AdminUpdateSettingsRequest) returns (AdminUpdateSettingsResponse);
   // AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
   rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse);
   // AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
@@ -114,9 +132,9 @@ service StorageService {
   rpc AdminListAuditLogs(AdminListAuditLogsRequest) returns (AdminListAuditLogsResponse);
 
   // Business-facing quota management.
-  // TODO(auth): these RPCs have no authentication today. Before exposing in
-  // production, add service-to-service authentication (linkd secret / mTLS /
-  // OAuth client credentials). See go-common/grpcx/auth.go for helpers.
+  // Auth posture: storage gRPC is internal-network trusted; API-level
+  // permissions are enforced at the gateway (testkit login, future RBAC +
+  // rules engine). See specs/2026-09-07-storage-platform-design.md.
 
   // SetOwnerQuota overwrites an owner's total quota. Business-facing (e.g.
   // pay-service resetting quota after a plan change). For admin tools use

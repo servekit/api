@@ -430,6 +430,135 @@ message AdminListBucketsResponse {
   repeated BucketInfo buckets = 1;
 }
 
+// ---- Provider / bucket / settings management (platform-ized registry).
+// Mutations rebuild the live provider registry immediately (in-process)
+// and converge across nodes within the cron refresh window. Guards:
+// a provider with bound buckets cannot be deleted; a bucket with existing
+// objects cannot be deleted or re-bound to a different provider. ----
+
+message AdminCreateProviderRequest {
+  // name uniquely identifies the provider (referenced by buckets).
+  // Immutable after creation.
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  Vendor vendor = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  string endpoint = 3 [(buf.validate.field).string.max_len = 512];
+  string region = 4 [(buf.validate.field).string.max_len = 64];
+  string access_key = 5 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  string secret_key = 6 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  // role_arn enables STS (GetSTSCredential) for this provider; empty =
+  // STS unavailable.
+  string role_arn = 7 [(buf.validate.field).string.max_len = 256];
+  // domain_id is the Huawei Cloud account UID; required for
+  // VENDOR_HUAWEI_OBS, unused otherwise.
+  string domain_id = 8 [(buf.validate.field).string.max_len = 64];
+}
+
+message AdminCreateProviderResponse {
+  ProviderInfo provider = 1;
+}
+
+// AdminUpdateProviderRequest edits a provider. name and vendor are
+// immutable. Credential fields are optional: absent = keep current
+// (edit endpoint/disabled without re-entering keys); present = replace.
+message AdminUpdateProviderRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string endpoint = 2 [(buf.validate.field).string.max_len = 512];
+  optional string region = 3 [(buf.validate.field).string.max_len = 64];
+  optional string access_key = 4 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  optional string secret_key = 5 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 256
+  }];
+  // role_arn is replace-on-present: explicitly sending an empty value
+  // disables STS.
+  optional string role_arn = 6 [(buf.validate.field).string.max_len = 256];
+  optional string domain_id = 7 [(buf.validate.field).string.max_len = 64];
+  optional bool disabled = 8;
+}
+
+message AdminUpdateProviderResponse {
+  ProviderInfo provider = 1;
+}
+
+// AdminDeleteProviderRequest hard-deletes the provider row after guards
+// pass (no bound buckets). The vendor-side account is untouched.
+message AdminDeleteProviderRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+// AdminUpsertBucketRequest creates or fully replaces a bucket binding by
+// name. cdn must be resent on every update (absent = disable CDN).
+// Re-binding a bucket that still has objects to a different provider is
+// rejected — object rows carry (vendor, bucket) and would dangle.
+message AdminUpsertBucketRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 255
+  }];
+  string provider = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string key_prefix = 3 [(buf.validate.field).string.max_len = 256];
+  BucketACL acl = 4 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  CDNConfig cdn = 5;
+}
+
+message AdminUpsertBucketResponse {
+  BucketInfo bucket = 1;
+}
+
+// AdminDeleteBucketRequest deletes the bucket binding after guards pass
+// (no existing objects). The vendor-side bucket is untouched.
+message AdminDeleteBucketRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 255
+  }];
+}
+
+message AdminGetSettingsRequest {}
+
+message AdminGetSettingsResponse {
+  StorageSettings settings = 1;
+}
+
+// AdminUpdateSettingsRequest updates runtime settings; absent optional
+// fields keep their current values. Referenced buckets must exist.
+message AdminUpdateSettingsRequest {
+  optional string default_bucket = 1 [(buf.validate.field).string.max_len = 255];
+  // public_bucket may be explicitly set to "" to reject PUBLIC uploads.
+  optional string public_bucket = 2 [(buf.validate.field).string.max_len = 255];
+}
+
+message AdminUpdateSettingsResponse {
+  StorageSettings settings = 1;
+}
+
 message AdminSoftDeleteOwnerFilesRequest {
   OwnerType owner_type = 1 [(buf.validate.field).enum = {defined_only: true}];
   int64 owner_id = 2 [(buf.validate.field).int64 = {gt: 0}];

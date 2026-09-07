@@ -319,6 +319,11 @@ message UnbindIdentityRequest {
 
 // ==================== Verification Code ====================
 
+// SendVerificationCodeRequest carries ONLY the target and intent — all
+// delivery content (templates, signatures, provider routing) is owned by
+// message-service policies configured on its admin surface. user-service
+// sends template_params {"code": <generated code>} and message-service
+// resolves the (app, scene) policy.
 message SendVerificationCodeRequest {
   string email = 1 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
@@ -336,68 +341,16 @@ message SendVerificationCodeRequest {
     not_in: [0]
   }];
   // phone is the E.164 international format ("+8613800138000") — the SMS
-  // destination; the destination country (which decides the domestic vs
-  // international vendor path) is derived from it.
+  // destination; the destination country (which decides the CN vs
+  // international route chain) is derived from it.
   string phone = 5 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{8,14}$"
   ];
-  // sender_id identifies the audit actor triggering this send (user ID,
-  // service name, platform identifier, ...). Required: user-service is
-  // stateless and passes this through to message-service verbatim — it does
-  // not derive, transform, or default the value.
-  string sender_id = 6 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 128
-  }];
 
-  // SMS delivery — required when channel=SMS. Path is decided by the
-  // destination country parsed from the E.164 phone (mirrors
-  // message-service's routing):
-  //   - destination "CN" (domestic): sms_template_id + sms_code_param_key +
-  //     sign_name are required. Domestic vendors reject raw content for
-  //     regulatory reasons — every SMS must use a vendor pre-registered
-  //     template. sms_code_param_key is the param-name under which the code is
-  //     placed in template_params; the name is fixed at the vendor's template-
-  //     registration time (e.g. "code", "param1", "verify_code") — caller must
-  //     match it. Empty defaults to "code".
-  //   - other destinations (international): caller picks ONE of
-  //     sms_template_id (vendor that requires templates even for intl, e.g.
-  //     Byteplus / Tencent-intl) OR sms_content (vendor that accepts raw
-  //     text, e.g. Aliyun SendMessageToGlobe, Twilio).
-  //
-  // {code} placeholder convention: sms_content may contain the literal
-  // substring "{code}", which user-service replaces with the actual generated
-  // code before forwarding to message-service. If sms_content does NOT
-  // contain "{code}", the substitution is a no-op and the code is silently
-  // dropped — caller's responsibility to include it.
-  string sms_template_id = 7 [(buf.validate.field).string.max_len = 128];
-  string sms_code_param_key = 8 [(buf.validate.field).string.max_len = 64];
-  string sms_content = 9 [(buf.validate.field).string.max_len = 1024];
-
-  // Email delivery — required when channel=EMAIL. email_subject and email_body
-  // are always required; email_html_body is optional.
-  //
-  // When email_html_body is set, message-service sends the email as MIME
-  // multipart/alternative with both representations — HTML-capable clients
-  // (Gmail, Outlook, mobile mail) render the pretty HTML; plain-text-only
-  // clients (terminal mutt, some accessibility tools) fall back to email_body.
-  // When email_html_body is empty, only the plain text body is sent.
-  //
-  // All three fields may use the "{code}" placeholder convention (see
-  // sms_content above): user-service replaces the literal substring "{code}"
-  // with the actual code before forwarding. Missing "{code}" is a no-op —
-  // the code is silently dropped. Typically only email_body / email_html_body
-  // include it; subject rarely does (it's a header).
-  string email_subject = 10 [(buf.validate.field).string = {max_len: 256}];
-  string email_body = 11 [(buf.validate.field).string = {max_len: 16384}];
-  string email_html_body = 13 [(buf.validate.field).string = {max_len: 65536}];
-
-  // sign_name is the SMS signature passed through verbatim to message-service
-  // when channel=SMS. Required for CN (domestic) SMS — domestic vendors reject
-  // sends without it. Treated as sender ID for international SMS (vendor- and
-  // region-specific semantics).
-  string sign_name = 12 [(buf.validate.field).string.max_len = 64];
+  reserved 6, 7, 8, 9, 10, 11, 12, 13;
+  reserved "sender_id", "sms_template_id", "sms_code_param_key", "sms_content";
+  reserved "email_subject", "email_body", "email_html_body", "sign_name";
 
   option (buf.validate.message).cel = {
     id: "target_exclusive"

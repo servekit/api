@@ -1,0 +1,286 @@
+// Messaging admin RPC request/response payloads.
+syntax = "proto3";
+
+package messaging.v1;
+
+import "buf/validate/validate.proto";
+import "messaging/v1/admin.proto";
+import "messaging/v1/enums.proto";
+
+// Update semantics across this surface: metadata-only tweaks use optional
+// fields (absent = keep); definition-bearing updates (signature bindings,
+// templates, policies) are FULL REPLACES — the admin UI always submits the
+// complete object it loaded.
+
+// ---- Apps ----
+
+message CreateAppRequest {
+  // app_key must be a stable slug identifying the calling service
+  // (e.g. "testkit", "user-service"). Unique. Immutable after creation.
+  string app_key = 1 [(buf.validate.field).string = {
+    pattern: "^[a-z][a-z0-9-]{0,63}$"
+  }];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  int64 sms_daily_limit = 3;
+  int64 email_daily_limit = 4;
+}
+
+// CreateAppResponse returns the created app plus the plaintext app_secret
+// exactly once — it is not recoverable later (rotate to re-issue).
+message CreateAppResponse {
+  MessageAppInfo app = 1;
+  string app_secret = 2;
+}
+
+message GetAppRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message GetAppResponse {
+  MessageAppInfo app = 1;
+}
+
+// UpdateAppRequest tweaks app metadata. app_key is immutable; absent
+// optional fields keep their current values.
+message UpdateAppRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  optional bool disabled = 3;
+  optional int64 sms_daily_limit = 4;
+  optional int64 email_daily_limit = 5;
+}
+
+message UpdateAppResponse {
+  MessageAppInfo app = 1;
+}
+
+// RotateAppSecret mints a new app_secret. The old secret becomes invalid
+// immediately; the new plaintext is returned exactly once.
+message RotateAppSecretRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message RotateAppSecretResponse {
+  MessageAppInfo app = 1;
+  string app_secret = 2;
+}
+
+message ListAppsRequest {}
+
+message ListAppsResponse {
+  repeated MessageAppInfo apps = 1;
+}
+
+// DeleteAppRequest soft-deletes the app. Sends fail immediately; policies
+// are kept (restore re-activates them).
+message DeleteAppRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+// ---- Channel accounts ----
+
+message CreateChannelAccountRequest {
+  // name uniquely identifies the account across vendors (referenced by
+  // policies). Immutable after creation.
+  string name = 1 [(buf.validate.field).string = {
+    pattern: "^[a-z][a-z0-9-]{0,63}$"
+  }];
+  string remark = 2 [(buf.validate.field).string.max_len = 256];
+  ChannelAccountCredentials credentials = 3 [(buf.validate.field).required = true];
+}
+
+message CreateChannelAccountResponse {
+  ChannelAccountInfo account = 1;
+}
+
+// UpdateChannelAccountRequest updates an account. name and vendor are
+// immutable. credentials is optional: absent = keep current credentials
+// (edit remark/disabled without re-entering secrets); present = full
+// replace.
+message UpdateChannelAccountRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+  optional string remark = 2 [(buf.validate.field).string.max_len = 256];
+  optional bool disabled = 3;
+  optional ChannelAccountCredentials credentials = 4;
+}
+
+message UpdateChannelAccountResponse {
+  ChannelAccountInfo account = 1;
+}
+
+// DeleteChannelAccountRequest soft-deletes the account. Policies referencing
+// it skip the account at send time (a policy whose routes all resolve to
+// deleted/disabled accounts fails with a clear error).
+message DeleteChannelAccountRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListChannelAccountsRequest {}
+
+message ListChannelAccountsResponse {
+  repeated ChannelAccountInfo accounts = 1;
+}
+
+// ---- Signatures ----
+
+message CreateSignatureRequest {
+  // name is the signature string itself (CN, e.g. "XX科技") or the intl
+  // sender ID (e.g. "MyApp"). Unique. Immutable after creation.
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 64
+  }];
+  string remark = 2 [(buf.validate.field).string.max_len = 256];
+  // account_ids lists the channel accounts the signature is registered on
+  // (报备). Full replace on every update; at least one binding required.
+  repeated int64 account_ids = 3 [(buf.validate.field).repeated.min_items = 1];
+}
+
+message CreateSignatureResponse {
+  SignatureInfo signature = 1;
+}
+
+// UpdateSignatureRequest is a full replace of remark/disabled/bindings.
+// name is immutable.
+message UpdateSignatureRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+  optional string remark = 2 [(buf.validate.field).string.max_len = 256];
+  optional bool disabled = 3;
+  // account_ids replaces the binding list when present.
+  optional AccountIds account_ids = 4;
+}
+
+// AccountIds wraps the binding list so UpdateSignatureRequest can
+// distinguish "keep current bindings" (absent) from "replace bindings"
+// (present; must be non-empty — a signature bound to no account is
+// unusable).
+message AccountIds {
+  repeated int64 ids = 1 [(buf.validate.field).repeated.min_items = 1];
+}
+
+message UpdateSignatureResponse {
+  SignatureInfo signature = 1;
+}
+
+// DeleteSignatureRequest soft-deletes the signature. Policy routes
+// referencing it fail validation at send time with a clear error.
+message DeleteSignatureRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListSignaturesRequest {}
+
+message ListSignaturesResponse {
+  repeated SignatureInfo signatures = 1;
+}
+
+// ---- Templates ----
+
+// CreateTemplateRequest creates a template from a full TemplateInfo
+// definition. template.id must be zero; template.app_id is overridden by
+// the top-level app_id (0 = shared).
+message CreateTemplateRequest {
+  int64 app_id = 1;
+  TemplateInfo template = 2 [(buf.validate.field).required = true];
+}
+
+message CreateTemplateResponse {
+  TemplateInfo template = 1;
+}
+
+// UpdateTemplateRequest fully replaces the template definition (name,
+// params, content; channel/kind must stay compatible with existing
+// policies — changing them requires delete + recreate). template.id is
+// overridden by the top-level id; template.app_id is ignored.
+message UpdateTemplateRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+  TemplateInfo template = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateTemplateResponse {
+  TemplateInfo template = 1;
+}
+
+// DeleteTemplateRequest soft-deletes the template. Policies referencing it
+// fail at send time with a clear error.
+message DeleteTemplateRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListTemplatesRequest {
+  // app_id 0 = all templates (shared + every app's).
+  int64 app_id = 1;
+  TemplateChannel channel = 2;
+}
+
+message ListTemplatesResponse {
+  repeated TemplateInfo templates = 1;
+}
+
+// ---- Policies ----
+
+// PolicyScene is the scene selector for policy payloads: exactly one field
+// set, matching the policy channel.
+message PolicyScene {
+  oneof scene {
+    EmailScene email_scene = 1;
+    SmsScene sms_scene = 2;
+  }
+}
+
+// CreatePolicyRequest binds (app, channel, scene) to a template + route
+// chains. The (app, channel, scene) tuple is unique — creating a duplicate
+// returns an error.
+message CreatePolicyRequest {
+  int64 app_id = 1 [(buf.validate.field).int64.gt = 0];
+  PolicyScene scene = 2 [(buf.validate.field).required = true];
+  int64 template_id = 3 [(buf.validate.field).int64.gt = 0];
+  // routes is the ordered chain for EMAIL and CN-domestic SMS.
+  repeated RouteRule routes = 4 [(buf.validate.field).repeated.min_items = 1];
+  // intl_routes is the ordered chain for international SMS. Optional: an
+  // SMS policy with no intl chain rejects non-CN destinations at send time.
+  repeated RouteRule intl_routes = 5;
+}
+
+message CreatePolicyResponse {
+  PolicyInfo policy = 1;
+}
+
+// UpdatePolicyRequest fully replaces template + route chains. app /
+// channel / scene are immutable — delete and recreate to move a policy.
+message UpdatePolicyRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+  optional bool disabled = 2;
+  int64 template_id = 3 [(buf.validate.field).int64.gt = 0];
+  // routes replaces the CN/email chain (required, non-empty).
+  repeated RouteRule routes = 4 [(buf.validate.field).repeated.min_items = 1];
+  // intl_routes replaces the intl chain (required field for SMS policies —
+  // send an empty list to disable intl; ignored for email).
+  repeated RouteRule intl_routes = 5;
+}
+
+message UpdatePolicyResponse {
+  PolicyInfo policy = 1;
+}
+
+// DeletePolicyRequest removes the binding immediately — sends for that
+// (app, scene) fail with ErrPolicyNotFound listing configured scenes.
+message DeletePolicyRequest {
+  int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListPoliciesRequest {
+  // app_id 0 = all apps.
+  int64 app_id = 1;
+  TemplateChannel channel = 2;
+}
+
+message ListPoliciesResponse {
+  repeated PolicyInfo policies = 1;
+}

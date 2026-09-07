@@ -11,7 +11,9 @@ package testkitv1
 import (
 	context "context"
 	v1 "github.com/servekit/api/gen/go/common/v1"
-	v11 "github.com/servekit/api/gen/go/reference/v1"
+	v12 "github.com/servekit/api/gen/go/messaging/v1"
+	v13 "github.com/servekit/api/gen/go/reference/v1"
+	v11 "github.com/servekit/api/gen/go/storage/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -24,152 +26,179 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TestkitService_Ping_FullMethodName                      = "/testkit.v1.TestkitService/Ping"
-	TestkitService_Login_FullMethodName                     = "/testkit.v1.TestkitService/Login"
-	TestkitService_Register_FullMethodName                  = "/testkit.v1.TestkitService/Register"
-	TestkitService_SendVerificationCode_FullMethodName      = "/testkit.v1.TestkitService/SendVerificationCode"
-	TestkitService_Logout_FullMethodName                    = "/testkit.v1.TestkitService/Logout"
-	TestkitService_GetProfile_FullMethodName                = "/testkit.v1.TestkitService/GetProfile"
-	TestkitService_UpdateProfile_FullMethodName             = "/testkit.v1.TestkitService/UpdateProfile"
-	TestkitService_ChangePassword_FullMethodName            = "/testkit.v1.TestkitService/ChangePassword"
-	TestkitService_ResetPassword_FullMethodName             = "/testkit.v1.TestkitService/ResetPassword"
-	TestkitService_ListIdentities_FullMethodName            = "/testkit.v1.TestkitService/ListIdentities"
-	TestkitService_BindIdentity_FullMethodName              = "/testkit.v1.TestkitService/BindIdentity"
-	TestkitService_BindOAuthIdentity_FullMethodName         = "/testkit.v1.TestkitService/BindOAuthIdentity"
-	TestkitService_UnbindIdentity_FullMethodName            = "/testkit.v1.TestkitService/UnbindIdentity"
-	TestkitService_ListSessions_FullMethodName              = "/testkit.v1.TestkitService/ListSessions"
-	TestkitService_RevokeSession_FullMethodName             = "/testkit.v1.TestkitService/RevokeSession"
-	TestkitService_RevokeAllSessions_FullMethodName         = "/testkit.v1.TestkitService/RevokeAllSessions"
-	TestkitService_GetSession_FullMethodName                = "/testkit.v1.TestkitService/GetSession"
-	TestkitService_IssueSessionCode_FullMethodName          = "/testkit.v1.TestkitService/IssueSessionCode"
-	TestkitService_ExchangeSessionCode_FullMethodName       = "/testkit.v1.TestkitService/ExchangeSessionCode"
-	TestkitService_GetOAuthURL_FullMethodName               = "/testkit.v1.TestkitService/GetOAuthURL"
-	TestkitService_SocialLogin_FullMethodName               = "/testkit.v1.TestkitService/SocialLogin"
-	TestkitService_MiniProgramLogin_FullMethodName          = "/testkit.v1.TestkitService/MiniProgramLogin"
-	TestkitService_MiniProgramPhoneLogin_FullMethodName     = "/testkit.v1.TestkitService/MiniProgramPhoneLogin"
-	TestkitService_CreateUser_FullMethodName                = "/testkit.v1.TestkitService/CreateUser"
-	TestkitService_GetUser_FullMethodName                   = "/testkit.v1.TestkitService/GetUser"
-	TestkitService_ListUsers_FullMethodName                 = "/testkit.v1.TestkitService/ListUsers"
-	TestkitService_ListUsersPaged_FullMethodName            = "/testkit.v1.TestkitService/ListUsersPaged"
-	TestkitService_DisableUser_FullMethodName               = "/testkit.v1.TestkitService/DisableUser"
-	TestkitService_GetLoginLogs_FullMethodName              = "/testkit.v1.TestkitService/GetLoginLogs"
-	TestkitService_CreateGroup_FullMethodName               = "/testkit.v1.TestkitService/CreateGroup"
-	TestkitService_GetGroup_FullMethodName                  = "/testkit.v1.TestkitService/GetGroup"
-	TestkitService_UpdateGroup_FullMethodName               = "/testkit.v1.TestkitService/UpdateGroup"
-	TestkitService_ListGroups_FullMethodName                = "/testkit.v1.TestkitService/ListGroups"
-	TestkitService_DeleteGroup_FullMethodName               = "/testkit.v1.TestkitService/DeleteGroup"
-	TestkitService_AddGroupMember_FullMethodName            = "/testkit.v1.TestkitService/AddGroupMember"
-	TestkitService_RemoveGroupMember_FullMethodName         = "/testkit.v1.TestkitService/RemoveGroupMember"
-	TestkitService_ListGroupMembers_FullMethodName          = "/testkit.v1.TestkitService/ListGroupMembers"
-	TestkitService_AddGroupRole_FullMethodName              = "/testkit.v1.TestkitService/AddGroupRole"
-	TestkitService_RemoveGroupRole_FullMethodName           = "/testkit.v1.TestkitService/RemoveGroupRole"
-	TestkitService_ListGroupRoles_FullMethodName            = "/testkit.v1.TestkitService/ListGroupRoles"
-	TestkitService_CreateRole_FullMethodName                = "/testkit.v1.TestkitService/CreateRole"
-	TestkitService_GetRole_FullMethodName                   = "/testkit.v1.TestkitService/GetRole"
-	TestkitService_UpdateRole_FullMethodName                = "/testkit.v1.TestkitService/UpdateRole"
-	TestkitService_DeleteRole_FullMethodName                = "/testkit.v1.TestkitService/DeleteRole"
-	TestkitService_ListRoles_FullMethodName                 = "/testkit.v1.TestkitService/ListRoles"
-	TestkitService_AssignRole_FullMethodName                = "/testkit.v1.TestkitService/AssignRole"
-	TestkitService_RevokeRole_FullMethodName                = "/testkit.v1.TestkitService/RevokeRole"
-	TestkitService_ListUserRoles_FullMethodName             = "/testkit.v1.TestkitService/ListUserRoles"
-	TestkitService_ListPermissions_FullMethodName           = "/testkit.v1.TestkitService/ListPermissions"
-	TestkitService_CreatePermission_FullMethodName          = "/testkit.v1.TestkitService/CreatePermission"
-	TestkitService_GetPermission_FullMethodName             = "/testkit.v1.TestkitService/GetPermission"
-	TestkitService_UpdatePermission_FullMethodName          = "/testkit.v1.TestkitService/UpdatePermission"
-	TestkitService_DeletePermission_FullMethodName          = "/testkit.v1.TestkitService/DeletePermission"
-	TestkitService_CreatePermissionGroup_FullMethodName     = "/testkit.v1.TestkitService/CreatePermissionGroup"
-	TestkitService_GetPermissionGroup_FullMethodName        = "/testkit.v1.TestkitService/GetPermissionGroup"
-	TestkitService_UpdatePermissionGroup_FullMethodName     = "/testkit.v1.TestkitService/UpdatePermissionGroup"
-	TestkitService_DeletePermissionGroup_FullMethodName     = "/testkit.v1.TestkitService/DeletePermissionGroup"
-	TestkitService_ListPermissionGroups_FullMethodName      = "/testkit.v1.TestkitService/ListPermissionGroups"
-	TestkitService_GenerateUploadURL_FullMethodName         = "/testkit.v1.TestkitService/GenerateUploadURL"
-	TestkitService_GetSTSCredential_FullMethodName          = "/testkit.v1.TestkitService/GetSTSCredential"
-	TestkitService_BatchGetSTSCredential_FullMethodName     = "/testkit.v1.TestkitService/BatchGetSTSCredential"
-	TestkitService_ConfirmUpload_FullMethodName             = "/testkit.v1.TestkitService/ConfirmUpload"
-	TestkitService_CancelUpload_FullMethodName              = "/testkit.v1.TestkitService/CancelUpload"
-	TestkitService_GenerateDownloadURL_FullMethodName       = "/testkit.v1.TestkitService/GenerateDownloadURL"
-	TestkitService_GenerateProcessURL_FullMethodName        = "/testkit.v1.TestkitService/GenerateProcessURL"
-	TestkitService_GenerateCDNURL_FullMethodName            = "/testkit.v1.TestkitService/GenerateCDNURL"
-	TestkitService_CreateFileLink_FullMethodName            = "/testkit.v1.TestkitService/CreateFileLink"
-	TestkitService_GetFileLinkDownload_FullMethodName       = "/testkit.v1.TestkitService/GetFileLinkDownload"
-	TestkitService_ListMyFiles_FullMethodName               = "/testkit.v1.TestkitService/ListMyFiles"
-	TestkitService_ListMyFilesPaged_FullMethodName          = "/testkit.v1.TestkitService/ListMyFilesPaged"
-	TestkitService_GetMyFile_FullMethodName                 = "/testkit.v1.TestkitService/GetMyFile"
-	TestkitService_UpdateMyFile_FullMethodName              = "/testkit.v1.TestkitService/UpdateMyFile"
-	TestkitService_DeleteMyFile_FullMethodName              = "/testkit.v1.TestkitService/DeleteMyFile"
-	TestkitService_BatchDeleteMyFiles_FullMethodName        = "/testkit.v1.TestkitService/BatchDeleteMyFiles"
-	TestkitService_GetMyQuota_FullMethodName                = "/testkit.v1.TestkitService/GetMyQuota"
-	TestkitService_ListMyAuditLogs_FullMethodName           = "/testkit.v1.TestkitService/ListMyAuditLogs"
-	TestkitService_AdminListFiles_FullMethodName            = "/testkit.v1.TestkitService/AdminListFiles"
-	TestkitService_AdminGetFile_FullMethodName              = "/testkit.v1.TestkitService/AdminGetFile"
-	TestkitService_AdminDeleteFile_FullMethodName           = "/testkit.v1.TestkitService/AdminDeleteFile"
-	TestkitService_AdminGetQuota_FullMethodName             = "/testkit.v1.TestkitService/AdminGetQuota"
-	TestkitService_AdminSetQuota_FullMethodName             = "/testkit.v1.TestkitService/AdminSetQuota"
-	TestkitService_AdminGetStats_FullMethodName             = "/testkit.v1.TestkitService/AdminGetStats"
-	TestkitService_AdminListProviders_FullMethodName        = "/testkit.v1.TestkitService/AdminListProviders"
-	TestkitService_AdminListBuckets_FullMethodName          = "/testkit.v1.TestkitService/AdminListBuckets"
-	TestkitService_AdminSoftDeleteOwnerFiles_FullMethodName = "/testkit.v1.TestkitService/AdminSoftDeleteOwnerFiles"
-	TestkitService_AdminDeleteOwner_FullMethodName          = "/testkit.v1.TestkitService/AdminDeleteOwner"
-	TestkitService_AdminListAuditLogs_FullMethodName        = "/testkit.v1.TestkitService/AdminListAuditLogs"
-	TestkitService_SendEmail_FullMethodName                 = "/testkit.v1.TestkitService/SendEmail"
-	TestkitService_SendSMS_FullMethodName                   = "/testkit.v1.TestkitService/SendSMS"
-	TestkitService_GetEmail_FullMethodName                  = "/testkit.v1.TestkitService/GetEmail"
-	TestkitService_ListEmails_FullMethodName                = "/testkit.v1.TestkitService/ListEmails"
-	TestkitService_ListEmailsByCursor_FullMethodName        = "/testkit.v1.TestkitService/ListEmailsByCursor"
-	TestkitService_GetEmailStats_FullMethodName             = "/testkit.v1.TestkitService/GetEmailStats"
-	TestkitService_ListEmailSenders_FullMethodName          = "/testkit.v1.TestkitService/ListEmailSenders"
-	TestkitService_GetSMS_FullMethodName                    = "/testkit.v1.TestkitService/GetSMS"
-	TestkitService_ListSMS_FullMethodName                   = "/testkit.v1.TestkitService/ListSMS"
-	TestkitService_ListSMSByCursor_FullMethodName           = "/testkit.v1.TestkitService/ListSMSByCursor"
-	TestkitService_GetSMSStats_FullMethodName               = "/testkit.v1.TestkitService/GetSMSStats"
-	TestkitService_ListSMSRegions_FullMethodName            = "/testkit.v1.TestkitService/ListSMSRegions"
-	TestkitService_ListRegionCodes_FullMethodName           = "/testkit.v1.TestkitService/ListRegionCodes"
-	TestkitService_ListSMSSenders_FullMethodName            = "/testkit.v1.TestkitService/ListSMSSenders"
-	TestkitService_NextID_FullMethodName                    = "/testkit.v1.TestkitService/NextID"
-	TestkitService_BatchNextID_FullMethodName               = "/testkit.v1.TestkitService/BatchNextID"
-	TestkitService_Decompose_FullMethodName                 = "/testkit.v1.TestkitService/Decompose"
-	TestkitService_GetDashboard_FullMethodName              = "/testkit.v1.TestkitService/GetDashboard"
-	TestkitService_Activate_FullMethodName                  = "/testkit.v1.TestkitService/Activate"
-	TestkitService_Deactivate_FullMethodName                = "/testkit.v1.TestkitService/Deactivate"
-	TestkitService_TrialStart_FullMethodName                = "/testkit.v1.TestkitService/TrialStart"
-	TestkitService_Health_FullMethodName                    = "/testkit.v1.TestkitService/Health"
-	TestkitService_CreateKey_FullMethodName                 = "/testkit.v1.TestkitService/CreateKey"
-	TestkitService_ShowKey_FullMethodName                   = "/testkit.v1.TestkitService/ShowKey"
-	TestkitService_ListKeys_FullMethodName                  = "/testkit.v1.TestkitService/ListKeys"
-	TestkitService_UpdateKey_FullMethodName                 = "/testkit.v1.TestkitService/UpdateKey"
-	TestkitService_RevokeKey_FullMethodName                 = "/testkit.v1.TestkitService/RevokeKey"
-	TestkitService_UnrevokeKey_FullMethodName               = "/testkit.v1.TestkitService/UnrevokeKey"
-	TestkitService_DeleteKey_FullMethodName                 = "/testkit.v1.TestkitService/DeleteKey"
-	TestkitService_GrantModule_FullMethodName               = "/testkit.v1.TestkitService/GrantModule"
-	TestkitService_RevokeModule_FullMethodName              = "/testkit.v1.TestkitService/RevokeModule"
-	TestkitService_ListKeyDevices_FullMethodName            = "/testkit.v1.TestkitService/ListKeyDevices"
-	TestkitService_KickDevice_FullMethodName                = "/testkit.v1.TestkitService/KickDevice"
-	TestkitService_ShowTrial_FullMethodName                 = "/testkit.v1.TestkitService/ShowTrial"
-	TestkitService_ResetTrial_FullMethodName                = "/testkit.v1.TestkitService/ResetTrial"
-	TestkitService_ShowPubKey_FullMethodName                = "/testkit.v1.TestkitService/ShowPubKey"
-	TestkitService_Ingest_FullMethodName                    = "/testkit.v1.TestkitService/Ingest"
-	TestkitService_CreateApp_FullMethodName                 = "/testkit.v1.TestkitService/CreateApp"
-	TestkitService_GetApp_FullMethodName                    = "/testkit.v1.TestkitService/GetApp"
-	TestkitService_UpdateApp_FullMethodName                 = "/testkit.v1.TestkitService/UpdateApp"
-	TestkitService_RotateToken_FullMethodName               = "/testkit.v1.TestkitService/RotateToken"
-	TestkitService_RevokeToken_FullMethodName               = "/testkit.v1.TestkitService/RevokeToken"
-	TestkitService_CreateSigningKey_FullMethodName          = "/testkit.v1.TestkitService/CreateSigningKey"
-	TestkitService_RevokeSigningKey_FullMethodName          = "/testkit.v1.TestkitService/RevokeSigningKey"
-	TestkitService_ReplaceEventRules_FullMethodName         = "/testkit.v1.TestkitService/ReplaceEventRules"
-	TestkitService_SetVersionBlocked_FullMethodName         = "/testkit.v1.TestkitService/SetVersionBlocked"
-	TestkitService_GetAppStats_FullMethodName               = "/testkit.v1.TestkitService/GetAppStats"
-	TestkitService_ListCountries_FullMethodName             = "/testkit.v1.TestkitService/ListCountries"
-	TestkitService_GetCountries_FullMethodName              = "/testkit.v1.TestkitService/GetCountries"
-	TestkitService_ListTimezones_FullMethodName             = "/testkit.v1.TestkitService/ListTimezones"
-	TestkitService_ListLanguages_FullMethodName             = "/testkit.v1.TestkitService/ListLanguages"
-	TestkitService_ListCurrencies_FullMethodName            = "/testkit.v1.TestkitService/ListCurrencies"
-	TestkitService_ListRegionGroups_FullMethodName          = "/testkit.v1.TestkitService/ListRegionGroups"
-	TestkitService_ParsePhone_FullMethodName                = "/testkit.v1.TestkitService/ParsePhone"
-	TestkitService_ResolveCodes_FullMethodName              = "/testkit.v1.TestkitService/ResolveCodes"
-	TestkitService_GetCountryProfile_FullMethodName         = "/testkit.v1.TestkitService/GetCountryProfile"
-	TestkitService_ListCountriesByRegion_FullMethodName     = "/testkit.v1.TestkitService/ListCountriesByRegion"
-	TestkitService_GetCountryDefaults_FullMethodName        = "/testkit.v1.TestkitService/GetCountryDefaults"
-	TestkitService_GetDataInfo_FullMethodName               = "/testkit.v1.TestkitService/GetDataInfo"
+	TestkitService_Ping_FullMethodName                        = "/testkit.v1.TestkitService/Ping"
+	TestkitService_Login_FullMethodName                       = "/testkit.v1.TestkitService/Login"
+	TestkitService_Register_FullMethodName                    = "/testkit.v1.TestkitService/Register"
+	TestkitService_SendVerificationCode_FullMethodName        = "/testkit.v1.TestkitService/SendVerificationCode"
+	TestkitService_Logout_FullMethodName                      = "/testkit.v1.TestkitService/Logout"
+	TestkitService_GetProfile_FullMethodName                  = "/testkit.v1.TestkitService/GetProfile"
+	TestkitService_UpdateProfile_FullMethodName               = "/testkit.v1.TestkitService/UpdateProfile"
+	TestkitService_ChangePassword_FullMethodName              = "/testkit.v1.TestkitService/ChangePassword"
+	TestkitService_ResetPassword_FullMethodName               = "/testkit.v1.TestkitService/ResetPassword"
+	TestkitService_ListIdentities_FullMethodName              = "/testkit.v1.TestkitService/ListIdentities"
+	TestkitService_BindIdentity_FullMethodName                = "/testkit.v1.TestkitService/BindIdentity"
+	TestkitService_BindOAuthIdentity_FullMethodName           = "/testkit.v1.TestkitService/BindOAuthIdentity"
+	TestkitService_UnbindIdentity_FullMethodName              = "/testkit.v1.TestkitService/UnbindIdentity"
+	TestkitService_ListSessions_FullMethodName                = "/testkit.v1.TestkitService/ListSessions"
+	TestkitService_RevokeSession_FullMethodName               = "/testkit.v1.TestkitService/RevokeSession"
+	TestkitService_RevokeAllSessions_FullMethodName           = "/testkit.v1.TestkitService/RevokeAllSessions"
+	TestkitService_GetSession_FullMethodName                  = "/testkit.v1.TestkitService/GetSession"
+	TestkitService_IssueSessionCode_FullMethodName            = "/testkit.v1.TestkitService/IssueSessionCode"
+	TestkitService_ExchangeSessionCode_FullMethodName         = "/testkit.v1.TestkitService/ExchangeSessionCode"
+	TestkitService_GetOAuthURL_FullMethodName                 = "/testkit.v1.TestkitService/GetOAuthURL"
+	TestkitService_SocialLogin_FullMethodName                 = "/testkit.v1.TestkitService/SocialLogin"
+	TestkitService_MiniProgramLogin_FullMethodName            = "/testkit.v1.TestkitService/MiniProgramLogin"
+	TestkitService_MiniProgramPhoneLogin_FullMethodName       = "/testkit.v1.TestkitService/MiniProgramPhoneLogin"
+	TestkitService_CreateUser_FullMethodName                  = "/testkit.v1.TestkitService/CreateUser"
+	TestkitService_GetUser_FullMethodName                     = "/testkit.v1.TestkitService/GetUser"
+	TestkitService_ListUsers_FullMethodName                   = "/testkit.v1.TestkitService/ListUsers"
+	TestkitService_ListUsersPaged_FullMethodName              = "/testkit.v1.TestkitService/ListUsersPaged"
+	TestkitService_DisableUser_FullMethodName                 = "/testkit.v1.TestkitService/DisableUser"
+	TestkitService_GetLoginLogs_FullMethodName                = "/testkit.v1.TestkitService/GetLoginLogs"
+	TestkitService_CreateGroup_FullMethodName                 = "/testkit.v1.TestkitService/CreateGroup"
+	TestkitService_GetGroup_FullMethodName                    = "/testkit.v1.TestkitService/GetGroup"
+	TestkitService_UpdateGroup_FullMethodName                 = "/testkit.v1.TestkitService/UpdateGroup"
+	TestkitService_ListGroups_FullMethodName                  = "/testkit.v1.TestkitService/ListGroups"
+	TestkitService_DeleteGroup_FullMethodName                 = "/testkit.v1.TestkitService/DeleteGroup"
+	TestkitService_AddGroupMember_FullMethodName              = "/testkit.v1.TestkitService/AddGroupMember"
+	TestkitService_RemoveGroupMember_FullMethodName           = "/testkit.v1.TestkitService/RemoveGroupMember"
+	TestkitService_ListGroupMembers_FullMethodName            = "/testkit.v1.TestkitService/ListGroupMembers"
+	TestkitService_AddGroupRole_FullMethodName                = "/testkit.v1.TestkitService/AddGroupRole"
+	TestkitService_RemoveGroupRole_FullMethodName             = "/testkit.v1.TestkitService/RemoveGroupRole"
+	TestkitService_ListGroupRoles_FullMethodName              = "/testkit.v1.TestkitService/ListGroupRoles"
+	TestkitService_CreateRole_FullMethodName                  = "/testkit.v1.TestkitService/CreateRole"
+	TestkitService_GetRole_FullMethodName                     = "/testkit.v1.TestkitService/GetRole"
+	TestkitService_UpdateRole_FullMethodName                  = "/testkit.v1.TestkitService/UpdateRole"
+	TestkitService_DeleteRole_FullMethodName                  = "/testkit.v1.TestkitService/DeleteRole"
+	TestkitService_ListRoles_FullMethodName                   = "/testkit.v1.TestkitService/ListRoles"
+	TestkitService_AssignRole_FullMethodName                  = "/testkit.v1.TestkitService/AssignRole"
+	TestkitService_RevokeRole_FullMethodName                  = "/testkit.v1.TestkitService/RevokeRole"
+	TestkitService_ListUserRoles_FullMethodName               = "/testkit.v1.TestkitService/ListUserRoles"
+	TestkitService_ListPermissions_FullMethodName             = "/testkit.v1.TestkitService/ListPermissions"
+	TestkitService_CreatePermission_FullMethodName            = "/testkit.v1.TestkitService/CreatePermission"
+	TestkitService_GetPermission_FullMethodName               = "/testkit.v1.TestkitService/GetPermission"
+	TestkitService_UpdatePermission_FullMethodName            = "/testkit.v1.TestkitService/UpdatePermission"
+	TestkitService_DeletePermission_FullMethodName            = "/testkit.v1.TestkitService/DeletePermission"
+	TestkitService_CreatePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/CreatePermissionGroup"
+	TestkitService_GetPermissionGroup_FullMethodName          = "/testkit.v1.TestkitService/GetPermissionGroup"
+	TestkitService_UpdatePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/UpdatePermissionGroup"
+	TestkitService_DeletePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/DeletePermissionGroup"
+	TestkitService_ListPermissionGroups_FullMethodName        = "/testkit.v1.TestkitService/ListPermissionGroups"
+	TestkitService_GenerateUploadURL_FullMethodName           = "/testkit.v1.TestkitService/GenerateUploadURL"
+	TestkitService_GetSTSCredential_FullMethodName            = "/testkit.v1.TestkitService/GetSTSCredential"
+	TestkitService_BatchGetSTSCredential_FullMethodName       = "/testkit.v1.TestkitService/BatchGetSTSCredential"
+	TestkitService_ConfirmUpload_FullMethodName               = "/testkit.v1.TestkitService/ConfirmUpload"
+	TestkitService_CancelUpload_FullMethodName                = "/testkit.v1.TestkitService/CancelUpload"
+	TestkitService_GenerateDownloadURL_FullMethodName         = "/testkit.v1.TestkitService/GenerateDownloadURL"
+	TestkitService_GenerateProcessURL_FullMethodName          = "/testkit.v1.TestkitService/GenerateProcessURL"
+	TestkitService_GenerateCDNURL_FullMethodName              = "/testkit.v1.TestkitService/GenerateCDNURL"
+	TestkitService_CreateFileLink_FullMethodName              = "/testkit.v1.TestkitService/CreateFileLink"
+	TestkitService_GetFileLinkDownload_FullMethodName         = "/testkit.v1.TestkitService/GetFileLinkDownload"
+	TestkitService_ListMyFiles_FullMethodName                 = "/testkit.v1.TestkitService/ListMyFiles"
+	TestkitService_ListMyFilesPaged_FullMethodName            = "/testkit.v1.TestkitService/ListMyFilesPaged"
+	TestkitService_GetMyFile_FullMethodName                   = "/testkit.v1.TestkitService/GetMyFile"
+	TestkitService_UpdateMyFile_FullMethodName                = "/testkit.v1.TestkitService/UpdateMyFile"
+	TestkitService_DeleteMyFile_FullMethodName                = "/testkit.v1.TestkitService/DeleteMyFile"
+	TestkitService_BatchDeleteMyFiles_FullMethodName          = "/testkit.v1.TestkitService/BatchDeleteMyFiles"
+	TestkitService_GetMyQuota_FullMethodName                  = "/testkit.v1.TestkitService/GetMyQuota"
+	TestkitService_ListMyAuditLogs_FullMethodName             = "/testkit.v1.TestkitService/ListMyAuditLogs"
+	TestkitService_AdminListFiles_FullMethodName              = "/testkit.v1.TestkitService/AdminListFiles"
+	TestkitService_AdminGetFile_FullMethodName                = "/testkit.v1.TestkitService/AdminGetFile"
+	TestkitService_AdminDeleteFile_FullMethodName             = "/testkit.v1.TestkitService/AdminDeleteFile"
+	TestkitService_AdminGetQuota_FullMethodName               = "/testkit.v1.TestkitService/AdminGetQuota"
+	TestkitService_AdminSetQuota_FullMethodName               = "/testkit.v1.TestkitService/AdminSetQuota"
+	TestkitService_AdminGetStats_FullMethodName               = "/testkit.v1.TestkitService/AdminGetStats"
+	TestkitService_AdminListProviders_FullMethodName          = "/testkit.v1.TestkitService/AdminListProviders"
+	TestkitService_AdminListBuckets_FullMethodName            = "/testkit.v1.TestkitService/AdminListBuckets"
+	TestkitService_AdminCreateProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminCreateProvider"
+	TestkitService_AdminUpdateProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminUpdateProvider"
+	TestkitService_AdminDeleteProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminDeleteProvider"
+	TestkitService_AdminUpsertBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminUpsertBucket"
+	TestkitService_AdminDeleteBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminDeleteBucket"
+	TestkitService_AdminGetSettings_FullMethodName            = "/testkit.v1.TestkitService/AdminGetSettings"
+	TestkitService_AdminUpdateSettings_FullMethodName         = "/testkit.v1.TestkitService/AdminUpdateSettings"
+	TestkitService_AdminSoftDeleteOwnerFiles_FullMethodName   = "/testkit.v1.TestkitService/AdminSoftDeleteOwnerFiles"
+	TestkitService_AdminDeleteOwner_FullMethodName            = "/testkit.v1.TestkitService/AdminDeleteOwner"
+	TestkitService_AdminListAuditLogs_FullMethodName          = "/testkit.v1.TestkitService/AdminListAuditLogs"
+	TestkitService_SendEmail_FullMethodName                   = "/testkit.v1.TestkitService/SendEmail"
+	TestkitService_SendSMS_FullMethodName                     = "/testkit.v1.TestkitService/SendSMS"
+	TestkitService_GetEmail_FullMethodName                    = "/testkit.v1.TestkitService/GetEmail"
+	TestkitService_ListEmails_FullMethodName                  = "/testkit.v1.TestkitService/ListEmails"
+	TestkitService_ListEmailsByCursor_FullMethodName          = "/testkit.v1.TestkitService/ListEmailsByCursor"
+	TestkitService_GetEmailStats_FullMethodName               = "/testkit.v1.TestkitService/GetEmailStats"
+	TestkitService_GetSMS_FullMethodName                      = "/testkit.v1.TestkitService/GetSMS"
+	TestkitService_ListSMS_FullMethodName                     = "/testkit.v1.TestkitService/ListSMS"
+	TestkitService_ListSMSByCursor_FullMethodName             = "/testkit.v1.TestkitService/ListSMSByCursor"
+	TestkitService_GetSMSStats_FullMethodName                 = "/testkit.v1.TestkitService/GetSMSStats"
+	TestkitService_ListSMSRegions_FullMethodName              = "/testkit.v1.TestkitService/ListSMSRegions"
+	TestkitService_ListRegionCodes_FullMethodName             = "/testkit.v1.TestkitService/ListRegionCodes"
+	TestkitService_MessageCreateApp_FullMethodName            = "/testkit.v1.TestkitService/MessageCreateApp"
+	TestkitService_MessageGetApp_FullMethodName               = "/testkit.v1.TestkitService/MessageGetApp"
+	TestkitService_MessageUpdateApp_FullMethodName            = "/testkit.v1.TestkitService/MessageUpdateApp"
+	TestkitService_MessageRotateAppSecret_FullMethodName      = "/testkit.v1.TestkitService/MessageRotateAppSecret"
+	TestkitService_MessageListApps_FullMethodName             = "/testkit.v1.TestkitService/MessageListApps"
+	TestkitService_MessageDeleteApp_FullMethodName            = "/testkit.v1.TestkitService/MessageDeleteApp"
+	TestkitService_MessageCreateChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageCreateChannelAccount"
+	TestkitService_MessageUpdateChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageUpdateChannelAccount"
+	TestkitService_MessageDeleteChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageDeleteChannelAccount"
+	TestkitService_MessageListChannelAccounts_FullMethodName  = "/testkit.v1.TestkitService/MessageListChannelAccounts"
+	TestkitService_MessageCreateSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageCreateSignature"
+	TestkitService_MessageUpdateSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageUpdateSignature"
+	TestkitService_MessageDeleteSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageDeleteSignature"
+	TestkitService_MessageListSignatures_FullMethodName       = "/testkit.v1.TestkitService/MessageListSignatures"
+	TestkitService_MessageCreateTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageCreateTemplate"
+	TestkitService_MessageUpdateTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageUpdateTemplate"
+	TestkitService_MessageDeleteTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageDeleteTemplate"
+	TestkitService_MessageListTemplates_FullMethodName        = "/testkit.v1.TestkitService/MessageListTemplates"
+	TestkitService_MessageCreatePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageCreatePolicy"
+	TestkitService_MessageUpdatePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageUpdatePolicy"
+	TestkitService_MessageDeletePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageDeletePolicy"
+	TestkitService_ListPolicies_FullMethodName                = "/testkit.v1.TestkitService/ListPolicies"
+	TestkitService_NextID_FullMethodName                      = "/testkit.v1.TestkitService/NextID"
+	TestkitService_BatchNextID_FullMethodName                 = "/testkit.v1.TestkitService/BatchNextID"
+	TestkitService_Decompose_FullMethodName                   = "/testkit.v1.TestkitService/Decompose"
+	TestkitService_GetDashboard_FullMethodName                = "/testkit.v1.TestkitService/GetDashboard"
+	TestkitService_Activate_FullMethodName                    = "/testkit.v1.TestkitService/Activate"
+	TestkitService_Deactivate_FullMethodName                  = "/testkit.v1.TestkitService/Deactivate"
+	TestkitService_TrialStart_FullMethodName                  = "/testkit.v1.TestkitService/TrialStart"
+	TestkitService_Health_FullMethodName                      = "/testkit.v1.TestkitService/Health"
+	TestkitService_CreateKey_FullMethodName                   = "/testkit.v1.TestkitService/CreateKey"
+	TestkitService_ShowKey_FullMethodName                     = "/testkit.v1.TestkitService/ShowKey"
+	TestkitService_ListKeys_FullMethodName                    = "/testkit.v1.TestkitService/ListKeys"
+	TestkitService_UpdateKey_FullMethodName                   = "/testkit.v1.TestkitService/UpdateKey"
+	TestkitService_RevokeKey_FullMethodName                   = "/testkit.v1.TestkitService/RevokeKey"
+	TestkitService_UnrevokeKey_FullMethodName                 = "/testkit.v1.TestkitService/UnrevokeKey"
+	TestkitService_DeleteKey_FullMethodName                   = "/testkit.v1.TestkitService/DeleteKey"
+	TestkitService_GrantModule_FullMethodName                 = "/testkit.v1.TestkitService/GrantModule"
+	TestkitService_RevokeModule_FullMethodName                = "/testkit.v1.TestkitService/RevokeModule"
+	TestkitService_ListKeyDevices_FullMethodName              = "/testkit.v1.TestkitService/ListKeyDevices"
+	TestkitService_KickDevice_FullMethodName                  = "/testkit.v1.TestkitService/KickDevice"
+	TestkitService_ShowTrial_FullMethodName                   = "/testkit.v1.TestkitService/ShowTrial"
+	TestkitService_ResetTrial_FullMethodName                  = "/testkit.v1.TestkitService/ResetTrial"
+	TestkitService_ShowPubKey_FullMethodName                  = "/testkit.v1.TestkitService/ShowPubKey"
+	TestkitService_Ingest_FullMethodName                      = "/testkit.v1.TestkitService/Ingest"
+	TestkitService_CreateApp_FullMethodName                   = "/testkit.v1.TestkitService/CreateApp"
+	TestkitService_GetApp_FullMethodName                      = "/testkit.v1.TestkitService/GetApp"
+	TestkitService_UpdateApp_FullMethodName                   = "/testkit.v1.TestkitService/UpdateApp"
+	TestkitService_RotateToken_FullMethodName                 = "/testkit.v1.TestkitService/RotateToken"
+	TestkitService_RevokeToken_FullMethodName                 = "/testkit.v1.TestkitService/RevokeToken"
+	TestkitService_CreateSigningKey_FullMethodName            = "/testkit.v1.TestkitService/CreateSigningKey"
+	TestkitService_RevokeSigningKey_FullMethodName            = "/testkit.v1.TestkitService/RevokeSigningKey"
+	TestkitService_ReplaceEventRules_FullMethodName           = "/testkit.v1.TestkitService/ReplaceEventRules"
+	TestkitService_SetVersionBlocked_FullMethodName           = "/testkit.v1.TestkitService/SetVersionBlocked"
+	TestkitService_GetAppStats_FullMethodName                 = "/testkit.v1.TestkitService/GetAppStats"
+	TestkitService_ListCountries_FullMethodName               = "/testkit.v1.TestkitService/ListCountries"
+	TestkitService_GetCountries_FullMethodName                = "/testkit.v1.TestkitService/GetCountries"
+	TestkitService_ListTimezones_FullMethodName               = "/testkit.v1.TestkitService/ListTimezones"
+	TestkitService_ListLanguages_FullMethodName               = "/testkit.v1.TestkitService/ListLanguages"
+	TestkitService_ListCurrencies_FullMethodName              = "/testkit.v1.TestkitService/ListCurrencies"
+	TestkitService_ListRegionGroups_FullMethodName            = "/testkit.v1.TestkitService/ListRegionGroups"
+	TestkitService_ParsePhone_FullMethodName                  = "/testkit.v1.TestkitService/ParsePhone"
+	TestkitService_ResolveCodes_FullMethodName                = "/testkit.v1.TestkitService/ResolveCodes"
+	TestkitService_GetCountryProfile_FullMethodName           = "/testkit.v1.TestkitService/GetCountryProfile"
+	TestkitService_ListCountriesByRegion_FullMethodName       = "/testkit.v1.TestkitService/ListCountriesByRegion"
+	TestkitService_GetCountryDefaults_FullMethodName          = "/testkit.v1.TestkitService/GetCountryDefaults"
+	TestkitService_GetDataInfo_FullMethodName                 = "/testkit.v1.TestkitService/GetDataInfo"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -280,10 +309,19 @@ type TestkitServiceClient interface {
 	AdminGetStats(ctx context.Context, in *AdminGetStatsRequest, opts ...grpc.CallOption) (*AdminGetStatsResponse, error)
 	AdminListProviders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminListProvidersResponse, error)
 	AdminListBuckets(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminListBucketsResponse, error)
+	// Provider / bucket / settings management (1:1 forwards to
+	// storage-service admin RPCs; the live registry rebuilds immediately).
+	AdminCreateProvider(ctx context.Context, in *v11.AdminCreateProviderRequest, opts ...grpc.CallOption) (*v11.AdminCreateProviderResponse, error)
+	AdminUpdateProvider(ctx context.Context, in *v11.AdminUpdateProviderRequest, opts ...grpc.CallOption) (*v11.AdminUpdateProviderResponse, error)
+	AdminDeleteProvider(ctx context.Context, in *v11.AdminDeleteProviderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AdminUpsertBucket(ctx context.Context, in *v11.AdminUpsertBucketRequest, opts ...grpc.CallOption) (*v11.AdminUpsertBucketResponse, error)
+	AdminDeleteBucket(ctx context.Context, in *v11.AdminDeleteBucketRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AdminGetSettings(ctx context.Context, in *v11.AdminGetSettingsRequest, opts ...grpc.CallOption) (*v11.AdminGetSettingsResponse, error)
+	AdminUpdateSettings(ctx context.Context, in *v11.AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*v11.AdminUpdateSettingsResponse, error)
 	AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error)
 	AdminDeleteOwner(ctx context.Context, in *AdminDeleteOwnerRequest, opts ...grpc.CallOption) (*AdminDeleteOwnerResponse, error)
 	AdminListAuditLogs(ctx context.Context, in *AdminListAuditLogsRequest, opts ...grpc.CallOption) (*AdminListAuditLogsResponse, error)
-	// Send (sender_id injected from config).
+	// Send (app credentials injected from config).
 	SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	// Email records.
@@ -291,7 +329,6 @@ type TestkitServiceClient interface {
 	ListEmails(ctx context.Context, in *ListEmailsRequest, opts ...grpc.CallOption) (*ListEmailsResponse, error)
 	ListEmailsByCursor(ctx context.Context, in *ListEmailsByCursorRequest, opts ...grpc.CallOption) (*ListEmailsByCursorResponse, error)
 	GetEmailStats(ctx context.Context, in *GetEmailStatsRequest, opts ...grpc.CallOption) (*EmailStatsResponse, error)
-	ListEmailSenders(ctx context.Context, in *ListEmailSendersRequest, opts ...grpc.CallOption) (*ListEmailSendersResponse, error)
 	// SMS records.
 	GetSMS(ctx context.Context, in *GetSMSRequest, opts ...grpc.CallOption) (*SMSRecord, error)
 	ListSMS(ctx context.Context, in *ListSMSRequest, opts ...grpc.CallOption) (*ListSMSResponse, error)
@@ -299,7 +336,28 @@ type TestkitServiceClient interface {
 	GetSMSStats(ctx context.Context, in *GetSMSStatsRequest, opts ...grpc.CallOption) (*SMSStatsResponse, error)
 	ListSMSRegions(ctx context.Context, in *ListSMSRegionsRequest, opts ...grpc.CallOption) (*ListSMSRegionsResponse, error)
 	ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error)
-	ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error)
+	MessageCreateApp(ctx context.Context, in *v12.CreateAppRequest, opts ...grpc.CallOption) (*v12.CreateAppResponse, error)
+	MessageGetApp(ctx context.Context, in *v12.GetAppRequest, opts ...grpc.CallOption) (*v12.GetAppResponse, error)
+	MessageUpdateApp(ctx context.Context, in *v12.UpdateAppRequest, opts ...grpc.CallOption) (*v12.UpdateAppResponse, error)
+	MessageRotateAppSecret(ctx context.Context, in *v12.RotateAppSecretRequest, opts ...grpc.CallOption) (*v12.RotateAppSecretResponse, error)
+	MessageListApps(ctx context.Context, in *v12.ListAppsRequest, opts ...grpc.CallOption) (*v12.ListAppsResponse, error)
+	MessageDeleteApp(ctx context.Context, in *v12.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MessageCreateChannelAccount(ctx context.Context, in *v12.CreateChannelAccountRequest, opts ...grpc.CallOption) (*v12.CreateChannelAccountResponse, error)
+	MessageUpdateChannelAccount(ctx context.Context, in *v12.UpdateChannelAccountRequest, opts ...grpc.CallOption) (*v12.UpdateChannelAccountResponse, error)
+	MessageDeleteChannelAccount(ctx context.Context, in *v12.DeleteChannelAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MessageListChannelAccounts(ctx context.Context, in *v12.ListChannelAccountsRequest, opts ...grpc.CallOption) (*v12.ListChannelAccountsResponse, error)
+	MessageCreateSignature(ctx context.Context, in *v12.CreateSignatureRequest, opts ...grpc.CallOption) (*v12.CreateSignatureResponse, error)
+	MessageUpdateSignature(ctx context.Context, in *v12.UpdateSignatureRequest, opts ...grpc.CallOption) (*v12.UpdateSignatureResponse, error)
+	MessageDeleteSignature(ctx context.Context, in *v12.DeleteSignatureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MessageListSignatures(ctx context.Context, in *v12.ListSignaturesRequest, opts ...grpc.CallOption) (*v12.ListSignaturesResponse, error)
+	MessageCreateTemplate(ctx context.Context, in *v12.CreateTemplateRequest, opts ...grpc.CallOption) (*v12.CreateTemplateResponse, error)
+	MessageUpdateTemplate(ctx context.Context, in *v12.UpdateTemplateRequest, opts ...grpc.CallOption) (*v12.UpdateTemplateResponse, error)
+	MessageDeleteTemplate(ctx context.Context, in *v12.DeleteTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MessageListTemplates(ctx context.Context, in *v12.ListTemplatesRequest, opts ...grpc.CallOption) (*v12.ListTemplatesResponse, error)
+	MessageCreatePolicy(ctx context.Context, in *v12.CreatePolicyRequest, opts ...grpc.CallOption) (*v12.CreatePolicyResponse, error)
+	MessageUpdatePolicy(ctx context.Context, in *v12.UpdatePolicyRequest, opts ...grpc.CallOption) (*v12.UpdatePolicyResponse, error)
+	MessageDeletePolicy(ctx context.Context, in *v12.DeletePolicyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListPolicies(ctx context.Context, in *v12.ListPoliciesRequest, opts ...grpc.CallOption) (*v12.ListPoliciesResponse, error)
 	// ---- GID debug (P5) ----
 	NextID(ctx context.Context, in *NextIDRequest, opts ...grpc.CallOption) (*NextIDResponse, error)
 	BatchNextID(ctx context.Context, in *BatchNextIDRequest, opts ...grpc.CallOption) (*BatchNextIDResponse, error)
@@ -335,20 +393,20 @@ type TestkitServiceClient interface {
 	ReplaceEventRules(ctx context.Context, in *ReplaceEventRulesRequest, opts ...grpc.CallOption) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(ctx context.Context, in *SetVersionBlockedRequest, opts ...grpc.CallOption) (*SetVersionBlockedResponse, error)
 	GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error)
-	ListCountries(ctx context.Context, in *v11.ListCountriesRequest, opts ...grpc.CallOption) (*v11.ListCountriesResponse, error)
+	ListCountries(ctx context.Context, in *v13.ListCountriesRequest, opts ...grpc.CallOption) (*v13.ListCountriesResponse, error)
 	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
 	// also accepted by the gateway).
-	GetCountries(ctx context.Context, in *v11.GetCountriesRequest, opts ...grpc.CallOption) (*v11.GetCountriesResponse, error)
-	ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error)
-	ListLanguages(ctx context.Context, in *v11.ListLanguagesRequest, opts ...grpc.CallOption) (*v11.ListLanguagesResponse, error)
-	ListCurrencies(ctx context.Context, in *v11.ListCurrenciesRequest, opts ...grpc.CallOption) (*v11.ListCurrenciesResponse, error)
-	ListRegionGroups(ctx context.Context, in *v11.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v11.ListRegionGroupsResponse, error)
-	ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error)
-	ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error)
-	GetCountryProfile(ctx context.Context, in *v11.GetCountryProfileRequest, opts ...grpc.CallOption) (*v11.GetCountryProfileResponse, error)
-	ListCountriesByRegion(ctx context.Context, in *v11.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v11.ListCountriesByRegionResponse, error)
-	GetCountryDefaults(ctx context.Context, in *v11.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v11.GetCountryDefaultsResponse, error)
-	GetDataInfo(ctx context.Context, in *v11.GetDataInfoRequest, opts ...grpc.CallOption) (*v11.GetDataInfoResponse, error)
+	GetCountries(ctx context.Context, in *v13.GetCountriesRequest, opts ...grpc.CallOption) (*v13.GetCountriesResponse, error)
+	ListTimezones(ctx context.Context, in *v13.ListTimezonesRequest, opts ...grpc.CallOption) (*v13.ListTimezonesResponse, error)
+	ListLanguages(ctx context.Context, in *v13.ListLanguagesRequest, opts ...grpc.CallOption) (*v13.ListLanguagesResponse, error)
+	ListCurrencies(ctx context.Context, in *v13.ListCurrenciesRequest, opts ...grpc.CallOption) (*v13.ListCurrenciesResponse, error)
+	ListRegionGroups(ctx context.Context, in *v13.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v13.ListRegionGroupsResponse, error)
+	ParsePhone(ctx context.Context, in *v13.ParsePhoneRequest, opts ...grpc.CallOption) (*v13.ParsePhoneResponse, error)
+	ResolveCodes(ctx context.Context, in *v13.ResolveCodesRequest, opts ...grpc.CallOption) (*v13.ResolveCodesResponse, error)
+	GetCountryProfile(ctx context.Context, in *v13.GetCountryProfileRequest, opts ...grpc.CallOption) (*v13.GetCountryProfileResponse, error)
+	ListCountriesByRegion(ctx context.Context, in *v13.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v13.ListCountriesByRegionResponse, error)
+	GetCountryDefaults(ctx context.Context, in *v13.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v13.GetCountryDefaultsResponse, error)
+	GetDataInfo(ctx context.Context, in *v13.GetDataInfoRequest, opts ...grpc.CallOption) (*v13.GetDataInfoResponse, error)
 }
 
 type testkitServiceClient struct {
@@ -1199,6 +1257,76 @@ func (c *testkitServiceClient) AdminListBuckets(ctx context.Context, in *emptypb
 	return out, nil
 }
 
+func (c *testkitServiceClient) AdminCreateProvider(ctx context.Context, in *v11.AdminCreateProviderRequest, opts ...grpc.CallOption) (*v11.AdminCreateProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminCreateProviderResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminCreateProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminUpdateProvider(ctx context.Context, in *v11.AdminUpdateProviderRequest, opts ...grpc.CallOption) (*v11.AdminUpdateProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminUpdateProviderResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminUpdateProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminDeleteProvider(ctx context.Context, in *v11.AdminDeleteProviderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_AdminDeleteProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminUpsertBucket(ctx context.Context, in *v11.AdminUpsertBucketRequest, opts ...grpc.CallOption) (*v11.AdminUpsertBucketResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminUpsertBucketResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminUpsertBucket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminDeleteBucket(ctx context.Context, in *v11.AdminDeleteBucketRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_AdminDeleteBucket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminGetSettings(ctx context.Context, in *v11.AdminGetSettingsRequest, opts ...grpc.CallOption) (*v11.AdminGetSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminGetSettingsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminGetSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminUpdateSettings(ctx context.Context, in *v11.AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*v11.AdminUpdateSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminUpdateSettingsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminUpdateSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *testkitServiceClient) AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminSoftDeleteOwnerFilesResponse)
@@ -1289,16 +1417,6 @@ func (c *testkitServiceClient) GetEmailStats(ctx context.Context, in *GetEmailSt
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListEmailSenders(ctx context.Context, in *ListEmailSendersRequest, opts ...grpc.CallOption) (*ListEmailSendersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListEmailSendersResponse)
-	err := c.cc.Invoke(ctx, TestkitService_ListEmailSenders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *testkitServiceClient) GetSMS(ctx context.Context, in *GetSMSRequest, opts ...grpc.CallOption) (*SMSRecord, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SMSRecord)
@@ -1359,10 +1477,220 @@ func (c *testkitServiceClient) ListRegionCodes(ctx context.Context, in *ListRegi
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error) {
+func (c *testkitServiceClient) MessageCreateApp(ctx context.Context, in *v12.CreateAppRequest, opts ...grpc.CallOption) (*v12.CreateAppResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSMSSendersResponse)
-	err := c.cc.Invoke(ctx, TestkitService_ListSMSSenders_FullMethodName, in, out, cOpts...)
+	out := new(v12.CreateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageGetApp(ctx context.Context, in *v12.GetAppRequest, opts ...grpc.CallOption) (*v12.GetAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.GetAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageGetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageUpdateApp(ctx context.Context, in *v12.UpdateAppRequest, opts ...grpc.CallOption) (*v12.UpdateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.UpdateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageRotateAppSecret(ctx context.Context, in *v12.RotateAppSecretRequest, opts ...grpc.CallOption) (*v12.RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageRotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageListApps(ctx context.Context, in *v12.ListAppsRequest, opts ...grpc.CallOption) (*v12.ListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.ListAppsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageDeleteApp(ctx context.Context, in *v12.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageCreateChannelAccount(ctx context.Context, in *v12.CreateChannelAccountRequest, opts ...grpc.CallOption) (*v12.CreateChannelAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.CreateChannelAccountResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreateChannelAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageUpdateChannelAccount(ctx context.Context, in *v12.UpdateChannelAccountRequest, opts ...grpc.CallOption) (*v12.UpdateChannelAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.UpdateChannelAccountResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateChannelAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageDeleteChannelAccount(ctx context.Context, in *v12.DeleteChannelAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteChannelAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageListChannelAccounts(ctx context.Context, in *v12.ListChannelAccountsRequest, opts ...grpc.CallOption) (*v12.ListChannelAccountsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.ListChannelAccountsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageListChannelAccounts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageCreateSignature(ctx context.Context, in *v12.CreateSignatureRequest, opts ...grpc.CallOption) (*v12.CreateSignatureResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.CreateSignatureResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreateSignature_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageUpdateSignature(ctx context.Context, in *v12.UpdateSignatureRequest, opts ...grpc.CallOption) (*v12.UpdateSignatureResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.UpdateSignatureResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateSignature_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageDeleteSignature(ctx context.Context, in *v12.DeleteSignatureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteSignature_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageListSignatures(ctx context.Context, in *v12.ListSignaturesRequest, opts ...grpc.CallOption) (*v12.ListSignaturesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.ListSignaturesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageListSignatures_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageCreateTemplate(ctx context.Context, in *v12.CreateTemplateRequest, opts ...grpc.CallOption) (*v12.CreateTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.CreateTemplateResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreateTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageUpdateTemplate(ctx context.Context, in *v12.UpdateTemplateRequest, opts ...grpc.CallOption) (*v12.UpdateTemplateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.UpdateTemplateResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageDeleteTemplate(ctx context.Context, in *v12.DeleteTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageListTemplates(ctx context.Context, in *v12.ListTemplatesRequest, opts ...grpc.CallOption) (*v12.ListTemplatesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.ListTemplatesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageListTemplates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageCreatePolicy(ctx context.Context, in *v12.CreatePolicyRequest, opts ...grpc.CallOption) (*v12.CreatePolicyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.CreatePolicyResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreatePolicy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageUpdatePolicy(ctx context.Context, in *v12.UpdatePolicyRequest, opts ...grpc.CallOption) (*v12.UpdatePolicyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.UpdatePolicyResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdatePolicy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) MessageDeletePolicy(ctx context.Context, in *v12.DeletePolicyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeletePolicy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) ListPolicies(ctx context.Context, in *v12.ListPoliciesRequest, opts ...grpc.CallOption) (*v12.ListPoliciesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v12.ListPoliciesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListPolicies_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1699,9 +2027,9 @@ func (c *testkitServiceClient) GetAppStats(ctx context.Context, in *GetAppStatsR
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListCountries(ctx context.Context, in *v11.ListCountriesRequest, opts ...grpc.CallOption) (*v11.ListCountriesResponse, error) {
+func (c *testkitServiceClient) ListCountries(ctx context.Context, in *v13.ListCountriesRequest, opts ...grpc.CallOption) (*v13.ListCountriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListCountriesResponse)
+	out := new(v13.ListCountriesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListCountries_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1709,9 +2037,9 @@ func (c *testkitServiceClient) ListCountries(ctx context.Context, in *v11.ListCo
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetCountries(ctx context.Context, in *v11.GetCountriesRequest, opts ...grpc.CallOption) (*v11.GetCountriesResponse, error) {
+func (c *testkitServiceClient) GetCountries(ctx context.Context, in *v13.GetCountriesRequest, opts ...grpc.CallOption) (*v13.GetCountriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.GetCountriesResponse)
+	out := new(v13.GetCountriesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_GetCountries_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1719,9 +2047,9 @@ func (c *testkitServiceClient) GetCountries(ctx context.Context, in *v11.GetCoun
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error) {
+func (c *testkitServiceClient) ListTimezones(ctx context.Context, in *v13.ListTimezonesRequest, opts ...grpc.CallOption) (*v13.ListTimezonesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListTimezonesResponse)
+	out := new(v13.ListTimezonesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListTimezones_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1729,9 +2057,9 @@ func (c *testkitServiceClient) ListTimezones(ctx context.Context, in *v11.ListTi
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListLanguages(ctx context.Context, in *v11.ListLanguagesRequest, opts ...grpc.CallOption) (*v11.ListLanguagesResponse, error) {
+func (c *testkitServiceClient) ListLanguages(ctx context.Context, in *v13.ListLanguagesRequest, opts ...grpc.CallOption) (*v13.ListLanguagesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListLanguagesResponse)
+	out := new(v13.ListLanguagesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListLanguages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1739,9 +2067,9 @@ func (c *testkitServiceClient) ListLanguages(ctx context.Context, in *v11.ListLa
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListCurrencies(ctx context.Context, in *v11.ListCurrenciesRequest, opts ...grpc.CallOption) (*v11.ListCurrenciesResponse, error) {
+func (c *testkitServiceClient) ListCurrencies(ctx context.Context, in *v13.ListCurrenciesRequest, opts ...grpc.CallOption) (*v13.ListCurrenciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListCurrenciesResponse)
+	out := new(v13.ListCurrenciesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListCurrencies_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1749,9 +2077,9 @@ func (c *testkitServiceClient) ListCurrencies(ctx context.Context, in *v11.ListC
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListRegionGroups(ctx context.Context, in *v11.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v11.ListRegionGroupsResponse, error) {
+func (c *testkitServiceClient) ListRegionGroups(ctx context.Context, in *v13.ListRegionGroupsRequest, opts ...grpc.CallOption) (*v13.ListRegionGroupsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListRegionGroupsResponse)
+	out := new(v13.ListRegionGroupsResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListRegionGroups_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1759,9 +2087,9 @@ func (c *testkitServiceClient) ListRegionGroups(ctx context.Context, in *v11.Lis
 	return out, nil
 }
 
-func (c *testkitServiceClient) ParsePhone(ctx context.Context, in *v11.ParsePhoneRequest, opts ...grpc.CallOption) (*v11.ParsePhoneResponse, error) {
+func (c *testkitServiceClient) ParsePhone(ctx context.Context, in *v13.ParsePhoneRequest, opts ...grpc.CallOption) (*v13.ParsePhoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ParsePhoneResponse)
+	out := new(v13.ParsePhoneResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ParsePhone_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1769,9 +2097,9 @@ func (c *testkitServiceClient) ParsePhone(ctx context.Context, in *v11.ParsePhon
 	return out, nil
 }
 
-func (c *testkitServiceClient) ResolveCodes(ctx context.Context, in *v11.ResolveCodesRequest, opts ...grpc.CallOption) (*v11.ResolveCodesResponse, error) {
+func (c *testkitServiceClient) ResolveCodes(ctx context.Context, in *v13.ResolveCodesRequest, opts ...grpc.CallOption) (*v13.ResolveCodesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ResolveCodesResponse)
+	out := new(v13.ResolveCodesResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ResolveCodes_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1779,9 +2107,9 @@ func (c *testkitServiceClient) ResolveCodes(ctx context.Context, in *v11.Resolve
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetCountryProfile(ctx context.Context, in *v11.GetCountryProfileRequest, opts ...grpc.CallOption) (*v11.GetCountryProfileResponse, error) {
+func (c *testkitServiceClient) GetCountryProfile(ctx context.Context, in *v13.GetCountryProfileRequest, opts ...grpc.CallOption) (*v13.GetCountryProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.GetCountryProfileResponse)
+	out := new(v13.GetCountryProfileResponse)
 	err := c.cc.Invoke(ctx, TestkitService_GetCountryProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1789,9 +2117,9 @@ func (c *testkitServiceClient) GetCountryProfile(ctx context.Context, in *v11.Ge
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListCountriesByRegion(ctx context.Context, in *v11.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v11.ListCountriesByRegionResponse, error) {
+func (c *testkitServiceClient) ListCountriesByRegion(ctx context.Context, in *v13.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v13.ListCountriesByRegionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.ListCountriesByRegionResponse)
+	out := new(v13.ListCountriesByRegionResponse)
 	err := c.cc.Invoke(ctx, TestkitService_ListCountriesByRegion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1799,9 +2127,9 @@ func (c *testkitServiceClient) ListCountriesByRegion(ctx context.Context, in *v1
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetCountryDefaults(ctx context.Context, in *v11.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v11.GetCountryDefaultsResponse, error) {
+func (c *testkitServiceClient) GetCountryDefaults(ctx context.Context, in *v13.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v13.GetCountryDefaultsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.GetCountryDefaultsResponse)
+	out := new(v13.GetCountryDefaultsResponse)
 	err := c.cc.Invoke(ctx, TestkitService_GetCountryDefaults_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1809,9 +2137,9 @@ func (c *testkitServiceClient) GetCountryDefaults(ctx context.Context, in *v11.G
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetDataInfo(ctx context.Context, in *v11.GetDataInfoRequest, opts ...grpc.CallOption) (*v11.GetDataInfoResponse, error) {
+func (c *testkitServiceClient) GetDataInfo(ctx context.Context, in *v13.GetDataInfoRequest, opts ...grpc.CallOption) (*v13.GetDataInfoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v11.GetDataInfoResponse)
+	out := new(v13.GetDataInfoResponse)
 	err := c.cc.Invoke(ctx, TestkitService_GetDataInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -1927,10 +2255,19 @@ type TestkitServiceServer interface {
 	AdminGetStats(context.Context, *AdminGetStatsRequest) (*AdminGetStatsResponse, error)
 	AdminListProviders(context.Context, *emptypb.Empty) (*AdminListProvidersResponse, error)
 	AdminListBuckets(context.Context, *emptypb.Empty) (*AdminListBucketsResponse, error)
+	// Provider / bucket / settings management (1:1 forwards to
+	// storage-service admin RPCs; the live registry rebuilds immediately).
+	AdminCreateProvider(context.Context, *v11.AdminCreateProviderRequest) (*v11.AdminCreateProviderResponse, error)
+	AdminUpdateProvider(context.Context, *v11.AdminUpdateProviderRequest) (*v11.AdminUpdateProviderResponse, error)
+	AdminDeleteProvider(context.Context, *v11.AdminDeleteProviderRequest) (*emptypb.Empty, error)
+	AdminUpsertBucket(context.Context, *v11.AdminUpsertBucketRequest) (*v11.AdminUpsertBucketResponse, error)
+	AdminDeleteBucket(context.Context, *v11.AdminDeleteBucketRequest) (*emptypb.Empty, error)
+	AdminGetSettings(context.Context, *v11.AdminGetSettingsRequest) (*v11.AdminGetSettingsResponse, error)
+	AdminUpdateSettings(context.Context, *v11.AdminUpdateSettingsRequest) (*v11.AdminUpdateSettingsResponse, error)
 	AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error)
 	AdminDeleteOwner(context.Context, *AdminDeleteOwnerRequest) (*AdminDeleteOwnerResponse, error)
 	AdminListAuditLogs(context.Context, *AdminListAuditLogsRequest) (*AdminListAuditLogsResponse, error)
-	// Send (sender_id injected from config).
+	// Send (app credentials injected from config).
 	SendEmail(context.Context, *SendEmailRequest) (*SendResponse, error)
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
 	// Email records.
@@ -1938,7 +2275,6 @@ type TestkitServiceServer interface {
 	ListEmails(context.Context, *ListEmailsRequest) (*ListEmailsResponse, error)
 	ListEmailsByCursor(context.Context, *ListEmailsByCursorRequest) (*ListEmailsByCursorResponse, error)
 	GetEmailStats(context.Context, *GetEmailStatsRequest) (*EmailStatsResponse, error)
-	ListEmailSenders(context.Context, *ListEmailSendersRequest) (*ListEmailSendersResponse, error)
 	// SMS records.
 	GetSMS(context.Context, *GetSMSRequest) (*SMSRecord, error)
 	ListSMS(context.Context, *ListSMSRequest) (*ListSMSResponse, error)
@@ -1946,7 +2282,28 @@ type TestkitServiceServer interface {
 	GetSMSStats(context.Context, *GetSMSStatsRequest) (*SMSStatsResponse, error)
 	ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error)
 	ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error)
-	ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error)
+	MessageCreateApp(context.Context, *v12.CreateAppRequest) (*v12.CreateAppResponse, error)
+	MessageGetApp(context.Context, *v12.GetAppRequest) (*v12.GetAppResponse, error)
+	MessageUpdateApp(context.Context, *v12.UpdateAppRequest) (*v12.UpdateAppResponse, error)
+	MessageRotateAppSecret(context.Context, *v12.RotateAppSecretRequest) (*v12.RotateAppSecretResponse, error)
+	MessageListApps(context.Context, *v12.ListAppsRequest) (*v12.ListAppsResponse, error)
+	MessageDeleteApp(context.Context, *v12.DeleteAppRequest) (*emptypb.Empty, error)
+	MessageCreateChannelAccount(context.Context, *v12.CreateChannelAccountRequest) (*v12.CreateChannelAccountResponse, error)
+	MessageUpdateChannelAccount(context.Context, *v12.UpdateChannelAccountRequest) (*v12.UpdateChannelAccountResponse, error)
+	MessageDeleteChannelAccount(context.Context, *v12.DeleteChannelAccountRequest) (*emptypb.Empty, error)
+	MessageListChannelAccounts(context.Context, *v12.ListChannelAccountsRequest) (*v12.ListChannelAccountsResponse, error)
+	MessageCreateSignature(context.Context, *v12.CreateSignatureRequest) (*v12.CreateSignatureResponse, error)
+	MessageUpdateSignature(context.Context, *v12.UpdateSignatureRequest) (*v12.UpdateSignatureResponse, error)
+	MessageDeleteSignature(context.Context, *v12.DeleteSignatureRequest) (*emptypb.Empty, error)
+	MessageListSignatures(context.Context, *v12.ListSignaturesRequest) (*v12.ListSignaturesResponse, error)
+	MessageCreateTemplate(context.Context, *v12.CreateTemplateRequest) (*v12.CreateTemplateResponse, error)
+	MessageUpdateTemplate(context.Context, *v12.UpdateTemplateRequest) (*v12.UpdateTemplateResponse, error)
+	MessageDeleteTemplate(context.Context, *v12.DeleteTemplateRequest) (*emptypb.Empty, error)
+	MessageListTemplates(context.Context, *v12.ListTemplatesRequest) (*v12.ListTemplatesResponse, error)
+	MessageCreatePolicy(context.Context, *v12.CreatePolicyRequest) (*v12.CreatePolicyResponse, error)
+	MessageUpdatePolicy(context.Context, *v12.UpdatePolicyRequest) (*v12.UpdatePolicyResponse, error)
+	MessageDeletePolicy(context.Context, *v12.DeletePolicyRequest) (*emptypb.Empty, error)
+	ListPolicies(context.Context, *v12.ListPoliciesRequest) (*v12.ListPoliciesResponse, error)
 	// ---- GID debug (P5) ----
 	NextID(context.Context, *NextIDRequest) (*NextIDResponse, error)
 	BatchNextID(context.Context, *BatchNextIDRequest) (*BatchNextIDResponse, error)
@@ -1982,20 +2339,20 @@ type TestkitServiceServer interface {
 	ReplaceEventRules(context.Context, *ReplaceEventRulesRequest) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error)
 	GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error)
-	ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error)
+	ListCountries(context.Context, *v13.ListCountriesRequest) (*v13.ListCountriesResponse, error)
 	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
 	// also accepted by the gateway).
-	GetCountries(context.Context, *v11.GetCountriesRequest) (*v11.GetCountriesResponse, error)
-	ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error)
-	ListLanguages(context.Context, *v11.ListLanguagesRequest) (*v11.ListLanguagesResponse, error)
-	ListCurrencies(context.Context, *v11.ListCurrenciesRequest) (*v11.ListCurrenciesResponse, error)
-	ListRegionGroups(context.Context, *v11.ListRegionGroupsRequest) (*v11.ListRegionGroupsResponse, error)
-	ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error)
-	ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error)
-	GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error)
-	ListCountriesByRegion(context.Context, *v11.ListCountriesByRegionRequest) (*v11.ListCountriesByRegionResponse, error)
-	GetCountryDefaults(context.Context, *v11.GetCountryDefaultsRequest) (*v11.GetCountryDefaultsResponse, error)
-	GetDataInfo(context.Context, *v11.GetDataInfoRequest) (*v11.GetDataInfoResponse, error)
+	GetCountries(context.Context, *v13.GetCountriesRequest) (*v13.GetCountriesResponse, error)
+	ListTimezones(context.Context, *v13.ListTimezonesRequest) (*v13.ListTimezonesResponse, error)
+	ListLanguages(context.Context, *v13.ListLanguagesRequest) (*v13.ListLanguagesResponse, error)
+	ListCurrencies(context.Context, *v13.ListCurrenciesRequest) (*v13.ListCurrenciesResponse, error)
+	ListRegionGroups(context.Context, *v13.ListRegionGroupsRequest) (*v13.ListRegionGroupsResponse, error)
+	ParsePhone(context.Context, *v13.ParsePhoneRequest) (*v13.ParsePhoneResponse, error)
+	ResolveCodes(context.Context, *v13.ResolveCodesRequest) (*v13.ResolveCodesResponse, error)
+	GetCountryProfile(context.Context, *v13.GetCountryProfileRequest) (*v13.GetCountryProfileResponse, error)
+	ListCountriesByRegion(context.Context, *v13.ListCountriesByRegionRequest) (*v13.ListCountriesByRegionResponse, error)
+	GetCountryDefaults(context.Context, *v13.GetCountryDefaultsRequest) (*v13.GetCountryDefaultsResponse, error)
+	GetDataInfo(context.Context, *v13.GetDataInfoRequest) (*v13.GetDataInfoResponse, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -2258,6 +2615,27 @@ func (UnimplementedTestkitServiceServer) AdminListProviders(context.Context, *em
 func (UnimplementedTestkitServiceServer) AdminListBuckets(context.Context, *emptypb.Empty) (*AdminListBucketsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminListBuckets not implemented")
 }
+func (UnimplementedTestkitServiceServer) AdminCreateProvider(context.Context, *v11.AdminCreateProviderRequest) (*v11.AdminCreateProviderResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminCreateProvider not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminUpdateProvider(context.Context, *v11.AdminUpdateProviderRequest) (*v11.AdminUpdateProviderResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateProvider not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminDeleteProvider(context.Context, *v11.AdminDeleteProviderRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteProvider not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminUpsertBucket(context.Context, *v11.AdminUpsertBucketRequest) (*v11.AdminUpsertBucketResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpsertBucket not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminDeleteBucket(context.Context, *v11.AdminDeleteBucketRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteBucket not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminGetSettings(context.Context, *v11.AdminGetSettingsRequest) (*v11.AdminGetSettingsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetSettings not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminUpdateSettings(context.Context, *v11.AdminUpdateSettingsRequest) (*v11.AdminUpdateSettingsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateSettings not implemented")
+}
 func (UnimplementedTestkitServiceServer) AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminSoftDeleteOwnerFiles not implemented")
 }
@@ -2285,9 +2663,6 @@ func (UnimplementedTestkitServiceServer) ListEmailsByCursor(context.Context, *Li
 func (UnimplementedTestkitServiceServer) GetEmailStats(context.Context, *GetEmailStatsRequest) (*EmailStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetEmailStats not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListEmailSenders(context.Context, *ListEmailSendersRequest) (*ListEmailSendersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListEmailSenders not implemented")
-}
 func (UnimplementedTestkitServiceServer) GetSMS(context.Context, *GetSMSRequest) (*SMSRecord, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSMS not implemented")
 }
@@ -2306,8 +2681,71 @@ func (UnimplementedTestkitServiceServer) ListSMSRegions(context.Context, *ListSM
 func (UnimplementedTestkitServiceServer) ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListRegionCodes not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSMSSenders not implemented")
+func (UnimplementedTestkitServiceServer) MessageCreateApp(context.Context, *v12.CreateAppRequest) (*v12.CreateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageGetApp(context.Context, *v12.GetAppRequest) (*v12.GetAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageGetApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageUpdateApp(context.Context, *v12.UpdateAppRequest) (*v12.UpdateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageRotateAppSecret(context.Context, *v12.RotateAppSecretRequest) (*v12.RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageRotateAppSecret not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageListApps(context.Context, *v12.ListAppsRequest) (*v12.ListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageListApps not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageDeleteApp(context.Context, *v12.DeleteAppRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeleteApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageCreateChannelAccount(context.Context, *v12.CreateChannelAccountRequest) (*v12.CreateChannelAccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreateChannelAccount not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageUpdateChannelAccount(context.Context, *v12.UpdateChannelAccountRequest) (*v12.UpdateChannelAccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdateChannelAccount not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageDeleteChannelAccount(context.Context, *v12.DeleteChannelAccountRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeleteChannelAccount not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageListChannelAccounts(context.Context, *v12.ListChannelAccountsRequest) (*v12.ListChannelAccountsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageListChannelAccounts not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageCreateSignature(context.Context, *v12.CreateSignatureRequest) (*v12.CreateSignatureResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreateSignature not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageUpdateSignature(context.Context, *v12.UpdateSignatureRequest) (*v12.UpdateSignatureResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdateSignature not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageDeleteSignature(context.Context, *v12.DeleteSignatureRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeleteSignature not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageListSignatures(context.Context, *v12.ListSignaturesRequest) (*v12.ListSignaturesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageListSignatures not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageCreateTemplate(context.Context, *v12.CreateTemplateRequest) (*v12.CreateTemplateResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreateTemplate not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageUpdateTemplate(context.Context, *v12.UpdateTemplateRequest) (*v12.UpdateTemplateResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdateTemplate not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageDeleteTemplate(context.Context, *v12.DeleteTemplateRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeleteTemplate not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageListTemplates(context.Context, *v12.ListTemplatesRequest) (*v12.ListTemplatesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageListTemplates not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageCreatePolicy(context.Context, *v12.CreatePolicyRequest) (*v12.CreatePolicyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreatePolicy not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageUpdatePolicy(context.Context, *v12.UpdatePolicyRequest) (*v12.UpdatePolicyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdatePolicy not implemented")
+}
+func (UnimplementedTestkitServiceServer) MessageDeletePolicy(context.Context, *v12.DeletePolicyRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeletePolicy not implemented")
+}
+func (UnimplementedTestkitServiceServer) ListPolicies(context.Context, *v12.ListPoliciesRequest) (*v12.ListPoliciesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPolicies not implemented")
 }
 func (UnimplementedTestkitServiceServer) NextID(context.Context, *NextIDRequest) (*NextIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method NextID not implemented")
@@ -2408,40 +2846,40 @@ func (UnimplementedTestkitServiceServer) SetVersionBlocked(context.Context, *Set
 func (UnimplementedTestkitServiceServer) GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAppStats not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error) {
+func (UnimplementedTestkitServiceServer) ListCountries(context.Context, *v13.ListCountriesRequest) (*v13.ListCountriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCountries not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetCountries(context.Context, *v11.GetCountriesRequest) (*v11.GetCountriesResponse, error) {
+func (UnimplementedTestkitServiceServer) GetCountries(context.Context, *v13.GetCountriesRequest) (*v13.GetCountriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCountries not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error) {
+func (UnimplementedTestkitServiceServer) ListTimezones(context.Context, *v13.ListTimezonesRequest) (*v13.ListTimezonesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTimezones not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListLanguages(context.Context, *v11.ListLanguagesRequest) (*v11.ListLanguagesResponse, error) {
+func (UnimplementedTestkitServiceServer) ListLanguages(context.Context, *v13.ListLanguagesRequest) (*v13.ListLanguagesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListLanguages not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListCurrencies(context.Context, *v11.ListCurrenciesRequest) (*v11.ListCurrenciesResponse, error) {
+func (UnimplementedTestkitServiceServer) ListCurrencies(context.Context, *v13.ListCurrenciesRequest) (*v13.ListCurrenciesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCurrencies not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListRegionGroups(context.Context, *v11.ListRegionGroupsRequest) (*v11.ListRegionGroupsResponse, error) {
+func (UnimplementedTestkitServiceServer) ListRegionGroups(context.Context, *v13.ListRegionGroupsRequest) (*v13.ListRegionGroupsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListRegionGroups not implemented")
 }
-func (UnimplementedTestkitServiceServer) ParsePhone(context.Context, *v11.ParsePhoneRequest) (*v11.ParsePhoneResponse, error) {
+func (UnimplementedTestkitServiceServer) ParsePhone(context.Context, *v13.ParsePhoneRequest) (*v13.ParsePhoneResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ParsePhone not implemented")
 }
-func (UnimplementedTestkitServiceServer) ResolveCodes(context.Context, *v11.ResolveCodesRequest) (*v11.ResolveCodesResponse, error) {
+func (UnimplementedTestkitServiceServer) ResolveCodes(context.Context, *v13.ResolveCodesRequest) (*v13.ResolveCodesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ResolveCodes not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetCountryProfile(context.Context, *v11.GetCountryProfileRequest) (*v11.GetCountryProfileResponse, error) {
+func (UnimplementedTestkitServiceServer) GetCountryProfile(context.Context, *v13.GetCountryProfileRequest) (*v13.GetCountryProfileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCountryProfile not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListCountriesByRegion(context.Context, *v11.ListCountriesByRegionRequest) (*v11.ListCountriesByRegionResponse, error) {
+func (UnimplementedTestkitServiceServer) ListCountriesByRegion(context.Context, *v13.ListCountriesByRegionRequest) (*v13.ListCountriesByRegionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCountriesByRegion not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetCountryDefaults(context.Context, *v11.GetCountryDefaultsRequest) (*v11.GetCountryDefaultsResponse, error) {
+func (UnimplementedTestkitServiceServer) GetCountryDefaults(context.Context, *v13.GetCountryDefaultsRequest) (*v13.GetCountryDefaultsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCountryDefaults not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetDataInfo(context.Context, *v11.GetDataInfoRequest) (*v11.GetDataInfoResponse, error) {
+func (UnimplementedTestkitServiceServer) GetDataInfo(context.Context, *v13.GetDataInfoRequest) (*v13.GetDataInfoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDataInfo not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
@@ -3977,6 +4415,132 @@ func _TestkitService_AdminListBuckets_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_AdminCreateProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminCreateProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminCreateProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminCreateProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminCreateProvider(ctx, req.(*v11.AdminCreateProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminUpdateProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminUpdateProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminUpdateProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminUpdateProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminUpdateProvider(ctx, req.(*v11.AdminUpdateProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminDeleteProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminDeleteProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminDeleteProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminDeleteProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminDeleteProvider(ctx, req.(*v11.AdminDeleteProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminUpsertBucket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminUpsertBucketRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminUpsertBucket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminUpsertBucket_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminUpsertBucket(ctx, req.(*v11.AdminUpsertBucketRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminDeleteBucket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminDeleteBucketRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminDeleteBucket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminDeleteBucket_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminDeleteBucket(ctx, req.(*v11.AdminDeleteBucketRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminGetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminGetSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminGetSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminGetSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminGetSettings(ctx, req.(*v11.AdminGetSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminUpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminUpdateSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminUpdateSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminUpdateSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminUpdateSettings(ctx, req.(*v11.AdminUpdateSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TestkitService_AdminSoftDeleteOwnerFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminSoftDeleteOwnerFilesRequest)
 	if err := dec(in); err != nil {
@@ -4139,24 +4703,6 @@ func _TestkitService_GetEmailStats_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_ListEmailSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListEmailSendersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TestkitServiceServer).ListEmailSenders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TestkitService_ListEmailSenders_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListEmailSenders(ctx, req.(*ListEmailSendersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _TestkitService_GetSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSMSRequest)
 	if err := dec(in); err != nil {
@@ -4265,20 +4811,398 @@ func _TestkitService_ListRegionCodes_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_ListSMSSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSMSSendersRequest)
+func _TestkitService_MessageCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreateAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).ListSMSSenders(ctx, in)
+		return srv.(TestkitServiceServer).MessageCreateApp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_ListSMSSenders_FullMethodName,
+		FullMethod: TestkitService_MessageCreateApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListSMSSenders(ctx, req.(*ListSMSSendersRequest))
+		return srv.(TestkitServiceServer).MessageCreateApp(ctx, req.(*v12.CreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.GetAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageGetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageGetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageGetApp(ctx, req.(*v12.GetAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageUpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageUpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageUpdateApp(ctx, req.(*v12.UpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageRotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageRotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageRotateAppSecret(ctx, req.(*v12.RotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageListApps(ctx, req.(*v12.ListAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageDeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageDeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageDeleteApp(ctx, req.(*v12.DeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageCreateChannelAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreateChannelAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageCreateChannelAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageCreateChannelAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageCreateChannelAccount(ctx, req.(*v12.CreateChannelAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageUpdateChannelAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdateChannelAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageUpdateChannelAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageUpdateChannelAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageUpdateChannelAccount(ctx, req.(*v12.UpdateChannelAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageDeleteChannelAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeleteChannelAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageDeleteChannelAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageDeleteChannelAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageDeleteChannelAccount(ctx, req.(*v12.DeleteChannelAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageListChannelAccounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListChannelAccountsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageListChannelAccounts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageListChannelAccounts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageListChannelAccounts(ctx, req.(*v12.ListChannelAccountsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageCreateSignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreateSignatureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageCreateSignature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageCreateSignature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageCreateSignature(ctx, req.(*v12.CreateSignatureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageUpdateSignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdateSignatureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageUpdateSignature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageUpdateSignature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageUpdateSignature(ctx, req.(*v12.UpdateSignatureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageDeleteSignature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeleteSignatureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageDeleteSignature(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageDeleteSignature_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageDeleteSignature(ctx, req.(*v12.DeleteSignatureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageListSignatures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListSignaturesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageListSignatures(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageListSignatures_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageListSignatures(ctx, req.(*v12.ListSignaturesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageCreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreateTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageCreateTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageCreateTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageCreateTemplate(ctx, req.(*v12.CreateTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageUpdateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdateTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageUpdateTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageUpdateTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageUpdateTemplate(ctx, req.(*v12.UpdateTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageDeleteTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeleteTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageDeleteTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageDeleteTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageDeleteTemplate(ctx, req.(*v12.DeleteTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageListTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListTemplatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageListTemplates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageListTemplates_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageListTemplates(ctx, req.(*v12.ListTemplatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageCreatePolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreatePolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageCreatePolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageCreatePolicy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageCreatePolicy(ctx, req.(*v12.CreatePolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageUpdatePolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdatePolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageUpdatePolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageUpdatePolicy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageUpdatePolicy(ctx, req.(*v12.UpdatePolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_MessageDeletePolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeletePolicyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).MessageDeletePolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_MessageDeletePolicy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).MessageDeletePolicy(ctx, req.(*v12.DeletePolicyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_ListPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListPoliciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).ListPolicies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_ListPolicies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).ListPolicies(ctx, req.(*v12.ListPoliciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4878,7 +5802,7 @@ func _TestkitService_GetAppStats_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _TestkitService_ListCountries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListCountriesRequest)
+	in := new(v13.ListCountriesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4890,13 +5814,13 @@ func _TestkitService_ListCountries_Handler(srv interface{}, ctx context.Context,
 		FullMethod: TestkitService_ListCountries_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListCountries(ctx, req.(*v11.ListCountriesRequest))
+		return srv.(TestkitServiceServer).ListCountries(ctx, req.(*v13.ListCountriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_GetCountries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.GetCountriesRequest)
+	in := new(v13.GetCountriesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4908,13 +5832,13 @@ func _TestkitService_GetCountries_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: TestkitService_GetCountries_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetCountries(ctx, req.(*v11.GetCountriesRequest))
+		return srv.(TestkitServiceServer).GetCountries(ctx, req.(*v13.GetCountriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ListTimezones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListTimezonesRequest)
+	in := new(v13.ListTimezonesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4926,13 +5850,13 @@ func _TestkitService_ListTimezones_Handler(srv interface{}, ctx context.Context,
 		FullMethod: TestkitService_ListTimezones_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListTimezones(ctx, req.(*v11.ListTimezonesRequest))
+		return srv.(TestkitServiceServer).ListTimezones(ctx, req.(*v13.ListTimezonesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ListLanguages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListLanguagesRequest)
+	in := new(v13.ListLanguagesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4944,13 +5868,13 @@ func _TestkitService_ListLanguages_Handler(srv interface{}, ctx context.Context,
 		FullMethod: TestkitService_ListLanguages_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListLanguages(ctx, req.(*v11.ListLanguagesRequest))
+		return srv.(TestkitServiceServer).ListLanguages(ctx, req.(*v13.ListLanguagesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ListCurrencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListCurrenciesRequest)
+	in := new(v13.ListCurrenciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4962,13 +5886,13 @@ func _TestkitService_ListCurrencies_Handler(srv interface{}, ctx context.Context
 		FullMethod: TestkitService_ListCurrencies_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListCurrencies(ctx, req.(*v11.ListCurrenciesRequest))
+		return srv.(TestkitServiceServer).ListCurrencies(ctx, req.(*v13.ListCurrenciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ListRegionGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListRegionGroupsRequest)
+	in := new(v13.ListRegionGroupsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4980,13 +5904,13 @@ func _TestkitService_ListRegionGroups_Handler(srv interface{}, ctx context.Conte
 		FullMethod: TestkitService_ListRegionGroups_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListRegionGroups(ctx, req.(*v11.ListRegionGroupsRequest))
+		return srv.(TestkitServiceServer).ListRegionGroups(ctx, req.(*v13.ListRegionGroupsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ParsePhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ParsePhoneRequest)
+	in := new(v13.ParsePhoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -4998,13 +5922,13 @@ func _TestkitService_ParsePhone_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: TestkitService_ParsePhone_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ParsePhone(ctx, req.(*v11.ParsePhoneRequest))
+		return srv.(TestkitServiceServer).ParsePhone(ctx, req.(*v13.ParsePhoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ResolveCodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ResolveCodesRequest)
+	in := new(v13.ResolveCodesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -5016,13 +5940,13 @@ func _TestkitService_ResolveCodes_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: TestkitService_ResolveCodes_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ResolveCodes(ctx, req.(*v11.ResolveCodesRequest))
+		return srv.(TestkitServiceServer).ResolveCodes(ctx, req.(*v13.ResolveCodesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_GetCountryProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.GetCountryProfileRequest)
+	in := new(v13.GetCountryProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -5034,13 +5958,13 @@ func _TestkitService_GetCountryProfile_Handler(srv interface{}, ctx context.Cont
 		FullMethod: TestkitService_GetCountryProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetCountryProfile(ctx, req.(*v11.GetCountryProfileRequest))
+		return srv.(TestkitServiceServer).GetCountryProfile(ctx, req.(*v13.GetCountryProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_ListCountriesByRegion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.ListCountriesByRegionRequest)
+	in := new(v13.ListCountriesByRegionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -5052,13 +5976,13 @@ func _TestkitService_ListCountriesByRegion_Handler(srv interface{}, ctx context.
 		FullMethod: TestkitService_ListCountriesByRegion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListCountriesByRegion(ctx, req.(*v11.ListCountriesByRegionRequest))
+		return srv.(TestkitServiceServer).ListCountriesByRegion(ctx, req.(*v13.ListCountriesByRegionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_GetCountryDefaults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.GetCountryDefaultsRequest)
+	in := new(v13.GetCountryDefaultsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -5070,13 +5994,13 @@ func _TestkitService_GetCountryDefaults_Handler(srv interface{}, ctx context.Con
 		FullMethod: TestkitService_GetCountryDefaults_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetCountryDefaults(ctx, req.(*v11.GetCountryDefaultsRequest))
+		return srv.(TestkitServiceServer).GetCountryDefaults(ctx, req.(*v13.GetCountryDefaultsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _TestkitService_GetDataInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v11.GetDataInfoRequest)
+	in := new(v13.GetDataInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -5088,7 +6012,7 @@ func _TestkitService_GetDataInfo_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: TestkitService_GetDataInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetDataInfo(ctx, req.(*v11.GetDataInfoRequest))
+		return srv.(TestkitServiceServer).GetDataInfo(ctx, req.(*v13.GetDataInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -5437,6 +6361,34 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_AdminListBuckets_Handler,
 		},
 		{
+			MethodName: "AdminCreateProvider",
+			Handler:    _TestkitService_AdminCreateProvider_Handler,
+		},
+		{
+			MethodName: "AdminUpdateProvider",
+			Handler:    _TestkitService_AdminUpdateProvider_Handler,
+		},
+		{
+			MethodName: "AdminDeleteProvider",
+			Handler:    _TestkitService_AdminDeleteProvider_Handler,
+		},
+		{
+			MethodName: "AdminUpsertBucket",
+			Handler:    _TestkitService_AdminUpsertBucket_Handler,
+		},
+		{
+			MethodName: "AdminDeleteBucket",
+			Handler:    _TestkitService_AdminDeleteBucket_Handler,
+		},
+		{
+			MethodName: "AdminGetSettings",
+			Handler:    _TestkitService_AdminGetSettings_Handler,
+		},
+		{
+			MethodName: "AdminUpdateSettings",
+			Handler:    _TestkitService_AdminUpdateSettings_Handler,
+		},
+		{
 			MethodName: "AdminSoftDeleteOwnerFiles",
 			Handler:    _TestkitService_AdminSoftDeleteOwnerFiles_Handler,
 		},
@@ -5473,10 +6425,6 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_GetEmailStats_Handler,
 		},
 		{
-			MethodName: "ListEmailSenders",
-			Handler:    _TestkitService_ListEmailSenders_Handler,
-		},
-		{
 			MethodName: "GetSMS",
 			Handler:    _TestkitService_GetSMS_Handler,
 		},
@@ -5501,8 +6449,92 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_ListRegionCodes_Handler,
 		},
 		{
-			MethodName: "ListSMSSenders",
-			Handler:    _TestkitService_ListSMSSenders_Handler,
+			MethodName: "MessageCreateApp",
+			Handler:    _TestkitService_MessageCreateApp_Handler,
+		},
+		{
+			MethodName: "MessageGetApp",
+			Handler:    _TestkitService_MessageGetApp_Handler,
+		},
+		{
+			MethodName: "MessageUpdateApp",
+			Handler:    _TestkitService_MessageUpdateApp_Handler,
+		},
+		{
+			MethodName: "MessageRotateAppSecret",
+			Handler:    _TestkitService_MessageRotateAppSecret_Handler,
+		},
+		{
+			MethodName: "MessageListApps",
+			Handler:    _TestkitService_MessageListApps_Handler,
+		},
+		{
+			MethodName: "MessageDeleteApp",
+			Handler:    _TestkitService_MessageDeleteApp_Handler,
+		},
+		{
+			MethodName: "MessageCreateChannelAccount",
+			Handler:    _TestkitService_MessageCreateChannelAccount_Handler,
+		},
+		{
+			MethodName: "MessageUpdateChannelAccount",
+			Handler:    _TestkitService_MessageUpdateChannelAccount_Handler,
+		},
+		{
+			MethodName: "MessageDeleteChannelAccount",
+			Handler:    _TestkitService_MessageDeleteChannelAccount_Handler,
+		},
+		{
+			MethodName: "MessageListChannelAccounts",
+			Handler:    _TestkitService_MessageListChannelAccounts_Handler,
+		},
+		{
+			MethodName: "MessageCreateSignature",
+			Handler:    _TestkitService_MessageCreateSignature_Handler,
+		},
+		{
+			MethodName: "MessageUpdateSignature",
+			Handler:    _TestkitService_MessageUpdateSignature_Handler,
+		},
+		{
+			MethodName: "MessageDeleteSignature",
+			Handler:    _TestkitService_MessageDeleteSignature_Handler,
+		},
+		{
+			MethodName: "MessageListSignatures",
+			Handler:    _TestkitService_MessageListSignatures_Handler,
+		},
+		{
+			MethodName: "MessageCreateTemplate",
+			Handler:    _TestkitService_MessageCreateTemplate_Handler,
+		},
+		{
+			MethodName: "MessageUpdateTemplate",
+			Handler:    _TestkitService_MessageUpdateTemplate_Handler,
+		},
+		{
+			MethodName: "MessageDeleteTemplate",
+			Handler:    _TestkitService_MessageDeleteTemplate_Handler,
+		},
+		{
+			MethodName: "MessageListTemplates",
+			Handler:    _TestkitService_MessageListTemplates_Handler,
+		},
+		{
+			MethodName: "MessageCreatePolicy",
+			Handler:    _TestkitService_MessageCreatePolicy_Handler,
+		},
+		{
+			MethodName: "MessageUpdatePolicy",
+			Handler:    _TestkitService_MessageUpdatePolicy_Handler,
+		},
+		{
+			MethodName: "MessageDeletePolicy",
+			Handler:    _TestkitService_MessageDeletePolicy_Handler,
+		},
+		{
+			MethodName: "ListPolicies",
+			Handler:    _TestkitService_ListPolicies_Handler,
 		},
 		{
 			MethodName: "NextID",

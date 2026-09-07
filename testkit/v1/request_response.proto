@@ -103,28 +103,11 @@ message SendVerificationCodeRequest {
     (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 5 [(buf.validate.field).string.max_len = 20];
-  // sender_id is the audit actor triggering this send (user id, service name,
-  // platform identifier, ...). user-service is stateless and passes it through
-  // verbatim; for unauthenticated flows (register/login) the frontend supplies
-  // a platform identifier (e.g. the target email/phone or "testkit-web").
-  string sender_id = 6 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 128
-  }];
-
-  // ---- Delivery templates (mirror user-service SendVerificationCodeRequest
-  // 1:1 — field numbers match). Required per channel by user-service's
-  // validateDeliverySpec: EMAIL needs email_subject + email_body ({code}
-  // placeholder substituted by user-service); SMS+CN needs sms_template_id +
-  // sign_name (domestic vendors reject raw content); SMS international needs
-  // exactly one of sms_template_id / sms_content.
-  string sms_template_id = 7 [(buf.validate.field).string.max_len = 128];
-  string sms_code_param_key = 8 [(buf.validate.field).string.max_len = 64];
-  string sms_content = 9 [(buf.validate.field).string.max_len = 1024];
-  string email_subject = 10 [(buf.validate.field).string.max_len = 256];
-  string email_body = 11 [(buf.validate.field).string.max_len = 16384];
-  string sign_name = 12 [(buf.validate.field).string.max_len = 64];
-  string email_html_body = 13 [(buf.validate.field).string.max_len = 65536];
+  // Delivery content (templates, signatures, vendor routing) is owned by
+  // message-service policies — mirrors user.v1.SendVerificationCodeRequest.
+  reserved 6, 7, 8, 9, 10, 11, 12, 13;
+  reserved "sender_id", "sms_template_id", "sms_code_param_key", "sms_content";
+  reserved "email_subject", "email_body", "email_html_body", "sign_name";
 }
 
 // SendVerificationCodeResponse returns the captcha_id that binds the generated
@@ -1268,31 +1251,21 @@ message AdminListAuditLogsResponse {
   string next_page_token = 3;
 }
 
-// ---- Send (sender_id dropped — BFF fills from cfg.Message.SenderID) ----
+// ---- Send (policy-driven — the BFF injects its app credentials when
+// calling message-service; the request carries scene + params only) ----
 
 message SendEmailRequest {
   repeated EmailAddress to = 1 [(buf.validate.field).repeated.min_items = 1];
   repeated EmailAddress cc = 2;
   repeated EmailAddress bcc = 3;
-  string subject = 4 [(buf.validate.field).string.min_len = 1];
-  string body = 5;
-  string html_body = 6;
-  EmailAddress reply_to = 7;
-  messaging.v1.EmailVendor vendor = 8;
-  string account = 9;
-  string template_id = 10;
-  map<string, string> template_params = 11;
-  messaging.v1.EmailScene scene = 12;
-  // sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1).
-  string idempotency_key = 13 [(buf.validate.field).string.max_len = 64];
-  EmailAddress from = 14;
-  repeated EmailAttachment attachments = 15;
+  EmailAddress reply_to = 4;
+  // Scene selects the message-service send policy (required).
+  messaging.v1.EmailScene scene = 5;
+  // TemplateParams feed the policy template's {{param}} placeholders.
+  map<string, string> template_params = 6;
+  string idempotency_key = 7 [(buf.validate.field).string.max_len = 64];
+  repeated EmailAttachment attachments = 8;
 
-  option (buf.validate.message).cel = {
-    id: "vendor_account_pair"
-    message: "vendor and account must both be set or both be empty"
-    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
-  };
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"
@@ -1306,21 +1279,12 @@ message SendSMSRequest {
     (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 2 [(buf.validate.field).string.min_len = 1];
-  string content = 3;
-  string template_id = 4;
-  map<string, string> template_params = 5;
-  messaging.v1.SmsVendor vendor = 6;
-  string account = 7;
-  messaging.v1.SmsScene scene = 8;
-  // sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1).
-  string idempotency_key = 9 [(buf.validate.field).string.max_len = 64];
-  string sign_name = 10 [(buf.validate.field).string.max_len = 64];
+  // Scene selects the message-service send policy (required).
+  messaging.v1.SmsScene scene = 3;
+  // TemplateParams feed the policy template's {{param}} placeholders.
+  map<string, string> template_params = 4;
+  string idempotency_key = 5 [(buf.validate.field).string.max_len = 64];
 
-  option (buf.validate.message).cel = {
-    id: "vendor_account_pair"
-    message: "vendor and account must both be set or both be empty"
-    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
-  };
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"
@@ -1352,7 +1316,7 @@ message GetSMSRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
 }
 
-// ---- List paged (sender_id filter dropped — decision 2) ----
+// ---- List paged ----
 
 message ListEmailsRequest {
   messaging.v1.EmailVendor vendor = 1;
@@ -1365,9 +1329,9 @@ message ListEmailsRequest {
   int32 page_size = 8;
   storage.v1.SortField sort_field = 9;
   messaging.v1.SortDirection sort_direction = 10;
-  // sender_id filters by the calling service label recorded on each record
-  // (mirror of message-service ListEmailsRequest.sender_id).
-  string sender_id = 11;
+  // app_key filters by the calling app recorded on each record (mirror of
+  // message-service ListEmailsRequest.app_key).
+  string app_key = 11;
 }
 
 message ListEmailsResponse {
@@ -1398,8 +1362,8 @@ message ListSMSRequest {
   int32 page_size = 9;
   storage.v1.SortField sort_field = 10;
   messaging.v1.SortDirection sort_direction = 11;
-  // sender_id filter (mirror of message-service ListSMSRequest.sender_id).
-  string sender_id = 12;
+  // app_key filter (mirror of message-service ListSMSRequest.app_key).
+  string app_key = 12;
 }
 
 message ListSMSResponse {
@@ -1409,7 +1373,7 @@ message ListSMSResponse {
   bool has_more = 4;
 }
 
-// ---- List cursor (sender_id filter dropped) ----
+// ---- List cursor ----
 
 message ListEmailsByCursorRequest {
   messaging.v1.EmailVendor vendor = 1;
@@ -1423,8 +1387,8 @@ message ListEmailsByCursorRequest {
   int32 page_size = 9;
   string page_token = 10;
   bool include_total = 11;
-  // sender_id filter (mirror of message-service ListEmailsByCursorRequest.sender_id).
-  string sender_id = 12;
+  // app_key filter (mirror of message-service ListEmailsByCursorRequest.app_key).
+  string app_key = 12;
 }
 
 message ListEmailsByCursorResponse {
@@ -1455,8 +1419,8 @@ message ListSMSByCursorRequest {
   int32 page_size = 10;
   string page_token = 11;
   bool include_total = 12;
-  // sender_id filter (mirror of message-service ListSMSByCursorRequest.sender_id).
-  string sender_id = 13;
+  // app_key filter (mirror of message-service ListSMSByCursorRequest.app_key).
+  string app_key = 13;
 }
 
 message ListSMSByCursorResponse {
@@ -1465,7 +1429,7 @@ message ListSMSByCursorResponse {
   string next_page_token = 3;
 }
 
-// ---- Stats (sender_id filter dropped) ----
+// ---- Stats ----
 
 message GetEmailStatsRequest {
   messaging.v1.EmailVendor vendor = 1;
@@ -1498,18 +1462,6 @@ message SMSStatsResponse {
 }
 
 // ---- Lookups (dropdown sources) ----
-
-message ListEmailSendersRequest {}
-
-message ListEmailSendersResponse {
-  repeated string sender_ids = 1;
-}
-
-message ListSMSSendersRequest {}
-
-message ListSMSSendersResponse {
-  repeated string sender_ids = 1;
-}
 
 message ListSMSRegionsRequest {}
 

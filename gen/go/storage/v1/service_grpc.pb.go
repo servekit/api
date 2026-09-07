@@ -49,6 +49,13 @@ const (
 	StorageService_AdminGetStats_FullMethodName             = "/storage.v1.StorageService/AdminGetStats"
 	StorageService_AdminListProviders_FullMethodName        = "/storage.v1.StorageService/AdminListProviders"
 	StorageService_AdminListBuckets_FullMethodName          = "/storage.v1.StorageService/AdminListBuckets"
+	StorageService_AdminCreateProvider_FullMethodName       = "/storage.v1.StorageService/AdminCreateProvider"
+	StorageService_AdminUpdateProvider_FullMethodName       = "/storage.v1.StorageService/AdminUpdateProvider"
+	StorageService_AdminDeleteProvider_FullMethodName       = "/storage.v1.StorageService/AdminDeleteProvider"
+	StorageService_AdminUpsertBucket_FullMethodName         = "/storage.v1.StorageService/AdminUpsertBucket"
+	StorageService_AdminDeleteBucket_FullMethodName         = "/storage.v1.StorageService/AdminDeleteBucket"
+	StorageService_AdminGetSettings_FullMethodName          = "/storage.v1.StorageService/AdminGetSettings"
+	StorageService_AdminUpdateSettings_FullMethodName       = "/storage.v1.StorageService/AdminUpdateSettings"
 	StorageService_AdminSoftDeleteOwnerFiles_FullMethodName = "/storage.v1.StorageService/AdminSoftDeleteOwnerFiles"
 	StorageService_AdminDeleteOwner_FullMethodName          = "/storage.v1.StorageService/AdminDeleteOwner"
 	StorageService_ListMyAuditLogs_FullMethodName           = "/storage.v1.StorageService/ListMyAuditLogs"
@@ -132,6 +139,24 @@ type StorageServiceClient interface {
 	AdminListProviders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminListProvidersResponse, error)
 	// AdminListBuckets lists all buckets (admin only).
 	AdminListBuckets(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminListBucketsResponse, error)
+	// AdminCreateProvider adds a provider to the live registry (admin only).
+	AdminCreateProvider(ctx context.Context, in *AdminCreateProviderRequest, opts ...grpc.CallOption) (*AdminCreateProviderResponse, error)
+	// AdminUpdateProvider edits a provider (credentials replace-on-present).
+	AdminUpdateProvider(ctx context.Context, in *AdminUpdateProviderRequest, opts ...grpc.CallOption) (*AdminUpdateProviderResponse, error)
+	// AdminDeleteProvider removes a provider (rejected while buckets are
+	// still bound to it).
+	AdminDeleteProvider(ctx context.Context, in *AdminDeleteProviderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AdminUpsertBucket creates or fully replaces a bucket binding
+	// (rejected while the bucket still has objects and the provider changes).
+	AdminUpsertBucket(ctx context.Context, in *AdminUpsertBucketRequest, opts ...grpc.CallOption) (*AdminUpsertBucketResponse, error)
+	// AdminDeleteBucket removes a bucket binding (rejected while the bucket
+	// still has objects).
+	AdminDeleteBucket(ctx context.Context, in *AdminDeleteBucketRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AdminGetSettings returns the runtime settings row (default/public
+	// bucket).
+	AdminGetSettings(ctx context.Context, in *AdminGetSettingsRequest, opts ...grpc.CallOption) (*AdminGetSettingsResponse, error)
+	// AdminUpdateSettings updates the runtime settings row.
+	AdminUpdateSettings(ctx context.Context, in *AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*AdminUpdateSettingsResponse, error)
 	// AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
 	AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error)
 	// AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
@@ -418,6 +443,76 @@ func (c *storageServiceClient) AdminListBuckets(ctx context.Context, in *emptypb
 	return out, nil
 }
 
+func (c *storageServiceClient) AdminCreateProvider(ctx context.Context, in *AdminCreateProviderRequest, opts ...grpc.CallOption) (*AdminCreateProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminCreateProviderResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminCreateProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminUpdateProvider(ctx context.Context, in *AdminUpdateProviderRequest, opts ...grpc.CallOption) (*AdminUpdateProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminUpdateProviderResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminUpdateProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminDeleteProvider(ctx context.Context, in *AdminDeleteProviderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageService_AdminDeleteProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminUpsertBucket(ctx context.Context, in *AdminUpsertBucketRequest, opts ...grpc.CallOption) (*AdminUpsertBucketResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminUpsertBucketResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminUpsertBucket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminDeleteBucket(ctx context.Context, in *AdminDeleteBucketRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageService_AdminDeleteBucket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminGetSettings(ctx context.Context, in *AdminGetSettingsRequest, opts ...grpc.CallOption) (*AdminGetSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminGetSettingsResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminGetSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) AdminUpdateSettings(ctx context.Context, in *AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*AdminUpdateSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminUpdateSettingsResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminUpdateSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *storageServiceClient) AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminSoftDeleteOwnerFilesResponse)
@@ -553,6 +648,24 @@ type StorageServiceServer interface {
 	AdminListProviders(context.Context, *emptypb.Empty) (*AdminListProvidersResponse, error)
 	// AdminListBuckets lists all buckets (admin only).
 	AdminListBuckets(context.Context, *emptypb.Empty) (*AdminListBucketsResponse, error)
+	// AdminCreateProvider adds a provider to the live registry (admin only).
+	AdminCreateProvider(context.Context, *AdminCreateProviderRequest) (*AdminCreateProviderResponse, error)
+	// AdminUpdateProvider edits a provider (credentials replace-on-present).
+	AdminUpdateProvider(context.Context, *AdminUpdateProviderRequest) (*AdminUpdateProviderResponse, error)
+	// AdminDeleteProvider removes a provider (rejected while buckets are
+	// still bound to it).
+	AdminDeleteProvider(context.Context, *AdminDeleteProviderRequest) (*emptypb.Empty, error)
+	// AdminUpsertBucket creates or fully replaces a bucket binding
+	// (rejected while the bucket still has objects and the provider changes).
+	AdminUpsertBucket(context.Context, *AdminUpsertBucketRequest) (*AdminUpsertBucketResponse, error)
+	// AdminDeleteBucket removes a bucket binding (rejected while the bucket
+	// still has objects).
+	AdminDeleteBucket(context.Context, *AdminDeleteBucketRequest) (*emptypb.Empty, error)
+	// AdminGetSettings returns the runtime settings row (default/public
+	// bucket).
+	AdminGetSettings(context.Context, *AdminGetSettingsRequest) (*AdminGetSettingsResponse, error)
+	// AdminUpdateSettings updates the runtime settings row.
+	AdminUpdateSettings(context.Context, *AdminUpdateSettingsRequest) (*AdminUpdateSettingsResponse, error)
 	// AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
 	AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error)
 	// AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
@@ -656,6 +769,27 @@ func (UnimplementedStorageServiceServer) AdminListProviders(context.Context, *em
 }
 func (UnimplementedStorageServiceServer) AdminListBuckets(context.Context, *emptypb.Empty) (*AdminListBucketsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminListBuckets not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminCreateProvider(context.Context, *AdminCreateProviderRequest) (*AdminCreateProviderResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminCreateProvider not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminUpdateProvider(context.Context, *AdminUpdateProviderRequest) (*AdminUpdateProviderResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateProvider not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminDeleteProvider(context.Context, *AdminDeleteProviderRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteProvider not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminUpsertBucket(context.Context, *AdminUpsertBucketRequest) (*AdminUpsertBucketResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpsertBucket not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminDeleteBucket(context.Context, *AdminDeleteBucketRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteBucket not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminGetSettings(context.Context, *AdminGetSettingsRequest) (*AdminGetSettingsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetSettings not implemented")
+}
+func (UnimplementedStorageServiceServer) AdminUpdateSettings(context.Context, *AdminUpdateSettingsRequest) (*AdminUpdateSettingsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateSettings not implemented")
 }
 func (UnimplementedStorageServiceServer) AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminSoftDeleteOwnerFiles not implemented")
@@ -1164,6 +1298,132 @@ func _StorageService_AdminListBuckets_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StorageService_AdminCreateProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminCreateProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminCreateProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminCreateProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminCreateProvider(ctx, req.(*AdminCreateProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminUpdateProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminUpdateProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminUpdateProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminUpdateProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminUpdateProvider(ctx, req.(*AdminUpdateProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminDeleteProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDeleteProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminDeleteProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminDeleteProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminDeleteProvider(ctx, req.(*AdminDeleteProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminUpsertBucket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminUpsertBucketRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminUpsertBucket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminUpsertBucket_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminUpsertBucket(ctx, req.(*AdminUpsertBucketRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminDeleteBucket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDeleteBucketRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminDeleteBucket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminDeleteBucket_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminDeleteBucket(ctx, req.(*AdminDeleteBucketRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminGetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminGetSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminGetSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminGetSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminGetSettings(ctx, req.(*AdminGetSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_AdminUpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminUpdateSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).AdminUpdateSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_AdminUpdateSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).AdminUpdateSettings(ctx, req.(*AdminUpdateSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _StorageService_AdminSoftDeleteOwnerFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminSoftDeleteOwnerFilesRequest)
 	if err := dec(in); err != nil {
@@ -1382,6 +1642,34 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AdminListBuckets",
 			Handler:    _StorageService_AdminListBuckets_Handler,
+		},
+		{
+			MethodName: "AdminCreateProvider",
+			Handler:    _StorageService_AdminCreateProvider_Handler,
+		},
+		{
+			MethodName: "AdminUpdateProvider",
+			Handler:    _StorageService_AdminUpdateProvider_Handler,
+		},
+		{
+			MethodName: "AdminDeleteProvider",
+			Handler:    _StorageService_AdminDeleteProvider_Handler,
+		},
+		{
+			MethodName: "AdminUpsertBucket",
+			Handler:    _StorageService_AdminUpsertBucket_Handler,
+		},
+		{
+			MethodName: "AdminDeleteBucket",
+			Handler:    _StorageService_AdminDeleteBucket_Handler,
+		},
+		{
+			MethodName: "AdminGetSettings",
+			Handler:    _StorageService_AdminGetSettings_Handler,
+		},
+		{
+			MethodName: "AdminUpdateSettings",
+			Handler:    _StorageService_AdminUpdateSettings_Handler,
 		},
 		{
 			MethodName: "AdminSoftDeleteOwnerFiles",

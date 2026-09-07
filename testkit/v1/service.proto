@@ -6,7 +6,10 @@ package testkit.v1;
 import "common/v1/pong.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "messaging/v1/admin.proto";
+import "messaging/v1/admin_request_response.proto";
 import "reference/v1/request_response.proto";
+import "storage/v1/request_response.proto";
 import "testkit/v1/message.proto";
 import "testkit/v1/request_response.proto";
 
@@ -430,6 +433,41 @@ service TestkitService {
   rpc AdminListBuckets(google.protobuf.Empty) returns (AdminListBucketsResponse) {
     option (google.api.http) = {get: "/api/v1/admin/storage/buckets"};
   }
+  // Provider / bucket / settings management (1:1 forwards to
+  // storage-service admin RPCs; the live registry rebuilds immediately).
+  rpc AdminCreateProvider(storage.v1.AdminCreateProviderRequest) returns (storage.v1.AdminCreateProviderResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/storage/providers"
+      body: "*"
+    };
+  }
+  rpc AdminUpdateProvider(storage.v1.AdminUpdateProviderRequest) returns (storage.v1.AdminUpdateProviderResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/storage/providers/{name}"
+      body: "*"
+    };
+  }
+  rpc AdminDeleteProvider(storage.v1.AdminDeleteProviderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/admin/storage/providers/{name}"};
+  }
+  rpc AdminUpsertBucket(storage.v1.AdminUpsertBucketRequest) returns (storage.v1.AdminUpsertBucketResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/storage/buckets/{name}"
+      body: "*"
+    };
+  }
+  rpc AdminDeleteBucket(storage.v1.AdminDeleteBucketRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/admin/storage/buckets/{name}"};
+  }
+  rpc AdminGetSettings(storage.v1.AdminGetSettingsRequest) returns (storage.v1.AdminGetSettingsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/settings"};
+  }
+  rpc AdminUpdateSettings(storage.v1.AdminUpdateSettingsRequest) returns (storage.v1.AdminUpdateSettingsResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/storage/settings"
+      body: "*"
+    };
+  }
   rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse) {
     option (google.api.http) = {
       post: "/api/v1/admin/storage/owners:softDeleteFiles"
@@ -448,11 +486,11 @@ service TestkitService {
 
   // ---- Message (P4) ----
   //
-  // sender_id (a service label, not a user id) is injected by the BFF from
-  // cfg.Message.SenderID on the Send RPCs; List/Stats forward no sender_id
-  // filter (ops console sees all records).
+  // Policy-driven: the BFF injects its message app credentials
+  // (cfg.Message.AppKey/AppSecret) on the Send RPCs; List/Stats forward the
+  // app_key filter as given (ops console sees all apps by default).
 
-  // Send (sender_id injected from config).
+  // Send (app credentials injected from config).
   rpc SendEmail(SendEmailRequest) returns (SendResponse) {
     option (google.api.http) = {
       post: "/api/v1/messages:email"
@@ -479,9 +517,6 @@ service TestkitService {
   rpc GetEmailStats(GetEmailStatsRequest) returns (EmailStatsResponse) {
     option (google.api.http) = {get: "/api/v1/emails:stats"};
   }
-  rpc ListEmailSenders(ListEmailSendersRequest) returns (ListEmailSendersResponse) {
-    option (google.api.http) = {get: "/api/v1/emails:senders"};
-  }
 
   // SMS records.
   rpc GetSMS(GetSMSRequest) returns (SMSRecord) {
@@ -502,8 +537,113 @@ service TestkitService {
   rpc ListRegionCodes(ListRegionCodesRequest) returns (ListRegionCodesResponse) {
     option (google.api.http) = {get: "/api/v1/region-codes"};
   }
-  rpc ListSMSSenders(ListSMSSendersRequest) returns (ListSMSSendersResponse) {
-    option (google.api.http) = {get: "/api/v1/sms:senders"};
+
+  // ---- Message admin (platform resources: apps / channel accounts /
+  // signatures / templates / policies; 1:1 forwards to
+  // message-service MessageAdminService) ----
+
+  rpc MessageCreateApp(messaging.v1.CreateAppRequest) returns (messaging.v1.CreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/apps"
+      body: "*"
+    };
+  }
+  rpc MessageGetApp(messaging.v1.GetAppRequest) returns (messaging.v1.GetAppResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/apps/{id}"};
+  }
+  rpc MessageUpdateApp(messaging.v1.UpdateAppRequest) returns (messaging.v1.UpdateAppResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/message/admin/apps/{id}"
+      body: "*"
+    };
+  }
+  rpc MessageRotateAppSecret(messaging.v1.RotateAppSecretRequest) returns (messaging.v1.RotateAppSecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/apps/{id}/secret:rotate"
+      body: "*"
+    };
+  }
+  rpc MessageListApps(messaging.v1.ListAppsRequest) returns (messaging.v1.ListAppsResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/apps"};
+  }
+  rpc MessageDeleteApp(messaging.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/apps/{id}"};
+  }
+
+  rpc MessageCreateChannelAccount(messaging.v1.CreateChannelAccountRequest) returns (messaging.v1.CreateChannelAccountResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/accounts"
+      body: "*"
+    };
+  }
+  rpc MessageUpdateChannelAccount(messaging.v1.UpdateChannelAccountRequest) returns (messaging.v1.UpdateChannelAccountResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/message/admin/accounts/{id}"
+      body: "*"
+    };
+  }
+  rpc MessageDeleteChannelAccount(messaging.v1.DeleteChannelAccountRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/accounts/{id}"};
+  }
+  rpc MessageListChannelAccounts(messaging.v1.ListChannelAccountsRequest) returns (messaging.v1.ListChannelAccountsResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/accounts"};
+  }
+
+  rpc MessageCreateSignature(messaging.v1.CreateSignatureRequest) returns (messaging.v1.CreateSignatureResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/signatures"
+      body: "*"
+    };
+  }
+  rpc MessageUpdateSignature(messaging.v1.UpdateSignatureRequest) returns (messaging.v1.UpdateSignatureResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/message/admin/signatures/{id}"
+      body: "*"
+    };
+  }
+  rpc MessageDeleteSignature(messaging.v1.DeleteSignatureRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/signatures/{id}"};
+  }
+  rpc MessageListSignatures(messaging.v1.ListSignaturesRequest) returns (messaging.v1.ListSignaturesResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/signatures"};
+  }
+
+  rpc MessageCreateTemplate(messaging.v1.CreateTemplateRequest) returns (messaging.v1.CreateTemplateResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/templates"
+      body: "*"
+    };
+  }
+  rpc MessageUpdateTemplate(messaging.v1.UpdateTemplateRequest) returns (messaging.v1.UpdateTemplateResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/message/admin/templates/{id}"
+      body: "*"
+    };
+  }
+  rpc MessageDeleteTemplate(messaging.v1.DeleteTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/templates/{id}"};
+  }
+  rpc MessageListTemplates(messaging.v1.ListTemplatesRequest) returns (messaging.v1.ListTemplatesResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/templates"};
+  }
+
+  rpc MessageCreatePolicy(messaging.v1.CreatePolicyRequest) returns (messaging.v1.CreatePolicyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/message/admin/policies"
+      body: "*"
+    };
+  }
+  rpc MessageUpdatePolicy(messaging.v1.UpdatePolicyRequest) returns (messaging.v1.UpdatePolicyResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/message/admin/policies/{id}"
+      body: "*"
+    };
+  }
+  rpc MessageDeletePolicy(messaging.v1.DeletePolicyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/policies/{id}"};
+  }
+  rpc ListPolicies(messaging.v1.ListPoliciesRequest) returns (messaging.v1.ListPoliciesResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/policies"};
   }
 
   // ==================== P5 RPCs (gid debug + aggregated dashboard) ====================

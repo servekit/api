@@ -74,10 +74,9 @@ message EmailRecord {
   EmailScene scene = 4;
   MessageStatus status = 5;
   EmailAddress target = 6;
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). NOT the end-user/admin id — the caller must record that
-  // in its own audit trail.
-  string sender_id = 7;
+  // AppKey identifies the calling app (the authenticated sender identity
+  // resolved from x-app-key credentials at send time).
+  string app_key = 7;
   repeated EmailAddress cc = 8;
   repeated EmailAddress bcc = 9;
   string subject = 10;
@@ -114,8 +113,9 @@ message SMSRecord {
       max_len: 20
     }
   ];
-  // SenderID identifies the calling business service. See SendSMSRequest.sender_id.
-  string sender_id = 8;
+  // AppKey identifies the calling app (the authenticated sender identity
+  // resolved from x-app-key credentials at send time).
+  string app_key = 8;
   string content = 9;
   string template_id = 10;
   map<string, string> template_params = 11;
@@ -124,6 +124,9 @@ message SMSRecord {
   int64 sent_at = 14;
   int64 created_at = 15;
   int64 updated_at = 16;
+  // SignName is the SMS signature (CN) / sender ID (intl) resolved from the
+  // policy route that handled the send.
+  string sign_name = 17;
 }
 
 // EmailVendorStats holds per-vendor statistics for email messages.

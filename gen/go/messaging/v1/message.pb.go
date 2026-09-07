@@ -198,10 +198,9 @@ type EmailRecord struct {
 	Scene   EmailScene             `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
 	Status  MessageStatus          `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	Target  *EmailAddress          `protobuf:"bytes,6,opt,name=target,proto3" json:"target,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). NOT the end-user/admin id — the caller must record that
-	// in its own audit trail.
-	SenderId       string            `protobuf:"bytes,7,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity
+	// resolved from x-app-key credentials at send time).
+	AppKey         string            `protobuf:"bytes,7,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Cc             []*EmailAddress   `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc,omitempty"`
 	Bcc            []*EmailAddress   `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc,omitempty"`
 	Subject        string            `protobuf:"bytes,10,opt,name=subject,proto3" json:"subject,omitempty"`
@@ -294,9 +293,9 @@ func (x *EmailRecord) GetTarget() *EmailAddress {
 	return nil
 }
 
-func (x *EmailRecord) GetSenderId() string {
+func (x *EmailRecord) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -409,8 +408,9 @@ type SMSRecord struct {
 	Status     MessageStatus          `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	RegionCode string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Phone      string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
-	// SenderID identifies the calling business service. See SendSMSRequest.sender_id.
-	SenderId       string            `protobuf:"bytes,8,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity
+	// resolved from x-app-key credentials at send time).
+	AppKey         string            `protobuf:"bytes,8,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Content        string            `protobuf:"bytes,9,opt,name=content,proto3" json:"content,omitempty"`
 	TemplateId     string            `protobuf:"bytes,10,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
 	TemplateParams map[string]string `protobuf:"bytes,11,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -419,8 +419,11 @@ type SMSRecord struct {
 	SentAt         int64             `protobuf:"varint,14,opt,name=sent_at,json=sentAt,proto3" json:"sent_at,omitempty"`
 	CreatedAt      int64             `protobuf:"varint,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt      int64             `protobuf:"varint,16,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// SignName is the SMS signature (CN) / sender ID (intl) resolved from the
+	// policy route that handled the send.
+	SignName      string `protobuf:"bytes,17,opt,name=sign_name,json=signName,proto3" json:"sign_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SMSRecord) Reset() {
@@ -502,9 +505,9 @@ func (x *SMSRecord) GetPhone() string {
 	return ""
 }
 
-func (x *SMSRecord) GetSenderId() string {
+func (x *SMSRecord) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -563,6 +566,13 @@ func (x *SMSRecord) GetUpdatedAt() int64 {
 		return x.UpdatedAt
 	}
 	return 0
+}
+
+func (x *SMSRecord) GetSignName() string {
+	if x != nil {
+		return x.SignName
+	}
+	return ""
 }
 
 // EmailVendorStats holds per-vendor statistics for email messages.
@@ -719,15 +729,15 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\tmime_type\x18\x05 \x01(\tR\bmimeType\x12\x1d\n" +
 	"\n" +
 	"size_bytes\x18\x06 \x01(\x03R\tsizeBytesJ\x04\b\x01\x10\x02J\x04\b\a\x10\bR\x04kindR\n" +
-	"expires_at\"\x97\a\n" +
+	"expires_at\"\x93\a\n" +
 	"\vEmailRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x121\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x19.messaging.v1.EmailVendorR\x06vendor\x12\x18\n" +
 	"\aaccount\x18\x03 \x01(\tR\aaccount\x12.\n" +
 	"\x05scene\x18\x04 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x123\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x122\n" +
-	"\x06target\x18\x06 \x01(\v2\x1a.messaging.v1.EmailAddressR\x06target\x12\x1b\n" +
-	"\tsender_id\x18\a \x01(\tR\bsenderId\x12*\n" +
+	"\x06target\x18\x06 \x01(\v2\x1a.messaging.v1.EmailAddressR\x06target\x12\x17\n" +
+	"\aapp_key\x18\a \x01(\tR\x06appKey\x12*\n" +
 	"\x02cc\x18\b \x03(\v2\x1a.messaging.v1.EmailAddressR\x02cc\x12,\n" +
 	"\x03bcc\x18\t \x03(\v2\x1a.messaging.v1.EmailAddressR\x03bcc\x12\x18\n" +
 	"\asubject\x18\n" +
@@ -748,7 +758,7 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\vattachments\x18\x15 \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc1\x05\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xda\x05\n" +
 	"\tSMSRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x18\n" +
@@ -758,8 +768,8 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x126\n" +
-	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
-	"\tsender_id\x18\b \x01(\tR\bsenderId\x12\x18\n" +
+	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x17\n" +
+	"\aapp_key\x18\b \x01(\tR\x06appKey\x12\x18\n" +
 	"\acontent\x18\t \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\n" +
 	" \x01(\tR\n" +
@@ -771,7 +781,8 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x0f \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x10 \x01(\x03R\tupdatedAt\x1aA\n" +
+	"updated_at\x18\x10 \x01(\x03R\tupdatedAt\x12\x1b\n" +
+	"\tsign_name\x18\x11 \x01(\tR\bsignName\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x87\x01\n" +

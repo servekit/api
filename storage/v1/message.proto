@@ -145,6 +145,14 @@ message ProviderInfo {
   Vendor vendor = 2;
   string endpoint = 3;
   string region = 4;
+  // disabled providers are skipped for new uploads (existing objects stay
+  // readable through their buckets... until the provider is deleted).
+  bool disabled = 5;
+  // sts_enabled reports whether role_arn is configured (STS credentials
+  // available for direct browser uploads).
+  bool sts_enabled = 6;
+  // bucket_count is the number of buckets bound to this provider.
+  int32 bucket_count = 7;
 }
 
 message BucketInfo {
@@ -153,6 +161,27 @@ message BucketInfo {
   string key_prefix = 3;
   BucketACL acl = 4;
   Vendor vendor = 5;
+  // cdn is the bucket's CDN fronting config; null = CDN disabled.
+  CDNConfig cdn = 6;
+}
+
+// CDNConfig is a bucket's CDN fronting configuration. auth_key signs URLs
+// for Aliyun/Tencent-style CDN; key_pair_id is CloudFront-only (AWS S3 /
+// S3-compatible vendors).
+message CDNConfig {
+  string domain = 1 [(buf.validate.field).string.min_len = 1];
+  string auth_key = 2;
+  string key_pair_id = 3;
+}
+
+// StorageSettings is the runtime-editable service-level settings row
+// (moved out of YAML config; managed via AdminGet/UpdateSettings).
+message StorageSettings {
+  // default_bucket receives uploads that do not specify a bucket.
+  string default_bucket = 1;
+  // public_bucket receives visibility=PUBLIC uploads; empty = PUBLIC
+  // uploads are rejected.
+  string public_bucket = 2;
 }
 
 // Audit Log

@@ -9,6 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "license/v1/enums.proto";
 import "messaging/v1/enums.proto";
 import "storage/v1/enums.proto";
+import "storage/v1/message.proto";
 import "telemetry/v1/enums.proto";
 import "testkit/v1/enums.proto";
 import "user/v1/enums.proto";
@@ -360,12 +361,15 @@ message BucketStats {
   int64 file_count = 4;
 }
 
-// ProviderInfo / BucketInfo are admin catalog entities.
+// ProviderInfo / BucketInfo are admin catalog entities (live registry view).
 message ProviderInfo {
   string name = 1;
   storage.v1.Vendor vendor = 2;
   string endpoint = 3;
   string region = 4;
+  bool disabled = 5;
+  bool sts_enabled = 6;
+  int32 bucket_count = 7;
 }
 
 message BucketInfo {
@@ -374,6 +378,8 @@ message BucketInfo {
   string key_prefix = 3;
   storage.v1.BucketACL acl = 4;
   storage.v1.Vendor vendor = 5;
+  // cdn is the bucket's CDN fronting config; null = CDN disabled.
+  storage.v1.CDNConfig cdn = 6;
 }
 
 // ---- Message linkd entities (P4) ----
@@ -429,7 +435,8 @@ message EmailRecord {
   messaging.v1.EmailScene scene = 4;
   messaging.v1.MessageStatus status = 5;
   EmailAddress target = 6;
-  string sender_id = 7; // read-only echo (testkit's sends echo cfg.Message.SenderID)
+  // app_key identifies the calling app (authenticated sender identity).
+  string app_key = 7;
   repeated EmailAddress cc = 8;
   repeated EmailAddress bcc = 9;
   string subject = 10;
@@ -463,7 +470,8 @@ message SMSRecord {
       max_len: 20
     }
   ];
-  string sender_id = 8;
+  // app_key identifies the calling app (authenticated sender identity).
+  string app_key = 8;
   string content = 9;
   string template_id = 10;
   map<string, string> template_params = 11;
@@ -472,6 +480,8 @@ message SMSRecord {
   int64 sent_at = 14;
   int64 created_at = 15;
   int64 updated_at = 16;
+  // sign_name is the SMS signature / intl sender ID the policy route used.
+  string sign_name = 17;
 }
 
 // EmailStats mirrors message.EmailStatsResponse (read-only snapshot).

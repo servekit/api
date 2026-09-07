@@ -25,42 +25,33 @@ const (
 )
 
 // SendEmailRequest is the request to send an email.
+//
+// Policy-driven: the caller supplies only the scene and template params.
+// The service resolves (app, EMAIL, scene) → policy → template + ordered
+// provider routes, renders subject/body from the template, and sends along
+// the route chain with fallback. Callers authenticate via app credentials
+// in gRPC metadata (x-app-key / x-app-secret).
 type SendEmailRequest struct {
-	state    protoimpl.MessageState `protogen:"open.v1"`
-	To       []*EmailAddress        `protobuf:"bytes,1,rep,name=to,proto3" json:"to,omitempty"`
-	Cc       []*EmailAddress        `protobuf:"bytes,2,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc      []*EmailAddress        `protobuf:"bytes,3,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject  string                 `protobuf:"bytes,4,opt,name=subject,proto3" json:"subject,omitempty"`
-	Body     string                 `protobuf:"bytes,5,opt,name=body,proto3" json:"body,omitempty"`
-	HtmlBody string                 `protobuf:"bytes,6,opt,name=html_body,json=htmlBody,proto3" json:"html_body,omitempty"`
-	ReplyTo  *EmailAddress          `protobuf:"bytes,7,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
-	// Vendor + Account optionally select a specific configured account.
-	// Both must be set together; if both zero/empty, sender uses default fallback.
-	Vendor  EmailVendor `protobuf:"varint,8,opt,name=vendor,proto3,enum=messaging.v1.EmailVendor" json:"vendor,omitempty"`
-	Account string      `protobuf:"bytes,9,opt,name=account,proto3" json:"account,omitempty"`
-	// Template is optional: vendors that do not support templating ignore it.
-	TemplateId     string            `protobuf:"bytes,10,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	TemplateParams map[string]string `protobuf:"bytes,11,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Scene is the business purpose of this email (required).
-	Scene EmailScene `protobuf:"varint,12,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Required. NOT the end-user/admin id — the caller must
-	// record that in its own audit trail.
-	SenderId string `protobuf:"bytes,13,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	To      []*EmailAddress        `protobuf:"bytes,1,rep,name=to,proto3" json:"to,omitempty"`
+	Cc      []*EmailAddress        `protobuf:"bytes,2,rep,name=cc,proto3" json:"cc,omitempty"`
+	Bcc     []*EmailAddress        `protobuf:"bytes,3,rep,name=bcc,proto3" json:"bcc,omitempty"`
+	ReplyTo *EmailAddress          `protobuf:"bytes,4,opt,name=reply_to,json=replyTo,proto3" json:"reply_to,omitempty"`
+	// Scene is the business purpose of this email (required). It selects the
+	// send policy configured on the admin surface.
+	Scene EmailScene `protobuf:"varint,5,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
+	// TemplateParams substitute {{param}} placeholders in the template bound
+	// by the policy. Required params (declared on the template) must be present.
+	TemplateParams map[string]string `protobuf:"bytes,6,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// IdempotencyKey is optional. When set, a second request with the same
-	// (sender_id, idempotency_key) returns the existing record without
+	// (app_key, idempotency_key) returns the existing record without
 	// re-sending. Use a UUID per logical send intent. Max length 64.
-	IdempotencyKey string `protobuf:"bytes,14,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
-	// From optionally overrides the account's configured From address.
-	// Empty falls back to the account default. The SMTP server is the
-	// ultimate arbiter of which From addresses are accepted (verified
-	// sender lists, etc.); the service does not pre-constrain.
-	From *EmailAddress `protobuf:"bytes,15,opt,name=from,proto3" json:"from,omitempty"`
+	IdempotencyKey string `protobuf:"bytes,7,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// attachments is optional. content attachments are embedded as real MIME
 	// parts; url-only attachments are pure references (caller-managed download
-	// links, rendered into html_body by the caller) whose metadata is persisted
-	// for record queries. Mixed lists are allowed.
-	Attachments   []*EmailAttachment `protobuf:"bytes,16,rep,name=attachments,proto3" json:"attachments,omitempty"`
+	// links) whose metadata is persisted for record queries. Mixed lists are
+	// allowed.
+	Attachments   []*EmailAttachment `protobuf:"bytes,8,rep,name=attachments,proto3" json:"attachments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -116,58 +107,9 @@ func (x *SendEmailRequest) GetBcc() []*EmailAddress {
 	return nil
 }
 
-func (x *SendEmailRequest) GetSubject() string {
-	if x != nil {
-		return x.Subject
-	}
-	return ""
-}
-
-func (x *SendEmailRequest) GetBody() string {
-	if x != nil {
-		return x.Body
-	}
-	return ""
-}
-
-func (x *SendEmailRequest) GetHtmlBody() string {
-	if x != nil {
-		return x.HtmlBody
-	}
-	return ""
-}
-
 func (x *SendEmailRequest) GetReplyTo() *EmailAddress {
 	if x != nil {
 		return x.ReplyTo
-	}
-	return nil
-}
-
-func (x *SendEmailRequest) GetVendor() EmailVendor {
-	if x != nil {
-		return x.Vendor
-	}
-	return EmailVendor_EMAIL_VENDOR_UNSPECIFIED
-}
-
-func (x *SendEmailRequest) GetAccount() string {
-	if x != nil {
-		return x.Account
-	}
-	return ""
-}
-
-func (x *SendEmailRequest) GetTemplateId() string {
-	if x != nil {
-		return x.TemplateId
-	}
-	return ""
-}
-
-func (x *SendEmailRequest) GetTemplateParams() map[string]string {
-	if x != nil {
-		return x.TemplateParams
 	}
 	return nil
 }
@@ -179,11 +121,11 @@ func (x *SendEmailRequest) GetScene() EmailScene {
 	return EmailScene_EMAIL_SCENE_UNSPECIFIED
 }
 
-func (x *SendEmailRequest) GetSenderId() string {
+func (x *SendEmailRequest) GetTemplateParams() map[string]string {
 	if x != nil {
-		return x.SenderId
+		return x.TemplateParams
 	}
-	return ""
+	return nil
 }
 
 func (x *SendEmailRequest) GetIdempotencyKey() string {
@@ -191,13 +133,6 @@ func (x *SendEmailRequest) GetIdempotencyKey() string {
 		return x.IdempotencyKey
 	}
 	return ""
-}
-
-func (x *SendEmailRequest) GetFrom() *EmailAddress {
-	if x != nil {
-		return x.From
-	}
-	return nil
 }
 
 func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
@@ -208,44 +143,27 @@ func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
 }
 
 // SendSMSRequest is the request to send an SMS.
+//
+// Policy-driven: the caller supplies only the scene and template params.
+// The service resolves (app, SMS, scene) → policy → template + CN/intl
+// route chains, picks the chain by the destination country parsed from
+// the E.164 number, and sends with ordered fallback.
 type SendSMSRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// to is the destination in E.164 international format ("+8613800138000")
 	// — the single canonical phone format. The destination country (which
-	// decides domestic vs international vendor routing, and the national
-	// number domestic vendors need) is parsed from it.
+	// decides the CN vs international route chain) is parsed from it.
 	To string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
-	// content is the raw SMS body for vendors that accept raw text (typically
-	// the international path). Substitution of placeholders (e.g. "{code}") is
-	// the caller's responsibility — message-service forwards the string as-is.
-	Content        string            `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	TemplateId     string            `protobuf:"bytes,4,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	TemplateParams map[string]string `protobuf:"bytes,5,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// Vendor + Account optionally select a specific configured account.
-	// Both must be set together; if both zero/empty, sender routes by phone country.
-	Vendor  SmsVendor `protobuf:"varint,6,opt,name=vendor,proto3,enum=messaging.v1.SmsVendor" json:"vendor,omitempty"`
-	Account string    `protobuf:"bytes,7,opt,name=account,proto3" json:"account,omitempty"`
 	// Scene is the business purpose of this SMS (required).
-	Scene SmsScene `protobuf:"varint,8,opt,name=scene,proto3,enum=messaging.v1.SmsScene" json:"scene,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Required. NOT the end-user/admin id — the caller must
-	// record that in its own audit trail.
-	SenderId string `protobuf:"bytes,9,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	Scene SmsScene `protobuf:"varint,2,opt,name=scene,proto3,enum=messaging.v1.SmsScene" json:"scene,omitempty"`
+	// TemplateParams substitute {{param}} placeholders (intl content
+	// templates) or supply vendor template parameters (CN domestic
+	// templates). Required params (declared on the template) must be present.
+	TemplateParams map[string]string `protobuf:"bytes,3,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
-	IdempotencyKey string `protobuf:"bytes,10,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
-	// SignName carries the per-message signature/sender ID semantics:
-	//   - For domestic SMS (destination country "CN"): the SMS signature that
-	//     must match the pre-registered sign in the vendor console (e.g.
-	//     "阿里云", "字节跳动"). Domestic vendors reject sends without it.
-	//   - For international SMS (other destinations): treated as the sender ID
-	//     / "From" field. Some regions require pre-registered alphabetic
-	//     sender IDs; vendors apply region-specific rules.
-	//
-	// Required for paths whose vendor enforces a signature (all current
-	// domestic vendors do).
-	SignName      string `protobuf:"bytes,11,opt,name=sign_name,json=signName,proto3" json:"sign_name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	IdempotencyKey string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SendSMSRequest) Reset() {
@@ -285,18 +203,11 @@ func (x *SendSMSRequest) GetTo() string {
 	return ""
 }
 
-func (x *SendSMSRequest) GetContent() string {
+func (x *SendSMSRequest) GetScene() SmsScene {
 	if x != nil {
-		return x.Content
+		return x.Scene
 	}
-	return ""
-}
-
-func (x *SendSMSRequest) GetTemplateId() string {
-	if x != nil {
-		return x.TemplateId
-	}
-	return ""
+	return SmsScene_SMS_SCENE_UNSPECIFIED
 }
 
 func (x *SendSMSRequest) GetTemplateParams() map[string]string {
@@ -306,44 +217,9 @@ func (x *SendSMSRequest) GetTemplateParams() map[string]string {
 	return nil
 }
 
-func (x *SendSMSRequest) GetVendor() SmsVendor {
-	if x != nil {
-		return x.Vendor
-	}
-	return SmsVendor_SMS_VENDOR_UNSPECIFIED
-}
-
-func (x *SendSMSRequest) GetAccount() string {
-	if x != nil {
-		return x.Account
-	}
-	return ""
-}
-
-func (x *SendSMSRequest) GetScene() SmsScene {
-	if x != nil {
-		return x.Scene
-	}
-	return SmsScene_SMS_SCENE_UNSPECIFIED
-}
-
-func (x *SendSMSRequest) GetSenderId() string {
-	if x != nil {
-		return x.SenderId
-	}
-	return ""
-}
-
 func (x *SendSMSRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
-	}
-	return ""
-}
-
-func (x *SendSMSRequest) GetSignName() string {
-	if x != nil {
-		return x.SignName
 	}
 	return ""
 }
@@ -546,10 +422,9 @@ type ListEmailsRequest struct {
 	Scene  EmailScene             `protobuf:"varint,2,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
 	Status MessageStatus          `protobuf:"varint,3,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	Target string                 `protobuf:"bytes,4,opt,name=target,proto3" json:"target,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-	// must record that in its own audit trail.
-	SenderId      string        `protobuf:"bytes,5,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity).
+	// Optional filter.
+	AppKey        string        `protobuf:"bytes,5,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	StartTime     int64         `protobuf:"varint,6,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       int64         `protobuf:"varint,7,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 	Page          int32         `protobuf:"varint,8,opt,name=page,proto3" json:"page,omitempty"`
@@ -618,9 +493,9 @@ func (x *ListEmailsRequest) GetTarget() string {
 	return ""
 }
 
-func (x *ListEmailsRequest) GetSenderId() string {
+func (x *ListEmailsRequest) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -744,10 +619,9 @@ type ListSMSRequest struct {
 	Status     MessageStatus          `protobuf:"varint,3,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	RegionCode string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Phone      string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-	// must record that in its own audit trail.
-	SenderId      string        `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity).
+	// Optional filter.
+	AppKey        string        `protobuf:"bytes,6,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	StartTime     int64         `protobuf:"varint,7,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       int64         `protobuf:"varint,8,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 	Page          int32         `protobuf:"varint,9,opt,name=page,proto3" json:"page,omitempty"`
@@ -823,9 +697,9 @@ func (x *ListSMSRequest) GetPhone() string {
 	return ""
 }
 
-func (x *ListSMSRequest) GetSenderId() string {
+func (x *ListSMSRequest) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -950,10 +824,9 @@ type ListEmailsByCursorRequest struct {
 	Scene  EmailScene             `protobuf:"varint,2,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
 	Status MessageStatus          `protobuf:"varint,3,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	Target string                 `protobuf:"bytes,4,opt,name=target,proto3" json:"target,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-	// must record that in its own audit trail.
-	SenderId      string        `protobuf:"bytes,5,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity).
+	// Optional filter.
+	AppKey        string        `protobuf:"bytes,5,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	StartTime     int64         `protobuf:"varint,6,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       int64         `protobuf:"varint,7,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 	SortField     SortField     `protobuf:"varint,8,opt,name=sort_field,json=sortField,proto3,enum=messaging.v1.SortField" json:"sort_field,omitempty"`
@@ -1026,9 +899,9 @@ func (x *ListEmailsByCursorRequest) GetTarget() string {
 	return ""
 }
 
-func (x *ListEmailsByCursorRequest) GetSenderId() string {
+func (x *ListEmailsByCursorRequest) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -1153,10 +1026,9 @@ type ListSMSByCursorRequest struct {
 	Status     MessageStatus          `protobuf:"varint,3,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	RegionCode string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Phone      string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
-	// SenderID identifies the calling business service (e.g. "user-service",
-	// "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-	// must record that in its own audit trail.
-	SenderId      string        `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	// AppKey identifies the calling app (the authenticated sender identity).
+	// Optional filter.
+	AppKey        string        `protobuf:"bytes,6,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	StartTime     int64         `protobuf:"varint,7,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime       int64         `protobuf:"varint,8,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 	SortField     SortField     `protobuf:"varint,9,opt,name=sort_field,json=sortField,proto3,enum=messaging.v1.SortField" json:"sort_field,omitempty"`
@@ -1233,9 +1105,9 @@ func (x *ListSMSByCursorRequest) GetPhone() string {
 	return ""
 }
 
-func (x *ListSMSByCursorRequest) GetSenderId() string {
+func (x *ListSMSByCursorRequest) GetAppKey() string {
 	if x != nil {
-		return x.SenderId
+		return x.AppKey
 	}
 	return ""
 }
@@ -1725,217 +1597,33 @@ func (x *ListSMSRegionsResponse) GetRegionCodes() []string {
 	return nil
 }
 
-// ListSMSSendersRequest is empty. See ListSMSRegionsRequest.
-type ListSMSSendersRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListSMSSendersRequest) Reset() {
-	*x = ListSMSSendersRequest{}
-	mi := &file_messaging_v1_request_response_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListSMSSendersRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListSMSSendersRequest) ProtoMessage() {}
-
-func (x *ListSMSSendersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_request_response_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListSMSSendersRequest.ProtoReflect.Descriptor instead.
-func (*ListSMSSendersRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_request_response_proto_rawDescGZIP(), []int{19}
-}
-
-type ListSMSSendersResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SenderIds     []string               `protobuf:"bytes,1,rep,name=sender_ids,json=senderIds,proto3" json:"sender_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListSMSSendersResponse) Reset() {
-	*x = ListSMSSendersResponse{}
-	mi := &file_messaging_v1_request_response_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListSMSSendersResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListSMSSendersResponse) ProtoMessage() {}
-
-func (x *ListSMSSendersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_request_response_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListSMSSendersResponse.ProtoReflect.Descriptor instead.
-func (*ListSMSSendersResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_request_response_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *ListSMSSendersResponse) GetSenderIds() []string {
-	if x != nil {
-		return x.SenderIds
-	}
-	return nil
-}
-
-// ListEmailSendersRequest is empty. See ListSMSRegionsRequest.
-type ListEmailSendersRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListEmailSendersRequest) Reset() {
-	*x = ListEmailSendersRequest{}
-	mi := &file_messaging_v1_request_response_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListEmailSendersRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListEmailSendersRequest) ProtoMessage() {}
-
-func (x *ListEmailSendersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_request_response_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListEmailSendersRequest.ProtoReflect.Descriptor instead.
-func (*ListEmailSendersRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_request_response_proto_rawDescGZIP(), []int{21}
-}
-
-type ListEmailSendersResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SenderIds     []string               `protobuf:"bytes,1,rep,name=sender_ids,json=senderIds,proto3" json:"sender_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListEmailSendersResponse) Reset() {
-	*x = ListEmailSendersResponse{}
-	mi := &file_messaging_v1_request_response_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListEmailSendersResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListEmailSendersResponse) ProtoMessage() {}
-
-func (x *ListEmailSendersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_request_response_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListEmailSendersResponse.ProtoReflect.Descriptor instead.
-func (*ListEmailSendersResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_request_response_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *ListEmailSendersResponse) GetSenderIds() []string {
-	if x != nil {
-		return x.SenderIds
-	}
-	return nil
-}
-
 var File_messaging_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\n" +
-	"#messaging/v1/request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\x1a\x1amessaging/v1/message.proto\"\xcc\b\n" +
+	"#messaging/v1/request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\x1a\x1amessaging/v1/message.proto\"\xd7\x04\n" +
 	"\x10SendEmailRequest\x124\n" +
 	"\x02to\x18\x01 \x03(\v2\x1a.messaging.v1.EmailAddressB\b\xbaH\x05\x92\x01\x02\b\x01R\x02to\x12*\n" +
 	"\x02cc\x18\x02 \x03(\v2\x1a.messaging.v1.EmailAddressR\x02cc\x12,\n" +
-	"\x03bcc\x18\x03 \x03(\v2\x1a.messaging.v1.EmailAddressR\x03bcc\x12!\n" +
-	"\asubject\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\asubject\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\tR\x04body\x12\x1b\n" +
-	"\thtml_body\x18\x06 \x01(\tR\bhtmlBody\x125\n" +
-	"\breply_to\x18\a \x01(\v2\x1a.messaging.v1.EmailAddressR\areplyTo\x121\n" +
-	"\x06vendor\x18\b \x01(\x0e2\x19.messaging.v1.EmailVendorR\x06vendor\x12\x18\n" +
-	"\aaccount\x18\t \x01(\tR\aaccount\x12\x1f\n" +
-	"\vtemplate_id\x18\n" +
-	" \x01(\tR\n" +
-	"templateId\x12[\n" +
-	"\x0ftemplate_params\x18\v \x03(\v22.messaging.v1.SendEmailRequest.TemplateParamsEntryR\x0etemplateParams\x12.\n" +
-	"\x05scene\x18\f \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x12\x1b\n" +
-	"\tsender_id\x18\r \x01(\tR\bsenderId\x120\n" +
-	"\x0fidempotency_key\x18\x0e \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12.\n" +
-	"\x04from\x18\x0f \x01(\v2\x1a.messaging.v1.EmailAddressR\x04from\x12?\n" +
-	"\vattachments\x18\x10 \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x1aA\n" +
+	"\x03bcc\x18\x03 \x03(\v2\x1a.messaging.v1.EmailAddressR\x03bcc\x125\n" +
+	"\breply_to\x18\x04 \x01(\v2\x1a.messaging.v1.EmailAddressR\areplyTo\x12.\n" +
+	"\x05scene\x18\x05 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x12[\n" +
+	"\x0ftemplate_params\x18\x06 \x03(\v22.messaging.v1.SendEmailRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
+	"\x0fidempotency_key\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12?\n" +
+	"\vattachments\x18\b \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x9e\x02\xbaH\x9a\x02\x1a\xa1\x01\n" +
-	"\x13vendor_account_pair\x124vendor and account must both be set or both be empty\x1aT(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')\x1a4\n" +
-	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1a>\n" +
-	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\"\xa5\x06\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +
+	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xf6\x02\n" +
 	"\x0eSendSMSRequest\x12+\n" +
-	"\x02to\x18\x01 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$R\x02to\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1f\n" +
-	"\vtemplate_id\x18\x04 \x01(\tR\n" +
-	"templateId\x12Y\n" +
-	"\x0ftemplate_params\x18\x05 \x03(\v20.messaging.v1.SendSMSRequest.TemplateParamsEntryR\x0etemplateParams\x12/\n" +
-	"\x06vendor\x18\x06 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x18\n" +
-	"\aaccount\x18\a \x01(\tR\aaccount\x12,\n" +
-	"\x05scene\x18\b \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x12\x1b\n" +
-	"\tsender_id\x18\t \x01(\tR\bsenderId\x120\n" +
-	"\x0fidempotency_key\x18\n" +
-	" \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12$\n" +
-	"\tsign_name\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\bsignName\x1aA\n" +
+	"\x02to\x18\x01 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$R\x02to\x12,\n" +
+	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x12Y\n" +
+	"\x0ftemplate_params\x18\x03 \x03(\v20.messaging.v1.SendSMSRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x9e\x02\xbaH\x9a\x02\x1a\xa1\x01\n" +
-	"\x13vendor_account_pair\x124vendor and account must both be set or both be empty\x1aT(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')\x1a4\n" +
-	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1a>\n" +
-	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\"\xd7\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +
+	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xd7\x01\n" +
 	"\fSendResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x123\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12>\n" +
@@ -1946,13 +1634,13 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x0fGetEmailRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"(\n" +
 	"\rGetSMSRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xc7\x03\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xc3\x03\n" +
 	"\x11ListEmailsRequest\x121\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x19.messaging.v1.EmailVendorR\x06vendor\x12.\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x123\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x16\n" +
-	"\x06target\x18\x04 \x01(\tR\x06target\x12\x1b\n" +
-	"\tsender_id\x18\x05 \x01(\tR\bsenderId\x12\x1d\n" +
+	"\x06target\x18\x04 \x01(\tR\x06target\x12\x17\n" +
+	"\aapp_key\x18\x05 \x01(\tR\x06appKey\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x06 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\a \x01(\x03R\aendTime\x12\x12\n" +
@@ -1967,7 +1655,7 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
 	"totalPages\x12\x19\n" +
-	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\x97\x04\n" +
+	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\x93\x04\n" +
 	"\x0eListSMSRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
@@ -1975,8 +1663,8 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x126\n" +
-	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
-	"\tsender_id\x18\x06 \x01(\tR\bsenderId\x12\x1d\n" +
+	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x17\n" +
+	"\aapp_key\x18\x06 \x01(\tR\x06appKey\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\b \x01(\x03R\aendTime\x12\x12\n" +
@@ -1991,13 +1679,13 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
 	"totalPages\x12\x19\n" +
-	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\xff\x03\n" +
+	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\xfb\x03\n" +
 	"\x19ListEmailsByCursorRequest\x121\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x19.messaging.v1.EmailVendorR\x06vendor\x12.\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x18.messaging.v1.EmailSceneR\x05scene\x123\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x16\n" +
-	"\x06target\x18\x04 \x01(\tR\x06target\x12\x1b\n" +
-	"\tsender_id\x18\x05 \x01(\tR\bsenderId\x12\x1d\n" +
+	"\x06target\x18\x04 \x01(\tR\x06target\x12\x17\n" +
+	"\aapp_key\x18\x05 \x01(\tR\x06appKey\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x06 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\a \x01(\x03R\aendTime\x126\n" +
@@ -2012,7 +1700,7 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x1aListEmailsByCursorResponse\x123\n" +
 	"\arecords\x18\x01 \x03(\v2\x19.messaging.v1.EmailRecordR\arecords\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xcf\x04\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xcb\x04\n" +
 	"\x16ListSMSByCursorRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
@@ -2020,8 +1708,8 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x126\n" +
-	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
-	"\tsender_id\x18\x06 \x01(\tR\bsenderId\x12\x1d\n" +
+	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x17\n" +
+	"\aapp_key\x18\x06 \x01(\tR\x06appKey\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\b \x01(\x03R\aendTime\x126\n" +
@@ -2064,15 +1752,7 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x15ListSMSRegionsRequest\"S\n" +
 	"\x16ListSMSRegionsResponse\x129\n" +
 	"\fregion_codes\x18\x01 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
-	"^[A-Z]{2}$R\vregionCodes\"\x17\n" +
-	"\x15ListSMSSendersRequest\"7\n" +
-	"\x16ListSMSSendersResponse\x12\x1d\n" +
-	"\n" +
-	"sender_ids\x18\x01 \x03(\tR\tsenderIds\"\x19\n" +
-	"\x17ListEmailSendersRequest\"9\n" +
-	"\x18ListEmailSendersResponse\x12\x1d\n" +
-	"\n" +
-	"sender_ids\x18\x01 \x03(\tR\tsenderIdsB\xb2\x01\n" +
+	"^[A-Z]{2}$R\vregionCodesB\xb2\x01\n" +
 	"\x10com.messaging.v1B\x14RequestResponseProtoP\x01Z7github.com/servekit/api/gen/go/messaging/v1;messagingv1\xa2\x02\x03MXX\xaa\x02\fMessaging.V1\xca\x02\fMessaging\\V1\xe2\x02\x18Messaging\\V1\\GPBMetadata\xea\x02\rMessaging::V1b\x06proto3"
 
 var (
@@ -2087,7 +1767,7 @@ func file_messaging_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_messaging_v1_request_response_proto_rawDescData
 }
 
-var file_messaging_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_messaging_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_messaging_v1_request_response_proto_goTypes = []any{
 	(*SendEmailRequest)(nil),           // 0: messaging.v1.SendEmailRequest
 	(*SendSMSRequest)(nil),             // 1: messaging.v1.SendSMSRequest
@@ -2108,77 +1788,70 @@ var file_messaging_v1_request_response_proto_goTypes = []any{
 	(*SMSStatsResponse)(nil),           // 16: messaging.v1.SMSStatsResponse
 	(*ListSMSRegionsRequest)(nil),      // 17: messaging.v1.ListSMSRegionsRequest
 	(*ListSMSRegionsResponse)(nil),     // 18: messaging.v1.ListSMSRegionsResponse
-	(*ListSMSSendersRequest)(nil),      // 19: messaging.v1.ListSMSSendersRequest
-	(*ListSMSSendersResponse)(nil),     // 20: messaging.v1.ListSMSSendersResponse
-	(*ListEmailSendersRequest)(nil),    // 21: messaging.v1.ListEmailSendersRequest
-	(*ListEmailSendersResponse)(nil),   // 22: messaging.v1.ListEmailSendersResponse
-	nil,                                // 23: messaging.v1.SendEmailRequest.TemplateParamsEntry
-	nil,                                // 24: messaging.v1.SendSMSRequest.TemplateParamsEntry
-	(*EmailAddress)(nil),               // 25: messaging.v1.EmailAddress
+	nil,                                // 19: messaging.v1.SendEmailRequest.TemplateParamsEntry
+	nil,                                // 20: messaging.v1.SendSMSRequest.TemplateParamsEntry
+	(*EmailAddress)(nil),               // 21: messaging.v1.EmailAddress
+	(EmailScene)(0),                    // 22: messaging.v1.EmailScene
+	(*EmailAttachment)(nil),            // 23: messaging.v1.EmailAttachment
+	(SmsScene)(0),                      // 24: messaging.v1.SmsScene
+	(MessageStatus)(0),                 // 25: messaging.v1.MessageStatus
 	(EmailVendor)(0),                   // 26: messaging.v1.EmailVendor
-	(EmailScene)(0),                    // 27: messaging.v1.EmailScene
-	(*EmailAttachment)(nil),            // 28: messaging.v1.EmailAttachment
-	(SmsVendor)(0),                     // 29: messaging.v1.SmsVendor
-	(SmsScene)(0),                      // 30: messaging.v1.SmsScene
-	(MessageStatus)(0),                 // 31: messaging.v1.MessageStatus
-	(SortField)(0),                     // 32: messaging.v1.SortField
-	(SortDirection)(0),                 // 33: messaging.v1.SortDirection
-	(*EmailRecord)(nil),                // 34: messaging.v1.EmailRecord
-	(*SMSRecord)(nil),                  // 35: messaging.v1.SMSRecord
-	(*EmailVendorStats)(nil),           // 36: messaging.v1.EmailVendorStats
-	(*SmsVendorStats)(nil),             // 37: messaging.v1.SmsVendorStats
+	(SmsVendor)(0),                     // 27: messaging.v1.SmsVendor
+	(SortField)(0),                     // 28: messaging.v1.SortField
+	(SortDirection)(0),                 // 29: messaging.v1.SortDirection
+	(*EmailRecord)(nil),                // 30: messaging.v1.EmailRecord
+	(*SMSRecord)(nil),                  // 31: messaging.v1.SMSRecord
+	(*EmailVendorStats)(nil),           // 32: messaging.v1.EmailVendorStats
+	(*SmsVendorStats)(nil),             // 33: messaging.v1.SmsVendorStats
 }
 var file_messaging_v1_request_response_proto_depIdxs = []int32{
-	25, // 0: messaging.v1.SendEmailRequest.to:type_name -> messaging.v1.EmailAddress
-	25, // 1: messaging.v1.SendEmailRequest.cc:type_name -> messaging.v1.EmailAddress
-	25, // 2: messaging.v1.SendEmailRequest.bcc:type_name -> messaging.v1.EmailAddress
-	25, // 3: messaging.v1.SendEmailRequest.reply_to:type_name -> messaging.v1.EmailAddress
-	26, // 4: messaging.v1.SendEmailRequest.vendor:type_name -> messaging.v1.EmailVendor
-	23, // 5: messaging.v1.SendEmailRequest.template_params:type_name -> messaging.v1.SendEmailRequest.TemplateParamsEntry
-	27, // 6: messaging.v1.SendEmailRequest.scene:type_name -> messaging.v1.EmailScene
-	25, // 7: messaging.v1.SendEmailRequest.from:type_name -> messaging.v1.EmailAddress
-	28, // 8: messaging.v1.SendEmailRequest.attachments:type_name -> messaging.v1.EmailAttachment
-	24, // 9: messaging.v1.SendSMSRequest.template_params:type_name -> messaging.v1.SendSMSRequest.TemplateParamsEntry
-	29, // 10: messaging.v1.SendSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
-	30, // 11: messaging.v1.SendSMSRequest.scene:type_name -> messaging.v1.SmsScene
-	31, // 12: messaging.v1.SendResponse.status:type_name -> messaging.v1.MessageStatus
-	26, // 13: messaging.v1.SendResponse.email_vendor:type_name -> messaging.v1.EmailVendor
-	29, // 14: messaging.v1.SendResponse.sms_vendor:type_name -> messaging.v1.SmsVendor
-	26, // 15: messaging.v1.ListEmailsRequest.vendor:type_name -> messaging.v1.EmailVendor
-	27, // 16: messaging.v1.ListEmailsRequest.scene:type_name -> messaging.v1.EmailScene
-	31, // 17: messaging.v1.ListEmailsRequest.status:type_name -> messaging.v1.MessageStatus
-	32, // 18: messaging.v1.ListEmailsRequest.sort_field:type_name -> messaging.v1.SortField
-	33, // 19: messaging.v1.ListEmailsRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	34, // 20: messaging.v1.ListEmailsResponse.records:type_name -> messaging.v1.EmailRecord
-	29, // 21: messaging.v1.ListSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
-	30, // 22: messaging.v1.ListSMSRequest.scene:type_name -> messaging.v1.SmsScene
-	31, // 23: messaging.v1.ListSMSRequest.status:type_name -> messaging.v1.MessageStatus
-	32, // 24: messaging.v1.ListSMSRequest.sort_field:type_name -> messaging.v1.SortField
-	33, // 25: messaging.v1.ListSMSRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	35, // 26: messaging.v1.ListSMSResponse.records:type_name -> messaging.v1.SMSRecord
-	26, // 27: messaging.v1.ListEmailsByCursorRequest.vendor:type_name -> messaging.v1.EmailVendor
-	27, // 28: messaging.v1.ListEmailsByCursorRequest.scene:type_name -> messaging.v1.EmailScene
-	31, // 29: messaging.v1.ListEmailsByCursorRequest.status:type_name -> messaging.v1.MessageStatus
-	32, // 30: messaging.v1.ListEmailsByCursorRequest.sort_field:type_name -> messaging.v1.SortField
-	33, // 31: messaging.v1.ListEmailsByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	34, // 32: messaging.v1.ListEmailsByCursorResponse.records:type_name -> messaging.v1.EmailRecord
-	29, // 33: messaging.v1.ListSMSByCursorRequest.vendor:type_name -> messaging.v1.SmsVendor
-	30, // 34: messaging.v1.ListSMSByCursorRequest.scene:type_name -> messaging.v1.SmsScene
-	31, // 35: messaging.v1.ListSMSByCursorRequest.status:type_name -> messaging.v1.MessageStatus
-	32, // 36: messaging.v1.ListSMSByCursorRequest.sort_field:type_name -> messaging.v1.SortField
-	33, // 37: messaging.v1.ListSMSByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
-	35, // 38: messaging.v1.ListSMSByCursorResponse.records:type_name -> messaging.v1.SMSRecord
-	26, // 39: messaging.v1.GetEmailStatsRequest.vendor:type_name -> messaging.v1.EmailVendor
-	27, // 40: messaging.v1.GetEmailStatsRequest.scene:type_name -> messaging.v1.EmailScene
-	29, // 41: messaging.v1.GetSMSStatsRequest.vendor:type_name -> messaging.v1.SmsVendor
-	30, // 42: messaging.v1.GetSMSStatsRequest.scene:type_name -> messaging.v1.SmsScene
-	36, // 43: messaging.v1.EmailStatsResponse.vendors:type_name -> messaging.v1.EmailVendorStats
-	37, // 44: messaging.v1.SMSStatsResponse.vendors:type_name -> messaging.v1.SmsVendorStats
-	45, // [45:45] is the sub-list for method output_type
-	45, // [45:45] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	21, // 0: messaging.v1.SendEmailRequest.to:type_name -> messaging.v1.EmailAddress
+	21, // 1: messaging.v1.SendEmailRequest.cc:type_name -> messaging.v1.EmailAddress
+	21, // 2: messaging.v1.SendEmailRequest.bcc:type_name -> messaging.v1.EmailAddress
+	21, // 3: messaging.v1.SendEmailRequest.reply_to:type_name -> messaging.v1.EmailAddress
+	22, // 4: messaging.v1.SendEmailRequest.scene:type_name -> messaging.v1.EmailScene
+	19, // 5: messaging.v1.SendEmailRequest.template_params:type_name -> messaging.v1.SendEmailRequest.TemplateParamsEntry
+	23, // 6: messaging.v1.SendEmailRequest.attachments:type_name -> messaging.v1.EmailAttachment
+	24, // 7: messaging.v1.SendSMSRequest.scene:type_name -> messaging.v1.SmsScene
+	20, // 8: messaging.v1.SendSMSRequest.template_params:type_name -> messaging.v1.SendSMSRequest.TemplateParamsEntry
+	25, // 9: messaging.v1.SendResponse.status:type_name -> messaging.v1.MessageStatus
+	26, // 10: messaging.v1.SendResponse.email_vendor:type_name -> messaging.v1.EmailVendor
+	27, // 11: messaging.v1.SendResponse.sms_vendor:type_name -> messaging.v1.SmsVendor
+	26, // 12: messaging.v1.ListEmailsRequest.vendor:type_name -> messaging.v1.EmailVendor
+	22, // 13: messaging.v1.ListEmailsRequest.scene:type_name -> messaging.v1.EmailScene
+	25, // 14: messaging.v1.ListEmailsRequest.status:type_name -> messaging.v1.MessageStatus
+	28, // 15: messaging.v1.ListEmailsRequest.sort_field:type_name -> messaging.v1.SortField
+	29, // 16: messaging.v1.ListEmailsRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	30, // 17: messaging.v1.ListEmailsResponse.records:type_name -> messaging.v1.EmailRecord
+	27, // 18: messaging.v1.ListSMSRequest.vendor:type_name -> messaging.v1.SmsVendor
+	24, // 19: messaging.v1.ListSMSRequest.scene:type_name -> messaging.v1.SmsScene
+	25, // 20: messaging.v1.ListSMSRequest.status:type_name -> messaging.v1.MessageStatus
+	28, // 21: messaging.v1.ListSMSRequest.sort_field:type_name -> messaging.v1.SortField
+	29, // 22: messaging.v1.ListSMSRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	31, // 23: messaging.v1.ListSMSResponse.records:type_name -> messaging.v1.SMSRecord
+	26, // 24: messaging.v1.ListEmailsByCursorRequest.vendor:type_name -> messaging.v1.EmailVendor
+	22, // 25: messaging.v1.ListEmailsByCursorRequest.scene:type_name -> messaging.v1.EmailScene
+	25, // 26: messaging.v1.ListEmailsByCursorRequest.status:type_name -> messaging.v1.MessageStatus
+	28, // 27: messaging.v1.ListEmailsByCursorRequest.sort_field:type_name -> messaging.v1.SortField
+	29, // 28: messaging.v1.ListEmailsByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	30, // 29: messaging.v1.ListEmailsByCursorResponse.records:type_name -> messaging.v1.EmailRecord
+	27, // 30: messaging.v1.ListSMSByCursorRequest.vendor:type_name -> messaging.v1.SmsVendor
+	24, // 31: messaging.v1.ListSMSByCursorRequest.scene:type_name -> messaging.v1.SmsScene
+	25, // 32: messaging.v1.ListSMSByCursorRequest.status:type_name -> messaging.v1.MessageStatus
+	28, // 33: messaging.v1.ListSMSByCursorRequest.sort_field:type_name -> messaging.v1.SortField
+	29, // 34: messaging.v1.ListSMSByCursorRequest.sort_direction:type_name -> messaging.v1.SortDirection
+	31, // 35: messaging.v1.ListSMSByCursorResponse.records:type_name -> messaging.v1.SMSRecord
+	26, // 36: messaging.v1.GetEmailStatsRequest.vendor:type_name -> messaging.v1.EmailVendor
+	22, // 37: messaging.v1.GetEmailStatsRequest.scene:type_name -> messaging.v1.EmailScene
+	27, // 38: messaging.v1.GetSMSStatsRequest.vendor:type_name -> messaging.v1.SmsVendor
+	24, // 39: messaging.v1.GetSMSStatsRequest.scene:type_name -> messaging.v1.SmsScene
+	32, // 40: messaging.v1.EmailStatsResponse.vendors:type_name -> messaging.v1.EmailVendorStats
+	33, // 41: messaging.v1.SMSStatsResponse.vendors:type_name -> messaging.v1.SmsVendorStats
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_messaging_v1_request_response_proto_init() }
@@ -2198,7 +1871,7 @@ func file_messaging_v1_request_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_messaging_v1_request_response_proto_rawDesc), len(file_messaging_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   25,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

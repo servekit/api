@@ -1,0 +1,81 @@
+// Messaging admin service definitions — RPC declarations only.
+//
+// MessageAdminService manages the platform resource model: apps (caller
+// identities), the channel-account pool (vendor credentials), SMS
+// signatures, templates, and per-(app, channel, scene) send policies.
+// Mutations take effect immediately (in-process registry refresh) and
+// converge across nodes within the cron refresh window.
+//
+// Trust model: internal-network gRPC with NO service-level auth — the
+// enforcement point for human access is the gateway (testkit login, future
+// RBAC + rules engine). See specs/2026-09-07-message-platform-design.md §8.
+syntax = "proto3";
+
+package messaging.v1;
+
+import "google/protobuf/empty.proto";
+import "messaging/v1/admin.proto";
+import "messaging/v1/admin_request_response.proto";
+
+service MessageAdminService {
+  // Apps
+
+  // CreateApp registers a calling app and returns the plaintext
+  // app_secret exactly once.
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  // GetApp returns one app by id.
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  // UpdateApp tweaks app metadata (name / disabled / daily limits).
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  // RotateAppSecret invalidates the current secret and returns a new
+  // plaintext exactly once.
+  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
+  // ListApps returns all apps (no pagination — low cardinality).
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  // DeleteApp soft-deletes an app; its sends fail immediately.
+  rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty);
+
+  // Channel accounts
+
+  // CreateChannelAccount adds a vendor account to the platform pool.
+  rpc CreateChannelAccount(CreateChannelAccountRequest) returns (CreateChannelAccountResponse);
+  // UpdateChannelAccount edits remark/disabled or replaces credentials.
+  rpc UpdateChannelAccount(UpdateChannelAccountRequest) returns (UpdateChannelAccountResponse);
+  // DeleteChannelAccount soft-deletes an account from the pool.
+  rpc DeleteChannelAccount(DeleteChannelAccountRequest) returns (google.protobuf.Empty);
+  // ListChannelAccounts returns the full pool (secrets masked).
+  rpc ListChannelAccounts(ListChannelAccountsRequest) returns (ListChannelAccountsResponse);
+
+  // Signatures
+
+  // CreateSignature registers a signature with its account bindings.
+  rpc CreateSignature(CreateSignatureRequest) returns (CreateSignatureResponse);
+  // UpdateSignature replaces remark/disabled/bindings.
+  rpc UpdateSignature(UpdateSignatureRequest) returns (UpdateSignatureResponse);
+  // DeleteSignature soft-deletes a signature.
+  rpc DeleteSignature(DeleteSignatureRequest) returns (google.protobuf.Empty);
+  // ListSignatures returns all signatures with bindings.
+  rpc ListSignatures(ListSignaturesRequest) returns (ListSignaturesResponse);
+
+  // Templates
+
+  // CreateTemplate registers a template (channel + kind + params + content).
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse);
+  // UpdateTemplate fully replaces a template definition.
+  rpc UpdateTemplate(UpdateTemplateRequest) returns (UpdateTemplateResponse);
+  // DeleteTemplate soft-deletes a template.
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (google.protobuf.Empty);
+  // ListTemplates filters by app (0 = all) and channel (0 = all).
+  rpc ListTemplates(ListTemplatesRequest) returns (ListTemplatesResponse);
+
+  // Policies
+
+  // CreatePolicy binds (app, channel, scene) → template + route chains.
+  rpc CreatePolicy(CreatePolicyRequest) returns (CreatePolicyResponse);
+  // UpdatePolicy fully replaces template + route chains.
+  rpc UpdatePolicy(UpdatePolicyRequest) returns (UpdatePolicyResponse);
+  // DeletePolicy removes the binding; sends fail closed from then on.
+  rpc DeletePolicy(DeletePolicyRequest) returns (google.protobuf.Empty);
+  // ListPolicies filters by app (0 = all) and channel (0 = all).
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse);
+}

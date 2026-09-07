@@ -35,20 +35,24 @@ const (
 	MessageService_ListSMSByCursor_FullMethodName    = "/messaging.v1.MessageService/ListSMSByCursor"
 	MessageService_GetSMSStats_FullMethodName        = "/messaging.v1.MessageService/GetSMSStats"
 	MessageService_ListSMSRegions_FullMethodName     = "/messaging.v1.MessageService/ListSMSRegions"
-	MessageService_ListSMSSenders_FullMethodName     = "/messaging.v1.MessageService/ListSMSSenders"
-	MessageService_ListEmailSenders_FullMethodName   = "/messaging.v1.MessageService/ListEmailSenders"
 )
 
 // MessageServiceClient is the client API for MessageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// MessageService is the data plane. Every Send* call authenticates the
+// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
+// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// internal-network trusted, no per-app scoping.
 type MessageServiceClient interface {
 	Ping(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.Pong, error)
-	// SendEmail sends an email via the configured vendor/account, or the default
-	// fallback chain when both vendor + account are unset.
+	// SendEmail sends a policy-driven email: resolves (app, EMAIL, scene) →
+	// policy → template + ordered provider routes, renders subject/body from
+	// the template, and sends along the route chain with fallback.
 	//
 	// Idempotency (when idempotency_key is set): Redis dedupes per
-	// (sender_id, idempotency_key).
+	// (app_key, idempotency_key).
 	//   - First request: sends + caches the success response.
 	//   - Concurrent second request: returns ErrIdempotencyConflict (409) while
 	//     the first is in flight.
@@ -56,28 +60,19 @@ type MessageServiceClient interface {
 	//     re-sending.
 	//   - Failure: reservation released — caller can retry the same key.
 	//
-	// Required fields: to, subject, body (or html_body), scene, sender_id.
-	// vendor + account must be set together or both empty.
 	// Returns: record ID + MessageStatus (SENT on success).
-	// Errors: ErrBadRequest on validation; ErrMessageSendFailed on vendor
+	// Errors: ErrBadRequest on validation (unknown scene policy, missing
+	// required template params, invalid recipient); ErrDailyQuotaExceeded when
+	// the app's daily email limit is hit; ErrMessageSendFailed on vendor
 	// rejection / transport failure (NOT cached — safe to retry the same key).
 	SendEmail(ctx context.Context, in *SendEmailRequest, opts ...grpc.CallOption) (*SendResponse, error)
-	// SendSMS sends an SMS via the configured vendor/account, or routes by phone
-	// country code when both are unset.
-	//
-	// Path selection by region_code:
-	//   - "CN" (domestic): template-based only. template_id + sign_name +
-	//     template_params required; content is ignored.
-	//   - other (international): caller picks ONE of template_id (template-based
-	//     vendor: Byteplus, Tencent intl) OR content (raw-content vendor: Aliyun
-	//     intl, Twilio-style). Setting both is a validation error.
-	//
+	// SendSMS sends a policy-driven SMS: resolves (app, SMS, scene) → policy →
+	// template + CN/intl route chains, picks the chain by the destination
+	// country parsed from the E.164 number, and sends with ordered fallback.
 	// Idempotency: same contract as SendEmail.
-	// Required fields: region_code (ISO alpha-2), phone (local, no "+"), scene,
-	// sender_id. sign_name required for CN + some intl paths.
+	//
 	// Returns: record ID + MessageStatus (SENT on success).
-	// Errors: ErrBadRequest on validation (incl. invalid phone / region); see
-	// SendSMSRequest.phone_no_plus for the "+" rule.
+	// Errors: see SendEmail (ErrDailyQuotaExceeded counts SMS attempts).
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	// GetEmail returns a single email record by ID.
 	// Errors: ErrEmailNotFound (404); ErrPersistenceDisabled (503) when email
@@ -123,14 +118,6 @@ type MessageServiceClient interface {
 	// DISTINCT). Callers further filter client-side if needed.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
 	ListSMSRegions(ctx context.Context, in *ListSMSRegionsRequest, opts ...grpc.CallOption) (*ListSMSRegionsResponse, error)
-	// ListSMSSenders returns distinct sender_id values across SMS records, for
-	// populating frontend filter dropdowns.
-	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
-	ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error)
-	// ListEmailSenders returns distinct sender_id values across email records,
-	// for populating frontend filter dropdowns.
-	// Errors: ErrPersistenceDisabled (503) when email persistence is off.
-	ListEmailSenders(ctx context.Context, in *ListEmailSendersRequest, opts ...grpc.CallOption) (*ListEmailSendersResponse, error)
 }
 
 type messageServiceClient struct {
@@ -261,36 +248,22 @@ func (c *messageServiceClient) ListSMSRegions(ctx context.Context, in *ListSMSRe
 	return out, nil
 }
 
-func (c *messageServiceClient) ListSMSSenders(ctx context.Context, in *ListSMSSendersRequest, opts ...grpc.CallOption) (*ListSMSSendersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListSMSSendersResponse)
-	err := c.cc.Invoke(ctx, MessageService_ListSMSSenders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) ListEmailSenders(ctx context.Context, in *ListEmailSendersRequest, opts ...grpc.CallOption) (*ListEmailSendersResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListEmailSendersResponse)
-	err := c.cc.Invoke(ctx, MessageService_ListEmailSenders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility.
+//
+// MessageService is the data plane. Every Send* call authenticates the
+// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
+// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// internal-network trusted, no per-app scoping.
 type MessageServiceServer interface {
 	Ping(context.Context, *emptypb.Empty) (*v1.Pong, error)
-	// SendEmail sends an email via the configured vendor/account, or the default
-	// fallback chain when both vendor + account are unset.
+	// SendEmail sends a policy-driven email: resolves (app, EMAIL, scene) →
+	// policy → template + ordered provider routes, renders subject/body from
+	// the template, and sends along the route chain with fallback.
 	//
 	// Idempotency (when idempotency_key is set): Redis dedupes per
-	// (sender_id, idempotency_key).
+	// (app_key, idempotency_key).
 	//   - First request: sends + caches the success response.
 	//   - Concurrent second request: returns ErrIdempotencyConflict (409) while
 	//     the first is in flight.
@@ -298,28 +271,19 @@ type MessageServiceServer interface {
 	//     re-sending.
 	//   - Failure: reservation released — caller can retry the same key.
 	//
-	// Required fields: to, subject, body (or html_body), scene, sender_id.
-	// vendor + account must be set together or both empty.
 	// Returns: record ID + MessageStatus (SENT on success).
-	// Errors: ErrBadRequest on validation; ErrMessageSendFailed on vendor
+	// Errors: ErrBadRequest on validation (unknown scene policy, missing
+	// required template params, invalid recipient); ErrDailyQuotaExceeded when
+	// the app's daily email limit is hit; ErrMessageSendFailed on vendor
 	// rejection / transport failure (NOT cached — safe to retry the same key).
 	SendEmail(context.Context, *SendEmailRequest) (*SendResponse, error)
-	// SendSMS sends an SMS via the configured vendor/account, or routes by phone
-	// country code when both are unset.
-	//
-	// Path selection by region_code:
-	//   - "CN" (domestic): template-based only. template_id + sign_name +
-	//     template_params required; content is ignored.
-	//   - other (international): caller picks ONE of template_id (template-based
-	//     vendor: Byteplus, Tencent intl) OR content (raw-content vendor: Aliyun
-	//     intl, Twilio-style). Setting both is a validation error.
-	//
+	// SendSMS sends a policy-driven SMS: resolves (app, SMS, scene) → policy →
+	// template + CN/intl route chains, picks the chain by the destination
+	// country parsed from the E.164 number, and sends with ordered fallback.
 	// Idempotency: same contract as SendEmail.
-	// Required fields: region_code (ISO alpha-2), phone (local, no "+"), scene,
-	// sender_id. sign_name required for CN + some intl paths.
+	//
 	// Returns: record ID + MessageStatus (SENT on success).
-	// Errors: ErrBadRequest on validation (incl. invalid phone / region); see
-	// SendSMSRequest.phone_no_plus for the "+" rule.
+	// Errors: see SendEmail (ErrDailyQuotaExceeded counts SMS attempts).
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
 	// GetEmail returns a single email record by ID.
 	// Errors: ErrEmailNotFound (404); ErrPersistenceDisabled (503) when email
@@ -365,14 +329,6 @@ type MessageServiceServer interface {
 	// DISTINCT). Callers further filter client-side if needed.
 	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
 	ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error)
-	// ListSMSSenders returns distinct sender_id values across SMS records, for
-	// populating frontend filter dropdowns.
-	// Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
-	ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error)
-	// ListEmailSenders returns distinct sender_id values across email records,
-	// for populating frontend filter dropdowns.
-	// Errors: ErrPersistenceDisabled (503) when email persistence is off.
-	ListEmailSenders(context.Context, *ListEmailSendersRequest) (*ListEmailSendersResponse, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -418,12 +374,6 @@ func (UnimplementedMessageServiceServer) GetSMSStats(context.Context, *GetSMSSta
 }
 func (UnimplementedMessageServiceServer) ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSMSRegions not implemented")
-}
-func (UnimplementedMessageServiceServer) ListSMSSenders(context.Context, *ListSMSSendersRequest) (*ListSMSSendersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListSMSSenders not implemented")
-}
-func (UnimplementedMessageServiceServer) ListEmailSenders(context.Context, *ListEmailSendersRequest) (*ListEmailSendersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListEmailSenders not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 func (UnimplementedMessageServiceServer) testEmbeddedByValue()                        {}
@@ -662,42 +612,6 @@ func _MessageService_ListSMSRegions_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_ListSMSSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListSMSSendersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).ListSMSSenders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MessageService_ListSMSSenders_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).ListSMSSenders(ctx, req.(*ListSMSSendersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_ListEmailSenders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListEmailSendersRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).ListEmailSenders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MessageService_ListEmailSenders_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).ListEmailSenders(ctx, req.(*ListEmailSendersRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -752,14 +666,6 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSMSRegions",
 			Handler:    _MessageService_ListSMSRegions_Handler,
-		},
-		{
-			MethodName: "ListSMSSenders",
-			Handler:    _MessageService_ListSMSSenders_Handler,
-		},
-		{
-			MethodName: "ListEmailSenders",
-			Handler:    _MessageService_ListEmailSenders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

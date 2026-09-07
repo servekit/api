@@ -8,118 +8,66 @@ import "messaging/v1/enums.proto";
 import "messaging/v1/message.proto";
 
 // SendEmailRequest is the request to send an email.
+//
+// Policy-driven: the caller supplies only the scene and template params.
+// The service resolves (app, EMAIL, scene) → policy → template + ordered
+// provider routes, renders subject/body from the template, and sends along
+// the route chain with fallback. Callers authenticate via app credentials
+// in gRPC metadata (x-app-key / x-app-secret).
 message SendEmailRequest {
   repeated EmailAddress to = 1 [(buf.validate.field).repeated.min_items = 1];
   repeated EmailAddress cc = 2;
   repeated EmailAddress bcc = 3;
-  string subject = 4 [(buf.validate.field).string.min_len = 1];
-  string body = 5;
-  string html_body = 6;
-  EmailAddress reply_to = 7;
-  // Vendor + Account optionally select a specific configured account.
-  // Both must be set together; if both zero/empty, sender uses default fallback.
-  EmailVendor vendor = 8;
-  string account = 9;
-  // Template is optional: vendors that do not support templating ignore it.
-  string template_id = 10;
-  map<string, string> template_params = 11;
-  // Scene is the business purpose of this email (required).
-  EmailScene scene = 12;
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Required. NOT the end-user/admin id — the caller must
-  // record that in its own audit trail.
-  string sender_id = 13;
+  EmailAddress reply_to = 4;
+  // Scene is the business purpose of this email (required). It selects the
+  // send policy configured on the admin surface.
+  EmailScene scene = 5;
+  // TemplateParams substitute {{param}} placeholders in the template bound
+  // by the policy. Required params (declared on the template) must be present.
+  map<string, string> template_params = 6;
 
   // IdempotencyKey is optional. When set, a second request with the same
-  // (sender_id, idempotency_key) returns the existing record without
+  // (app_key, idempotency_key) returns the existing record without
   // re-sending. Use a UUID per logical send intent. Max length 64.
-  string idempotency_key = 14 [(buf.validate.field).string.max_len = 64];
-
-  // From optionally overrides the account's configured From address.
-  // Empty falls back to the account default. The SMTP server is the
-  // ultimate arbiter of which From addresses are accepted (verified
-  // sender lists, etc.); the service does not pre-constrain.
-  EmailAddress from = 15;
+  string idempotency_key = 7 [(buf.validate.field).string.max_len = 64];
 
   // attachments is optional. content attachments are embedded as real MIME
   // parts; url-only attachments are pure references (caller-managed download
-  // links, rendered into html_body by the caller) whose metadata is persisted
-  // for record queries. Mixed lists are allowed.
-  repeated EmailAttachment attachments = 16;
+  // links) whose metadata is persisted for record queries. Mixed lists are
+  // allowed.
+  repeated EmailAttachment attachments = 8;
 
-  option (buf.validate.message).cel = {
-    id: "vendor_account_pair"
-    message: "vendor and account must both be set or both be empty"
-    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
-  };
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"
     expression: "this.scene != 0"
-  };
-  option (buf.validate.message).cel = {
-    id: "sender_required"
-    message: "sender_id is required"
-    expression: "this.sender_id != ''"
   };
 }
 
 // SendSMSRequest is the request to send an SMS.
+//
+// Policy-driven: the caller supplies only the scene and template params.
+// The service resolves (app, SMS, scene) → policy → template + CN/intl
+// route chains, picks the chain by the destination country parsed from
+// the E.164 number, and sends with ordered fallback.
 message SendSMSRequest {
   // to is the destination in E.164 international format ("+8613800138000")
   // — the single canonical phone format. The destination country (which
-  // decides domestic vs international vendor routing, and the national
-  // number domestic vendors need) is parsed from it.
+  // decides the CN vs international route chain) is parsed from it.
   string to = 1 [(buf.validate.field).string.pattern = "^\\+[1-9][0-9]{8,14}$"];
-
-  // content is the raw SMS body for vendors that accept raw text (typically
-  // the international path). Substitution of placeholders (e.g. "{code}") is
-  // the caller's responsibility — message-service forwards the string as-is.
-  string content = 3;
-  string template_id = 4;
-  map<string, string> template_params = 5;
-
-  // Vendor + Account optionally select a specific configured account.
-  // Both must be set together; if both zero/empty, sender routes by phone country.
-  SmsVendor vendor = 6;
-  string account = 7;
-
   // Scene is the business purpose of this SMS (required).
-  SmsScene scene = 8;
-
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Required. NOT the end-user/admin id — the caller must
-  // record that in its own audit trail.
-  string sender_id = 9;
-
+  SmsScene scene = 2;
+  // TemplateParams substitute {{param}} placeholders (intl content
+  // templates) or supply vendor template parameters (CN domestic
+  // templates). Required params (declared on the template) must be present.
+  map<string, string> template_params = 3;
   // IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
-  string idempotency_key = 10 [(buf.validate.field).string.max_len = 64];
+  string idempotency_key = 4 [(buf.validate.field).string.max_len = 64];
 
-  // SignName carries the per-message signature/sender ID semantics:
-  //   - For domestic SMS (destination country "CN"): the SMS signature that
-  //     must match the pre-registered sign in the vendor console (e.g.
-  //     "阿里云", "字节跳动"). Domestic vendors reject sends without it.
-  //   - For international SMS (other destinations): treated as the sender ID
-  //     / "From" field. Some regions require pre-registered alphabetic
-  //     sender IDs; vendors apply region-specific rules.
-  // Required for paths whose vendor enforces a signature (all current
-  // domestic vendors do).
-  string sign_name = 11 [(buf.validate.field).string.max_len = 64];
-
-  option (buf.validate.message).cel = {
-    id: "vendor_account_pair"
-    message: "vendor and account must both be set or both be empty"
-    expression: "(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')"
-  };
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"
     expression: "this.scene != 0"
-  };
-  option (buf.validate.message).cel = {
-    id: "sender_required"
-    message: "sender_id is required"
-    expression: "this.sender_id != ''"
   };
 }
 
@@ -150,10 +98,9 @@ message ListEmailsRequest {
   EmailScene scene = 2;
   MessageStatus status = 3;
   string target = 4;
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-  // must record that in its own audit trail.
-  string sender_id = 5;
+  // AppKey identifies the calling app (the authenticated sender identity).
+  // Optional filter.
+  string app_key = 5;
   int64 start_time = 6;
   int64 end_time = 7;
   int32 page = 8;
@@ -186,10 +133,9 @@ message ListSMSRequest {
       max_len: 20
     }
   ];
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-  // must record that in its own audit trail.
-  string sender_id = 6;
+  // AppKey identifies the calling app (the authenticated sender identity).
+  // Optional filter.
+  string app_key = 6;
   int64 start_time = 7;
   int64 end_time = 8;
   int32 page = 9;
@@ -214,10 +160,9 @@ message ListEmailsByCursorRequest {
   EmailScene scene = 2;
   MessageStatus status = 3;
   string target = 4;
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-  // must record that in its own audit trail.
-  string sender_id = 5;
+  // AppKey identifies the calling app (the authenticated sender identity).
+  // Optional filter.
+  string app_key = 5;
   int64 start_time = 6;
   int64 end_time = 7;
   SortField sort_field = 8;
@@ -255,10 +200,9 @@ message ListSMSByCursorRequest {
       max_len: 20
     }
   ];
-  // SenderID identifies the calling business service (e.g. "user-service",
-  // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
-  // must record that in its own audit trail.
-  string sender_id = 6;
+  // AppKey identifies the calling app (the authenticated sender identity).
+  // Optional filter.
+  string app_key = 6;
   int64 start_time = 7;
   int64 end_time = 8;
   SortField sort_field = 9;
@@ -316,18 +260,4 @@ message ListSMSRegionsRequest {}
 
 message ListSMSRegionsResponse {
   repeated string region_codes = 1 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"];
-}
-
-// ListSMSSendersRequest is empty. See ListSMSRegionsRequest.
-message ListSMSSendersRequest {}
-
-message ListSMSSendersResponse {
-  repeated string sender_ids = 1;
-}
-
-// ListEmailSendersRequest is empty. See ListSMSRegionsRequest.
-message ListEmailSendersRequest {}
-
-message ListEmailSendersResponse {
-  repeated string sender_ids = 1;
 }

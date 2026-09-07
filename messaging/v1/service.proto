@@ -8,14 +8,19 @@ import "google/protobuf/empty.proto";
 import "messaging/v1/message.proto";
 import "messaging/v1/request_response.proto";
 
+// MessageService is the data plane. Every Send* call authenticates the
+// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
+// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// internal-network trusted, no per-app scoping.
 service MessageService {
   rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
 
-  // SendEmail sends an email via the configured vendor/account, or the default
-  // fallback chain when both vendor + account are unset.
+  // SendEmail sends a policy-driven email: resolves (app, EMAIL, scene) →
+  // policy → template + ordered provider routes, renders subject/body from
+  // the template, and sends along the route chain with fallback.
   //
   // Idempotency (when idempotency_key is set): Redis dedupes per
-  // (sender_id, idempotency_key).
+  // (app_key, idempotency_key).
   //   - First request: sends + caches the success response.
   //   - Concurrent second request: returns ErrIdempotencyConflict (409) while
   //     the first is in flight.
@@ -23,29 +28,20 @@ service MessageService {
   //     re-sending.
   //   - Failure: reservation released — caller can retry the same key.
   //
-  // Required fields: to, subject, body (or html_body), scene, sender_id.
-  // vendor + account must be set together or both empty.
   // Returns: record ID + MessageStatus (SENT on success).
-  // Errors: ErrBadRequest on validation; ErrMessageSendFailed on vendor
+  // Errors: ErrBadRequest on validation (unknown scene policy, missing
+  // required template params, invalid recipient); ErrDailyQuotaExceeded when
+  // the app's daily email limit is hit; ErrMessageSendFailed on vendor
   // rejection / transport failure (NOT cached — safe to retry the same key).
   rpc SendEmail(SendEmailRequest) returns (SendResponse);
 
-  // SendSMS sends an SMS via the configured vendor/account, or routes by phone
-  // country code when both are unset.
-  //
-  // Path selection by region_code:
-  //   - "CN" (domestic): template-based only. template_id + sign_name +
-  //     template_params required; content is ignored.
-  //   - other (international): caller picks ONE of template_id (template-based
-  //     vendor: Byteplus, Tencent intl) OR content (raw-content vendor: Aliyun
-  //     intl, Twilio-style). Setting both is a validation error.
-  //
+  // SendSMS sends a policy-driven SMS: resolves (app, SMS, scene) → policy →
+  // template + CN/intl route chains, picks the chain by the destination
+  // country parsed from the E.164 number, and sends with ordered fallback.
   // Idempotency: same contract as SendEmail.
-  // Required fields: region_code (ISO alpha-2), phone (local, no "+"), scene,
-  // sender_id. sign_name required for CN + some intl paths.
+  //
   // Returns: record ID + MessageStatus (SENT on success).
-  // Errors: ErrBadRequest on validation (incl. invalid phone / region); see
-  // SendSMSRequest.phone_no_plus for the "+" rule.
+  // Errors: see SendEmail (ErrDailyQuotaExceeded counts SMS attempts).
   rpc SendSMS(SendSMSRequest) returns (SendResponse);
 
   // GetEmail returns a single email record by ID.
@@ -100,14 +96,4 @@ service MessageService {
   // DISTINCT). Callers further filter client-side if needed.
   // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
   rpc ListSMSRegions(ListSMSRegionsRequest) returns (ListSMSRegionsResponse);
-
-  // ListSMSSenders returns distinct sender_id values across SMS records, for
-  // populating frontend filter dropdowns.
-  // Errors: ErrPersistenceDisabled (503) when SMS persistence is off.
-  rpc ListSMSSenders(ListSMSSendersRequest) returns (ListSMSSendersResponse);
-
-  // ListEmailSenders returns distinct sender_id values across email records,
-  // for populating frontend filter dropdowns.
-  // Errors: ErrPersistenceDisabled (503) when email persistence is off.
-  rpc ListEmailSenders(ListEmailSendersRequest) returns (ListEmailSendersResponse);
 }

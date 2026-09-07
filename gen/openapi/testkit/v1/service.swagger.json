@@ -54,7 +54,13 @@
               "AUDIT_ACTION_UPLOAD_SESSION_CREATE",
               "AUDIT_ACTION_UPLOAD_SESSION_CONFIRM",
               "AUDIT_ACTION_UPLOAD_SESSION_CANCEL",
-              "AUDIT_ACTION_UPLOAD_SESSION_GC"
+              "AUDIT_ACTION_UPLOAD_SESSION_GC",
+              "AUDIT_ACTION_ADMIN_CREATE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_UPDATE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
+              "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
+              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -67,7 +73,10 @@
               "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED",
               "AUDIT_LOG_TARGET_TYPE_FILE",
               "AUDIT_LOG_TARGET_TYPE_QUOTA",
-              "AUDIT_LOG_TARGET_TYPE_OWNER"
+              "AUDIT_LOG_TARGET_TYPE_OWNER",
+              "AUDIT_LOG_TARGET_TYPE_PROVIDER",
+              "AUDIT_LOG_TARGET_TYPE_BUCKET",
+              "AUDIT_LOG_TARGET_TYPE_SETTINGS"
             ],
             "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED"
           },
@@ -349,6 +358,73 @@
         ]
       }
     },
+    "/api/v1/admin/storage/buckets/{name}": {
+      "delete": {
+        "operationId": "AdminDeleteBucket",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "AdminUpsertBucket",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpsertBucketResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminUpsertBucketBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/admin/storage/owners:delete": {
       "post": {
         "operationId": "AdminDeleteOwner",
@@ -433,6 +509,104 @@
         "tags": [
           "TestkitService"
         ]
+      },
+      "post": {
+        "summary": "Provider / bucket / settings management (1:1 forwards to\nstorage-service admin RPCs; the live registry rebuilds immediately).",
+        "operationId": "AdminCreateProvider",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminCreateProviderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AdminCreateProviderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/providers/{name}": {
+      "delete": {
+        "operationId": "AdminDeleteProvider",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "AdminUpdateProvider",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpdateProviderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminUpdateProviderBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
       }
     },
     "/api/v1/admin/storage/quota": {
@@ -503,6 +677,59 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1AdminSetQuotaRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/settings": {
+      "get": {
+        "operationId": "AdminGetSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminGetSettingsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "AdminUpdateSettings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpdateSettingsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "AdminUpdateSettingsRequest updates runtime settings; absent optional\nfields keep their current values. Referenced buckets must exist.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpdateSettingsRequest"
             }
           }
         ],
@@ -772,7 +999,7 @@
           },
           {
             "name": "scene",
-            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.",
+            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.\n - EMAIL_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -784,7 +1011,8 @@
               "EMAIL_SCENE_CHANGE_PASSWORD",
               "EMAIL_SCENE_BIND_ACCOUNT",
               "EMAIL_SCENE_NOTIFICATION",
-              "EMAIL_SCENE_VERIFY_EMAIL"
+              "EMAIL_SCENE_VERIFY_EMAIL",
+              "EMAIL_SCENE_TEST"
             ],
             "default": "EMAIL_SCENE_UNSPECIFIED"
           },
@@ -862,8 +1090,8 @@
             "default": "SORT_DIRECTION_UNSPECIFIED"
           },
           {
-            "name": "senderId",
-            "description": "sender_id filters by the calling service label recorded on each record\n(mirror of message-service ListEmailsRequest.sender_id).",
+            "name": "appKey",
+            "description": "app_key filters by the calling app recorded on each record (mirror of\nmessage-service ListEmailsRequest.app_key).",
             "in": "query",
             "required": false,
             "type": "string"
@@ -940,7 +1168,7 @@
           },
           {
             "name": "scene",
-            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.",
+            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.\n - EMAIL_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -952,7 +1180,8 @@
               "EMAIL_SCENE_CHANGE_PASSWORD",
               "EMAIL_SCENE_BIND_ACCOUNT",
               "EMAIL_SCENE_NOTIFICATION",
-              "EMAIL_SCENE_VERIFY_EMAIL"
+              "EMAIL_SCENE_VERIFY_EMAIL",
+              "EMAIL_SCENE_TEST"
             ],
             "default": "EMAIL_SCENE_UNSPECIFIED"
           },
@@ -1035,35 +1264,13 @@
             "type": "boolean"
           },
           {
-            "name": "senderId",
-            "description": "sender_id filter (mirror of message-service ListEmailsByCursorRequest.sender_id).",
+            "name": "appKey",
+            "description": "app_key filter (mirror of message-service ListEmailsByCursorRequest.app_key).",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/emails:senders": {
-      "get": {
-        "operationId": "ListEmailSenders",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListEmailSendersResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
         "tags": [
           "TestkitService"
         ]
@@ -1103,7 +1310,7 @@
           },
           {
             "name": "scene",
-            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.",
+            "description": " - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.\n - EMAIL_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -1115,7 +1322,8 @@
               "EMAIL_SCENE_CHANGE_PASSWORD",
               "EMAIL_SCENE_BIND_ACCOUNT",
               "EMAIL_SCENE_NOTIFICATION",
-              "EMAIL_SCENE_VERIFY_EMAIL"
+              "EMAIL_SCENE_VERIFY_EMAIL",
+              "EMAIL_SCENE_TEST"
             ],
             "default": "EMAIL_SCENE_UNSPECIFIED"
           },
@@ -2635,9 +2843,728 @@
         ]
       }
     },
+    "/api/v1/message/admin/accounts": {
+      "get": {
+        "operationId": "MessageListChannelAccounts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListChannelAccountsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreateChannelAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateChannelAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateChannelAccountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/accounts/{id}": {
+      "delete": {
+        "operationId": "MessageDeleteChannelAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdateChannelAccount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateChannelAccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdateChannelAccountBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/apps": {
+      "get": {
+        "operationId": "MessageListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/messagingV1CreateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/messagingV1CreateAppRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/apps/{id}": {
+      "get": {
+        "operationId": "MessageGetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/messagingV1GetAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "MessageDeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/messagingV1UpdateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdateAppBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/apps/{id}/secret:rotate": {
+      "post": {
+        "operationId": "MessageRotateAppSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RotateAppSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageRotateAppSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/policies": {
+      "get": {
+        "operationId": "ListPolicies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPoliciesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "app_id 0 = all apps.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TEMPLATE_CHANNEL_UNSPECIFIED",
+              "TEMPLATE_CHANNEL_EMAIL",
+              "TEMPLATE_CHANNEL_SMS"
+            ],
+            "default": "TEMPLATE_CHANNEL_UNSPECIFIED"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreatePolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreatePolicyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "CreatePolicyRequest binds (app, channel, scene) to a template + route\nchains. The (app, channel, scene) tuple is unique — creating a duplicate\nreturns an error.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreatePolicyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/policies/{id}": {
+      "delete": {
+        "operationId": "MessageDeletePolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdatePolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdatePolicyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdatePolicyBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/signatures": {
+      "get": {
+        "operationId": "MessageListSignatures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListSignaturesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreateSignature",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateSignatureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateSignatureRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/signatures/{id}": {
+      "delete": {
+        "operationId": "MessageDeleteSignature",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdateSignature",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateSignatureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdateSignatureBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/templates": {
+      "get": {
+        "operationId": "MessageListTemplates",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTemplatesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "app_id 0 = all templates (shared + every app's).",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TEMPLATE_CHANNEL_UNSPECIFIED",
+              "TEMPLATE_CHANNEL_EMAIL",
+              "TEMPLATE_CHANNEL_SMS"
+            ],
+            "default": "TEMPLATE_CHANNEL_UNSPECIFIED"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreateTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "CreateTemplateRequest creates a template from a full TemplateInfo\ndefinition. template.id must be zero; template.app_id is overridden by\nthe top-level app_id (0 = shared).",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateTemplateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/templates/{id}": {
+      "delete": {
+        "operationId": "MessageDeleteTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdateTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateTemplateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdateTemplateBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/messages:email": {
       "post": {
-        "summary": "Send (sender_id injected from config).",
+        "summary": "Send (app credentials injected from config).",
         "operationId": "SendEmail",
         "responses": {
           "200": {
@@ -4448,7 +5375,7 @@
           },
           {
             "name": "scene",
-            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.",
+            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.\n - SMS_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -4459,7 +5386,8 @@
               "SMS_SCENE_REGISTER",
               "SMS_SCENE_CHANGE_PASSWORD",
               "SMS_SCENE_BIND_ACCOUNT",
-              "SMS_SCENE_VERIFY_PHONE"
+              "SMS_SCENE_VERIFY_PHONE",
+              "SMS_SCENE_TEST"
             ],
             "default": "SMS_SCENE_UNSPECIFIED"
           },
@@ -4543,8 +5471,8 @@
             "default": "SORT_DIRECTION_UNSPECIFIED"
           },
           {
-            "name": "senderId",
-            "description": "sender_id filter (mirror of message-service ListSMSRequest.sender_id).",
+            "name": "appKey",
+            "description": "app_key filter (mirror of message-service ListSMSRequest.app_key).",
             "in": "query",
             "required": false,
             "type": "string"
@@ -4623,7 +5551,7 @@
           },
           {
             "name": "scene",
-            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.",
+            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.\n - SMS_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -4634,7 +5562,8 @@
               "SMS_SCENE_REGISTER",
               "SMS_SCENE_CHANGE_PASSWORD",
               "SMS_SCENE_BIND_ACCOUNT",
-              "SMS_SCENE_VERIFY_PHONE"
+              "SMS_SCENE_VERIFY_PHONE",
+              "SMS_SCENE_TEST"
             ],
             "default": "SMS_SCENE_UNSPECIFIED"
           },
@@ -4723,8 +5652,8 @@
             "type": "boolean"
           },
           {
-            "name": "senderId",
-            "description": "sender_id filter (mirror of message-service ListSMSByCursorRequest.sender_id).",
+            "name": "appKey",
+            "description": "app_key filter (mirror of message-service ListSMSByCursorRequest.app_key).",
             "in": "query",
             "required": false,
             "type": "string"
@@ -4743,28 +5672,6 @@
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/v1ListSMSRegionsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/sms:senders": {
-      "get": {
-        "operationId": "ListSMSSenders",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListSMSSendersResponse"
             }
           },
           "default": {
@@ -4815,7 +5722,7 @@
           },
           {
             "name": "scene",
-            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.",
+            "description": " - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.\n - SMS_SCENE_TEST: Ops-console test send (message admin UI).",
             "in": "query",
             "required": false,
             "type": "string",
@@ -4826,7 +5733,8 @@
               "SMS_SCENE_REGISTER",
               "SMS_SCENE_CHANGE_PASSWORD",
               "SMS_SCENE_BIND_ACCOUNT",
-              "SMS_SCENE_VERIFY_PHONE"
+              "SMS_SCENE_VERIFY_PHONE",
+              "SMS_SCENE_TEST"
             ],
             "default": "SMS_SCENE_UNSPECIFIED"
           },
@@ -5038,7 +5946,13 @@
               "AUDIT_ACTION_UPLOAD_SESSION_CREATE",
               "AUDIT_ACTION_UPLOAD_SESSION_CONFIRM",
               "AUDIT_ACTION_UPLOAD_SESSION_CANCEL",
-              "AUDIT_ACTION_UPLOAD_SESSION_GC"
+              "AUDIT_ACTION_UPLOAD_SESSION_GC",
+              "AUDIT_ACTION_ADMIN_CREATE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_UPDATE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
+              "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
+              "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
+              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -5051,7 +5965,10 @@
               "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED",
               "AUDIT_LOG_TARGET_TYPE_FILE",
               "AUDIT_LOG_TARGET_TYPE_QUOTA",
-              "AUDIT_LOG_TARGET_TYPE_OWNER"
+              "AUDIT_LOG_TARGET_TYPE_OWNER",
+              "AUDIT_LOG_TARGET_TYPE_PROVIDER",
+              "AUDIT_LOG_TARGET_TYPE_BUCKET",
+              "AUDIT_LOG_TARGET_TYPE_SETTINGS"
             ],
             "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED"
           },
@@ -5116,7 +6033,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateAppResponse"
+              "$ref": "#/definitions/testkitV1CreateAppResponse"
             }
           },
           "default": {
@@ -5132,7 +6049,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateAppRequest"
+              "$ref": "#/definitions/testkitV1CreateAppRequest"
             }
           }
         ],
@@ -5148,7 +6065,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetAppResponse"
+              "$ref": "#/definitions/testkitV1GetAppResponse"
             }
           },
           "default": {
@@ -5176,7 +6093,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateAppResponse"
+              "$ref": "#/definitions/testkitV1UpdateAppResponse"
             }
           },
           "default": {
@@ -6224,6 +7141,52 @@
         }
       }
     },
+    "TestkitServiceAdminUpdateProviderBody": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "accessKey": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "roleArn": {
+          "type": "string",
+          "description": "role_arn is replace-on-present: explicitly sending an empty value\ndisables STS."
+        },
+        "domainId": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "description": "AdminUpdateProviderRequest edits a provider. name and vendor are\nimmutable. Credential fields are optional: absent = keep current\n(edit endpoint/disabled without re-entering keys); present = replace."
+    },
+    "TestkitServiceAdminUpsertBucketBody": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string"
+        },
+        "acl": {
+          "$ref": "#/definitions/v1BucketACL"
+        },
+        "cdn": {
+          "$ref": "#/definitions/v1CDNConfig"
+        }
+      },
+      "description": "AdminUpsertBucketRequest creates or fully replaces a bucket binding by\nname. cdn must be resent on every update (absent = disable CDN).\nRe-binding a bucket that still has objects to a different provider is\nrejected — object rows carry (vendor, bucket) and would dangle."
+    },
     "TestkitServiceAssignRoleBody": {
       "type": "object",
       "properties": {
@@ -6333,6 +7296,99 @@
           "format": "date-time"
         }
       }
+    },
+    "TestkitServiceMessageRotateAppSecretBody": {
+      "type": "object",
+      "description": "RotateAppSecret mints a new app_secret. The old secret becomes invalid\nimmediately; the new plaintext is returned exactly once."
+    },
+    "TestkitServiceMessageUpdateAppBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "UpdateAppRequest tweaks app metadata. app_key is immutable; absent\noptional fields keep their current values."
+    },
+    "TestkitServiceMessageUpdateChannelAccountBody": {
+      "type": "object",
+      "properties": {
+        "remark": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "credentials": {
+          "$ref": "#/definitions/v1ChannelAccountCredentials"
+        }
+      },
+      "description": "UpdateChannelAccountRequest updates an account. name and vendor are\nimmutable. credentials is optional: absent = keep current credentials\n(edit remark/disabled without re-entering secrets); present = full\nreplace."
+    },
+    "TestkitServiceMessageUpdatePolicyBody": {
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "type": "boolean"
+        },
+        "templateId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "routes replaces the CN/email chain (required, non-empty)."
+        },
+        "intlRoutes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "intl_routes replaces the intl chain (required field for SMS policies —\nsend an empty list to disable intl; ignored for email)."
+        }
+      },
+      "description": "UpdatePolicyRequest fully replaces template + route chains. app /\nchannel / scene are immutable — delete and recreate to move a policy."
+    },
+    "TestkitServiceMessageUpdateSignatureBody": {
+      "type": "object",
+      "properties": {
+        "remark": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "accountIds": {
+          "$ref": "#/definitions/v1AccountIds",
+          "description": "account_ids replaces the binding list when present."
+        }
+      },
+      "description": "UpdateSignatureRequest is a full replace of remark/disabled/bindings.\nname is immutable."
+    },
+    "TestkitServiceMessageUpdateTemplateBody": {
+      "type": "object",
+      "properties": {
+        "template": {
+          "$ref": "#/definitions/v1TemplateInfo"
+        }
+      },
+      "description": "UpdateTemplateRequest fully replaces the template definition (name,\nparams, content; channel/kind must stay compatible with existing\npolicies — changing them requires delete + recreate). template.id is\noverridden by the top-level id; template.app_id is ignored."
     },
     "TestkitServiceReplaceEventRulesBody": {
       "type": "object",
@@ -6532,6 +7588,54 @@
         }
       }
     },
+    "messagingV1CreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "description": "app_key must be a stable slug identifying the calling service\n(e.g. \"testkit\", \"user-service\"). Unique. Immutable after creation."
+        },
+        "name": {
+          "type": "string"
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "messagingV1CreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1MessageAppInfo"
+        },
+        "appSecret": {
+          "type": "string"
+        }
+      },
+      "description": "CreateAppResponse returns the created app plus the plaintext app_secret\nexactly once — it is not recoverable later (rotate to re-issue)."
+    },
+    "messagingV1GetAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1MessageAppInfo"
+        }
+      }
+    },
+    "messagingV1UpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1MessageAppInfo"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -6568,6 +7672,194 @@
         }
       }
     },
+    "storageV1BucketInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string"
+        },
+        "acl": {
+          "$ref": "#/definitions/v1BucketACL"
+        },
+        "vendor": {
+          "$ref": "#/definitions/v1Vendor"
+        },
+        "cdn": {
+          "$ref": "#/definitions/v1CDNConfig",
+          "description": "cdn is the bucket's CDN fronting config; null = CDN disabled."
+        }
+      }
+    },
+    "storageV1ProviderInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "vendor": {
+          "$ref": "#/definitions/v1Vendor"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled providers are skipped for new uploads (existing objects stay\nreadable through their buckets... until the provider is deleted)."
+        },
+        "stsEnabled": {
+          "type": "boolean",
+          "description": "sts_enabled reports whether role_arn is configured (STS credentials\navailable for direct browser uploads)."
+        },
+        "bucketCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "bucket_count is the number of buckets bound to this provider."
+        }
+      }
+    },
+    "testkitV1BucketInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string"
+        },
+        "acl": {
+          "$ref": "#/definitions/v1BucketACL"
+        },
+        "vendor": {
+          "$ref": "#/definitions/v1Vendor"
+        },
+        "cdn": {
+          "$ref": "#/definitions/v1CDNConfig",
+          "description": "cdn is the bucket's CDN fronting config; null = CDN disabled."
+        }
+      }
+    },
+    "testkitV1CreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "testkitV1CreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1App"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "testkitV1GetAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1App"
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IngestTokenInfo"
+          }
+        },
+        "signingKeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TelemetrySigningKeyInfo"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1EventRule"
+          }
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VersionInfo"
+          }
+        }
+      }
+    },
+    "testkitV1ProviderInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "vendor": {
+          "$ref": "#/definitions/v1Vendor"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "stsEnabled": {
+          "type": "boolean"
+        },
+        "bucketCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "ProviderInfo / BucketInfo are admin catalog entities (live registry view)."
+    },
+    "testkitV1UpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1App"
+        }
+      }
+    },
+    "v1AccountIds": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      },
+      "description": "AccountIds wraps the binding list so UpdateSignatureRequest can\ndistinguish \"keep current bindings\" (absent) from \"replace bindings\"\n(present; must be non-empty — a signature bound to no account is\nunusable)."
+    },
     "v1ActivateRequest": {
       "type": "object",
       "properties": {
@@ -6599,6 +7891,46 @@
         },
         "slots": {
           "$ref": "#/definitions/v1SlotSummary"
+        }
+      }
+    },
+    "v1AdminCreateProviderRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name uniquely identifies the provider (referenced by buckets).\nImmutable after creation."
+        },
+        "vendor": {
+          "$ref": "#/definitions/v1Vendor"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "accessKey": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "roleArn": {
+          "type": "string",
+          "description": "role_arn enables STS (GetSTSCredential) for this provider; empty =\nSTS unavailable."
+        },
+        "domainId": {
+          "type": "string",
+          "description": "domain_id is the Huawei Cloud account UID; required for\nVENDOR_HUAWEI_OBS, unused otherwise."
+        }
+      }
+    },
+    "v1AdminCreateProviderResponse": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "$ref": "#/definitions/storageV1ProviderInfo"
         }
       }
     },
@@ -6698,6 +8030,14 @@
       },
       "description": "AdminFileInfo is the admin-facing file entity (adds provider/bucket/object_key/\nobject_id internal-location fields absent from the user view)."
     },
+    "v1AdminGetSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/v1StorageSettings"
+        }
+      }
+    },
     "v1AdminGetStatsResponse": {
       "type": "object",
       "properties": {
@@ -6770,7 +8110,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1BucketInfo"
+            "$ref": "#/definitions/testkitV1BucketInfo"
           }
         }
       }
@@ -6801,7 +8141,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1ProviderInfo"
+            "$ref": "#/definitions/testkitV1ProviderInfo"
           }
         }
       }
@@ -6854,6 +8194,59 @@
           "format": "int64"
         }
       }
+    },
+    "v1AdminUpdateProviderResponse": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "$ref": "#/definitions/storageV1ProviderInfo"
+        }
+      }
+    },
+    "v1AdminUpdateSettingsRequest": {
+      "type": "object",
+      "properties": {
+        "defaultBucket": {
+          "type": "string"
+        },
+        "publicBucket": {
+          "type": "string",
+          "description": "public_bucket may be explicitly set to \"\" to reject PUBLIC uploads."
+        }
+      },
+      "description": "AdminUpdateSettingsRequest updates runtime settings; absent optional\nfields keep their current values. Referenced buckets must exist."
+    },
+    "v1AdminUpdateSettingsResponse": {
+      "type": "object",
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/v1StorageSettings"
+        }
+      }
+    },
+    "v1AdminUpsertBucketResponse": {
+      "type": "object",
+      "properties": {
+        "bucket": {
+          "$ref": "#/definitions/storageV1BucketInfo"
+        }
+      }
+    },
+    "v1AliyunSmsCredentials": {
+      "type": "object",
+      "properties": {
+        "accessKeyId": {
+          "type": "string"
+        },
+        "accessKeySecret": {
+          "type": "string"
+        },
+        "regionId": {
+          "type": "string",
+          "description": "region_id defaults to \"cn-hangzhou\" server-side when empty."
+        }
+      },
+      "description": "AliyunSmsCredentials configures an Aliyun SMS account."
     },
     "v1App": {
       "type": "object",
@@ -6923,7 +8316,13 @@
         "AUDIT_ACTION_UPLOAD_SESSION_CREATE",
         "AUDIT_ACTION_UPLOAD_SESSION_CONFIRM",
         "AUDIT_ACTION_UPLOAD_SESSION_CANCEL",
-        "AUDIT_ACTION_UPLOAD_SESSION_GC"
+        "AUDIT_ACTION_UPLOAD_SESSION_GC",
+        "AUDIT_ACTION_ADMIN_CREATE_PROVIDER",
+        "AUDIT_ACTION_ADMIN_UPDATE_PROVIDER",
+        "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
+        "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
+        "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
+        "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
       ],
       "default": "AUDIT_ACTION_UNSPECIFIED",
       "description": "AuditAction represents types of auditable operations."
@@ -6989,7 +8388,10 @@
         "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED",
         "AUDIT_LOG_TARGET_TYPE_FILE",
         "AUDIT_LOG_TARGET_TYPE_QUOTA",
-        "AUDIT_LOG_TARGET_TYPE_OWNER"
+        "AUDIT_LOG_TARGET_TYPE_OWNER",
+        "AUDIT_LOG_TARGET_TYPE_PROVIDER",
+        "AUDIT_LOG_TARGET_TYPE_BUCKET",
+        "AUDIT_LOG_TARGET_TYPE_SETTINGS"
       ],
       "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED",
       "description": "AuditLogTargetType represents the kind of resource an audited operation touched."
@@ -7178,26 +8580,6 @@
       "default": "BUCKET_ACL_UNSPECIFIED",
       "description": "BucketACL represents bucket access control levels."
     },
-    "v1BucketInfo": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "provider": {
-          "type": "string"
-        },
-        "keyPrefix": {
-          "type": "string"
-        },
-        "acl": {
-          "$ref": "#/definitions/v1BucketACL"
-        },
-        "vendor": {
-          "$ref": "#/definitions/v1Vendor"
-        }
-      }
-    },
     "v1BucketStats": {
       "type": "object",
       "properties": {
@@ -7217,6 +8599,40 @@
           "format": "int64"
         }
       }
+    },
+    "v1ByteplusSmsCredentials": {
+      "type": "object",
+      "properties": {
+        "accessKey": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "smsAccount": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "region defaults to \"ap-singapore-1\" server-side when empty."
+        }
+      },
+      "description": "ByteplusSmsCredentials configures a Byteplus (intl) SMS account."
+    },
+    "v1CDNConfig": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "authKey": {
+          "type": "string"
+        },
+        "keyPairId": {
+          "type": "string"
+        }
+      },
+      "description": "CDNConfig is a bucket's CDN fronting configuration. auth_key signs URLs\nfor Aliyun/Tencent-style CDN; key_pair_id is CloudFront-only (AWS S3 /\nS3-compatible vendors)."
     },
     "v1CancelUploadRequest": {
       "type": "object",
@@ -7240,6 +8656,68 @@
           "type": "string"
         }
       }
+    },
+    "v1ChannelAccountCredentials": {
+      "type": "object",
+      "properties": {
+        "aliyunSms": {
+          "$ref": "#/definitions/v1AliyunSmsCredentials"
+        },
+        "tencentSms": {
+          "$ref": "#/definitions/v1TencentSmsCredentials"
+        },
+        "volcengineSms": {
+          "$ref": "#/definitions/v1VolcengineSmsCredentials"
+        },
+        "byteplusSms": {
+          "$ref": "#/definitions/v1ByteplusSmsCredentials"
+        },
+        "huaweiSms": {
+          "$ref": "#/definitions/v1HuaweiSmsCredentials"
+        },
+        "smtp": {
+          "$ref": "#/definitions/v1SmtpEmailCredentials"
+        }
+      },
+      "description": "ChannelAccountCredentials carries the per-vendor credential set. Exactly\none arm is set; the vendor enum is implied by the arm. Secret fields\n(keys/passwords) are echoed EMPTY on read — they are write-only."
+    },
+    "v1ChannelAccountInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "description": "name uniquely identifies the account (referenced by policies), e.g.\n\"aliyun-main\". Unique across all vendors."
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "remark": {
+          "type": "string"
+        },
+        "smsVendor": {
+          "$ref": "#/definitions/v1SmsVendor"
+        },
+        "emailVendor": {
+          "$ref": "#/definitions/v1EmailVendor"
+        },
+        "credentials": {
+          "$ref": "#/definitions/v1ChannelAccountCredentials",
+          "description": "credentials with secret fields EMPTY on read."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "ChannelAccountInfo is a vendor account in the platform channel pool."
     },
     "v1ConfirmUploadRequest": {
       "type": "object",
@@ -7303,28 +8781,26 @@
       },
       "description": "Country is one row of the ISO 3166-1 + E.164 directory. Field names use\nthe CLDR/libphonenumber \"region\" convention for the alpha-2 code — the\ndirectory covers countries and other territories alike."
     },
-    "v1CreateAppRequest": {
+    "v1CreateChannelAccountRequest": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string"
-        },
         "name": {
+          "type": "string",
+          "description": "name uniquely identifies the account across vendors (referenced by\npolicies). Immutable after creation."
+        },
+        "remark": {
           "type": "string"
         },
-        "email": {
-          "type": "string"
+        "credentials": {
+          "$ref": "#/definitions/v1ChannelAccountCredentials"
         }
       }
     },
-    "v1CreateAppResponse": {
+    "v1CreateChannelAccountResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1App"
-        },
-        "token": {
-          "type": "string"
+        "account": {
+          "$ref": "#/definitions/v1ChannelAccountInfo"
         }
       }
     },
@@ -7419,6 +8895,47 @@
         }
       }
     },
+    "v1CreatePolicyRequest": {
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "scene": {
+          "$ref": "#/definitions/v1PolicyScene"
+        },
+        "templateId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "routes is the ordered chain for EMAIL and CN-domestic SMS."
+        },
+        "intlRoutes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "intl_routes is the ordered chain for international SMS. Optional: an\nSMS policy with no intl chain rejects non-CN destinations at send time."
+        }
+      },
+      "description": "CreatePolicyRequest binds (app, channel, scene) to a template + route\nchains. The (app, channel, scene) tuple is unique — creating a duplicate\nreturns an error."
+    },
+    "v1CreatePolicyResponse": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "$ref": "#/definitions/v1PolicyInfo"
+        }
+      }
+    },
     "v1CreateRoleRequest": {
       "type": "object",
       "properties": {
@@ -7445,6 +8962,34 @@
       },
       "title": "---- RBAC-Role (P2) ----"
     },
+    "v1CreateSignatureRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name is the signature string itself (CN, e.g. \"XX科技\") or the intl\nsender ID (e.g. \"MyApp\"). Unique. Immutable after creation."
+        },
+        "remark": {
+          "type": "string"
+        },
+        "accountIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          },
+          "description": "account_ids lists the channel accounts the signature is registered on\n(报备). Full replace on every update; at least one binding required."
+        }
+      }
+    },
+    "v1CreateSignatureResponse": {
+      "type": "object",
+      "properties": {
+        "signature": {
+          "$ref": "#/definitions/v1SignatureInfo"
+        }
+      }
+    },
     "v1CreateSigningKeyResponse": {
       "type": "object",
       "properties": {
@@ -7453,6 +8998,27 @@
         },
         "secret": {
           "type": "string"
+        }
+      }
+    },
+    "v1CreateTemplateRequest": {
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "template": {
+          "$ref": "#/definitions/v1TemplateInfo"
+        }
+      },
+      "description": "CreateTemplateRequest creates a template from a full TemplateInfo\ndefinition. template.id must be zero; template.app_id is overridden by\nthe top-level app_id (0 = shared)."
+    },
+    "v1CreateTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "template": {
+          "$ref": "#/definitions/v1TemplateInfo"
         }
       }
     },
@@ -7710,9 +9276,9 @@
         "target": {
           "$ref": "#/definitions/v1EmailAddress"
         },
-        "senderId": {
+        "appKey": {
           "type": "string",
-          "title": "read-only echo (testkit's sends echo cfg.Message.SenderID)"
+          "description": "app_key identifies the calling app (authenticated sender identity)."
         },
         "cc": {
           "type": "array",
@@ -7787,10 +9353,11 @@
         "EMAIL_SCENE_CHANGE_PASSWORD",
         "EMAIL_SCENE_BIND_ACCOUNT",
         "EMAIL_SCENE_NOTIFICATION",
-        "EMAIL_SCENE_VERIFY_EMAIL"
+        "EMAIL_SCENE_VERIFY_EMAIL",
+        "EMAIL_SCENE_TEST"
       ],
       "default": "EMAIL_SCENE_UNSPECIFIED",
-      "description": "EmailScene represents the business purpose of an email. Required on every\nsend. Used for audit, filtering, and stats grouping — NOT for routing\n(vendor selection is independent of scene).\n\n - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address."
+      "description": "EmailScene represents the business purpose of an email. Required on every\nsend. Drives policy routing: (app, channel, scene) resolves the send policy\n(template + ordered provider routes).\n\n - EMAIL_SCENE_LOGIN_CODE: One-time login verification code.\n - EMAIL_SCENE_FORGOT_PASSWORD: Password reset link / code.\n - EMAIL_SCENE_REGISTER: Registration verification code.\n - EMAIL_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - EMAIL_SCENE_BIND_ACCOUNT: Bind a new email/identity to an account.\n - EMAIL_SCENE_NOTIFICATION: Generic transactional notification.\n - EMAIL_SCENE_VERIFY_EMAIL: Verify ownership of an email address.\n - EMAIL_SCENE_TEST: Ops-console test send (message admin UI)."
     },
     "v1EmailStats": {
       "type": "object",
@@ -7850,6 +9417,21 @@
           }
         }
       }
+    },
+    "v1EmailTemplateContent": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "textBody": {
+          "type": "string"
+        },
+        "htmlBody": {
+          "type": "string"
+        }
+      },
+      "description": "EmailTemplateContent is the EMAIL_RENDER template body. All three fields\nsupport {{param}} substitution. html_body optional (plain-text-only send\nwhen empty)."
     },
     "v1EmailVendor": {
       "type": "string",
@@ -8138,42 +9720,6 @@
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
-        }
-      }
-    },
-    "v1GetAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1App"
-        },
-        "tokens": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1IngestTokenInfo"
-          }
-        },
-        "signingKeys": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1TelemetrySigningKeyInfo"
-          }
-        },
-        "rules": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1EventRule"
-          }
-        },
-        "versions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1VersionInfo"
           }
         }
       }
@@ -8616,6 +10162,29 @@
         }
       }
     },
+    "v1HuaweiSmsCredentials": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string"
+        },
+        "appSecret": {
+          "type": "string"
+        },
+        "sign": {
+          "type": "string",
+          "description": "sign is the default signature bound to the Huawei app (Huawei carries\nthe sign on the account, not per request)."
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "endpoint defaults to\n\"https://smsapi.cn-north-4.myhuaweicloud.com\" server-side when empty."
+        },
+        "region": {
+          "type": "string"
+        }
+      },
+      "description": "HuaweiSmsCredentials configures a Huawei Cloud SMS account."
+    },
     "v1Identity": {
       "type": "object",
       "properties": {
@@ -8908,6 +10477,30 @@
       },
       "description": "Language is one selectable BCP 47 tag."
     },
+    "v1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MessageAppInfo"
+          }
+        }
+      }
+    },
+    "v1ListChannelAccountsResponse": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ChannelAccountInfo"
+          }
+        }
+      }
+    },
     "v1ListCountriesByRegionResponse": {
       "type": "object",
       "properties": {
@@ -8952,17 +10545,6 @@
         },
         "dataVersion": {
           "type": "string"
-        }
-      }
-    },
-    "v1ListEmailSendersResponse": {
-      "type": "object",
-      "properties": {
-        "senderIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },
@@ -9208,6 +10790,18 @@
         }
       }
     },
+    "v1ListPoliciesResponse": {
+      "type": "object",
+      "properties": {
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PolicyInfo"
+          }
+        }
+      }
+    },
     "v1ListRegionCodesResponse": {
       "type": "object",
       "properties": {
@@ -9308,17 +10902,6 @@
         }
       }
     },
-    "v1ListSMSSendersResponse": {
-      "type": "object",
-      "properties": {
-        "senderIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "v1ListSessionsResponse": {
       "type": "object",
       "properties": {
@@ -9331,6 +10914,30 @@
         },
         "nextCursor": {
           "type": "string"
+        }
+      }
+    },
+    "v1ListSignaturesResponse": {
+      "type": "object",
+      "properties": {
+        "signatures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SignatureInfo"
+          }
+        }
+      }
+    },
+    "v1ListTemplatesResponse": {
+      "type": "object",
+      "properties": {
+        "templates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TemplateInfo"
+          }
         }
       }
     },
@@ -9524,6 +11131,44 @@
         }
       },
       "description": "LoginRequest is the curated frontend DTO for login. Field names line up 1:1\nwith user-service LoginRequest; the auth mapping layer int-casts the enums."
+    },
+    "v1MessageAppInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appKey": {
+          "type": "string",
+          "description": "app_key is the public credential identifier passed in x-app-key\nmetadata (e.g. \"testkit\"). Unique."
+        },
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled apps fail every send with ErrAppUnauthorized."
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64",
+          "description": "Daily send-attempt caps (0 = unlimited). Counts attempts, not\ndeliveries; protects vendor accounts from runaway loops."
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "MessageAppInfo is a registered calling application (the x-app-key\nidentity). Apps own policies; quotas and idempotency namespaces hang off\nthe app_key."
     },
     "v1MessageStatus": {
       "type": "string",
@@ -9753,6 +11398,73 @@
       "default": "PHONE_TYPE_UNSPECIFIED",
       "description": "PhoneType classifies a parsed phone number by libphonenumber numbering\nrules. Some regions cannot distinguish mobile from fixed line by prefix —\nthose report PHONE_TYPE_FIXED_LINE_OR_MOBILE."
     },
+    "v1PolicyInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "channel": {
+          "$ref": "#/definitions/v1TemplateChannel"
+        },
+        "emailScene": {
+          "$ref": "#/definitions/v1EmailScene"
+        },
+        "smsScene": {
+          "$ref": "#/definitions/v1SmsScene"
+        },
+        "templateId": {
+          "type": "string",
+          "format": "int64",
+          "description": "template_id references the template rendered for every send of this\npolicy. Its channel must match."
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "routes is the ordered route chain for EMAIL and for CN-domestic SMS."
+        },
+        "intlRoutes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RouteRule"
+          },
+          "description": "intl_routes is the ordered route chain for international SMS\n(destination country != CN). Unused for email."
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "PolicyInfo binds (app, channel, scene) to a template and route chains.\nExactly one of email_scene / sms_scene is set, matching channel."
+    },
+    "v1PolicyScene": {
+      "type": "object",
+      "properties": {
+        "emailScene": {
+          "$ref": "#/definitions/v1EmailScene"
+        },
+        "smsScene": {
+          "$ref": "#/definitions/v1SmsScene"
+        }
+      },
+      "description": "PolicyScene is the scene selector for policy payloads: exactly one field\nset, matching the policy channel."
+    },
     "v1Pong": {
       "type": "object",
       "properties": {
@@ -9796,24 +11508,6 @@
         }
       },
       "description": "Pong is the standard health-check response shared by every servekit\nservice's Ping RPC — only public, non-sensitive info (service name, build\nversion, status, timestamps). Never include internal addresses, IPs, env\nvars, secrets, or dependency topology here."
-    },
-    "v1ProviderInfo": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "vendor": {
-          "$ref": "#/definitions/v1Vendor"
-        },
-        "endpoint": {
-          "type": "string"
-        },
-        "region": {
-          "type": "string"
-        }
-      },
-      "description": "ProviderInfo / BucketInfo are admin catalog entities."
     },
     "v1ProviderStats": {
       "type": "object",
@@ -10131,6 +11825,17 @@
       },
       "description": "Role is a named bundle of permissions assignable to users or groups."
     },
+    "v1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1MessageAppInfo"
+        },
+        "appSecret": {
+          "type": "string"
+        }
+      }
+    },
     "v1RotateTokenResponse": {
       "type": "object",
       "properties": {
@@ -10138,6 +11843,27 @@
           "type": "string"
         }
       }
+    },
+    "v1RouteRule": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "int64",
+          "description": "account_id references a channel account (the vendor pool entry)."
+        },
+        "signatureId": {
+          "type": "string",
+          "format": "int64",
+          "description": "signature_id references the signature used with that account.\nRequired for SMS routes (0 is invalid); unused for email routes."
+        },
+        "weight": {
+          "type": "integer",
+          "format": "int32",
+          "description": "weight \u003e= 1; higher weight = higher start probability. Default 1."
+        }
+      },
+      "description": "RouteRule is one entry of a policy route chain. Chains are ordered;\nthe send picks a start by weight, then falls back along the list order."
     },
     "v1SMSRecord": {
       "type": "object",
@@ -10164,8 +11890,9 @@
         "phone": {
           "type": "string"
         },
-        "senderId": {
-          "type": "string"
+        "appKey": {
+          "type": "string",
+          "description": "app_key identifies the calling app (authenticated sender identity)."
         },
         "content": {
           "type": "string"
@@ -10197,6 +11924,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "signName": {
+          "type": "string",
+          "description": "sign_name is the SMS signature / intl sender ID the policy route used."
         }
       }
     },
@@ -10281,42 +12012,22 @@
             "$ref": "#/definitions/v1EmailAddress"
           }
         },
-        "subject": {
-          "type": "string"
-        },
-        "body": {
-          "type": "string"
-        },
-        "htmlBody": {
-          "type": "string"
-        },
         "replyTo": {
           "$ref": "#/definitions/v1EmailAddress"
         },
-        "vendor": {
-          "$ref": "#/definitions/v1EmailVendor"
-        },
-        "account": {
-          "type": "string"
-        },
-        "templateId": {
-          "type": "string"
+        "scene": {
+          "$ref": "#/definitions/v1EmailScene",
+          "description": "Scene selects the message-service send policy (required)."
         },
         "templateParams": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
-        },
-        "scene": {
-          "$ref": "#/definitions/v1EmailScene"
+          },
+          "description": "TemplateParams feed the policy template's {{param}} placeholders."
         },
         "idempotencyKey": {
-          "type": "string",
-          "description": "sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1)."
-        },
-        "from": {
-          "$ref": "#/definitions/v1EmailAddress"
+          "type": "string"
         },
         "attachments": {
           "type": "array",
@@ -10355,32 +12066,18 @@
         "phone": {
           "type": "string"
         },
-        "content": {
-          "type": "string"
-        },
-        "templateId": {
-          "type": "string"
+        "scene": {
+          "$ref": "#/definitions/v1SmsScene",
+          "description": "Scene selects the message-service send policy (required)."
         },
         "templateParams": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
-        },
-        "vendor": {
-          "$ref": "#/definitions/v1SmsVendor"
-        },
-        "account": {
-          "type": "string"
-        },
-        "scene": {
-          "$ref": "#/definitions/v1SmsScene"
+          },
+          "description": "TemplateParams feed the policy template's {{param}} placeholders."
         },
         "idempotencyKey": {
-          "type": "string",
-          "description": "sender_id NOT exposed — BFF fills from cfg.Message.SenderID (decision 1)."
-        },
-        "signName": {
           "type": "string"
         }
       }
@@ -10401,32 +12098,6 @@
           "type": "string"
         },
         "phone": {
-          "type": "string"
-        },
-        "senderId": {
-          "type": "string",
-          "description": "sender_id is the audit actor triggering this send (user id, service name,\nplatform identifier, ...). user-service is stateless and passes it through\nverbatim; for unauthenticated flows (register/login) the frontend supplies\na platform identifier (e.g. the target email/phone or \"testkit-web\")."
-        },
-        "smsTemplateId": {
-          "type": "string",
-          "description": "---- Delivery templates (mirror user-service SendVerificationCodeRequest\n1:1 — field numbers match). Required per channel by user-service's\nvalidateDeliverySpec: EMAIL needs email_subject + email_body ({code}\nplaceholder substituted by user-service); SMS+CN needs sms_template_id +\nsign_name (domestic vendors reject raw content); SMS international needs\nexactly one of sms_template_id / sms_content."
-        },
-        "smsCodeParamKey": {
-          "type": "string"
-        },
-        "smsContent": {
-          "type": "string"
-        },
-        "emailSubject": {
-          "type": "string"
-        },
-        "emailBody": {
-          "type": "string"
-        },
-        "signName": {
-          "type": "string"
-        },
-        "emailHtmlBody": {
           "type": "string"
         }
       },
@@ -10545,6 +12216,42 @@
         }
       }
     },
+    "v1SignatureInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "description": "name is the signature string itself (e.g. \"XX科技\") or the intl\nsender ID (e.g. \"MyApp\"). Unique."
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "remark": {
+          "type": "string"
+        },
+        "accountIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          },
+          "description": "account_ids lists the channel accounts this signature is registered on."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "SignatureInfo is an SMS signature (CN) / sender ID (intl), with the\naccounts it has been pre-registered on (报备). A signature may only be\nused with a bound account in a policy route."
+    },
     "v1SigningKeyInfo": {
       "type": "object",
       "properties": {
@@ -10576,6 +12283,15 @@
         }
       }
     },
+    "v1SmsContentTemplate": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      },
+      "description": "SmsContentTemplate is the SMS_CONTENT template body (intl raw-content\nvendors), rendered platform-side with {{param}} substitution."
+    },
     "v1SmsScene": {
       "type": "string",
       "enum": [
@@ -10585,10 +12301,11 @@
         "SMS_SCENE_REGISTER",
         "SMS_SCENE_CHANGE_PASSWORD",
         "SMS_SCENE_BIND_ACCOUNT",
-        "SMS_SCENE_VERIFY_PHONE"
+        "SMS_SCENE_VERIFY_PHONE",
+        "SMS_SCENE_TEST"
       ],
       "default": "SMS_SCENE_UNSPECIFIED",
-      "description": "SmsScene represents the business purpose of an SMS. Required on every send.\nMirrors EmailScene; VERIFY_PHONE is the SMS counterpart of VERIFY_EMAIL\n(cross-channel pairs like VERIFY_EMAIL+SMS are rejected by SendSMS).\n\n - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number."
+      "description": "SmsScene represents the business purpose of an SMS. Required on every send.\nMirrors EmailScene; VERIFY_PHONE is the SMS counterpart of VERIFY_EMAIL\n(cross-channel pairs like VERIFY_EMAIL+SMS are rejected by SendSMS).\n\n - SMS_SCENE_LOGIN_CODE: One-time login verification code.\n - SMS_SCENE_FORGOT_PASSWORD: Password reset code.\n - SMS_SCENE_REGISTER: Registration verification code.\n - SMS_SCENE_CHANGE_PASSWORD: Confirmation of password change.\n - SMS_SCENE_BIND_ACCOUNT: Bind a new phone to an account.\n - SMS_SCENE_VERIFY_PHONE: Verify ownership of a phone number.\n - SMS_SCENE_TEST: Ops-console test send (message admin UI)."
     },
     "v1SmsVendor": {
       "type": "string",
@@ -10602,6 +12319,19 @@
       ],
       "default": "SMS_VENDOR_UNSPECIFIED",
       "description": "SmsVendor represents the SMS service brand. Path capabilities differ:\n  - Domestic (CN) vendors: template-based only; raw content rejected.\n  - International vendors split into:\n      * raw-content (ALIYUN, VOLCENGINE intl, ...): caller supplies Content.\n      * template-based (TENCENT intl, BYTEPLUS): caller supplies TemplateID + Params.\nThe service picks a path automatically from the destination region_code,\nunless the request explicitly sets vendor + account.\n\n - SMS_VENDOR_ALIYUN: Aliyun (domestic + intl SendMessageToGlobe).\n - SMS_VENDOR_TENCENT: Tencent Cloud SMS (domestic + intl via SdkAppid).\n - SMS_VENDOR_VOLCENGINE: ByteDance Volcengine SMS.\n - SMS_VENDOR_BYTEPLUS: Byteplus (intl-only, template-based).\n - SMS_VENDOR_HUAWEI: Huawei Cloud SMS."
+    },
+    "v1SmsVendorCodesContent": {
+      "type": "object",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VendorTemplateCode"
+          }
+        }
+      },
+      "description": "SmsVendorCodesContent is the SMS_VENDOR_CODES template body: the\nper-vendor code mapping. The params spec still applies — the same params\nfeed every vendor's template."
     },
     "v1SmsVendorStats": {
       "type": "object",
@@ -10622,6 +12352,32 @@
           "format": "int64"
         }
       }
+    },
+    "v1SmtpEmailCredentials": {
+      "type": "object",
+      "properties": {
+        "brand": {
+          "$ref": "#/definitions/v1EmailVendor"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "description": "port defaults to 587 server-side when zero."
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "fromAddress": {
+          "type": "string"
+        }
+      },
+      "description": "SmtpEmailCredentials configures an SMTP email account. brand is an audit\nlabel (which ESP the mailbox belongs to); transport is always SMTP."
     },
     "v1SocialLoginRequest": {
       "type": "object",
@@ -10680,6 +12436,20 @@
       "default": "SORT_FIELD_UNSPECIFIED",
       "description": "SortField controls list ordering."
     },
+    "v1StorageSettings": {
+      "type": "object",
+      "properties": {
+        "defaultBucket": {
+          "type": "string",
+          "description": "default_bucket receives uploads that do not specify a bucket."
+        },
+        "publicBucket": {
+          "type": "string",
+          "description": "public_bucket receives visibility=PUBLIC uploads; empty = PUBLIC\nuploads are rejected."
+        }
+      },
+      "description": "StorageSettings is the runtime-editable service-level settings row\n(moved out of YAML config; managed via AdminGet/UpdateSettings)."
+    },
     "v1TelemetrySigningKeyInfo": {
       "type": "object",
       "properties": {
@@ -10698,6 +12468,116 @@
           "format": "date-time"
         }
       }
+    },
+    "v1TemplateChannel": {
+      "type": "string",
+      "enum": [
+        "TEMPLATE_CHANNEL_UNSPECIFIED",
+        "TEMPLATE_CHANNEL_EMAIL",
+        "TEMPLATE_CHANNEL_SMS"
+      ],
+      "default": "TEMPLATE_CHANNEL_UNSPECIFIED",
+      "description": "TemplateChannel selects which send channel a template/policy belongs to."
+    },
+    "v1TemplateInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "channel": {
+          "$ref": "#/definitions/v1TemplateChannel"
+        },
+        "kind": {
+          "$ref": "#/definitions/v1TemplateKind"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TemplateParamSpec"
+          }
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "email": {
+          "$ref": "#/definitions/v1EmailTemplateContent"
+        },
+        "vendorCodes": {
+          "$ref": "#/definitions/v1SmsVendorCodesContent"
+        },
+        "smsContent": {
+          "$ref": "#/definitions/v1SmsContentTemplate"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "TemplateInfo is a message template. app_id = 0 means shared across all\napps; otherwise the template belongs to that app's namespace."
+    },
+    "v1TemplateKind": {
+      "type": "string",
+      "enum": [
+        "TEMPLATE_KIND_UNSPECIFIED",
+        "TEMPLATE_KIND_EMAIL_RENDER",
+        "TEMPLATE_KIND_SMS_VENDOR_CODES",
+        "TEMPLATE_KIND_SMS_CONTENT"
+      ],
+      "default": "TEMPLATE_KIND_UNSPECIFIED",
+      "description": "TemplateKind selects how template content is stored and rendered.\n\n - TEMPLATE_KIND_EMAIL_RENDER: Email: platform renders subject/text/html with {{param}} substitution.\n - TEMPLATE_KIND_SMS_VENDOR_CODES: Domestic (CN) SMS: content lives at the vendor — the platform stores the\nper-vendor template-code mapping only (regulatory: CN templates must be\npre-registered in each vendor console).\n - TEMPLATE_KIND_SMS_CONTENT: International SMS: platform renders raw content with {{param}}\nsubstitution for raw-content vendors."
+    },
+    "v1TemplateParamSpec": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "required params must be present in template_params on every send."
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "description": "TemplateParamSpec declares one {{param}} placeholder of a template."
+    },
+    "v1TencentSmsCredentials": {
+      "type": "object",
+      "properties": {
+        "secretId": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "smsSdkAppId": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "region defaults to \"ap-guangzhou\" server-side when empty."
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "endpoint is optional (e.g. a dedicated intl endpoint)."
+        }
+      },
+      "description": "TencentSmsCredentials configures a Tencent Cloud SMS account."
     },
     "v1Timezone": {
       "type": "object",
@@ -10812,11 +12692,11 @@
         }
       }
     },
-    "v1UpdateAppResponse": {
+    "v1UpdateChannelAccountResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1App"
+        "account": {
+          "$ref": "#/definitions/v1ChannelAccountInfo"
         }
       }
     },
@@ -10825,6 +12705,14 @@
       "properties": {
         "key": {
           "$ref": "#/definitions/v1KeyInfo"
+        }
+      }
+    },
+    "v1UpdatePolicyResponse": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "$ref": "#/definitions/v1PolicyInfo"
         }
       }
     },
@@ -10865,6 +12753,22 @@
         "regionCode": {
           "type": "string",
           "description": "The user's country/region (ISO 3166-1 alpha-2); \"\" leaves it untouched."
+        }
+      }
+    },
+    "v1UpdateSignatureResponse": {
+      "type": "object",
+      "properties": {
+        "signature": {
+          "$ref": "#/definitions/v1SignatureInfo"
+        }
+      }
+    },
+    "v1UpdateTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "template": {
+          "$ref": "#/definitions/v1TemplateInfo"
         }
       }
     },
@@ -11094,6 +12998,18 @@
       "default": "VENDOR_UNSPECIFIED",
       "description": "Vendor classifies storage backends (cloud storage providers)."
     },
+    "v1VendorTemplateCode": {
+      "type": "object",
+      "properties": {
+        "vendor": {
+          "$ref": "#/definitions/v1SmsVendor"
+        },
+        "templateCode": {
+          "type": "string"
+        }
+      },
+      "description": "VendorTemplateCode maps the template to one vendor's pre-registered\ntemplate code (CN domestic: codes live in each vendor console)."
+    },
     "v1VerificationChannel": {
       "type": "string",
       "enum": [
@@ -11146,6 +13062,25 @@
       ],
       "default": "VISIBILITY_UNSPECIFIED",
       "description": "Visibility declares the intended audience class of an upload (avatar /\ncover style \"public resource\" vs. default private). It maps to BUCKETS, not\nper-file ACLs: objects are content-addressed and deduplicated globally, so\na physical object cannot be public for one referencing file and private\nfor another — bucket-level visibility is the only coherent granularity.\nPUBLIC uploads land in the configured public bucket (public-read / CDN);\nPRIVATE (and UNSPECIFIED, for backward compatibility) keep today's\nbehavior: the requested bucket, or the default bucket when unset."
+    },
+    "v1VolcengineSmsCredentials": {
+      "type": "object",
+      "properties": {
+        "accessKey": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "smsAccount": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "region defaults to \"cn-north-1\" server-side when empty."
+        }
+      },
+      "description": "VolcengineSmsCredentials configures a Volcengine SMS account."
     }
   }
 }

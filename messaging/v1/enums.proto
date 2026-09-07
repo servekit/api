@@ -52,8 +52,8 @@ enum SmsVendor {
 }
 
 // EmailScene represents the business purpose of an email. Required on every
-// send. Used for audit, filtering, and stats grouping — NOT for routing
-// (vendor selection is independent of scene).
+// send. Drives policy routing: (app, channel, scene) resolves the send policy
+// (template + ordered provider routes).
 enum EmailScene {
   EMAIL_SCENE_UNSPECIFIED = 0;
   EMAIL_SCENE_LOGIN_CODE = 1; // One-time login verification code.
@@ -63,6 +63,7 @@ enum EmailScene {
   EMAIL_SCENE_BIND_ACCOUNT = 5; // Bind a new email/identity to an account.
   EMAIL_SCENE_NOTIFICATION = 6; // Generic transactional notification.
   EMAIL_SCENE_VERIFY_EMAIL = 7; // Verify ownership of an email address.
+  EMAIL_SCENE_TEST = 8; // Ops-console test send (message admin UI).
 }
 
 // SmsScene represents the business purpose of an SMS. Required on every send.
@@ -76,6 +77,28 @@ enum SmsScene {
   SMS_SCENE_CHANGE_PASSWORD = 4; // Confirmation of password change.
   SMS_SCENE_BIND_ACCOUNT = 5; // Bind a new phone to an account.
   SMS_SCENE_VERIFY_PHONE = 6; // Verify ownership of a phone number.
+  SMS_SCENE_TEST = 7; // Ops-console test send (message admin UI).
+}
+
+// TemplateChannel selects which send channel a template/policy belongs to.
+enum TemplateChannel {
+  TEMPLATE_CHANNEL_UNSPECIFIED = 0;
+  TEMPLATE_CHANNEL_EMAIL = 1;
+  TEMPLATE_CHANNEL_SMS = 2;
+}
+
+// TemplateKind selects how template content is stored and rendered.
+enum TemplateKind {
+  TEMPLATE_KIND_UNSPECIFIED = 0;
+  // Email: platform renders subject/text/html with {{param}} substitution.
+  TEMPLATE_KIND_EMAIL_RENDER = 1;
+  // Domestic (CN) SMS: content lives at the vendor — the platform stores the
+  // per-vendor template-code mapping only (regulatory: CN templates must be
+  // pre-registered in each vendor console).
+  TEMPLATE_KIND_SMS_VENDOR_CODES = 2;
+  // International SMS: platform renders raw content with {{param}}
+  // substitution for raw-content vendors.
+  TEMPLATE_KIND_SMS_CONTENT = 3;
 }
 
 // SortField selects the column used to order List responses.
