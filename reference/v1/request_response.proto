@@ -10,47 +10,38 @@ import "reference/v1/enums.proto";
 import "reference/v1/message.proto";
 
 message ListCountriesRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListCountriesResponse {
   repeated Country countries = 1; // name-sorted in the request locale
-  string data_version = 2;        // generation stamp, e.g. "2026-09-06"
+  string data_version = 2; // generation stamp, e.g. "2026-09-06"
 }
 
 // GetCountries is the batch alpha-2 lookup for consumers that serve a
 // curated subset of the directory (e.g. only the countries a product ships
 // to): pass exactly the codes you care about, get the same rows
 // ListCountries serves — in request order, not locale collation. Unknown
-// codes land in missing_countries; the call never errors on them.
+// codes land in missing_regions; the call never errors on them.
 message GetCountriesRequest {
-  repeated string country_codes = 1 [
-    (buf.validate.field).repeated = {
-      unique: true
-      max_items: 250
-      items: {string: {pattern: "^[A-Z]{2}$"}}
+  repeated string region_codes = 1 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 250
+    items: {
+      string: {pattern: "^[A-Z]{2}$"}
     }
-  ];
-  string locale = 2 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  }];
+  string locale = 2 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message GetCountriesResponse {
-  repeated Country countries = 1;         // request order
-  repeated string missing_countries = 2;  // unknown alpha-2 codes, request order
+  repeated Country countries = 1; // request order
+  repeated string missing_regions = 2; // unknown alpha-2 codes, request order
   string data_version = 3;
 }
 
 message ListTimezonesRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListTimezonesResponse {
@@ -59,10 +50,7 @@ message ListTimezonesResponse {
 }
 
 message ListLanguagesRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListLanguagesResponse {
@@ -71,10 +59,7 @@ message ListLanguagesResponse {
 }
 
 message ListCurrenciesRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListCurrenciesResponse {
@@ -83,10 +68,7 @@ message ListCurrenciesResponse {
 }
 
 message ListRegionGroupsRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListRegionGroupsResponse {
@@ -96,27 +78,32 @@ message ListRegionGroupsResponse {
 
 // ParsePhone applies libphonenumber rules to raw input. Bad input never
 // fails the RPC: is_valid=false + error_reason carries the reason, and
-// guessable fields (country_code/dial_code) are still filled when the
-// country is inferable.
+// guessable fields (region_code/dial_code) are still filled when the
+// region is inferable.
 message ParsePhoneRequest {
-  string raw = 1 [
-    (buf.validate.field).string = {min_len: 1, max_len: 32}
-  ];
+  string raw = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 32
+  }];
   // alpha-2; disambiguates local-format input; empty = international format only
-  string default_region = 2 [
-    (buf.validate.field).string.pattern = "^$|^[A-Z]{2}$"
-  ];
+  string default_region = 2 [(buf.validate.field).string.pattern = "^$|^[A-Z]{2}$"];
 }
 
 message ParsePhoneResponse {
   bool is_valid = 1;
-  string e164 = 2;                  // canonical E.164 when parseable
-  string country_code = 3;          // inferred alpha-2, "" when unknown
-  string dial_code = 4;             // e.g. "+86", "" when unknown
+  string e164 = 2; // canonical E.164 when parseable
+  string region_code = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ]; // inferred alpha-2, "" when unknown
+  string dial_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
+  ]; // e.g. "+86", "" when unknown
   string national_number = 5;
   string formatted_international = 6; // E.123 international display form
   PhoneType type = 7;
-  string error_reason = 8;          // set when is_valid=false
+  string error_reason = 8; // set when is_valid=false
 }
 
 // ResolveCodes is the batch by-code lookup across domains — one call serves
@@ -124,22 +111,23 @@ message ParsePhoneResponse {
 // aliases (normalized to canonical). Unresolved inputs land in missing_*;
 // the call itself never errors on unknown codes.
 message ResolveCodesRequest {
-  string locale = 1 [
-    (buf.validate.field).string.pattern =
-      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
-  repeated string country_codes = 2 [
-    (buf.validate.field).repeated = {unique: true, max_items: 100}
-  ];
-  repeated string timezone_ids = 3 [
-    (buf.validate.field).repeated = {unique: true, max_items: 100}
-  ];
-  repeated string language_tags = 4 [
-    (buf.validate.field).repeated = {unique: true, max_items: 100}
-  ];
-  repeated string currency_codes = 5 [
-    (buf.validate.field).repeated = {unique: true, max_items: 100}
-  ];
+  string locale = 1 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
+  repeated string region_codes = 2 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 100
+  }];
+  repeated string timezone_ids = 3 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 100
+  }];
+  repeated string language_tags = 4 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 100
+  }];
+  repeated string currency_codes = 5 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 100
+  }];
 }
 
 message ResolveCodesResponse {
@@ -147,7 +135,7 @@ message ResolveCodesResponse {
   repeated Timezone timezones = 2;
   repeated Language languages = 3;
   repeated Currency currencies = 4;
-  repeated string missing_countries = 5;
+  repeated string missing_regions = 5;
   repeated string missing_timezones = 6;
   repeated string missing_languages = 7;
   repeated string missing_currencies = 8;
@@ -159,10 +147,8 @@ message ResolveCodesResponse {
 // currently-valid currencies, and IANA zones — a pure join over the
 // compiled tables.
 message GetCountryProfileRequest {
-  string country_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
-  string locale = 2 [
-    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string region_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
+  string locale = 2 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message GetCountryProfileResponse {
@@ -175,7 +161,7 @@ message GetCountryProfileResponse {
   // (CLDR territoryInfo); e.g. zh-Hans for CN.
   repeated Language languages = 6;
   repeated Currency currencies = 3; // currently valid in this country
-  repeated Timezone timezones = 4;  // IANA zones covering this country
+  repeated Timezone timezones = 4; // IANA zones covering this country
   string data_version = 5;
 }
 
@@ -184,10 +170,8 @@ message GetCountryProfileResponse {
 // sub-region yields its direct members). Ordered by the request locale's
 // country collation.
 message ListCountriesByRegionRequest {
-  string region_code = 1 [(buf.validate.field).string.pattern = "^[0-9]{3}$"];
-  string locale = 2 [
-    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string group_code = 1 [(buf.validate.field).string.pattern = "^[0-9]{3}$"];
+  string locale = 2 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message ListCountriesByRegionResponse {
@@ -201,21 +185,22 @@ message ListCountriesByRegionResponse {
 // resolved in the request locale so a form can display without a second
 // call.
 message GetCountryDefaultsRequest {
-  string country_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
-  string locale = 2 [
-    (buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
-  ];
+  string region_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
+  string locale = 2 [(buf.validate.field).string.pattern = "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"];
 }
 
 message GetCountryDefaultsResponse {
-  string timezone_id = 1;    // primary IANA zone, e.g. "Asia/Shanghai"
-  string timezone_name = 2;  // display name in the request locale
-  string currency_code = 3;  // first currently-valid currency, e.g. "CNY"
+  string timezone_id = 1; // primary IANA zone, e.g. "Asia/Shanghai"
+  string timezone_name = 2; // display name in the request locale
+  string currency_code = 3; // first currently-valid currency, e.g. "CNY"
   string currency_name = 4;
   string currency_symbol = 5;
-  string language_tag = 6;   // most-spoken official language, e.g. "zh-Hans"
+  string language_tag = 6; // most-spoken official language, e.g. "zh-Hans"
   string language_name = 7;
-  string dial_code = 8;      // "+86"
+  string dial_code = 8 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
+  ]; // "+86"
   string example_number = 9; // "+86 138 0013 8000"
   string data_version = 10;
 }
@@ -227,7 +212,7 @@ message GetDataInfoRequest {}
 message GetDataInfoResponse {
   string data_version = 1;
   repeated string locales = 2;
-  int32 country_count = 3;
+  int32 region_count = 3;
   int32 timezone_count = 4;
   int32 language_count = 5;
   int32 currency_count = 6;

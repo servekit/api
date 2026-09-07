@@ -13,6 +13,7 @@
 package referencev1
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,10 +28,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Country is one row of the ISO 3166-1 + E.164 directory.
+// Country is one row of the ISO 3166-1 + E.164 directory. Field names use
+// the CLDR/libphonenumber "region" convention for the alpha-2 code — the
+// directory covers countries and other territories alike.
 type Country struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                        // alpha-2, e.g. "CN"
+	RegionCode    string                 `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`          // ISO 3166-1 alpha-2, e.g. "CN"
 	Alpha_3       string                 `protobuf:"bytes,2,opt,name=alpha_3,json=alpha3,proto3" json:"alpha_3,omitempty"`                      // alpha-3, e.g. "CHN"
 	DialCode      string                 `protobuf:"bytes,3,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`                // ITU E.164 with "+", e.g. "+86"
 	FlagEmoji     string                 `protobuf:"bytes,4,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`             // regional-indicator pair, e.g. "🇨🇳"
@@ -73,9 +76,9 @@ func (*Country) Descriptor() ([]byte, []int) {
 	return file_reference_v1_message_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Country) GetCode() string {
+func (x *Country) GetRegionCode() string {
 	if x != nil {
-		return x.Code
+		return x.RegionCode
 	}
 	return ""
 }
@@ -128,8 +131,8 @@ type Timezone struct {
 	Id      string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`           // canonical, e.g. "Asia/Shanghai"
 	Aliases []string               `protobuf:"bytes,2,rep,name=aliases,proto3" json:"aliases,omitempty"` // backward links, e.g. "PRC"; input
 	// normalization only — never in pickers
-	CountryCodes  []string `protobuf:"bytes,3,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"` // ISO alpha-2 members
-	Name          string   `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                     // CLDR exemplar city in the request locale
+	RegionCodes   []string `protobuf:"bytes,3,rep,name=region_codes,json=regionCodes,proto3" json:"region_codes,omitempty"` // ISO alpha-2 members
+	Name          string   `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                  // CLDR exemplar city in the request locale
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -178,9 +181,9 @@ func (x *Timezone) GetAliases() []string {
 	return nil
 }
 
-func (x *Timezone) GetCountryCodes() []string {
+func (x *Timezone) GetRegionCodes() []string {
 	if x != nil {
-		return x.CountryCodes
+		return x.RegionCodes
 	}
 	return nil
 }
@@ -256,12 +259,12 @@ func (x *Language) GetNativeName() string {
 // Currency is one ISO 4217 currency.
 type Currency struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                     // e.g. "CNY"
-	Symbol        string                 `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`                                 // e.g. "¥"
-	MinorUnits    int32                  `protobuf:"varint,3,opt,name=minor_units,json=minorUnits,proto3" json:"minor_units,omitempty"`      // 0 (JPY) / 2 (CNY) / 3 (BHD)
-	CountryCodes  []string               `protobuf:"bytes,4,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"` // current official users
-	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                                     // display name in the request locale
-	FlagEmoji     string                 `protobuf:"bytes,6,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`          // issuer flag, e.g. "🇨🇳" — derived from the
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                  // e.g. "CNY"
+	Symbol        string                 `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`                              // e.g. "¥"
+	MinorUnits    int32                  `protobuf:"varint,3,opt,name=minor_units,json=minorUnits,proto3" json:"minor_units,omitempty"`   // 0 (JPY) / 2 (CNY) / 3 (BHD)
+	RegionCodes   []string               `protobuf:"bytes,4,rep,name=region_codes,json=regionCodes,proto3" json:"region_codes,omitempty"` // current official users
+	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                                  // display name in the request locale
+	FlagEmoji     string                 `protobuf:"bytes,6,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`       // issuer flag, e.g. "🇨🇳" — derived from the
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -317,9 +320,9 @@ func (x *Currency) GetMinorUnits() int32 {
 	return 0
 }
 
-func (x *Currency) GetCountryCodes() []string {
+func (x *Currency) GetRegionCodes() []string {
 	if x != nil {
-		return x.CountryCodes
+		return x.RegionCodes
 	}
 	return nil
 }
@@ -339,13 +342,15 @@ func (x *Currency) GetFlagEmoji() string {
 }
 
 // RegionGroup is one UN M49 node (continent or sub-region). The world root
-// (001) is not served; top level (parent_code == "") is continents.
+// (001) is not served; top level (parent_code == "") is continents. The
+// group identifier is numeric M49, so it is named group_code — "region_code"
+// is reserved for ISO 3166-1 alpha-2 across this API.
 type RegionGroup struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                     // UN M49, e.g. "142" (Asia)
-	ParentCode    string                 `protobuf:"bytes,2,opt,name=parent_code,json=parentCode,proto3" json:"parent_code,omitempty"`       // "" for top level
-	CountryCodes  []string               `protobuf:"bytes,3,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"` // direct members; recurse client-side
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                     // e.g. "亚洲" / "Asia"
+	GroupCode     string                 `protobuf:"bytes,1,opt,name=group_code,json=groupCode,proto3" json:"group_code,omitempty"`       // UN M49, e.g. "142" (Asia)
+	ParentCode    string                 `protobuf:"bytes,2,opt,name=parent_code,json=parentCode,proto3" json:"parent_code,omitempty"`    // "" for top level
+	RegionCodes   []string               `protobuf:"bytes,3,rep,name=region_codes,json=regionCodes,proto3" json:"region_codes,omitempty"` // direct members; recurse client-side
+	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                  // e.g. "亚洲" / "Asia"
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -380,9 +385,9 @@ func (*RegionGroup) Descriptor() ([]byte, []int) {
 	return file_reference_v1_message_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RegionGroup) GetCode() string {
+func (x *RegionGroup) GetGroupCode() string {
 	if x != nil {
-		return x.Code
+		return x.GroupCode
 	}
 	return ""
 }
@@ -394,9 +399,9 @@ func (x *RegionGroup) GetParentCode() string {
 	return ""
 }
 
-func (x *RegionGroup) GetCountryCodes() []string {
+func (x *RegionGroup) GetRegionCodes() []string {
 	if x != nil {
-		return x.CountryCodes
+		return x.RegionCodes
 	}
 	return nil
 }
@@ -412,40 +417,46 @@ var File_reference_v1_message_proto protoreflect.FileDescriptor
 
 const file_reference_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x1areference/v1/message.proto\x12\freference.v1\"\xd2\x01\n" +
-	"\aCountry\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x17\n" +
-	"\aalpha_3\x18\x02 \x01(\tR\x06alpha3\x12\x1b\n" +
-	"\tdial_code\x18\x03 \x01(\tR\bdialCode\x12\x1d\n" +
+	"\x1areference/v1/message.proto\x12\freference.v1\x1a\x1bbuf/validate/validate.proto\"\x94\x02\n" +
+	"\aCountry\x125\n" +
+	"\vregion_code\x18\x01 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12\x17\n" +
+	"\aalpha_3\x18\x02 \x01(\tR\x06alpha3\x12:\n" +
+	"\tdial_code\x18\x03 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\n" +
 	"flag_emoji\x18\x04 \x01(\tR\tflagEmoji\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12%\n" +
 	"\x0eexample_number\x18\a \x01(\tR\rexampleNumber\x12#\n" +
-	"\rlanguage_tags\x18\b \x03(\tR\flanguageTags\"m\n" +
+	"\rlanguage_tags\x18\b \x03(\tR\flanguageTags\"\x83\x01\n" +
 	"\bTimezone\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\aaliases\x18\x02 \x03(\tR\aaliases\x12#\n" +
-	"\rcountry_codes\x18\x03 \x03(\tR\fcountryCodes\x12\x12\n" +
+	"\aaliases\x18\x02 \x03(\tR\aaliases\x129\n" +
+	"\fregion_codes\x18\x03 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\"Q\n" +
 	"\bLanguage\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1f\n" +
 	"\vnative_name\x18\x03 \x01(\tR\n" +
-	"nativeName\"\xaf\x01\n" +
+	"nativeName\"\xc5\x01\n" +
 	"\bCurrency\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x16\n" +
 	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12\x1f\n" +
 	"\vminor_units\x18\x03 \x01(\x05R\n" +
-	"minorUnits\x12#\n" +
-	"\rcountry_codes\x18\x04 \x03(\tR\fcountryCodes\x12\x12\n" +
+	"minorUnits\x129\n" +
+	"\fregion_codes\x18\x04 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12\x1d\n" +
 	"\n" +
-	"flag_emoji\x18\x06 \x01(\tR\tflagEmoji\"{\n" +
-	"\vRegionGroup\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x1f\n" +
+	"flag_emoji\x18\x06 \x01(\tR\tflagEmoji\"\x9c\x01\n" +
+	"\vRegionGroup\x12\x1d\n" +
+	"\n" +
+	"group_code\x18\x01 \x01(\tR\tgroupCode\x12\x1f\n" +
 	"\vparent_code\x18\x02 \x01(\tR\n" +
-	"parentCode\x12#\n" +
-	"\rcountry_codes\x18\x03 \x03(\tR\fcountryCodes\x12\x12\n" +
+	"parentCode\x129\n" +
+	"\fregion_codes\x18\x03 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04nameB\xaa\x01\n" +
 	"\x10com.reference.v1B\fMessageProtoP\x01Z7github.com/servekit/api/gen/go/reference/v1;referencev1\xa2\x02\x03RXX\xaa\x02\fReference.V1\xca\x02\fReference\\V1\xe2\x02\x18Reference\\V1\\GPBMetadata\xea\x02\rReference::V1b\x06proto3"
 

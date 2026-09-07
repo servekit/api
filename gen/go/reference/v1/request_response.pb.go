@@ -126,10 +126,10 @@ func (x *ListCountriesResponse) GetDataVersion() string {
 // curated subset of the directory (e.g. only the countries a product ships
 // to): pass exactly the codes you care about, get the same rows
 // ListCountries serves — in request order, not locale collation. Unknown
-// codes land in missing_countries; the call never errors on them.
+// codes land in missing_regions; the call never errors on them.
 type GetCountriesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CountryCodes  []string               `protobuf:"bytes,1,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"`
+	RegionCodes   []string               `protobuf:"bytes,1,rep,name=region_codes,json=regionCodes,proto3" json:"region_codes,omitempty"`
 	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -165,9 +165,9 @@ func (*GetCountriesRequest) Descriptor() ([]byte, []int) {
 	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetCountriesRequest) GetCountryCodes() []string {
+func (x *GetCountriesRequest) GetRegionCodes() []string {
 	if x != nil {
-		return x.CountryCodes
+		return x.RegionCodes
 	}
 	return nil
 }
@@ -180,12 +180,12 @@ func (x *GetCountriesRequest) GetLocale() string {
 }
 
 type GetCountriesResponse struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Countries        []*Country             `protobuf:"bytes,1,rep,name=countries,proto3" json:"countries,omitempty"`                                       // request order
-	MissingCountries []string               `protobuf:"bytes,2,rep,name=missing_countries,json=missingCountries,proto3" json:"missing_countries,omitempty"` // unknown alpha-2 codes, request order
-	DataVersion      string                 `protobuf:"bytes,3,opt,name=data_version,json=dataVersion,proto3" json:"data_version,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Countries      []*Country             `protobuf:"bytes,1,rep,name=countries,proto3" json:"countries,omitempty"`                                 // request order
+	MissingRegions []string               `protobuf:"bytes,2,rep,name=missing_regions,json=missingRegions,proto3" json:"missing_regions,omitempty"` // unknown alpha-2 codes, request order
+	DataVersion    string                 `protobuf:"bytes,3,opt,name=data_version,json=dataVersion,proto3" json:"data_version,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetCountriesResponse) Reset() {
@@ -225,9 +225,9 @@ func (x *GetCountriesResponse) GetCountries() []*Country {
 	return nil
 }
 
-func (x *GetCountriesResponse) GetMissingCountries() []string {
+func (x *GetCountriesResponse) GetMissingRegions() []string {
 	if x != nil {
-		return x.MissingCountries
+		return x.MissingRegions
 	}
 	return nil
 }
@@ -625,8 +625,8 @@ func (x *ListRegionGroupsResponse) GetDataVersion() string {
 
 // ParsePhone applies libphonenumber rules to raw input. Bad input never
 // fails the RPC: is_valid=false + error_reason carries the reason, and
-// guessable fields (country_code/dial_code) are still filled when the
-// country is inferable.
+// guessable fields (region_code/dial_code) are still filled when the
+// region is inferable.
 type ParsePhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Raw   string                 `protobuf:"bytes,1,opt,name=raw,proto3" json:"raw,omitempty"`
@@ -683,9 +683,9 @@ func (x *ParsePhoneRequest) GetDefaultRegion() string {
 type ParsePhoneResponse struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
 	IsValid                bool                   `protobuf:"varint,1,opt,name=is_valid,json=isValid,proto3" json:"is_valid,omitempty"`
-	E164                   string                 `protobuf:"bytes,2,opt,name=e164,proto3" json:"e164,omitempty"`                                  // canonical E.164 when parseable
-	CountryCode            string                 `protobuf:"bytes,3,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"` // inferred alpha-2, "" when unknown
-	DialCode               string                 `protobuf:"bytes,4,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`          // e.g. "+86", "" when unknown
+	E164                   string                 `protobuf:"bytes,2,opt,name=e164,proto3" json:"e164,omitempty"`                               // canonical E.164 when parseable
+	RegionCode             string                 `protobuf:"bytes,3,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"` // inferred alpha-2, "" when unknown
+	DialCode               string                 `protobuf:"bytes,4,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`       // e.g. "+86", "" when unknown
 	NationalNumber         string                 `protobuf:"bytes,5,opt,name=national_number,json=nationalNumber,proto3" json:"national_number,omitempty"`
 	FormattedInternational string                 `protobuf:"bytes,6,opt,name=formatted_international,json=formattedInternational,proto3" json:"formatted_international,omitempty"` // E.123 international display form
 	Type                   PhoneType              `protobuf:"varint,7,opt,name=type,proto3,enum=reference.v1.PhoneType" json:"type,omitempty"`
@@ -738,9 +738,9 @@ func (x *ParsePhoneResponse) GetE164() string {
 	return ""
 }
 
-func (x *ParsePhoneResponse) GetCountryCode() string {
+func (x *ParsePhoneResponse) GetRegionCode() string {
 	if x != nil {
-		return x.CountryCode
+		return x.RegionCode
 	}
 	return ""
 }
@@ -787,7 +787,7 @@ func (x *ParsePhoneResponse) GetErrorReason() string {
 type ResolveCodesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Locale        string                 `protobuf:"bytes,1,opt,name=locale,proto3" json:"locale,omitempty"`
-	CountryCodes  []string               `protobuf:"bytes,2,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"`
+	RegionCodes   []string               `protobuf:"bytes,2,rep,name=region_codes,json=regionCodes,proto3" json:"region_codes,omitempty"`
 	TimezoneIds   []string               `protobuf:"bytes,3,rep,name=timezone_ids,json=timezoneIds,proto3" json:"timezone_ids,omitempty"`
 	LanguageTags  []string               `protobuf:"bytes,4,rep,name=language_tags,json=languageTags,proto3" json:"language_tags,omitempty"`
 	CurrencyCodes []string               `protobuf:"bytes,5,rep,name=currency_codes,json=currencyCodes,proto3" json:"currency_codes,omitempty"`
@@ -832,9 +832,9 @@ func (x *ResolveCodesRequest) GetLocale() string {
 	return ""
 }
 
-func (x *ResolveCodesRequest) GetCountryCodes() []string {
+func (x *ResolveCodesRequest) GetRegionCodes() []string {
 	if x != nil {
-		return x.CountryCodes
+		return x.RegionCodes
 	}
 	return nil
 }
@@ -866,7 +866,7 @@ type ResolveCodesResponse struct {
 	Timezones         []*Timezone            `protobuf:"bytes,2,rep,name=timezones,proto3" json:"timezones,omitempty"`
 	Languages         []*Language            `protobuf:"bytes,3,rep,name=languages,proto3" json:"languages,omitempty"`
 	Currencies        []*Currency            `protobuf:"bytes,4,rep,name=currencies,proto3" json:"currencies,omitempty"`
-	MissingCountries  []string               `protobuf:"bytes,5,rep,name=missing_countries,json=missingCountries,proto3" json:"missing_countries,omitempty"`
+	MissingRegions    []string               `protobuf:"bytes,5,rep,name=missing_regions,json=missingRegions,proto3" json:"missing_regions,omitempty"`
 	MissingTimezones  []string               `protobuf:"bytes,6,rep,name=missing_timezones,json=missingTimezones,proto3" json:"missing_timezones,omitempty"`
 	MissingLanguages  []string               `protobuf:"bytes,7,rep,name=missing_languages,json=missingLanguages,proto3" json:"missing_languages,omitempty"`
 	MissingCurrencies []string               `protobuf:"bytes,8,rep,name=missing_currencies,json=missingCurrencies,proto3" json:"missing_currencies,omitempty"`
@@ -933,9 +933,9 @@ func (x *ResolveCodesResponse) GetCurrencies() []*Currency {
 	return nil
 }
 
-func (x *ResolveCodesResponse) GetMissingCountries() []string {
+func (x *ResolveCodesResponse) GetMissingRegions() []string {
 	if x != nil {
-		return x.MissingCountries
+		return x.MissingRegions
 	}
 	return nil
 }
@@ -974,7 +974,7 @@ func (x *ResolveCodesResponse) GetDataVersion() string {
 // compiled tables.
 type GetCountryProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CountryCode   string                 `protobuf:"bytes,1,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	RegionCode    string                 `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1010,9 +1010,9 @@ func (*GetCountryProfileRequest) Descriptor() ([]byte, []int) {
 	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *GetCountryProfileRequest) GetCountryCode() string {
+func (x *GetCountryProfileRequest) GetRegionCode() string {
 	if x != nil {
-		return x.CountryCode
+		return x.RegionCode
 	}
 	return ""
 }
@@ -1119,7 +1119,7 @@ func (x *GetCountryProfileResponse) GetDataVersion() string {
 // country collation.
 type ListCountriesByRegionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RegionCode    string                 `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	GroupCode     string                 `protobuf:"bytes,1,opt,name=group_code,json=groupCode,proto3" json:"group_code,omitempty"`
 	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1155,9 +1155,9 @@ func (*ListCountriesByRegionRequest) Descriptor() ([]byte, []int) {
 	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *ListCountriesByRegionRequest) GetRegionCode() string {
+func (x *ListCountriesByRegionRequest) GetGroupCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.GroupCode
 	}
 	return ""
 }
@@ -1228,7 +1228,7 @@ func (x *ListCountriesByRegionResponse) GetDataVersion() string {
 // call.
 type GetCountryDefaultsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CountryCode   string                 `protobuf:"bytes,1,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	RegionCode    string                 `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1264,9 +1264,9 @@ func (*GetCountryDefaultsRequest) Descriptor() ([]byte, []int) {
 	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *GetCountryDefaultsRequest) GetCountryCode() string {
+func (x *GetCountryDefaultsRequest) GetRegionCode() string {
 	if x != nil {
-		return x.CountryCode
+		return x.RegionCode
 	}
 	return ""
 }
@@ -1436,7 +1436,7 @@ type GetDataInfoResponse struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	DataVersion      string                 `protobuf:"bytes,1,opt,name=data_version,json=dataVersion,proto3" json:"data_version,omitempty"`
 	Locales          []string               `protobuf:"bytes,2,rep,name=locales,proto3" json:"locales,omitempty"`
-	CountryCount     int32                  `protobuf:"varint,3,opt,name=country_count,json=countryCount,proto3" json:"country_count,omitempty"`
+	RegionCount      int32                  `protobuf:"varint,3,opt,name=region_count,json=regionCount,proto3" json:"region_count,omitempty"`
 	TimezoneCount    int32                  `protobuf:"varint,4,opt,name=timezone_count,json=timezoneCount,proto3" json:"timezone_count,omitempty"`
 	LanguageCount    int32                  `protobuf:"varint,5,opt,name=language_count,json=languageCount,proto3" json:"language_count,omitempty"`
 	CurrencyCount    int32                  `protobuf:"varint,6,opt,name=currency_count,json=currencyCount,proto3" json:"currency_count,omitempty"`
@@ -1489,9 +1489,9 @@ func (x *GetDataInfoResponse) GetLocales() []string {
 	return nil
 }
 
-func (x *GetDataInfoResponse) GetCountryCount() int32 {
+func (x *GetDataInfoResponse) GetRegionCount() int32 {
 	if x != nil {
-		return x.CountryCount
+		return x.RegionCount
 	}
 	return 0
 }
@@ -1533,14 +1533,14 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"o\n" +
 	"\x15ListCountriesResponse\x123\n" +
 	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12!\n" +
-	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"\x9e\x01\n" +
-	"\x13GetCountriesRequest\x12@\n" +
-	"\rcountry_codes\x18\x01 \x03(\tB\x1b\xbaH\x18\x92\x01\x15\x10\xfa\x01\x18\x01\"\x0er\f2\n" +
-	"^[A-Z]{2}$R\fcountryCodes\x12E\n" +
-	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\x9b\x01\n" +
+	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"\x9c\x01\n" +
+	"\x13GetCountriesRequest\x12>\n" +
+	"\fregion_codes\x18\x01 \x03(\tB\x1b\xbaH\x18\x92\x01\x15\x10\xfa\x01\x18\x01\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\x12E\n" +
+	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\x97\x01\n" +
 	"\x14GetCountriesResponse\x123\n" +
-	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12+\n" +
-	"\x11missing_countries\x18\x02 \x03(\tR\x10missingCountries\x12!\n" +
+	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12'\n" +
+	"\x0fmissing_regions\x18\x02 \x03(\tR\x0emissingRegions\x12!\n" +
 	"\fdata_version\x18\x03 \x01(\tR\vdataVersion\"]\n" +
 	"\x14ListTimezonesRequest\x12E\n" +
 	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"p\n" +
@@ -1566,41 +1566,44 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"m\n" +
 	"\x11ParsePhoneRequest\x12\x1b\n" +
 	"\x03raw\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18 R\x03raw\x12;\n" +
-	"\x0edefault_region\x18\x02 \x01(\tB\x14\xbaH\x11r\x0f2\r^$|^[A-Z]{2}$R\rdefaultRegion\"\xb5\x02\n" +
+	"\x0edefault_region\x18\x02 \x01(\tB\x14\xbaH\x11r\x0f2\r^$|^[A-Z]{2}$R\rdefaultRegion\"\xe8\x02\n" +
 	"\x12ParsePhoneResponse\x12\x19\n" +
 	"\bis_valid\x18\x01 \x01(\bR\aisValid\x12\x12\n" +
-	"\x04e164\x18\x02 \x01(\tR\x04e164\x12!\n" +
-	"\fcountry_code\x18\x03 \x01(\tR\vcountryCode\x12\x1b\n" +
-	"\tdial_code\x18\x04 \x01(\tR\bdialCode\x12'\n" +
+	"\x04e164\x18\x02 \x01(\tR\x04e164\x125\n" +
+	"\vregion_code\x18\x03 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12:\n" +
+	"\tdial_code\x18\x04 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12'\n" +
 	"\x0fnational_number\x18\x05 \x01(\tR\x0enationalNumber\x127\n" +
 	"\x17formatted_international\x18\x06 \x01(\tR\x16formattedInternational\x12+\n" +
 	"\x04type\x18\a \x01(\x0e2\x17.reference.v1.PhoneTypeR\x04type\x12!\n" +
-	"\ferror_reason\x18\b \x01(\tR\verrorReason\"\xa0\x02\n" +
+	"\ferror_reason\x18\b \x01(\tR\verrorReason\"\x9e\x02\n" +
 	"\x13ResolveCodesRequest\x12E\n" +
-	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12/\n" +
-	"\rcountry_codes\x18\x02 \x03(\tB\n" +
-	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\fcountryCodes\x12-\n" +
+	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12-\n" +
+	"\fregion_codes\x18\x02 \x03(\tB\n" +
+	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\vregionCodes\x12-\n" +
 	"\ftimezone_ids\x18\x03 \x03(\tB\n" +
 	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\vtimezoneIds\x12/\n" +
 	"\rlanguage_tags\x18\x04 \x03(\tB\n" +
 	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\flanguageTags\x121\n" +
 	"\x0ecurrency_codes\x18\x05 \x03(\tB\n" +
-	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\rcurrencyCodes\"\xc8\x03\n" +
+	"\xbaH\a\x92\x01\x04\x10d\x18\x01R\rcurrencyCodes\"\xc4\x03\n" +
 	"\x14ResolveCodesResponse\x123\n" +
 	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x124\n" +
 	"\ttimezones\x18\x02 \x03(\v2\x16.reference.v1.TimezoneR\ttimezones\x124\n" +
 	"\tlanguages\x18\x03 \x03(\v2\x16.reference.v1.LanguageR\tlanguages\x126\n" +
 	"\n" +
 	"currencies\x18\x04 \x03(\v2\x16.reference.v1.CurrencyR\n" +
-	"currencies\x12+\n" +
-	"\x11missing_countries\x18\x05 \x03(\tR\x10missingCountries\x12+\n" +
+	"currencies\x12'\n" +
+	"\x0fmissing_regions\x18\x05 \x03(\tR\x0emissingRegions\x12+\n" +
 	"\x11missing_timezones\x18\x06 \x03(\tR\x10missingTimezones\x12+\n" +
 	"\x11missing_languages\x18\a \x03(\tR\x10missingLanguages\x12-\n" +
 	"\x12missing_currencies\x18\b \x03(\tR\x11missingCurrencies\x12!\n" +
-	"\fdata_version\x18\t \x01(\tR\vdataVersion\"\x97\x01\n" +
-	"\x18GetCountryProfileRequest\x124\n" +
-	"\fcountry_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
-	"^[A-Z]{2}$R\vcountryCode\x12E\n" +
+	"\fdata_version\x18\t \x01(\tR\vdataVersion\"\x95\x01\n" +
+	"\x18GetCountryProfileRequest\x122\n" +
+	"\vregion_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12E\n" +
 	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\xd3\x02\n" +
 	"\x19GetCountryProfileResponse\x12/\n" +
 	"\acountry\x18\x01 \x01(\v2\x15.reference.v1.CountryR\acountry\x12>\n" +
@@ -1610,19 +1613,20 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"currencies\x18\x03 \x03(\v2\x16.reference.v1.CurrencyR\n" +
 	"currencies\x124\n" +
 	"\ttimezones\x18\x04 \x03(\v2\x16.reference.v1.TimezoneR\ttimezones\x12!\n" +
-	"\fdata_version\x18\x05 \x01(\tR\vdataVersion\"\x99\x01\n" +
-	"\x1cListCountriesByRegionRequest\x122\n" +
-	"\vregion_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
-	"^[0-9]{3}$R\n" +
-	"regionCode\x12E\n" +
+	"\fdata_version\x18\x05 \x01(\tR\vdataVersion\"\x97\x01\n" +
+	"\x1cListCountriesByRegionRequest\x120\n" +
+	"\n" +
+	"group_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
+	"^[0-9]{3}$R\tgroupCode\x12E\n" +
 	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"w\n" +
 	"\x1dListCountriesByRegionResponse\x123\n" +
 	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12!\n" +
-	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"\x98\x01\n" +
-	"\x19GetCountryDefaultsRequest\x124\n" +
-	"\fcountry_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
-	"^[A-Z]{2}$R\vcountryCode\x12E\n" +
-	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\x84\x03\n" +
+	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"\x96\x01\n" +
+	"\x19GetCountryDefaultsRequest\x122\n" +
+	"\vregion_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12E\n" +
+	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\xa3\x03\n" +
 	"\x1aGetCountryDefaultsResponse\x12\x1f\n" +
 	"\vtimezone_id\x18\x01 \x01(\tR\n" +
 	"timezoneId\x12#\n" +
@@ -1631,16 +1635,16 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"\rcurrency_name\x18\x04 \x01(\tR\fcurrencyName\x12'\n" +
 	"\x0fcurrency_symbol\x18\x05 \x01(\tR\x0ecurrencySymbol\x12!\n" +
 	"\flanguage_tag\x18\x06 \x01(\tR\vlanguageTag\x12#\n" +
-	"\rlanguage_name\x18\a \x01(\tR\flanguageName\x12\x1b\n" +
-	"\tdial_code\x18\b \x01(\tR\bdialCode\x12%\n" +
+	"\rlanguage_name\x18\a \x01(\tR\flanguageName\x12:\n" +
+	"\tdial_code\x18\b \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12%\n" +
 	"\x0eexample_number\x18\t \x01(\tR\rexampleNumber\x12!\n" +
 	"\fdata_version\x18\n" +
 	" \x01(\tR\vdataVersion\"\x14\n" +
-	"\x12GetDataInfoRequest\"\x9a\x02\n" +
+	"\x12GetDataInfoRequest\"\x98\x02\n" +
 	"\x13GetDataInfoResponse\x12!\n" +
 	"\fdata_version\x18\x01 \x01(\tR\vdataVersion\x12\x18\n" +
-	"\alocales\x18\x02 \x03(\tR\alocales\x12#\n" +
-	"\rcountry_count\x18\x03 \x01(\x05R\fcountryCount\x12%\n" +
+	"\alocales\x18\x02 \x03(\tR\alocales\x12!\n" +
+	"\fregion_count\x18\x03 \x01(\x05R\vregionCount\x12%\n" +
 	"\x0etimezone_count\x18\x04 \x01(\x05R\rtimezoneCount\x12%\n" +
 	"\x0elanguage_count\x18\x05 \x01(\x05R\rlanguageCount\x12%\n" +
 	"\x0ecurrency_count\x18\x06 \x01(\x05R\rcurrencyCount\x12,\n" +

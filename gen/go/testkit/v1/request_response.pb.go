@@ -34,14 +34,14 @@ const (
 // LoginRequest is the curated frontend DTO for login. Field names line up 1:1
 // with user-service LoginRequest; the auth mapping layer int-casts the enums.
 type LoginRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Method     v1.LoginMethod         `protobuf:"varint,1,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
-	Username   string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Password   string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	Code       string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Email      string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	RegionCode string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Method   v1.LoginMethod         `protobuf:"varint,1,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	Username string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Password string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Code     string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Email    string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	DialCode string                 `protobuf:"bytes,6,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	Phone    string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
 	// captcha_id returned by SendVerificationCode; required for code-based login.
 	CaptchaId     string `protobuf:"bytes,8,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -113,9 +113,9 @@ func (x *LoginRequest) GetEmail() string {
 	return ""
 }
 
-func (x *LoginRequest) GetRegionCode() string {
+func (x *LoginRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -136,15 +136,15 @@ func (x *LoginRequest) GetCaptchaId() string {
 
 // RegisterRequest is the curated frontend DTO for registration.
 type RegisterRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Provider   v1.IdentityProvider    `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Email      string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Code       string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
-	Username   string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname   string                 `protobuf:"bytes,5,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Password   string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
-	RegionCode string                 `protobuf:"bytes,7,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,8,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Provider v1.IdentityProvider    `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	Email    string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Code     string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Username string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname string                 `protobuf:"bytes,5,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Password string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	DialCode string                 `protobuf:"bytes,7,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	Phone    string                 `protobuf:"bytes,8,opt,name=phone,proto3" json:"phone,omitempty"`
 	// captcha_id returned by SendVerificationCode; required to verify the code.
 	CaptchaId string `protobuf:"bytes,9,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
 	// Optional initial profile fields (mirror user-service RegisterRequest).
@@ -227,9 +227,9 @@ func (x *RegisterRequest) GetPassword() string {
 	return ""
 }
 
-func (x *RegisterRequest) GetRegionCode() string {
+func (x *RegisterRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -274,12 +274,12 @@ func (x *RegisterRequest) GetLocale() string {
 // ...) live in user-service and are intentionally NOT exposed here — the BFF
 // supplies them from server config, not the frontend (design spec §3.2.2).
 type SendVerificationCodeRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Email      string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Channel    v1.VerificationChannel `protobuf:"varint,2,opt,name=channel,proto3,enum=user.v1.VerificationChannel" json:"channel,omitempty"`
-	Purpose    v1.VerificationPurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=user.v1.VerificationPurpose" json:"purpose,omitempty"`
-	RegionCode string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Email    string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Channel  v1.VerificationChannel `protobuf:"varint,2,opt,name=channel,proto3,enum=user.v1.VerificationChannel" json:"channel,omitempty"`
+	Purpose  v1.VerificationPurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=user.v1.VerificationPurpose" json:"purpose,omitempty"`
+	DialCode string                 `protobuf:"bytes,4,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	Phone    string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	// sender_id is the audit actor triggering this send (user id, service name,
 	// platform identifier, ...). user-service is stateless and passes it through
 	// verbatim; for unauthenticated flows (register/login) the frontend supplies
@@ -353,9 +353,9 @@ func (x *SendVerificationCodeRequest) GetPurpose() v1.VerificationPurpose {
 	return v1.VerificationPurpose(0)
 }
 
-func (x *SendVerificationCodeRequest) GetRegionCode() string {
+func (x *SendVerificationCodeRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -589,16 +589,20 @@ func (*GetProfileRequest) Descriptor() ([]byte, []int) {
 }
 
 type UpdateProfileRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RealName      string                 `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
-	AvatarUrl     string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
-	Gender        v1.Gender              `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Birthday      string                 `protobuf:"bytes,6,opt,name=birthday,proto3" json:"birthday,omitempty"`
-	Timezone      string                 `protobuf:"bytes,7,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale        string                 `protobuf:"bytes,8,opt,name=locale,proto3" json:"locale,omitempty"`
-	Bio           string                 `protobuf:"bytes,9,opt,name=bio,proto3" json:"bio,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Username  string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname  string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RealName  string                 `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
+	AvatarUrl string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	Gender    v1.Gender              `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Birthday  string                 `protobuf:"bytes,6,opt,name=birthday,proto3" json:"birthday,omitempty"`
+	Timezone  string                 `protobuf:"bytes,7,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale    string                 `protobuf:"bytes,8,opt,name=locale,proto3" json:"locale,omitempty"`
+	Bio       string                 `protobuf:"bytes,9,opt,name=bio,proto3" json:"bio,omitempty"`
+	// ISO 4217 alpha-3; "" leaves the stored value untouched.
+	DefaultCurrency string `protobuf:"bytes,10,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
+	// The user's country/region (ISO 3166-1 alpha-2); "" leaves it untouched.
+	RegionCode    string `protobuf:"bytes,11,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -696,6 +700,20 @@ func (x *UpdateProfileRequest) GetBio() string {
 	return ""
 }
 
+func (x *UpdateProfileRequest) GetDefaultCurrency() string {
+	if x != nil {
+		return x.DefaultCurrency
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetRegionCode() string {
+	if x != nil {
+		return x.RegionCode
+	}
+	return ""
+}
+
 type ChangePasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OldPassword   string                 `protobuf:"bytes,1,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"`
@@ -753,7 +771,7 @@ type ResetPasswordRequest struct {
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	NewPassword   string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	DialCode      string                 `protobuf:"bytes,4,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
 	Phone         string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -810,9 +828,9 @@ func (x *ResetPasswordRequest) GetNewPassword() string {
 	return ""
 }
 
-func (x *ResetPasswordRequest) GetRegionCode() string {
+func (x *ResetPasswordRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -911,7 +929,7 @@ type BindIdentityRequest struct {
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	Password      string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,5,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	DialCode      string                 `protobuf:"bytes,5,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
 	Phone         string                 `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -975,9 +993,9 @@ func (x *BindIdentityRequest) GetPassword() string {
 	return ""
 }
 
-func (x *BindIdentityRequest) GetRegionCode() string {
+func (x *BindIdentityRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -2070,7 +2088,7 @@ type CreateUserRequest struct {
 	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	RealName      string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
 	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	DialCode      string                 `protobuf:"bytes,6,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
 	Phone         string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
 	Password      string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
 	Gender        v1.Gender              `protobuf:"varint,9,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
@@ -2145,9 +2163,9 @@ func (x *CreateUserRequest) GetEmail() string {
 	return ""
 }
 
-func (x *CreateUserRequest) GetRegionCode() string {
+func (x *CreateUserRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -8394,7 +8412,7 @@ func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
 
 type SendSMSRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	RegionCode     string                 `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	DialCode       string                 `protobuf:"bytes,1,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
 	Phone          string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	Content        string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	TemplateId     string                 `protobuf:"bytes,4,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
@@ -8439,9 +8457,9 @@ func (*SendSMSRequest) Descriptor() ([]byte, []int) {
 	return file_testkit_v1_request_response_proto_rawDescGZIP(), []int{124}
 }
 
-func (x *SendSMSRequest) GetRegionCode() string {
+func (x *SendSMSRequest) GetDialCode() string {
 	if x != nil {
-		return x.RegionCode
+		return x.DialCode
 	}
 	return ""
 }
@@ -13655,47 +13673,44 @@ var File_testkit_v1_request_response_proto protoreflect.FileDescriptor
 const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"!testkit/v1/request_response.proto\x12\n" +
-	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18telemetry/v1/enums.proto\x1a\x18testkit/v1/message.proto\x1a\x13user/v1/enums.proto\"\xd0\x02\n" +
+	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18telemetry/v1/enums.proto\x1a\x18testkit/v1/message.proto\x1a\x13user/v1/enums.proto\"\xda\x02\n" +
 	"\fLoginRequest\x128\n" +
 	"\x06method\x18\x01 \x01(\x0e2\x14.user.v1.LoginMethodB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\x06method\x12$\n" +
 	"\busername\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\busername\x12$\n" +
 	"\bpassword\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x12\x1b\n" +
-	"\x04code\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\x12\x1e\n" +
-	"\x05email\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
-	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
+	"\x04code\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\x12#\n" +
+	"\x05email\x18\x05 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12:\n" +
+	"\tdial_code\x18\x06 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
 	"\n" +
-	"captcha_id\x18\b \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId\"\xfb\x03\n" +
+	"captcha_id\x18\b \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId\"\xad\x04\n" +
 	"\x0fRegisterRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12\x1e\n" +
-	"\x05email\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12#\n" +
+	"\x05email\x18\x02 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12#\n" +
 	"\busername\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
-	"\bpassword\x18\x06 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x125\n" +
-	"\vregion_code\x18\a \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
+	"\bpassword\x18\x06 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x12:\n" +
+	"\tdial_code\x18\a \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
 	"\n" +
 	"captcha_id\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId\x121\n" +
 	"\x06gender\x18\n" +
 	" \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
-	"\btimezone\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
-	"\x06locale\x18\f \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\"\x89\x05\n" +
-	"\x1bSendVerificationCodeRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12B\n" +
+	"\btimezone\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\f \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\x93\x05\n" +
+	"\x1bSendVerificationCodeRequest\x12#\n" +
+	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12B\n" +
 	"\achannel\x18\x02 \x01(\x0e2\x1c.user.v1.VerificationChannelB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\achannel\x12B\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x1c.user.v1.VerificationPurposeB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\apurpose\x125\n" +
-	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\apurpose\x12:\n" +
+	"\tdial_code\x18\x04 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
 	"\tsender_id\x18\x06 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\bsenderId\x120\n" +
@@ -13711,58 +13726,62 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x0femail_html_body\x18\r \x01(\tB\t\xbaH\x06r\x04\x18\x80\x80\x04R\remailHtmlBody\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
-	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\x9e\x01\n" +
+	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xae\x01\n" +
 	"\rTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12$\n" +
 	"\x04user\x18\x02 \x01(\v2\x10.testkit.v1.UserR\x04user\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x03 \x01(\tR\tsessionId\x12\x15\n" +
-	"\x06is_new\x18\x04 \x01(\bR\x05isNew\x12\x1b\n" +
-	"\treturn_to\x18\x05 \x01(\tR\breturnTo\"\x13\n" +
-	"\x11GetProfileRequest\"\xe9\x02\n" +
+	"\x06is_new\x18\x04 \x01(\bR\x05isNew\x12+\n" +
+	"\treturn_to\x18\x05 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\breturnTo\"\x13\n" +
+	"\x11GetProfileRequest\"\xa1\x04\n" +
 	"\x14UpdateProfileRequest\x12#\n" +
 	"\busername\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
 	"\treal_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12'\n" +
 	"\n" +
 	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\x121\n" +
-	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
-	"\bbirthday\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x18\n" +
-	"R\bbirthday\x12#\n" +
-	"\btimezone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
-	"\x06locale\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12\x1a\n" +
-	"\x03bio\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x03bio\"u\n" +
+	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12;\n" +
+	"\bbirthday\x18\x06 \x01(\tB\x1f\xbaH\x1c\xd8\x01\x01r\x17\x18\n" +
+	"2\x13^\\d{4}-\\d{2}-\\d{2}$R\bbirthday\x12#\n" +
+	"\btimezone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\b \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12\x1a\n" +
+	"\x03bio\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x03bio\x12?\n" +
+	"\x10default_currency\x18\n" +
+	" \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{3}$R\x0fdefaultCurrency\x125\n" +
+	"\vregion_code\x18\v \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\"u\n" +
 	"\x15ChangePasswordRequest\x12-\n" +
 	"\fold_password\x18\x01 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\voldPassword\x12-\n" +
 	"\fnew_password\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"\xb4\x03\n" +
-	"\x14ResetPasswordRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"\xb8\x03\n" +
+	"\x14ResetPasswordRequest\x12#\n" +
+	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12-\n" +
 	"\fnew_password\x18\x03 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\x125\n" +
-	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"\x17\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\x12:\n" +
+	"\tdial_code\x18\x04 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
+	"\x05phone\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd1\x01\xbaH\xcd\x01\x1a\xca\x01\n" +
+	"\x10target_exclusive\x123exactly one of email or dial_code+phone must be set\x1a\x80\x01(this.email != '' && this.dial_code == '' && this.phone == '') || (this.email == '' && this.dial_code != '' && this.phone != '')\"\x17\n" +
 	"\x15ListIdentitiesRequest\"N\n" +
 	"\x16ListIdentitiesResponse\x124\n" +
 	"\n" +
 	"identities\x18\x01 \x03(\v2\x14.testkit.v1.IdentityR\n" +
-	"identities\"\xed\x03\n" +
+	"identities\"\xf1\x03\n" +
 	"\x13BindIdentityRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12\x1e\n" +
-	"\x05email\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12#\n" +
+	"\x05email\x18\x02 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12$\n" +
-	"\bpassword\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x125\n" +
-	"\vregion_code\x18\x05 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"\xa3\x01\n" +
+	"\bpassword\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x12:\n" +
+	"\tdial_code\x18\x05 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
+	"\x05phone\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd1\x01\xbaH\xcd\x01\x1a\xca\x01\n" +
+	"\x10target_exclusive\x123exactly one of email or dial_code+phone must be set\x1a\x80\x01(this.email != '' && this.dial_code == '' && this.phone == '') || (this.email == '' && this.dial_code != '' && this.phone != '')\"\xa3\x01\n" +
 	"\x18BindOAuthIdentityRequest\x12E\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\x0e\xbaH\v\x82\x01\b\x10\x01 \x00 \x01 \x02R\bprovider\x12\x1e\n" +
 	"\x04code\x18\x02 \x01(\tB\n" +
@@ -13822,9 +13841,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12%\n" +
 	"\treturn_to\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\breturnTo\x12\x1e\n" +
-	"\x05state\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x05state\"=\n" +
-	"\x13GetOAuthURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x05state\"M\n" +
+	"\x13GetOAuthURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x14\n" +
 	"\x05state\x18\x02 \x01(\tR\x05state\"\x96\x01\n" +
 	"\x12SocialLoginRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
@@ -13844,31 +13863,30 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"phone_code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tphoneCode\x12#\n" +
 	"\bnickname\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
 	"\n" +
-	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\"\xa4\x01\n" +
+	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\"\xb4\x01\n" +
 	"\x13SocialLoginResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12$\n" +
 	"\x04user\x18\x02 \x01(\v2\x10.testkit.v1.UserR\x04user\x12\x15\n" +
-	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12\x1b\n" +
-	"\treturn_to\x18\x04 \x01(\tR\breturnTo\x12\x1d\n" +
+	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12+\n" +
+	"\treturn_to\x18\x04 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\breturnTo\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x05 \x01(\tR\tsessionId\"\xd6\x03\n" +
+	"session_id\x18\x05 \x01(\tR\tsessionId\"\x88\x04\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
 	"\busername\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
-	"\treal_name\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12\x1e\n" +
-	"\x05email\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
-	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
+	"\treal_name\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12#\n" +
+	"\x05email\x18\x05 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12:\n" +
+	"\tdial_code\x18\x06 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12&\n" +
 	"\bpassword\x18\b \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\b\x18\x80\x01R\bpassword\x121\n" +
 	"\x06gender\x18\t \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\n" +
-	" \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
-	"\x06locale\x18\v \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\":\n" +
+	" \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\":\n" +
 	"\x12CreateUserResponse\x12$\n" +
 	"\x04user\x18\x01 \x01(\v2\x10.testkit.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
@@ -13876,7 +13894,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xdc\b\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\x89\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -13884,8 +13902,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06cursor\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12'\n" +
 	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
 	"\x0fregister_source\x18\x06 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12<\n" +
-	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12\x1f\n" +
-	"\x06locale\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
+	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12G\n" +
+	"\x06locale\x18\b \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12#\n" +
 	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +
 	"\vregister_ip\x18\n" +
 	" \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
@@ -13895,8 +13913,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x0ecreated_at_end\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\fcreatedAtEnd\x12I\n" +
 	"\x13last_login_at_start\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\x10lastLoginAtStart\x12E\n" +
 	"\x11last_login_at_end\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\x0elastLoginAtEnd\x12\x19\n" +
-	"\buser_ids\x18\x10 \x03(\x03R\auserIds\x12\x1e\n" +
-	"\x05email\x18\x11 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
+	"\buser_ids\x18\x10 \x03(\x03R\auserIds\x12#\n" +
+	"\x05email\x18\x11 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
 	"\vregion_code\x18\x12 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x12\x1d\n" +
@@ -13910,15 +13929,15 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x11ListUsersResponse\x12&\n" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xe9\b\n" +
+	"nextCursor\"\x96\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
 	"\x06gender\x18\x03 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
 	"\x0fregister_source\x18\x04 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12<\n" +
 	"\x0fregister_device\x18\x05 \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12.\n" +
-	"\tuser_type\x18\x06 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\x12\x1f\n" +
-	"\x06locale\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
+	"\tuser_type\x18\x06 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\x12G\n" +
+	"\x06locale\x18\a \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12#\n" +
 	"\btimezone\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +
 	"\vregister_ip\x18\t \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
 	"registerIp\x12+\n" +
@@ -13928,8 +13947,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x0ecreated_at_end\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\fcreatedAtEnd\x12I\n" +
 	"\x13last_login_at_start\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\x10lastLoginAtStart\x12E\n" +
 	"\x11last_login_at_end\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\x0elastLoginAtEnd\x12\x19\n" +
-	"\buser_ids\x18\x0f \x03(\x03R\auserIds\x12\x1e\n" +
-	"\x05email\x18\x10 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
+	"\buser_ids\x18\x0f \x03(\x03R\auserIds\x12#\n" +
+	"\x05email\x18\x10 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
 	"\vregion_code\x18\x11 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x12\x1d\n" +
@@ -14223,9 +14243,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\afile_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06fileId\x126\n" +
 	"\x03ops\x18\x02 \x03(\v2\x1a.testkit.v1.ImageProcessOpB\b\xbaH\x05\x92\x01\x02\b\x01R\x03ops\x12\x1f\n" +
 	"\vttl_seconds\x18\x03 \x01(\x05R\n" +
-	"ttlSeconds\"M\n" +
-	"\x1aGenerateProcessURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x1d\n" +
+	"ttlSeconds\"]\n" +
+	"\x1aGenerateProcessURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x1d\n" +
 	"\n" +
 	"expires_at\x18\x02 \x01(\x03R\texpiresAt\"\xf9\x01\n" +
 	"\x15GenerateCDNURLRequest\x12 \n" +
@@ -14236,9 +14256,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\bfilename\x18\x05 \x01(\tH\x00R\bfilename\x88\x01\x01\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x06 \x01(\tR\trequestIdB\v\n" +
-	"\t_filename\"I\n" +
-	"\x16GenerateCDNURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x1d\n" +
+	"\t_filename\"Y\n" +
+	"\x16GenerateCDNURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x1d\n" +
 	"\n" +
 	"expires_at\x18\x02 \x01(\x03R\texpiresAt\"\x91\x02\n" +
 	"\x12ListMyFilesRequest\x12\x1f\n" +
@@ -14448,11 +14468,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\xde\x01\xbaH\xda\x01\x1a\xa1\x01\n" +
 	"\x13vendor_account_pair\x124vendor and account must both be set or both be empty\x1aT(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')\x1a4\n" +
-	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xbc\x06\n" +
-	"\x0eSendSMSRequest\x125\n" +
-	"\vregion_code\x18\x01 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
+	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xc1\x06\n" +
+	"\x0eSendSMSRequest\x12:\n" +
+	"\tdial_code\x18\x01 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05phone\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\x04 \x01(\tR\n" +
@@ -14500,14 +14518,15 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
 	"totalPages\x12\x19\n" +
-	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\xdd\x03\n" +
+	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\x8e\x04\n" +
 	"\x0eListSMSRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x04 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\x05 \x01(\tR\x05phone\x12\x1d\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12/\n" +
+	"\x05phone\x18\x05 \x01(\tB\x19\xbaH\x16\xd8\x01\x01r\x11\x18\x142\r^[0-9]{4,15}$R\x05phone\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x06 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\a \x01(\x03R\aendTime\x12\x12\n" +
@@ -14544,14 +14563,15 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x1aListEmailsByCursorResponse\x121\n" +
 	"\arecords\x18\x01 \x03(\v2\x17.testkit.v1.EmailRecordR\arecords\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x95\x04\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xc6\x04\n" +
 	"\x16ListSMSByCursorRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x04 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\x05 \x01(\tR\x05phone\x12\x1d\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x12/\n" +
+	"\x05phone\x18\x05 \x01(\tB\x19\xbaH\x16\xd8\x01\x01r\x11\x18\x142\r^[0-9]{4,15}$R\x05phone\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\x06 \x01(\x03R\tstartTime\x12\x19\n" +
 	"\bend_time\x18\a \x01(\x03R\aendTime\x124\n" +
@@ -14600,16 +14620,17 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x16ListSMSSendersResponse\x12\x1d\n" +
 	"\n" +
 	"sender_ids\x18\x01 \x03(\tR\tsenderIds\"\x17\n" +
-	"\x15ListSMSRegionsRequest\";\n" +
-	"\x16ListSMSRegionsResponse\x12!\n" +
-	"\fregion_codes\x18\x01 \x03(\tR\vregionCodes\"\x18\n" +
+	"\x15ListSMSRegionsRequest\"S\n" +
+	"\x16ListSMSRegionsResponse\x129\n" +
+	"\fregion_codes\x18\x01 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\"\x18\n" +
 	"\x16ListRegionCodesRequest\"T\n" +
 	"\x17ListRegionCodesResponse\x129\n" +
-	"\fregion_codes\x18\x01 \x03(\v2\x16.testkit.v1.RegionCodeR\vregionCodes\"o\n" +
+	"\fregion_codes\x18\x01 \x03(\v2\x16.testkit.v1.RegionCodeR\vregionCodes\"\x8e\x01\n" +
 	"\n" +
 	"RegionCode\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x1b\n" +
-	"\tdial_code\x18\x02 \x01(\tR\bdialCode\x12\x17\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12:\n" +
+	"\tdial_code\x18\x02 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x17\n" +
 	"\aname_zh\x18\x03 \x01(\tR\x06nameZh\x12\x17\n" +
 	"\aname_en\x18\x04 \x01(\tR\x06nameEn\"\x0f\n" +
 	"\rNextIDRequest\" \n" +

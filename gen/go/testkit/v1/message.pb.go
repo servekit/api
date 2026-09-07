@@ -58,8 +58,15 @@ type User struct {
 	LastLoginAt    *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=last_login_at,json=lastLoginAt,proto3" json:"last_login_at,omitempty"`
 	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt      *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Derived from region_code at read time, never stored — mirrors
+	// user.v1.User.dial_code.
+	DialCode string `protobuf:"bytes,20,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	// ISO 4217 alpha-3, "" = unset.
+	DefaultCurrency string `protobuf:"bytes,21,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
+	// Reserved for MFA; false until an MFA flow exists.
+	MfaEnabled    bool `protobuf:"varint,22,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
@@ -223,6 +230,27 @@ func (x *User) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *User) GetDialCode() string {
+	if x != nil {
+		return x.DialCode
+	}
+	return ""
+}
+
+func (x *User) GetDefaultCurrency() string {
+	if x != nil {
+		return x.DefaultCurrency
+	}
+	return ""
+}
+
+func (x *User) GetMfaEnabled() bool {
+	if x != nil {
+		return x.MfaEnabled
+	}
+	return false
 }
 
 // Identity is a login method linked to a user (email, phone, each OAuth
@@ -4542,23 +4570,26 @@ var File_testkit_v1_message_proto protoreflect.FileDescriptor
 const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/message.proto\x12\n" +
-	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\xd7\x05\n" +
+	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\x91\b\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\treal_name\x18\x04 \x01(\tR\brealName\x12\x1d\n" +
+	"\treal_name\x18\x04 \x01(\tR\brealName\x12-\n" +
 	"\n" +
-	"avatar_url\x18\x05 \x01(\tR\tavatarUrl\x12\x14\n" +
-	"\x05email\x18\x06 \x01(\tR\x05email\x12\x1f\n" +
-	"\vregion_code\x18\a \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\b \x01(\tR\x05phone\x121\n" +
-	"\x06gender\x18\t \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12\x1a\n" +
+	"avatar_url\x18\x05 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12#\n" +
+	"\x05email\x18\x06 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
+	"\vregion_code\x18\a \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\b \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x121\n" +
+	"\x06gender\x18\t \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12;\n" +
 	"\bbirthday\x18\n" +
-	" \x01(\tR\bbirthday\x12\x1a\n" +
-	"\btimezone\x18\v \x01(\tR\btimezone\x12\x16\n" +
-	"\x06locale\x18\f \x01(\tR\x06locale\x12\x10\n" +
+	" \x01(\tB\x1f\xbaH\x1c\xd8\x01\x01r\x17\x18\n" +
+	"2\x13^\\d{4}-\\d{2}-\\d{2}$R\bbirthday\x12#\n" +
+	"\btimezone\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\f \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12\x10\n" +
 	"\x03bio\x18\r \x01(\tR\x03bio\x125\n" +
 	"\x06status\x18\x0e \x01(\x0e2\x13.user.v1.UserStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x12B\n" +
 	"\x0fregister_source\x18\x0f \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x128\n" +
@@ -4567,7 +4598,11 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xd5\x01\n" +
+	"updated_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12:\n" +
+	"\tdial_code\x18\x14 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12)\n" +
+	"\x10default_currency\x18\x15 \x01(\tR\x0fdefaultCurrency\x12\x1f\n" +
+	"\vmfa_enabled\x18\x16 \x01(\bR\n" +
+	"mfaEnabled\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -4632,12 +4667,12 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x128\n" +
 	"\vpermissions\x18\x04 \x03(\v2\x16.testkit.v1.PermissionR\vpermissions\x12\x1d\n" +
 	"\n" +
-	"is_builtin\x18\x05 \x01(\bR\tisBuiltin\"\xb0\x01\n" +
+	"is_builtin\x18\x05 \x01(\bR\tisBuiltin\"\xc0\x01\n" +
 	"\vGroupMember\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x1d\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12-\n" +
 	"\n" +
-	"avatar_url\x18\x03 \x01(\tR\tavatarUrl\x12\x12\n" +
+	"avatar_url\x18\x03 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xb2\x04\n" +
@@ -4815,10 +4850,10 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\"P\n" +
 	"\fEmailAddress\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12!\n" +
-	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xb6\x01\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xc6\x01\n" +
 	"\x0fEmailAttachment\x12#\n" +
-	"\bfilename\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bfilename\x12\x10\n" +
-	"\x03url\x18\x02 \x01(\tR\x03url\x12\x18\n" +
+	"\bfilename\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bfilename\x12 \n" +
+	"\x03url\x18\x02 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\fR\acontent\x12\x16\n" +
 	"\x06inline\x18\x04 \x01(\bR\x06inline\x12\x1b\n" +
 	"\tmime_type\x18\x05 \x01(\tR\bmimeType\x12\x1d\n" +
@@ -4862,16 +4897,17 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\vattachments\x18\x15 \x03(\v2\x1b.testkit.v1.EmailAttachmentR\vattachments\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x87\x05\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xbf\x05\n" +
 	"\tSMSRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x18\n" +
 	"\aaccount\x18\x03 \x01(\tR\aaccount\x12,\n" +
 	"\x05scene\x18\x04 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x06 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\a \x01(\tR\x05phone\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
 	"\tsender_id\x18\b \x01(\tR\bsenderId\x12\x18\n" +
 	"\acontent\x18\t \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\n" +
@@ -4981,12 +5017,13 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\x93\x04\n" +
+	"dropReason\"\xa2\x04\n" +
 	"\x03App\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12'\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
+	"\x05email\x18\x04 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12'\n" +
 	"\x0fstrict_versions\x18\x05 \x01(\bR\x0estrictVersions\x123\n" +
 	"\tauth_mode\x18\x06 \x01(\x0e2\x16.telemetry.v1.AuthModeR\bauthMode\x12D\n" +
 	"\x10auth_grace_until\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\x0eauthGraceUntil\x12&\n" +

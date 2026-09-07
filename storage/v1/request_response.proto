@@ -298,7 +298,13 @@ message GenerateProcessURLRequest {
 }
 
 message GenerateProcessURLResponse {
-  string url = 1;
+  string url = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
   int64 expires_at = 2;
 }
 
@@ -335,7 +341,13 @@ message GenerateCDNURLRequest {
 
 message GenerateCDNURLResponse {
   // url is the signed CDN URL. Expires at the time indicated by expires_at.
-  string url = 1;
+  string url = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
   // expires_at is the Unix timestamp at which the URL signature becomes
   // invalid. After this time the CDN returns 403.
   int64 expires_at = 2;

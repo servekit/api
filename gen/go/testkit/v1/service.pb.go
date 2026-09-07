@@ -31,7 +31,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2\x84\x8c\x01\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2\x87\x8c\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -191,10 +191,10 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\x10ListRegionGroups\x12%.reference.v1.ListRegionGroupsRequest\x1a&.reference.v1.ListRegionGroupsResponse\"'\x82\xd3\xe4\x93\x02!\x12\x1f/api/v1/reference/region-groups\x12y\n" +
 	"\n" +
 	"ParsePhone\x12\x1f.reference.v1.ParsePhoneRequest\x1a .reference.v1.ParsePhoneResponse\"(\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/api/v1/reference/phone:parse\x12\x81\x01\n" +
-	"\fResolveCodes\x12!.reference.v1.ResolveCodesRequest\x1a\".reference.v1.ResolveCodesResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/reference/codes:resolve\x12\xa0\x01\n" +
-	"\x11GetCountryProfile\x12&.reference.v1.GetCountryProfileRequest\x1a'.reference.v1.GetCountryProfileResponse\":\x82\xd3\xe4\x93\x024\x122/api/v1/reference/countries/{country_code}/profile\x12\xab\x01\n" +
-	"\x15ListCountriesByRegion\x12*.reference.v1.ListCountriesByRegionRequest\x1a+.reference.v1.ListCountriesByRegionResponse\"9\x82\xd3\xe4\x93\x023\x121/api/v1/reference/regions/{region_code}/countries\x12\xa4\x01\n" +
-	"\x12GetCountryDefaults\x12'.reference.v1.GetCountryDefaultsRequest\x1a(.reference.v1.GetCountryDefaultsResponse\";\x82\xd3\xe4\x93\x025\x123/api/v1/reference/countries/{country_code}/defaults\x12w\n" +
+	"\fResolveCodes\x12!.reference.v1.ResolveCodesRequest\x1a\".reference.v1.ResolveCodesResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/reference/codes:resolve\x12\x9f\x01\n" +
+	"\x11GetCountryProfile\x12&.reference.v1.GetCountryProfileRequest\x1a'.reference.v1.GetCountryProfileResponse\"9\x82\xd3\xe4\x93\x023\x121/api/v1/reference/countries/{region_code}/profile\x12\xb0\x01\n" +
+	"\x15ListCountriesByRegion\x12*.reference.v1.ListCountriesByRegionRequest\x1a+.reference.v1.ListCountriesByRegionResponse\">\x82\xd3\xe4\x93\x028\x126/api/v1/reference/region-groups/{group_code}/countries\x12\xa3\x01\n" +
+	"\x12GetCountryDefaults\x12'.reference.v1.GetCountryDefaultsRequest\x1a(.reference.v1.GetCountryDefaultsResponse\":\x82\xd3\xe4\x93\x024\x122/api/v1/reference/countries/{region_code}/defaults\x12w\n" +
 	"\vGetDataInfo\x12 .reference.v1.GetDataInfoRequest\x1a!.reference.v1.GetDataInfoResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/data-infoB\x9c\x01\n" +
 	"\x0ecom.testkit.v1B\fServiceProtoP\x01Z3github.com/servekit/api/gen/go/testkit/v1;testkitv1\xa2\x02\x03TXX\xaa\x02\n" +
 	"Testkit.V1\xca\x02\n" +

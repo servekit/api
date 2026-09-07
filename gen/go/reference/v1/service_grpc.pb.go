@@ -53,7 +53,7 @@ type ReferenceServiceClient interface {
 	// Batch country lookup by alpha-2 codes: the same rows ListCountries
 	// serves, restricted to the requested set, in request order — for
 	// consumers that only serve a curated subset of the directory. Unknown
-	// codes land in missing_countries and never fail the call.
+	// codes land in missing_regions and never fail the call.
 	GetCountries(ctx context.Context, in *GetCountriesRequest, opts ...grpc.CallOption) (*GetCountriesResponse, error)
 	ListTimezones(ctx context.Context, in *ListTimezonesRequest, opts ...grpc.CallOption) (*ListTimezonesResponse, error)
 	ListLanguages(ctx context.Context, in *ListLanguagesRequest, opts ...grpc.CallOption) (*ListLanguagesResponse, error)
@@ -225,7 +225,7 @@ type ReferenceServiceServer interface {
 	// Batch country lookup by alpha-2 codes: the same rows ListCountries
 	// serves, restricted to the requested set, in request order — for
 	// consumers that only serve a curated subset of the directory. Unknown
-	// codes land in missing_countries and never fail the call.
+	// codes land in missing_regions and never fail the call.
 	GetCountries(context.Context, *GetCountriesRequest) (*GetCountriesResponse, error)
 	ListTimezones(context.Context, *ListTimezonesRequest) (*ListTimezonesResponse, error)
 	ListLanguages(context.Context, *ListLanguagesRequest) (*ListLanguagesResponse, error)

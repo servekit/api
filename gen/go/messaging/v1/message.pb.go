@@ -710,10 +710,10 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\x1amessaging/v1/message.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"P\n" +
 	"\fEmailAddress\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12!\n" +
-	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xd4\x01\n" +
+	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xe4\x01\n" +
 	"\x0fEmailAttachment\x12#\n" +
-	"\bfilename\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bfilename\x12\x10\n" +
-	"\x03url\x18\x03 \x01(\tR\x03url\x12\x18\n" +
+	"\bfilename\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\bfilename\x12 \n" +
+	"\x03url\x18\x03 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x18\n" +
 	"\acontent\x18\b \x01(\fR\acontent\x12\x16\n" +
 	"\x06inline\x18\x04 \x01(\bR\x06inline\x12\x1b\n" +
 	"\tmime_type\x18\x05 \x01(\tR\bmimeType\x12\x1d\n" +
@@ -748,16 +748,17 @@ const file_messaging_v1_message_proto_rawDesc = "" +
 	"\vattachments\x18\x15 \x03(\v2\x1d.messaging.v1.EmailAttachmentR\vattachments\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x89\x05\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc1\x05\n" +
 	"\tSMSRecord\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
 	"\x06vendor\x18\x02 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12\x18\n" +
 	"\aaccount\x18\x03 \x01(\tR\aaccount\x12,\n" +
 	"\x05scene\x18\x04 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x06 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\a \x01(\tR\x05phone\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
 	"\tsender_id\x18\b \x01(\tR\bsenderId\x12\x18\n" +
 	"\acontent\x18\t \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\n" +

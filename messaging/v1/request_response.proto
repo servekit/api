@@ -66,14 +66,11 @@ message SendEmailRequest {
 
 // SendSMSRequest is the request to send an SMS.
 message SendSMSRequest {
-  // region_code is the ISO 3166-1 alpha-2 region code used to parse phone
-  // (e.g. "CN", "US", "HK"). Required. Acts as defaultRegion for
-  // phonenumber parsing — NOT a dialing code like "86".
-  string region_code = 1 [(buf.validate.field).string.pattern = "^[A-Z]{2}$"];
-
-  // phone is the local phone number WITHOUT the international prefix
-  // (e.g. "13800138000", "5551234567"). Must NOT start with "+".
-  string phone = 2 [(buf.validate.field).string.min_len = 1];
+  // to is the destination in E.164 international format ("+8613800138000")
+  // — the single canonical phone format. The destination country (which
+  // decides domestic vs international vendor routing, and the national
+  // number domestic vendors need) is parsed from it.
+  string to = 1 [(buf.validate.field).string.pattern = "^\\+[1-9][0-9]{8,14}$"];
 
   // content is the raw SMS body for vendors that accept raw text (typically
   // the international path). Substitution of placeholders (e.g. "{code}") is
@@ -99,10 +96,10 @@ message SendSMSRequest {
   string idempotency_key = 10 [(buf.validate.field).string.max_len = 64];
 
   // SignName carries the per-message signature/sender ID semantics:
-  //   - For domestic SMS (region_code == "CN"): the SMS signature that must
-  //     match the pre-registered sign in the vendor console (e.g. "阿里云",
-  //     "字节跳动"). Domestic vendors reject sends without it.
-  //   - For international SMS (other region_code): treated as the sender ID
+  //   - For domestic SMS (destination country "CN"): the SMS signature that
+  //     must match the pre-registered sign in the vendor console (e.g.
+  //     "阿里云", "字节跳动"). Domestic vendors reject sends without it.
+  //   - For international SMS (other destinations): treated as the sender ID
   //     / "From" field. Some regions require pre-registered alphabetic
   //     sender IDs; vendors apply region-specific rules.
   // Required for paths whose vendor enforces a signature (all current
@@ -123,11 +120,6 @@ message SendSMSRequest {
     id: "sender_required"
     message: "sender_id is required"
     expression: "this.sender_id != ''"
-  };
-  option (buf.validate.message).cel = {
-    id: "phone_no_plus"
-    message: "phone must not start with '+' — provide local number only"
-    expression: "!this.phone.startsWith('+')"
   };
 }
 
@@ -183,8 +175,17 @@ message ListSMSRequest {
   SmsVendor vendor = 1;
   SmsScene scene = 2;
   MessageStatus status = 3;
-  string region_code = 4;
-  string phone = 5;
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^\\+[1-9][0-9]{8,14}$"
+      max_len: 20
+    }
+  ];
   // SenderID identifies the calling business service (e.g. "user-service",
   // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
   // must record that in its own audit trail.
@@ -243,8 +244,17 @@ message ListSMSByCursorRequest {
   SmsVendor vendor = 1;
   SmsScene scene = 2;
   MessageStatus status = 3;
-  string region_code = 4;
-  string phone = 5;
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^\\+[1-9][0-9]{8,14}$"
+      max_len: 20
+    }
+  ];
   // SenderID identifies the calling business service (e.g. "user-service",
   // "pay-service"). Optional filter; NOT the end-user/admin id — the caller
   // must record that in its own audit trail.
@@ -305,7 +315,7 @@ message SMSStatsResponse {
 message ListSMSRegionsRequest {}
 
 message ListSMSRegionsResponse {
-  repeated string region_codes = 1;
+  repeated string region_codes = 1 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"];
 }
 
 // ListSMSSendersRequest is empty. See ListSMSRegionsRequest.

@@ -21,7 +21,13 @@ message App {
   string id = 1; // uuid
   string slug = 2; // unique, url-safe
   string name = 3;
-  string email = 4; // optional operator contact
+  string email = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ]; // optional operator contact
   bool strict_versions = 5; // drop unknown versions instead of auto-registering
   AuthMode auth_mode = 6;
   google.protobuf.Timestamp auth_grace_until = 7; // while set+future: hmac apps still accept unsigned batches

@@ -32,7 +32,13 @@ message EmailAttachment {
   // callers render the download link into html_body themselves; message-service
   // only persists the reference for record queries. Non-http(s) schemes are
   // rejected defensively (file://, ftp://, gopher://, etc.).
-  string url = 3;
+  string url = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
 
   // content is the raw attachment bytes supplied inline — embedded as a real
   // MIME part. Bounded by attachment.max_inline_bytes (single attachment)
@@ -97,8 +103,17 @@ message SMSRecord {
   string account = 3;
   SmsScene scene = 4;
   MessageStatus status = 5;
-  string region_code = 6;
-  string phone = 7;
+  string region_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 7 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^\\+[1-9][0-9]{8,14}$"
+      max_len: 20
+    }
+  ];
   // SenderID identifies the calling business service. See SendSMSRequest.sender_id.
   string sender_id = 8;
   string content = 9;

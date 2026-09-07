@@ -210,13 +210,11 @@ func (x *SendEmailRequest) GetAttachments() []*EmailAttachment {
 // SendSMSRequest is the request to send an SMS.
 type SendSMSRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// region_code is the ISO 3166-1 alpha-2 region code used to parse phone
-	// (e.g. "CN", "US", "HK"). Required. Acts as defaultRegion for
-	// phonenumber parsing — NOT a dialing code like "86".
-	RegionCode string `protobuf:"bytes,1,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	// phone is the local phone number WITHOUT the international prefix
-	// (e.g. "13800138000", "5551234567"). Must NOT start with "+".
-	Phone string `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
+	// to is the destination in E.164 international format ("+8613800138000")
+	// — the single canonical phone format. The destination country (which
+	// decides domestic vs international vendor routing, and the national
+	// number domestic vendors need) is parsed from it.
+	To string `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
 	// content is the raw SMS body for vendors that accept raw text (typically
 	// the international path). Substitution of placeholders (e.g. "{code}") is
 	// the caller's responsibility — message-service forwards the string as-is.
@@ -236,10 +234,10 @@ type SendSMSRequest struct {
 	// IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
 	IdempotencyKey string `protobuf:"bytes,10,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// SignName carries the per-message signature/sender ID semantics:
-	//   - For domestic SMS (region_code == "CN"): the SMS signature that must
-	//     match the pre-registered sign in the vendor console (e.g. "阿里云",
-	//     "字节跳动"). Domestic vendors reject sends without it.
-	//   - For international SMS (other region_code): treated as the sender ID
+	//   - For domestic SMS (destination country "CN"): the SMS signature that
+	//     must match the pre-registered sign in the vendor console (e.g.
+	//     "阿里云", "字节跳动"). Domestic vendors reject sends without it.
+	//   - For international SMS (other destinations): treated as the sender ID
 	//     / "From" field. Some regions require pre-registered alphabetic
 	//     sender IDs; vendors apply region-specific rules.
 	//
@@ -280,16 +278,9 @@ func (*SendSMSRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_request_response_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SendSMSRequest) GetRegionCode() string {
+func (x *SendSMSRequest) GetTo() string {
 	if x != nil {
-		return x.RegionCode
-	}
-	return ""
-}
-
-func (x *SendSMSRequest) GetPhone() string {
-	if x != nil {
-		return x.Phone
+		return x.To
 	}
 	return ""
 }
@@ -1925,12 +1916,9 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x9e\x02\xbaH\x9a\x02\x1a\xa1\x01\n" +
 	"\x13vendor_account_pair\x124vendor and account must both be set or both be empty\x1aT(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')\x1a4\n" +
 	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1a>\n" +
-	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\"\xb6\a\n" +
-	"\x0eSendSMSRequest\x122\n" +
-	"\vregion_code\x18\x01 \x01(\tB\x11\xbaH\x0er\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05phone\x12\x18\n" +
+	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\"\xa5\x06\n" +
+	"\x0eSendSMSRequest\x12+\n" +
+	"\x02to\x18\x01 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$R\x02to\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1f\n" +
 	"\vtemplate_id\x18\x04 \x01(\tR\n" +
 	"templateId\x12Y\n" +
@@ -1944,11 +1932,10 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\tsign_name\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\bsignName\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x89\x03\xbaH\x85\x03\x1a\xa1\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x9e\x02\xbaH\x9a\x02\x1a\xa1\x01\n" +
 	"\x13vendor_account_pair\x124vendor and account must both be set or both be empty\x1aT(this.vendor == 0 && this.account == '') || (this.vendor != 0 && this.account != '')\x1a4\n" +
 	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1a>\n" +
-	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\x1ai\n" +
-	"\rphone_no_plus\x12;phone must not start with '+' — provide local number only\x1a\x1b!this.phone.startsWith('+')\"\xd7\x01\n" +
+	"\x0fsender_required\x12\x15sender_id is required\x1a\x14this.sender_id != ''\"\xd7\x01\n" +
 	"\fSendResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x123\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12>\n" +
@@ -1980,14 +1967,15 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
 	"totalPages\x12\x19\n" +
-	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\xdf\x03\n" +
+	"\bhas_more\x18\x04 \x01(\bR\ahasMore\"\x97\x04\n" +
 	"\x0eListSMSRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x04 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\x05 \x01(\tR\x05phone\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
 	"\tsender_id\x18\x06 \x01(\tR\bsenderId\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
@@ -2024,14 +2012,15 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x1aListEmailsByCursorResponse\x123\n" +
 	"\arecords\x18\x01 \x03(\v2\x19.messaging.v1.EmailRecordR\arecords\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x97\x04\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xcf\x04\n" +
 	"\x16ListSMSByCursorRequest\x12/\n" +
 	"\x06vendor\x18\x01 \x01(\x0e2\x17.messaging.v1.SmsVendorR\x06vendor\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x123\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x12\x1f\n" +
-	"\vregion_code\x18\x04 \x01(\tR\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\x05 \x01(\tR\x05phone\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x1b.messaging.v1.MessageStatusR\x06status\x125\n" +
+	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\x05 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12\x1b\n" +
 	"\tsender_id\x18\x06 \x01(\tR\bsenderId\x12\x1d\n" +
 	"\n" +
 	"start_time\x18\a \x01(\x03R\tstartTime\x12\x19\n" +
@@ -2072,9 +2061,10 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x06failed\x18\x03 \x01(\x03R\x06failed\x12!\n" +
 	"\fsuccess_rate\x18\x04 \x01(\x01R\vsuccessRate\x126\n" +
 	"\avendors\x18\x05 \x03(\v2\x1c.messaging.v1.SmsVendorStatsR\avendors\"\x17\n" +
-	"\x15ListSMSRegionsRequest\";\n" +
-	"\x16ListSMSRegionsResponse\x12!\n" +
-	"\fregion_codes\x18\x01 \x03(\tR\vregionCodes\"\x17\n" +
+	"\x15ListSMSRegionsRequest\"S\n" +
+	"\x16ListSMSRegionsResponse\x129\n" +
+	"\fregion_codes\x18\x01 \x03(\tB\x16\xbaH\x13\x92\x01\x10\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\vregionCodes\"\x17\n" +
 	"\x15ListSMSSendersRequest\"7\n" +
 	"\x16ListSMSSendersResponse\x12\x1d\n" +
 	"\n" +

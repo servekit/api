@@ -23,10 +23,16 @@ message LoginRequest {
   string username = 2 [(buf.validate.field).string.max_len = 256];
   string password = 3 [(buf.validate.field).string.max_len = 128];
   string code = 4 [(buf.validate.field).string.max_len = 16];
-  string email = 5 [(buf.validate.field).string.max_len = 256];
-  string region_code = 6 [
+  string email = 5 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
+  string dial_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 7 [(buf.validate.field).string.max_len = 20];
   // captcha_id returned by SendVerificationCode; required for code-based login.
@@ -39,7 +45,13 @@ message RegisterRequest {
     defined_only: true
     not_in: [0]
   }];
-  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string email = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   string code = 3 [(buf.validate.field).string = {
     min_len: 1
     max_len: 16
@@ -47,9 +59,9 @@ message RegisterRequest {
   string username = 4 [(buf.validate.field).string.max_len = 64];
   string nickname = 5 [(buf.validate.field).string.max_len = 64];
   string password = 6 [(buf.validate.field).string.max_len = 128];
-  string region_code = 7 [
+  string dial_code = 7 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 8 [(buf.validate.field).string.max_len = 20];
   // captcha_id returned by SendVerificationCode; required to verify the code.
@@ -57,7 +69,13 @@ message RegisterRequest {
   // Optional initial profile fields (mirror user-service RegisterRequest).
   user.v1.Gender gender = 10 [(buf.validate.field).enum.defined_only = true];
   string timezone = 11 [(buf.validate.field).string.max_len = 64];
-  string locale = 12 [(buf.validate.field).string.max_len = 16];
+  string locale = 12 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+      max_len: 16
+    }
+  ];
 }
 
 // SendVerificationCodeRequest is the curated frontend DTO for requesting a
@@ -65,7 +83,13 @@ message RegisterRequest {
 // ...) live in user-service and are intentionally NOT exposed here — the BFF
 // supplies them from server config, not the frontend (design spec §3.2.2).
 message SendVerificationCodeRequest {
-  string email = 1 [(buf.validate.field).string.max_len = 256];
+  string email = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   user.v1.VerificationChannel channel = 2 [(buf.validate.field).enum = {
     defined_only: true
     not_in: [0]
@@ -74,9 +98,9 @@ message SendVerificationCodeRequest {
     defined_only: true
     not_in: [0]
   }];
-  string region_code = 4 [
+  string dial_code = 4 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 5 [(buf.validate.field).string.max_len = 20];
   // sender_id is the audit actor triggering this send (user id, service name,
@@ -120,7 +144,13 @@ message TokenResponse {
   bool is_new = 4;
   // return_to: business URL recorded at GetOAuthURL time (OAuth flows only;
   // empty for password/code logins).
-  string return_to = 5;
+  string return_to = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
 }
 
 // ==================== P2 request/response messages ====================
@@ -141,10 +171,32 @@ message UpdateProfileRequest {
   string real_name = 3 [(buf.validate.field).string.max_len = 64];
   string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
   user.v1.Gender gender = 5 [(buf.validate.field).enum.defined_only = true];
-  string birthday = 6 [(buf.validate.field).string.max_len = 10];
+  string birthday = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+      max_len: 10
+    }
+  ];
   string timezone = 7 [(buf.validate.field).string.max_len = 64];
-  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string locale = 8 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+      max_len: 16
+    }
+  ];
   string bio = 9 [(buf.validate.field).string.max_len = 512];
+  // ISO 4217 alpha-3; "" leaves the stored value untouched.
+  string default_currency = 10 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{3}$"
+  ];
+  // The user's country/region (ISO 3166-1 alpha-2); "" leaves it untouched.
+  string region_code = 11 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
 }
 
 message ChangePasswordRequest {
@@ -159,7 +211,13 @@ message ChangePasswordRequest {
 }
 
 message ResetPasswordRequest {
-  string email = 1 [(buf.validate.field).string.max_len = 256];
+  string email = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   string code = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 16
@@ -168,16 +226,16 @@ message ResetPasswordRequest {
     min_len: 8
     max_len: 128
   }];
-  string region_code = 4 [
+  string dial_code = 4 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 5 [(buf.validate.field).string.max_len = 20];
 
   option (buf.validate.message).cel = {
     id: "target_exclusive"
-    message: "exactly one of email or region_code+phone must be set"
-    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+    message: "exactly one of email or dial_code+phone must be set"
+    expression: "(this.email != '' && this.dial_code == '' && this.phone == '') || (this.email == '' && this.dial_code != '' && this.phone != '')"
   };
 }
 
@@ -193,22 +251,28 @@ message BindIdentityRequest {
     defined_only: true
     not_in: [0]
   }];
-  string email = 2 [(buf.validate.field).string.max_len = 256];
+  string email = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   string code = 3 [(buf.validate.field).string = {
     min_len: 1
     max_len: 16
   }];
   string password = 4 [(buf.validate.field).string.max_len = 128];
-  string region_code = 5 [
+  string dial_code = 5 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 6 [(buf.validate.field).string.max_len = 20];
 
   option (buf.validate.message).cel = {
     id: "target_exclusive"
-    message: "exactly one of email or region_code+phone must be set"
-    expression: "(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')"
+    message: "exactly one of email or dial_code+phone must be set"
+    expression: "(this.email != '' && this.dial_code == '' && this.phone == '') || (this.email == '' && this.dial_code != '' && this.phone != '')"
   };
 }
 
@@ -325,7 +389,13 @@ message GetOAuthURLRequest {
 }
 
 message GetOAuthURLResponse {
-  string url = 1;
+  string url = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
   string state = 2;
 }
 
@@ -361,7 +431,13 @@ message SocialLoginResponse {
   string token = 1;
   User user = 2;
   bool is_new = 3;
-  string return_to = 4; // meaningful only for SocialLogin (OAuth callback flow)
+  string return_to = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ]; // meaningful only for SocialLogin (OAuth callback flow)
   string session_id = 5;
 }
 
@@ -375,10 +451,16 @@ message CreateUserRequest {
   string username = 2 [(buf.validate.field).string.max_len = 64];
   string nickname = 3 [(buf.validate.field).string.max_len = 64];
   string real_name = 4 [(buf.validate.field).string.max_len = 64];
-  string email = 5 [(buf.validate.field).string.max_len = 256];
-  string region_code = 6 [
+  string email = 5 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
+  string dial_code = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 7 [(buf.validate.field).string.max_len = 20];
   string password = 8 [(buf.validate.field).string = {
@@ -387,7 +469,13 @@ message CreateUserRequest {
   }];
   user.v1.Gender gender = 9 [(buf.validate.field).enum.defined_only = true];
   string timezone = 10 [(buf.validate.field).string.max_len = 64];
-  string locale = 11 [(buf.validate.field).string.max_len = 16];
+  string locale = 11 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+      max_len: 16
+    }
+  ];
 }
 
 message CreateUserResponse {
@@ -415,7 +503,13 @@ message ListUsersRequest {
   user.v1.Gender gender = 5;
   user.v1.IdentityProvider register_source = 6;
   user.v1.DeviceType register_device = 7;
-  string locale = 8 [(buf.validate.field).string.max_len = 16];
+  string locale = 8 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+      max_len: 16
+    }
+  ];
   string timezone = 9 [(buf.validate.field).string.max_len = 64];
   string register_ip = 10 [(buf.validate.field).string.max_len = 45];
   string last_login_ip = 11 [(buf.validate.field).string.max_len = 45];
@@ -424,7 +518,13 @@ message ListUsersRequest {
   google.protobuf.Timestamp last_login_at_start = 14;
   google.protobuf.Timestamp last_login_at_end = 15;
   repeated int64 user_ids = 16;
-  string email = 17 [(buf.validate.field).string.max_len = 256];
+  string email = 17 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   string region_code = 18 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.pattern = "^[A-Z]{2}$"
@@ -448,7 +548,13 @@ message ListUsersPagedRequest {
   user.v1.IdentityProvider register_source = 4;
   user.v1.DeviceType register_device = 5;
   user.v1.UserType user_type = 6;
-  string locale = 7 [(buf.validate.field).string.max_len = 16];
+  string locale = 7 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+      max_len: 16
+    }
+  ];
   string timezone = 8 [(buf.validate.field).string.max_len = 64];
   string register_ip = 9 [(buf.validate.field).string.max_len = 45];
   string last_login_ip = 10 [(buf.validate.field).string.max_len = 45];
@@ -457,7 +563,13 @@ message ListUsersPagedRequest {
   google.protobuf.Timestamp last_login_at_start = 13;
   google.protobuf.Timestamp last_login_at_end = 14;
   repeated int64 user_ids = 15;
-  string email = 16 [(buf.validate.field).string.max_len = 256];
+  string email = 16 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }
+  ];
   string region_code = 17 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.pattern = "^[A-Z]{2}$"
@@ -896,7 +1008,13 @@ message GenerateProcessURLRequest {
 }
 
 message GenerateProcessURLResponse {
-  string url = 1;
+  string url = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
   int64 expires_at = 2;
 }
 
@@ -912,7 +1030,13 @@ message GenerateCDNURLRequest {
 }
 
 message GenerateCDNURLResponse {
-  string url = 1;
+  string url = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      uri: true
+      max_len: 2048
+    }
+  ];
   int64 expires_at = 2;
 }
 
@@ -1177,9 +1301,9 @@ message SendEmailRequest {
 }
 
 message SendSMSRequest {
-  string region_code = 1 [
+  string dial_code = 1 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
   ];
   string phone = 2 [(buf.validate.field).string.min_len = 1];
   string content = 3;
@@ -1257,8 +1381,17 @@ message ListSMSRequest {
   messaging.v1.SmsVendor vendor = 1;
   messaging.v1.SmsScene scene = 2;
   messaging.v1.MessageStatus status = 3;
-  string region_code = 4;
-  string phone = 5;
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[0-9]{4,15}$"
+      max_len: 20
+    }
+  ];
   int64 start_time = 6;
   int64 end_time = 7;
   int32 page = 8;
@@ -1304,8 +1437,17 @@ message ListSMSByCursorRequest {
   messaging.v1.SmsVendor vendor = 1;
   messaging.v1.SmsScene scene = 2;
   messaging.v1.MessageStatus status = 3;
-  string region_code = 4;
-  string phone = 5;
+  string region_code = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ];
+  string phone = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[0-9]{4,15}$"
+      max_len: 20
+    }
+  ];
   int64 start_time = 6;
   int64 end_time = 7;
   storage.v1.SortField sort_field = 8;
@@ -1372,7 +1514,7 @@ message ListSMSSendersResponse {
 message ListSMSRegionsRequest {}
 
 message ListSMSRegionsResponse {
-  repeated string region_codes = 1;
+  repeated string region_codes = 1 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"];
 }
 
 message ListRegionCodesRequest {}
@@ -1385,7 +1527,10 @@ message ListRegionCodesResponse {
 // testkit owns its wire types; the mapping layer is a plain field copy).
 message RegionCode {
   string code = 1;
-  string dial_code = 2;
+  string dial_code = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
+  ];
   string name_zh = 3;
   string name_en = 4;
 }

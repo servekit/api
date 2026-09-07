@@ -3865,7 +3865,7 @@
         ]
       }
     },
-    "/api/v1/reference/countries/{countryCode}/defaults": {
+    "/api/v1/reference/countries/{regionCode}/defaults": {
       "get": {
         "operationId": "GetCountryDefaults",
         "responses": {
@@ -3884,7 +3884,7 @@
         },
         "parameters": [
           {
-            "name": "countryCode",
+            "name": "regionCode",
             "in": "path",
             "required": true,
             "type": "string"
@@ -3901,7 +3901,7 @@
         ]
       }
     },
-    "/api/v1/reference/countries/{countryCode}/profile": {
+    "/api/v1/reference/countries/{regionCode}/profile": {
       "get": {
         "operationId": "GetCountryProfile",
         "responses": {
@@ -3920,7 +3920,7 @@
         },
         "parameters": [
           {
-            "name": "countryCode",
+            "name": "regionCode",
             "in": "path",
             "required": true,
             "type": "string"
@@ -3957,7 +3957,7 @@
         },
         "parameters": [
           {
-            "name": "countryCodes",
+            "name": "regionCodes",
             "in": "query",
             "required": false,
             "type": "array",
@@ -4080,7 +4080,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (country_code/dial_code) are still filled when the\ncountry is inferable.",
+            "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (region_code/dial_code) are still filled when the\nregion is inferable.",
             "in": "body",
             "required": true,
             "schema": {
@@ -4123,7 +4123,7 @@
         ]
       }
     },
-    "/api/v1/reference/regions/{regionCode}/countries": {
+    "/api/v1/reference/region-groups/{groupCode}/countries": {
       "get": {
         "operationId": "ListCountriesByRegion",
         "responses": {
@@ -4142,7 +4142,7 @@
         },
         "parameters": [
           {
-            "name": "regionCode",
+            "name": "groupCode",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7136,7 +7136,7 @@
         "password": {
           "type": "string"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -7268,9 +7268,9 @@
     "v1Country": {
       "type": "object",
       "properties": {
-        "code": {
+        "regionCode": {
           "type": "string",
-          "title": "alpha-2, e.g. \"CN\""
+          "title": "ISO 3166-1 alpha-2, e.g. \"CN\""
         },
         "alpha3": {
           "type": "string",
@@ -7301,7 +7301,7 @@
           "title": "\"\" when the metadata has none — use as a phone\ninput placeholder / format hint"
         }
       },
-      "description": "Country is one row of the ISO 3166-1 + E.164 directory."
+      "description": "Country is one row of the ISO 3166-1 + E.164 directory. Field names use\nthe CLDR/libphonenumber \"region\" convention for the alpha-2 code — the\ndirectory covers countries and other territories alike."
     },
     "v1CreateAppRequest": {
       "type": "object",
@@ -7474,7 +7474,7 @@
         "email": {
           "type": "string"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -7519,7 +7519,7 @@
           "format": "int32",
           "title": "0 (JPY) / 2 (CNY) / 3 (BHD)"
         },
-        "countryCodes": {
+        "regionCodes": {
           "type": "array",
           "items": {
             "type": "string"
@@ -8215,7 +8215,7 @@
           },
           "title": "request order"
         },
-        "missingCountries": {
+        "missingRegions": {
           "type": "array",
           "items": {
             "type": "string"
@@ -8323,7 +8323,7 @@
             "type": "string"
           }
         },
-        "countryCount": {
+        "regionCount": {
           "type": "integer",
           "format": "int32"
         },
@@ -9512,7 +9512,7 @@
         "email": {
           "type": "string"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -9649,7 +9649,7 @@
           "title": "alpha-2; disambiguates local-format input; empty = international format only"
         }
       },
-      "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (country_code/dial_code) are still filled when the\ncountry is inferable."
+      "description": "ParsePhone applies libphonenumber rules to raw input. Bad input never\nfails the RPC: is_valid=false + error_reason carries the reason, and\nguessable fields (region_code/dial_code) are still filled when the\nregion is inferable."
     },
     "v1ParsePhoneResponse": {
       "type": "object",
@@ -9661,7 +9661,7 @@
           "type": "string",
           "title": "canonical E.164 when parseable"
         },
-        "countryCode": {
+        "regionCode": {
           "type": "string",
           "title": "inferred alpha-2, \"\" when unknown"
         },
@@ -9874,7 +9874,7 @@
     "v1RegionGroup": {
       "type": "object",
       "properties": {
-        "code": {
+        "groupCode": {
           "type": "string",
           "title": "UN M49, e.g. \"142\" (Asia)"
         },
@@ -9882,7 +9882,7 @@
           "type": "string",
           "title": "\"\" for top level"
         },
-        "countryCodes": {
+        "regionCodes": {
           "type": "array",
           "items": {
             "type": "string"
@@ -9894,7 +9894,7 @@
           "title": "e.g. \"亚洲\" / \"Asia\""
         }
       },
-      "description": "RegionGroup is one UN M49 node (continent or sub-region). The world root\n(001) is not served; top level (parent_code == \"\") is continents."
+      "description": "RegionGroup is one UN M49 node (continent or sub-region). The world root\n(001) is not served; top level (parent_code == \"\") is continents. The\ngroup identifier is numeric M49, so it is named group_code — \"region_code\"\nis reserved for ISO 3166-1 alpha-2 across this API."
     },
     "v1RegisterRequest": {
       "type": "object",
@@ -9917,7 +9917,7 @@
         "password": {
           "type": "string"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -9964,7 +9964,7 @@
         "newPassword": {
           "type": "string"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -9986,7 +9986,7 @@
         "locale": {
           "type": "string"
         },
-        "countryCodes": {
+        "regionCodes": {
           "type": "array",
           "items": {
             "type": "string"
@@ -10044,7 +10044,7 @@
             "$ref": "#/definitions/v1Currency"
           }
         },
-        "missingCountries": {
+        "missingRegions": {
           "type": "array",
           "items": {
             "type": "string"
@@ -10349,7 +10349,7 @@
     "v1SendSMSRequest": {
       "type": "object",
       "properties": {
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -10397,7 +10397,7 @@
         "purpose": {
           "$ref": "#/definitions/v1VerificationPurpose"
         },
-        "regionCode": {
+        "dialCode": {
           "type": "string"
         },
         "phone": {
@@ -10713,7 +10713,7 @@
           },
           "title": "backward links, e.g. \"PRC\"; input"
         },
-        "countryCodes": {
+        "regionCodes": {
           "type": "array",
           "items": {
             "type": "string"
@@ -10857,6 +10857,14 @@
         },
         "bio": {
           "type": "string"
+        },
+        "defaultCurrency": {
+          "type": "string",
+          "description": "ISO 4217 alpha-3; \"\" leaves the stored value untouched."
+        },
+        "regionCode": {
+          "type": "string",
+          "description": "The user's country/region (ISO 3166-1 alpha-2); \"\" leaves it untouched."
         }
       }
     },
@@ -10988,6 +10996,18 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "dialCode": {
+          "type": "string",
+          "description": "Derived from region_code at read time, never stored — mirrors\nuser.v1.User.dial_code."
+        },
+        "defaultCurrency": {
+          "type": "string",
+          "description": "ISO 4217 alpha-3, \"\" = unset."
+        },
+        "mfaEnabled": {
+          "type": "boolean",
+          "description": "Reserved for MFA; false until an MFA flow exists."
         }
       },
       "description": "User is the frontend-facing user shape (P2 enriched). Fields are renumbered\nsequentially vs uservl.User (which has gaps from historical edits); the\nmapping layer translates field-by-name, not field-by-number. Unlike P1's\n6-field login view, this carries the full profile surface (status, gender,\ntimestamps, register_source, ...) used by profile/admin UIs. user_type is\nretained so the frontend can still do its two-track split (design spec §3.5)."

@@ -5167,7 +5167,7 @@ func local_request_TestkitService_ResolveCodes_0(ctx context.Context, marshaler 
 	return msg, metadata, err
 }
 
-var filter_TestkitService_GetCountryProfile_0 = &utilities.DoubleArray{Encoding: map[string]int{"country_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_TestkitService_GetCountryProfile_0 = &utilities.DoubleArray{Encoding: map[string]int{"region_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 
 func request_TestkitService_GetCountryProfile_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -5175,13 +5175,13 @@ func request_TestkitService_GetCountryProfile_0(ctx context.Context, marshaler r
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["country_code"]
+	val, ok := pathParams["region_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "country_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
 	}
-	protoReq.CountryCode, err = runtime.String(val)
+	protoReq.RegionCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "country_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -5202,13 +5202,13 @@ func local_request_TestkitService_GetCountryProfile_0(ctx context.Context, marsh
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["country_code"]
+	val, ok := pathParams["region_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "country_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
 	}
-	protoReq.CountryCode, err = runtime.String(val)
+	protoReq.RegionCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "country_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -5220,7 +5220,7 @@ func local_request_TestkitService_GetCountryProfile_0(ctx context.Context, marsh
 	return msg, metadata, err
 }
 
-var filter_TestkitService_ListCountriesByRegion_0 = &utilities.DoubleArray{Encoding: map[string]int{"region_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_TestkitService_ListCountriesByRegion_0 = &utilities.DoubleArray{Encoding: map[string]int{"group_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 
 func request_TestkitService_ListCountriesByRegion_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -5228,13 +5228,13 @@ func request_TestkitService_ListCountriesByRegion_0(ctx context.Context, marshal
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["region_code"]
+	val, ok := pathParams["group_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "group_code")
 	}
-	protoReq.RegionCode, err = runtime.String(val)
+	protoReq.GroupCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "group_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -5255,13 +5255,13 @@ func local_request_TestkitService_ListCountriesByRegion_0(ctx context.Context, m
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["region_code"]
+	val, ok := pathParams["group_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "group_code")
 	}
-	protoReq.RegionCode, err = runtime.String(val)
+	protoReq.GroupCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "group_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -5273,7 +5273,7 @@ func local_request_TestkitService_ListCountriesByRegion_0(ctx context.Context, m
 	return msg, metadata, err
 }
 
-var filter_TestkitService_GetCountryDefaults_0 = &utilities.DoubleArray{Encoding: map[string]int{"country_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_TestkitService_GetCountryDefaults_0 = &utilities.DoubleArray{Encoding: map[string]int{"region_code": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 
 func request_TestkitService_GetCountryDefaults_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -5281,13 +5281,13 @@ func request_TestkitService_GetCountryDefaults_0(ctx context.Context, marshaler 
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["country_code"]
+	val, ok := pathParams["region_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "country_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
 	}
-	protoReq.CountryCode, err = runtime.String(val)
+	protoReq.RegionCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "country_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -5308,13 +5308,13 @@ func local_request_TestkitService_GetCountryDefaults_0(ctx context.Context, mars
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["country_code"]
+	val, ok := pathParams["region_code"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "country_code")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "region_code")
 	}
-	protoReq.CountryCode, err = runtime.String(val)
+	protoReq.RegionCode, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "country_code", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "region_code", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -8199,7 +8199,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryProfile", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{country_code}/profile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryProfile", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{region_code}/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -8219,7 +8219,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/ListCountriesByRegion", runtime.WithHTTPPathPattern("/api/v1/reference/regions/{region_code}/countries"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/ListCountriesByRegion", runtime.WithHTTPPathPattern("/api/v1/reference/region-groups/{group_code}/countries"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -8239,7 +8239,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryDefaults", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{country_code}/defaults"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryDefaults", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{region_code}/defaults"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10731,7 +10731,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryProfile", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{country_code}/profile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryProfile", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{region_code}/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10748,7 +10748,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/ListCountriesByRegion", runtime.WithHTTPPathPattern("/api/v1/reference/regions/{region_code}/countries"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/ListCountriesByRegion", runtime.WithHTTPPathPattern("/api/v1/reference/region-groups/{group_code}/countries"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10765,7 +10765,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryDefaults", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{country_code}/defaults"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetCountryDefaults", runtime.WithHTTPPathPattern("/api/v1/reference/countries/{region_code}/defaults"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10941,9 +10941,9 @@ var (
 	pattern_TestkitService_ListRegionGroups_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "region-groups"}, ""))
 	pattern_TestkitService_ParsePhone_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "phone"}, "parse"))
 	pattern_TestkitService_ResolveCodes_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "codes"}, "resolve"))
-	pattern_TestkitService_GetCountryProfile_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "country_code", "profile"}, ""))
-	pattern_TestkitService_ListCountriesByRegion_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "regions", "region_code", "countries"}, ""))
-	pattern_TestkitService_GetCountryDefaults_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "country_code", "defaults"}, ""))
+	pattern_TestkitService_GetCountryProfile_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "profile"}, ""))
+	pattern_TestkitService_ListCountriesByRegion_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "region-groups", "group_code", "countries"}, ""))
+	pattern_TestkitService_GetCountryDefaults_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "defaults"}, ""))
 	pattern_TestkitService_GetDataInfo_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "data-info"}, ""))
 )
 

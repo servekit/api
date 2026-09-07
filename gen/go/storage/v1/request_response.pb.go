@@ -3831,9 +3831,9 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x03ops\x18\x02 \x03(\v2\x1a.storage.v1.ImageProcessOpB\b\xbaH\x05\x92\x01\x02\b\x01R\x03ops\x12\x1f\n" +
 	"\vttl_seconds\x18\x03 \x01(\x05R\n" +
 	"ttlSeconds\x12(\n" +
-	"\x05owner\x18\xff\x01 \x01(\v2\x11.storage.v1.OwnerR\x05owner\"M\n" +
-	"\x1aGenerateProcessURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x1d\n" +
+	"\x05owner\x18\xff\x01 \x01(\v2\x11.storage.v1.OwnerR\x05owner\"]\n" +
+	"\x1aGenerateProcessURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x1d\n" +
 	"\n" +
 	"expires_at\x18\x02 \x01(\x03R\texpiresAt\"\xa4\x02\n" +
 	"\x15GenerateCDNURLRequest\x12 \n" +
@@ -3845,9 +3845,9 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x05owner\x18\xff\x01 \x01(\v2\x11.storage.v1.OwnerR\x05owner\x12\x1e\n" +
 	"\n" +
 	"request_id\x18\x80\x02 \x01(\tR\trequestIdB\v\n" +
-	"\t_filename\"I\n" +
-	"\x16GenerateCDNURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x1d\n" +
+	"\t_filename\"Y\n" +
+	"\x16GenerateCDNURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x1d\n" +
 	"\n" +
 	"expires_at\x18\x02 \x01(\x03R\texpiresAt\"=\n" +
 	"\x11GetMyQuotaRequest\x12(\n" +

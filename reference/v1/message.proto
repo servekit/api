@@ -7,58 +7,70 @@ syntax = "proto3";
 
 package reference.v1;
 
-// Country is one row of the ISO 3166-1 + E.164 directory.
+import "buf/validate/validate.proto";
+
+// Country is one row of the ISO 3166-1 + E.164 directory. Field names use
+// the CLDR/libphonenumber "region" convention for the alpha-2 code — the
+// directory covers countries and other territories alike.
 message Country {
-  string code = 1;         // alpha-2, e.g. "CN"
-  string alpha_3 = 2;      // alpha-3, e.g. "CHN"
-  string dial_code = 3;    // ITU E.164 with "+", e.g. "+86"
-  string flag_emoji = 4;   // regional-indicator pair, e.g. "🇨🇳"
-  string name = 5;         // display name in the request locale
+  string region_code = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[A-Z]{2}$"
+  ]; // ISO 3166-1 alpha-2, e.g. "CN"
+  string alpha_3 = 2; // alpha-3, e.g. "CHN"
+  string dial_code = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^\\+[1-9][0-9]{0,3}$"
+  ]; // ITU E.164 with "+", e.g. "+86"
+  string flag_emoji = 4; // regional-indicator pair, e.g. "🇨🇳"
+  string name = 5; // display name in the request locale
   string example_number = 7; // libphonenumber example, e.g. "+86 138 0013 8000";
-                             // "" when the metadata has none — use as a phone
-                             // input placeholder / format hint
+  // "" when the metadata has none — use as a phone
+  // input placeholder / format hint
   repeated string language_tags = 8; // official languages, most-spoken first
-                                     // (official and de facto official;
-                                     // territories whose CLDR entries carry
-                                     // no official status fall back to plain
-                                     // population ranking — AC/TA -> en)
+  // (official and de facto official;
+  // territories whose CLDR entries carry
+  // no official status fall back to plain
+  // population ranking — AC/TA -> en)
 }
 
 // Timezone is one canonical IANA zone with its tzdb backward links.
 message Timezone {
-  string id = 1;               // canonical, e.g. "Asia/Shanghai"
+  string id = 1; // canonical, e.g. "Asia/Shanghai"
   repeated string aliases = 2; // backward links, e.g. "PRC"; input
-                               // normalization only — never in pickers
-  repeated string country_codes = 3; // ISO alpha-2 members
-  string name = 4;             // CLDR exemplar city in the request locale
+  // normalization only — never in pickers
+  repeated string region_codes = 3 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"]; // ISO alpha-2 members
+  string name = 4; // CLDR exemplar city in the request locale
 }
 
 // Language is one selectable BCP 47 tag.
 message Language {
-  string tag = 1;         // e.g. "zh-Hans"
-  string name = 2;        // the language's name in the request locale
+  string tag = 1; // e.g. "zh-Hans"
+  string name = 2; // the language's name in the request locale
   string native_name = 3; // endonym — the language's own name for itself
-                          // (日本語, 한국어); "" when CLDR lacks the locale
+  // (日本語, 한국어); "" when CLDR lacks the locale
 }
 
 // Currency is one ISO 4217 currency.
 message Currency {
-  string code = 1;            // e.g. "CNY"
-  string symbol = 2;          // e.g. "¥"
-  int32 minor_units = 3;      // 0 (JPY) / 2 (CNY) / 3 (BHD)
-  repeated string country_codes = 4; // current official users
-  string name = 5;            // display name in the request locale
-  string flag_emoji = 6;      // issuer flag, e.g. "🇨🇳" — derived from the
-                              // code's leading alpha-2 (EUR -> "🇪🇺");
-                              // X-prefixed multi-country codes take their
-                              // first member, no-country codes (XDR) are ""
+  string code = 1; // e.g. "CNY"
+  string symbol = 2; // e.g. "¥"
+  int32 minor_units = 3; // 0 (JPY) / 2 (CNY) / 3 (BHD)
+  repeated string region_codes = 4 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"]; // current official users
+  string name = 5; // display name in the request locale
+  string flag_emoji = 6; // issuer flag, e.g. "🇨🇳" — derived from the
+  // code's leading alpha-2 (EUR -> "🇪🇺");
+  // X-prefixed multi-country codes take their
+  // first member, no-country codes (XDR) are ""
 }
 
 // RegionGroup is one UN M49 node (continent or sub-region). The world root
-// (001) is not served; top level (parent_code == "") is continents.
+// (001) is not served; top level (parent_code == "") is continents. The
+// group identifier is numeric M49, so it is named group_code — "region_code"
+// is reserved for ISO 3166-1 alpha-2 across this API.
 message RegionGroup {
-  string code = 1;                  // UN M49, e.g. "142" (Asia)
-  string parent_code = 2;           // "" for top level
-  repeated string country_codes = 3; // direct members; recurse client-side
-  string name = 4;                  // e.g. "亚洲" / "Asia"
+  string group_code = 1; // UN M49, e.g. "142" (Asia)
+  string parent_code = 2; // "" for top level
+  repeated string region_codes = 3 [(buf.validate.field).repeated.items.string.pattern = "^[A-Z]{2}$"]; // direct members; recurse client-side
+  string name = 4; // e.g. "亚洲" / "Asia"
 }

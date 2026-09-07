@@ -592,12 +592,13 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\x93\x04\n" +
+	"dropReason\"\xa2\x04\n" +
 	"\x03App\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12'\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
+	"\x05email\x18\x04 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12'\n" +
 	"\x0fstrict_versions\x18\x05 \x01(\bR\x0estrictVersions\x123\n" +
 	"\tauth_mode\x18\x06 \x01(\x0e2\x16.telemetry.v1.AuthModeR\bauthMode\x12D\n" +
 	"\x10auth_grace_until\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\x0eauthGraceUntil\x12&\n" +

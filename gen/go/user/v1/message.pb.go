@@ -26,14 +26,18 @@ const (
 )
 
 type User struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username       string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname       string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RealName       string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
-	AvatarUrl      string                 `protobuf:"bytes,5,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
-	Email          string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	RegionCode     string                 `protobuf:"bytes,22,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Id        int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username  string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname  string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RealName  string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
+	AvatarUrl string                 `protobuf:"bytes,5,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	Email     string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
+	// The user's country/region (ISO 3166-1 alpha-2) — a profile attribute of
+	// the person (residence), independent of the phone's home country.
+	RegionCode string `protobuf:"bytes,22,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
+	// E.164 international format ("+8613800138000") — the single canonical
+	// phone format; parts (dial code, national number) are derived from it.
 	Phone          string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
 	Gender         Gender                 `protobuf:"varint,8,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
 	Birthday       string                 `protobuf:"bytes,9,opt,name=birthday,proto3" json:"birthday,omitempty"` // YYYY-MM-DD
@@ -52,8 +56,19 @@ type User struct {
 	RegisterAgent string `protobuf:"bytes,24,opt,name=register_agent,json=registerAgent,proto3" json:"register_agent,omitempty"`
 	// Derived from register_agent at read time (never stored).
 	RegisterDevice DeviceType `protobuf:"varint,25,opt,name=register_device,json=registerDevice,proto3,enum=user.v1.DeviceType" json:"register_device,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// The phone's E.164 dial code ("+86"), stored alongside the E.164 phone
+	// (written together by the same normalization) so admin stats can filter
+	// / group by the phone's home country. Always consistent with phone —
+	// unlike the user's region_code, which describes the person.
+	DialCode string `protobuf:"bytes,26,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	// Preferred display currency, ISO 4217 alpha-3 ("" = unset). Reserved
+	// for future billing; format-validated only — no reference-service
+	// existence check at write time.
+	DefaultCurrency string `protobuf:"bytes,27,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
+	// Reserved for MFA: no write path exists until MFA ships — reads only.
+	MfaEnabled    bool `protobuf:"varint,28,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
@@ -238,6 +253,27 @@ func (x *User) GetRegisterDevice() DeviceType {
 		return x.RegisterDevice
 	}
 	return DeviceType_DEVICE_TYPE_UNSPECIFIED
+}
+
+func (x *User) GetDialCode() string {
+	if x != nil {
+		return x.DialCode
+	}
+	return ""
+}
+
+func (x *User) GetDefaultCurrency() string {
+	if x != nil {
+		return x.DefaultCurrency
+	}
+	return ""
+}
+
+func (x *User) GetMfaEnabled() bool {
+	if x != nil {
+		return x.MfaEnabled
+	}
+	return false
 }
 
 type Identity struct {
@@ -1171,24 +1207,26 @@ var File_user_v1_message_proto protoreflect.FileDescriptor
 
 const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\x86\a\n" +
+	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xc0\t\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x1b\n" +
-	"\treal_name\x18\x04 \x01(\tR\brealName\x12\x1d\n" +
+	"\treal_name\x18\x04 \x01(\tR\brealName\x12-\n" +
 	"\n" +
-	"avatar_url\x18\x05 \x01(\tR\tavatarUrl\x12\x14\n" +
-	"\x05email\x18\x06 \x01(\tR\x05email\x125\n" +
+	"avatar_url\x18\x05 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12#\n" +
+	"\x05email\x18\x06 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
 	"\vregion_code\x18\x16 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x14\n" +
-	"\x05phone\x18\a \x01(\tR\x05phone\x121\n" +
-	"\x06gender\x18\b \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12\x1a\n" +
-	"\bbirthday\x18\t \x01(\tR\bbirthday\x12\x1a\n" +
+	"regionCode\x126\n" +
+	"\x05phone\x18\a \x01(\tB \xbaH\x1d\xd8\x01\x01r\x18\x18\x142\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x121\n" +
+	"\x06gender\x18\b \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12;\n" +
+	"\bbirthday\x18\t \x01(\tB\x1f\xbaH\x1c\xd8\x01\x01r\x17\x18\n" +
+	"2\x13^\\d{4}-\\d{2}-\\d{2}$R\bbirthday\x12#\n" +
 	"\btimezone\x18\n" +
-	" \x01(\tR\btimezone\x12\x16\n" +
-	"\x06locale\x18\v \x01(\tR\x06locale\x12\x10\n" +
+	" \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12\x10\n" +
 	"\x03bio\x18\f \x01(\tR\x03bio\x125\n" +
 	"\x06status\x18\r \x01(\x0e2\x13.user.v1.UserStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\x12B\n" +
 	"\x0fregister_source\x18\x0e \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x128\n" +
@@ -1201,7 +1239,12 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\vregister_ip\x18\x17 \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
 	"registerIp\x12/\n" +
 	"\x0eregister_agent\x18\x18 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\rregisterAgent\x12<\n" +
-	"\x0fregister_device\x18\x19 \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\"\xd5\x01\n" +
+	"\x0fregister_device\x18\x19 \x01(\x0e2\x13.user.v1.DeviceTypeR\x0eregisterDevice\x12:\n" +
+	"\tdial_code\x18\x1a \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12?\n" +
+	"\x10default_currency\x18\x1b \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{3}$R\x0fdefaultCurrency\x12\x1f\n" +
+	"\vmfa_enabled\x18\x1c \x01(\bR\n" +
+	"mfaEnabled\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -1259,12 +1302,12 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xb0\x01\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xc0\x01\n" +
 	"\vGroupMember\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x1d\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12-\n" +
 	"\n" +
-	"avatar_url\x18\x03 \x01(\tR\tavatarUrl\x12\x12\n" +
+	"avatar_url\x18\x03 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd3\x02\n" +

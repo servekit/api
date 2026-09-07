@@ -26,18 +26,20 @@ const (
 )
 
 type RegisterRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Provider   IdentityProvider       `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Email      string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Code       string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
-	Username   string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname   string                 `protobuf:"bytes,5,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Password   string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
-	Gender     Gender                 `protobuf:"varint,7,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Timezone   string                 `protobuf:"bytes,8,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale     string                 `protobuf:"bytes,9,opt,name=locale,proto3" json:"locale,omitempty"`
-	RegionCode string                 `protobuf:"bytes,10,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,11,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Provider IdentityProvider       `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	Email    string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Code     string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Username string                 `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname string                 `protobuf:"bytes,5,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Password string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	Gender   Gender                 `protobuf:"varint,7,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Timezone string                 `protobuf:"bytes,8,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale   string                 `protobuf:"bytes,9,opt,name=locale,proto3" json:"locale,omitempty"`
+	// phone is the E.164 international format ("+8613800138000") — the single
+	// canonical phone format at the service boundary. region/country context
+	// is derived from it, never paired alongside it.
+	Phone string `protobuf:"bytes,11,opt,name=phone,proto3" json:"phone,omitempty"`
 	// captcha_id returned by SendVerificationCode; required to verify the code.
 	CaptchaId     string `protobuf:"bytes,12,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -137,13 +139,6 @@ func (x *RegisterRequest) GetLocale() string {
 	return ""
 }
 
-func (x *RegisterRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
-	}
-	return ""
-}
-
 func (x *RegisterRequest) GetPhone() string {
 	if x != nil {
 		return x.Phone
@@ -211,14 +206,14 @@ func (x *RegisterResponse) GetSessionId() string {
 }
 
 type LoginRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Method     LoginMethod            `protobuf:"varint,1,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
-	Username   string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Password   string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	Code       string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Email      string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	RegionCode string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Method   LoginMethod            `protobuf:"varint,1,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"`
+	Username string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Password string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Code     string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Email    string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	// E.164 international format ("+8613800138000").
+	Phone string `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
 	// captcha_id returned by SendVerificationCode; required for code-based login methods.
 	CaptchaId     string `protobuf:"bytes,8,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -286,13 +281,6 @@ func (x *LoginRequest) GetCode() string {
 func (x *LoginRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
-	}
-	return ""
-}
-
-func (x *LoginRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
 	}
 	return ""
 }
@@ -783,17 +771,23 @@ func (x *GetProfileRequest) GetUserId() int64 {
 }
 
 type UpdateProfileRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,10,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RealName      string                 `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
-	AvatarUrl     string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
-	Gender        Gender                 `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Birthday      string                 `protobuf:"bytes,6,opt,name=birthday,proto3" json:"birthday,omitempty"`
-	Timezone      string                 `protobuf:"bytes,7,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale        string                 `protobuf:"bytes,8,opt,name=locale,proto3" json:"locale,omitempty"`
-	Bio           string                 `protobuf:"bytes,9,opt,name=bio,proto3" json:"bio,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	UserId    int64                  `protobuf:"varint,10,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Username  string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname  string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RealName  string                 `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
+	AvatarUrl string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	Gender    Gender                 `protobuf:"varint,5,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Birthday  string                 `protobuf:"bytes,6,opt,name=birthday,proto3" json:"birthday,omitempty"`
+	Timezone  string                 `protobuf:"bytes,7,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale    string                 `protobuf:"bytes,8,opt,name=locale,proto3" json:"locale,omitempty"`
+	Bio       string                 `protobuf:"bytes,9,opt,name=bio,proto3" json:"bio,omitempty"`
+	// ISO 4217 alpha-3; "" leaves the stored value untouched.
+	DefaultCurrency string `protobuf:"bytes,11,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
+	// The user's country/region (ISO 3166-1 alpha-2) — a profile attribute of
+	// the PERSON, independent of the phone's home country. ""; empty input
+	// leaves the stored value untouched.
+	RegionCode    string `protobuf:"bytes,12,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -898,6 +892,20 @@ func (x *UpdateProfileRequest) GetBio() string {
 	return ""
 }
 
+func (x *UpdateProfileRequest) GetDefaultCurrency() string {
+	if x != nil {
+		return x.DefaultCurrency
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetRegionCode() string {
+	if x != nil {
+		return x.RegionCode
+	}
+	return ""
+}
+
 type ChangePasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -959,12 +967,12 @@ func (x *ChangePasswordRequest) GetNewPassword() string {
 }
 
 type ResetPasswordRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	NewPassword   string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone         string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Email       string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Code        string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	NewPassword string                 `protobuf:"bytes,3,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	// E.164 international format ("+8613800138000").
+	Phone         string `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1016,13 +1024,6 @@ func (x *ResetPasswordRequest) GetCode() string {
 func (x *ResetPasswordRequest) GetNewPassword() string {
 	if x != nil {
 		return x.NewPassword
-	}
-	return ""
-}
-
-func (x *ResetPasswordRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
 	}
 	return ""
 }
@@ -1123,14 +1124,14 @@ func (x *ListIdentitiesResponse) GetIdentities() []*Identity {
 }
 
 type BindIdentityRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Provider      IdentityProvider       `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
-	Password      string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone         string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UserId   int64                  `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Provider IdentityProvider       `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
+	Email    string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Code     string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Password string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	// E.164 international format ("+8613800138000").
+	Phone         string `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1196,13 +1197,6 @@ func (x *BindIdentityRequest) GetCode() string {
 func (x *BindIdentityRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
-	}
-	return ""
-}
-
-func (x *BindIdentityRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
 	}
 	return ""
 }
@@ -1396,27 +1390,30 @@ func (x *UnbindIdentityRequest) GetCode() string {
 }
 
 type SendVerificationCodeRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	Email      string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Channel    VerificationChannel    `protobuf:"varint,2,opt,name=channel,proto3,enum=user.v1.VerificationChannel" json:"channel,omitempty"`
-	Purpose    VerificationPurpose    `protobuf:"varint,3,opt,name=purpose,proto3,enum=user.v1.VerificationPurpose" json:"purpose,omitempty"`
-	RegionCode string                 `protobuf:"bytes,4,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone      string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Email   string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Channel VerificationChannel    `protobuf:"varint,2,opt,name=channel,proto3,enum=user.v1.VerificationChannel" json:"channel,omitempty"`
+	Purpose VerificationPurpose    `protobuf:"varint,3,opt,name=purpose,proto3,enum=user.v1.VerificationPurpose" json:"purpose,omitempty"`
+	// phone is the E.164 international format ("+8613800138000") — the SMS
+	// destination; the destination country (which decides the domestic vs
+	// international vendor path) is derived from it.
+	Phone string `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
 	// sender_id identifies the audit actor triggering this send (user ID,
 	// service name, platform identifier, ...). Required: user-service is
 	// stateless and passes this through to message-service verbatim — it does
 	// not derive, transform, or default the value.
 	SenderId string `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	// SMS delivery — required when channel=SMS. Path is decided by destination
-	// region (mirrors message-service's routing):
-	//   - region_code == "CN" (domestic): sms_template_id + sms_code_param_key +
+	// SMS delivery — required when channel=SMS. Path is decided by the
+	// destination country parsed from the E.164 phone (mirrors
+	// message-service's routing):
+	//   - destination "CN" (domestic): sms_template_id + sms_code_param_key +
 	//     sign_name are required. Domestic vendors reject raw content for
 	//     regulatory reasons — every SMS must use a vendor pre-registered
 	//     template. sms_code_param_key is the param-name under which the code is
 	//     placed in template_params; the name is fixed at the vendor's template-
 	//     registration time (e.g. "code", "param1", "verify_code") — caller must
 	//     match it. Empty defaults to "code".
-	//   - region_code != "CN" (international): caller picks ONE of
+	//   - other destinations (international): caller picks ONE of
 	//     sms_template_id (vendor that requires templates even for intl, e.g.
 	//     Byteplus / Tencent-intl) OR sms_content (vendor that accepts raw
 	//     text, e.g. Aliyun SendMessageToGlobe, Twilio).
@@ -1504,13 +1501,6 @@ func (x *SendVerificationCodeRequest) GetPurpose() VerificationPurpose {
 		return x.Purpose
 	}
 	return VerificationPurpose_VERIFICATION_PURPOSE_UNSPECIFIED
-}
-
-func (x *SendVerificationCodeRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
-	}
-	return ""
 }
 
 func (x *SendVerificationCodeRequest) GetPhone() string {
@@ -2211,18 +2201,19 @@ func (x *GetSessionResponse) GetLoginProvider() IdentityProvider {
 }
 
 type CreateUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserType      UserType               `protobuf:"varint,1,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RealName      string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
-	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	RegionCode    string                 `protobuf:"bytes,11,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
-	Phone         string                 `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
-	Password      string                 `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
-	Gender        Gender                 `protobuf:"varint,8,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Timezone      string                 `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale        string                 `protobuf:"bytes,10,opt,name=locale,proto3" json:"locale,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UserType UserType               `protobuf:"varint,1,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
+	Username string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RealName string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
+	Email    string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	// phone is the E.164 international format ("+8613800138000"). The user's
+	// country defaults to the phone's home country.
+	Phone         string `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
+	Password      string `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
+	Gender        Gender `protobuf:"varint,8,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Timezone      string `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale        string `protobuf:"bytes,10,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2288,13 +2279,6 @@ func (x *CreateUserRequest) GetRealName() string {
 func (x *CreateUserRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
-	}
-	return ""
-}
-
-func (x *CreateUserRequest) GetRegionCode() string {
-	if x != nil {
-		return x.RegionCode
 	}
 	return ""
 }
@@ -5178,49 +5162,44 @@ var File_user_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_user_v1_request_response_proto_rawDesc = "" +
 	"\n" +
-	"\x1euser/v1/request_response.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\x1a\x15user/v1/message.proto\"\xd5\x05\n" +
+	"\x1euser/v1/request_response.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\x1a\x15user/v1/message.proto\"\xf9\x04\n" +
 	"\x0fRegisterRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12\x1e\n" +
-	"\x05email\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12#\n" +
+	"\x05email\x18\x02 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12#\n" +
 	"\busername\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
 	"\bpassword\x18\x06 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x121\n" +
 	"\x06gender\x18\a \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
-	"\x06locale\x18\t \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x125\n" +
-	"\vregion_code\x18\n" +
-	" \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\v \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
+	"\x06locale\x18\t \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x124\n" +
+	"\x05phone\x18\v \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12'\n" +
 	"\n" +
-	"captcha_id\x18\f \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"T\n" +
+	"captcha_id\x18\f \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"T\n" +
 	"\x10RegisterResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x02 \x01(\tR\tsessionId\"\xd0\x02\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\"\xb5\x02\n" +
 	"\fLoginRequest\x128\n" +
 	"\x06method\x18\x01 \x01(\x0e2\x14.user.v1.LoginMethodB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\x06method\x12$\n" +
 	"\busername\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\busername\x12$\n" +
 	"\bpassword\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x12\x1b\n" +
-	"\x04code\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\x12\x1e\n" +
-	"\x05email\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
-	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
+	"\x04code\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\x12#\n" +
+	"\x05email\x18\x05 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x124\n" +
+	"\x05phone\x18\a \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12'\n" +
 	"\n" +
-	"captcha_id\x18\b \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId\"\x85\x01\n" +
+	"captcha_id\x18\b \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tcaptchaId\"\x95\x01\n" +
 	"\rLoginResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x15\n" +
-	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12\x1b\n" +
-	"\treturn_to\x18\x04 \x01(\tR\breturnTo\"8\n" +
+	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12+\n" +
+	"\treturn_to\x18\x04 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\breturnTo\"8\n" +
 	"\rLogoutRequest\x12'\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\tsessionId\"\x9e\x01\n" +
@@ -5228,9 +5207,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12%\n" +
 	"\treturn_to\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\breturnTo\x12\x1e\n" +
-	"\x05state\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x05state\"=\n" +
-	"\x13GetOAuthURLResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x05state\"M\n" +
+	"\x13GetOAuthURLResponse\x12 \n" +
+	"\x03url\x18\x01 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\x03url\x12\x14\n" +
 	"\x05state\x18\x02 \x01(\tR\x05state\"\x96\x01\n" +
 	"\x12SocialLoginRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
@@ -5252,7 +5231,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\"5\n" +
 	"\x11GetProfileRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\x8b\x03\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xc3\x04\n" +
 	"\x14UpdateProfileRequest\x12 \n" +
 	"\auser_id\x18\n" +
 	" \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12#\n" +
@@ -5261,46 +5240,47 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\treal_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12'\n" +
 	"\n" +
 	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\x121\n" +
-	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
-	"\bbirthday\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x18\n" +
-	"R\bbirthday\x12#\n" +
-	"\btimezone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
-	"\x06locale\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12\x1a\n" +
-	"\x03bio\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x03bio\"\x97\x01\n" +
+	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12;\n" +
+	"\bbirthday\x18\x06 \x01(\tB\x1f\xbaH\x1c\xd8\x01\x01r\x17\x18\n" +
+	"2\x13^\\d{4}-\\d{2}-\\d{2}$R\bbirthday\x12#\n" +
+	"\btimezone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
+	"\x06locale\x18\b \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12\x1a\n" +
+	"\x03bio\x18\t \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x03bio\x12?\n" +
+	"\x10default_currency\x18\v \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{3}$R\x0fdefaultCurrency\x125\n" +
+	"\vregion_code\x18\f \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
+	"^[A-Z]{2}$R\n" +
+	"regionCode\"\x97\x01\n" +
 	"\x15ChangePasswordRequest\x12 \n" +
 	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12-\n" +
 	"\fold_password\x18\x01 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\voldPassword\x12-\n" +
 	"\fnew_password\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"\xb4\x03\n" +
-	"\x14ResetPasswordRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"\xd8\x02\n" +
+	"\x14ResetPasswordRequest\x12#\n" +
+	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12-\n" +
 	"\fnew_password\x18\x03 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\x125\n" +
-	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"9\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\x124\n" +
+	"\x05phone\x18\x05 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"9\n" +
 	"\x15ListIdentitiesRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"K\n" +
 	"\x16ListIdentitiesResponse\x121\n" +
 	"\n" +
 	"identities\x18\x01 \x03(\v2\x11.user.v1.IdentityR\n" +
-	"identities\"\x8f\x04\n" +
+	"identities\"\xb3\x03\n" +
 	"\x13BindIdentityRequest\x12 \n" +
 	"\auser_id\x18\x05 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12\x1e\n" +
-	"\x05email\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12\x1d\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12#\n" +
+	"\x05email\x18\x02 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
 	"\x04code\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12$\n" +
-	"\bpassword\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x125\n" +
-	"\vregion_code\x18\x06 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"\xc5\x01\n" +
+	"\bpassword\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x124\n" +
+	"\x05phone\x18\a \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"\xc5\x01\n" +
 	"\x18BindOAuthIdentityRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12E\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\x0e\xbaH\v\x82\x01\b\x10\x01 \x00 \x01 \x02R\bprovider\x12\x1e\n" +
@@ -5314,17 +5294,15 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12(\n" +
 	"\videntity_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\n" +
 	"identityId\x12\x1b\n" +
-	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\xe3\x06\n" +
-	"\x1bSendVerificationCodeRequest\x12\x1e\n" +
-	"\x05email\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x12B\n" +
+	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\x87\x06\n" +
+	"\x1bSendVerificationCodeRequest\x12#\n" +
+	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12B\n" +
 	"\achannel\x18\x02 \x01(\x0e2\x1c.user.v1.VerificationChannelB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\achannel\x12B\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x1c.user.v1.VerificationPurposeB\n" +
-	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\apurpose\x125\n" +
-	"\vregion_code\x18\x04 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12'\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\apurpose\x124\n" +
+	"\x05phone\x18\x05 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12'\n" +
 	"\tsender_id\x18\x06 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\bsenderId\x120\n" +
 	"\x0fsms_template_id\x18\a \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\rsmsTemplateId\x124\n" +
@@ -5336,8 +5314,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"email_body\x18\v \x01(\tB\t\xbaH\x06r\x04\x18\x80\x80\x01R\temailBody\x121\n" +
 	"\x0femail_html_body\x18\r \x01(\tB\t\xbaH\x06r\x04\x18\x80\x80\x04R\remailHtmlBody\x12$\n" +
-	"\tsign_name\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\bsignName:\xd7\x01\xbaH\xd3\x01\x1a\xd0\x01\n" +
-	"\x10target_exclusive\x125exactly one of email or region_code+phone must be set\x1a\x84\x01(this.email != '' && this.region_code == '' && this.phone == '') || (this.email == '' && this.region_code != '' && this.phone != '')\"=\n" +
+	"\tsign_name\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\bsignName:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
 	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xba\x01\n" +
@@ -5389,28 +5367,26 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\flogin_target\x18\t \x01(\tR\vloginTarget\x12\x16\n" +
 	"\x06device\x18\n" +
 	" \x01(\tR\x06device\x12@\n" +
-	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xd6\x03\n" +
+	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xe3\x03\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
 	"\busername\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
-	"\treal_name\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12\x1e\n" +
-	"\x05email\x18\x05 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
-	"\vregion_code\x18\v \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
-	"^[A-Z]{2}$R\n" +
-	"regionCode\x12\x1d\n" +
-	"\x05phone\x18\x06 \x01(\tB\a\xbaH\x04r\x02\x18\x14R\x05phone\x12&\n" +
+	"\treal_name\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12#\n" +
+	"\x05email\x18\x05 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x124\n" +
+	"\x05phone\x18\x06 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone\x12&\n" +
 	"\bpassword\x18\a \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\b\x18\x80\x01R\bpassword\x121\n" +
 	"\x06gender\x18\b \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
-	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12\x1f\n" +
+	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
 	"\x06locale\x18\n" +
-	" \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\"7\n" +
+	" \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"7\n" +
 	"\x12CreateUserResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xe0\b\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\x8d\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -5418,8 +5394,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06cursor\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12'\n" +
 	"\x06gender\x18\x05 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
 	"\x0fregister_source\x18\x06 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12@\n" +
-	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeB\x02\x18\x01R\x0eregisterDevice\x12\x1f\n" +
-	"\x06locale\x18\b \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
+	"\x0fregister_device\x18\a \x01(\x0e2\x13.user.v1.DeviceTypeB\x02\x18\x01R\x0eregisterDevice\x12G\n" +
+	"\x06locale\x18\b \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12#\n" +
 	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +
 	"\vregister_ip\x18\n" +
 	" \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
@@ -5429,8 +5405,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x0ecreated_at_end\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\fcreatedAtEnd\x12I\n" +
 	"\x13last_login_at_start\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\x10lastLoginAtStart\x12E\n" +
 	"\x11last_login_at_end\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\x0elastLoginAtEnd\x12\x19\n" +
-	"\buser_ids\x18\x10 \x03(\x03R\auserIds\x12\x1e\n" +
-	"\x05email\x18\x11 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
+	"\buser_ids\x18\x10 \x03(\x03R\auserIds\x12#\n" +
+	"\x05email\x18\x11 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
 	"\vregion_code\x18\x17 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x12\x1d\n" +
@@ -5444,15 +5421,15 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x11ListUsersResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xed\b\n" +
+	"nextCursor\"\x9a\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
 	"\x06gender\x18\x03 \x01(\x0e2\x0f.user.v1.GenderR\x06gender\x12B\n" +
 	"\x0fregister_source\x18\x04 \x01(\x0e2\x19.user.v1.IdentityProviderR\x0eregisterSource\x12@\n" +
 	"\x0fregister_device\x18\x05 \x01(\x0e2\x13.user.v1.DeviceTypeB\x02\x18\x01R\x0eregisterDevice\x12.\n" +
-	"\tuser_type\x18\x06 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\x12\x1f\n" +
-	"\x06locale\x18\a \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x06locale\x12#\n" +
+	"\tuser_type\x18\x06 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\x12G\n" +
+	"\x06locale\x18\a \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12#\n" +
 	"\btimezone\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12(\n" +
 	"\vregister_ip\x18\t \x01(\tB\a\xbaH\x04r\x02\x18-R\n" +
 	"registerIp\x12+\n" +
@@ -5462,8 +5439,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x0ecreated_at_end\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\fcreatedAtEnd\x12I\n" +
 	"\x13last_login_at_start\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\x10lastLoginAtStart\x12E\n" +
 	"\x11last_login_at_end\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\x0elastLoginAtEnd\x12\x19\n" +
-	"\buser_ids\x18\x0f \x03(\x03R\auserIds\x12\x1e\n" +
-	"\x05email\x18\x10 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x05email\x125\n" +
+	"\buser_ids\x18\x0f \x03(\x03R\auserIds\x12#\n" +
+	"\x05email\x18\x10 \x01(\tB\r\xbaH\n" +
+	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x125\n" +
 	"\vregion_code\x18\x18 \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
 	"regionCode\x12\x1d\n" +
