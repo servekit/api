@@ -12089,6 +12089,10 @@
         },
         "idempotencyKey": {
           "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "description": "Free-form international SMS content ({{param}} rendered with\ntemplate_params; CN destinations reject it — vendor templates only)."
         }
       }
     },

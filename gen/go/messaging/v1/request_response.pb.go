@@ -193,8 +193,16 @@ type SendSMSRequest struct {
 	TemplateParams map[string]string `protobuf:"bytes,3,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
 	IdempotencyKey string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Free-form content (international destinations only): when non-empty,
+	// the SMS body comes from this field ({{param}} placeholders still render
+	// with template_params) and raw-content vendors in the intl route chain
+	// send it verbatim. Template-based vendors in the chain keep using their
+	// per-vendor template codes. Rejected for CN destinations (regulatory:
+	// domestic SMS must use vendor pre-registered templates). With no
+	// raw-content vendor integrated the chain falls through and fails loudly.
+	Content       string `protobuf:"bytes,5,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendSMSRequest) Reset() {
@@ -251,6 +259,13 @@ func (x *SendSMSRequest) GetTemplateParams() map[string]string {
 func (x *SendSMSRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *SendSMSRequest) GetContent() string {
+	if x != nil {
+		return x.Content
 	}
 	return ""
 }
@@ -1650,12 +1665,13 @@ const file_messaging_v1_request_response_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\xa3\x01\xbaH\x9f\x01\x1a4\n" +
 	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\x1ag\n" +
-	"\fcontent_pair\x120free-form mode requires body when subject is set\x1a%this.subject == '' || this.body != ''\"\xf6\x02\n" +
+	"\fcontent_pair\x120free-form mode requires body when subject is set\x1a%this.subject == '' || this.body != ''\"\x90\x03\n" +
 	"\x0eSendSMSRequest\x12+\n" +
 	"\x02to\x18\x01 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$R\x02to\x12,\n" +
 	"\x05scene\x18\x02 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x12Y\n" +
 	"\x0ftemplate_params\x18\x03 \x03(\v20.messaging.v1.SendSMSRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x1aA\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12\x18\n" +
+	"\acontent\x18\x05 \x01(\tR\acontent\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +

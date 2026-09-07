@@ -1290,6 +1290,9 @@ message SendSMSRequest {
   // TemplateParams feed the policy template's {{param}} placeholders.
   map<string, string> template_params = 4;
   string idempotency_key = 5 [(buf.validate.field).string.max_len = 64];
+  // Free-form international SMS content ({{param}} rendered with
+  // template_params; CN destinations reject it — vendor templates only).
+  string content = 6;
 
   option (buf.validate.message).cel = {
     id: "scene_required"

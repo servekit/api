@@ -80,6 +80,15 @@ message SendSMSRequest {
   // IdempotencyKey is optional. See SendEmailRequest.idempotency_key.
   string idempotency_key = 4 [(buf.validate.field).string.max_len = 64];
 
+  // Free-form content (international destinations only): when non-empty,
+  // the SMS body comes from this field ({{param}} placeholders still render
+  // with template_params) and raw-content vendors in the intl route chain
+  // send it verbatim. Template-based vendors in the chain keep using their
+  // per-vendor template codes. Rejected for CN destinations (regulatory:
+  // domestic SMS must use vendor pre-registered templates). With no
+  // raw-content vendor integrated the chain falls through and fails loudly.
+  string content = 5;
+
   option (buf.validate.message).cel = {
     id: "scene_required"
     message: "scene is required"

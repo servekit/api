@@ -8317,8 +8317,11 @@ type SendSMSRequest struct {
 	// TemplateParams feed the policy template's {{param}} placeholders.
 	TemplateParams map[string]string `protobuf:"bytes,4,rep,name=template_params,json=templateParams,proto3" json:"template_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	IdempotencyKey string            `protobuf:"bytes,5,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Free-form international SMS content ({{param}} rendered with
+	// template_params; CN destinations reject it — vendor templates only).
+	Content       string `protobuf:"bytes,6,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendSMSRequest) Reset() {
@@ -8382,6 +8385,13 @@ func (x *SendSMSRequest) GetTemplateParams() map[string]string {
 func (x *SendSMSRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *SendSMSRequest) GetContent() string {
+	if x != nil {
+		return x.Content
 	}
 	return ""
 }
@@ -14152,13 +14162,14 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:9\xbaH6\x1a4\n" +
-	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\xf1\x03\n" +
+	"\x0escene_required\x12\x11scene is required\x1a\x0fthis.scene != 0\"\x8b\x04\n" +
 	"\x0eSendSMSRequest\x12:\n" +
 	"\tdial_code\x18\x01 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12\x1d\n" +
 	"\x05phone\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x05phone\x12,\n" +
 	"\x05scene\x18\x03 \x01(\x0e2\x16.messaging.v1.SmsSceneR\x05scene\x12W\n" +
 	"\x0ftemplate_params\x18\x04 \x03(\v2..testkit.v1.SendSMSRequest.TemplateParamsEntryR\x0etemplateParams\x120\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x1aA\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x0eidempotencyKey\x12\x18\n" +
+	"\acontent\x18\x06 \x01(\tR\acontent\x1aA\n" +
 	"\x13TemplateParamsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01:\x87\x01\xbaH\x83\x01\x1a4\n" +
