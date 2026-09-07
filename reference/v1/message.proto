@@ -30,8 +30,10 @@ message Timezone {
 
 // Language is one selectable BCP 47 tag.
 message Language {
-  string tag = 1;   // e.g. "zh-Hans"
-  string name = 2;  // the language's name in the request locale
+  string tag = 1;         // e.g. "zh-Hans"
+  string name = 2;        // the language's name in the request locale
+  string native_name = 3; // endonym — the language's own name for itself
+                          // (日本語, 한국어); "" when CLDR lacks the locale
 }
 
 // Currency is one ISO 4217 currency.

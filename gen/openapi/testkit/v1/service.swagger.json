@@ -8828,6 +8828,10 @@
         "name": {
           "type": "string",
           "title": "the language's name in the request locale"
+        },
+        "nativeName": {
+          "type": "string",
+          "title": "endonym — the language's own name for itself"
         }
       },
       "description": "Language is one selectable BCP 47 tag."

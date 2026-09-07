@@ -185,8 +185,9 @@ func (x *Timezone) GetName() string {
 // Language is one selectable BCP 47 tag.
 type Language struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Tag           string                 `protobuf:"bytes,1,opt,name=tag,proto3" json:"tag,omitempty"`   // e.g. "zh-Hans"
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"` // the language's name in the request locale
+	Tag           string                 `protobuf:"bytes,1,opt,name=tag,proto3" json:"tag,omitempty"`                                 // e.g. "zh-Hans"
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                               // the language's name in the request locale
+	NativeName    string                 `protobuf:"bytes,3,opt,name=native_name,json=nativeName,proto3" json:"native_name,omitempty"` // endonym — the language's own name for itself
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -231,6 +232,13 @@ func (x *Language) GetTag() string {
 func (x *Language) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *Language) GetNativeName() string {
+	if x != nil {
+		return x.NativeName
 	}
 	return ""
 }
@@ -407,10 +415,12 @@ const file_reference_v1_message_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\aaliases\x18\x02 \x03(\tR\aaliases\x12#\n" +
 	"\rcountry_codes\x18\x03 \x03(\tR\fcountryCodes\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\"0\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\"Q\n" +
 	"\bLanguage\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\xaf\x01\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1f\n" +
+	"\vnative_name\x18\x03 \x01(\tR\n" +
+	"nativeName\"\xaf\x01\n" +
 	"\bCurrency\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x16\n" +
 	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12\x1f\n" +
