@@ -3937,6 +3937,47 @@
         ]
       }
     },
+    "/api/v1/reference/countries:batch": {
+      "get": {
+        "summary": "Batch subset lookup: ?countryCodes=AC\u0026countryCodes=CN (comma-separated\nalso accepted by the gateway).",
+        "operationId": "GetCountries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCountriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "countryCodes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/reference/currencies": {
       "get": {
         "operationId": "ListCurrencies",
@@ -7250,6 +7291,14 @@
         "exampleNumber": {
           "type": "string",
           "title": "libphonenumber example, e.g. \"+86 138 0013 8000\";"
+        },
+        "languageTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "official languages, most-spoken first",
+          "title": "\"\" when the metadata has none — use as a phone\ninput placeholder / format hint"
         }
       },
       "description": "Country is one row of the ISO 3166-1 + E.164 directory."
@@ -8152,6 +8201,29 @@
             "type": "string",
             "format": "int64"
           }
+        }
+      }
+    },
+    "v1GetCountriesResponse": {
+      "type": "object",
+      "properties": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Country"
+          },
+          "title": "request order"
+        },
+        "missingCountries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "unknown alpha-2 codes, request order"
+        },
+        "dataVersion": {
+          "type": "string"
         }
       }
     },

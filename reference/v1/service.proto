@@ -16,6 +16,12 @@ service ReferenceService {
   rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);
 
   rpc ListCountries(ListCountriesRequest) returns (ListCountriesResponse);
+
+  // Batch country lookup by alpha-2 codes: the same rows ListCountries
+  // serves, restricted to the requested set, in request order — for
+  // consumers that only serve a curated subset of the directory. Unknown
+  // codes land in missing_countries and never fail the call.
+  rpc GetCountries(GetCountriesRequest) returns (GetCountriesResponse);
   rpc ListTimezones(ListTimezonesRequest) returns (ListTimezonesResponse);
   rpc ListLanguages(ListLanguagesRequest) returns (ListLanguagesResponse);
   rpc ListCurrencies(ListCurrenciesRequest) returns (ListCurrenciesResponse);

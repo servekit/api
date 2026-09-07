@@ -36,6 +36,9 @@ type Country struct {
 	FlagEmoji     string                 `protobuf:"bytes,4,opt,name=flag_emoji,json=flagEmoji,proto3" json:"flag_emoji,omitempty"`             // regional-indicator pair, e.g. "🇨🇳"
 	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`                                        // display name in the request locale
 	ExampleNumber string                 `protobuf:"bytes,7,opt,name=example_number,json=exampleNumber,proto3" json:"example_number,omitempty"` // libphonenumber example, e.g. "+86 138 0013 8000";
+	// "" when the metadata has none — use as a phone
+	// input placeholder / format hint
+	LanguageTags  []string `protobuf:"bytes,8,rep,name=language_tags,json=languageTags,proto3" json:"language_tags,omitempty"` // official languages, most-spoken first
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -110,6 +113,13 @@ func (x *Country) GetExampleNumber() string {
 		return x.ExampleNumber
 	}
 	return ""
+}
+
+func (x *Country) GetLanguageTags() []string {
+	if x != nil {
+		return x.LanguageTags
+	}
+	return nil
 }
 
 // Timezone is one canonical IANA zone with its tzdb backward links.
@@ -402,7 +412,7 @@ var File_reference_v1_message_proto protoreflect.FileDescriptor
 
 const file_reference_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x1areference/v1/message.proto\x12\freference.v1\"\xad\x01\n" +
+	"\x1areference/v1/message.proto\x12\freference.v1\"\xd2\x01\n" +
 	"\aCountry\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x17\n" +
 	"\aalpha_3\x18\x02 \x01(\tR\x06alpha3\x12\x1b\n" +
@@ -410,7 +420,8 @@ const file_reference_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"flag_emoji\x18\x04 \x01(\tR\tflagEmoji\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12%\n" +
-	"\x0eexample_number\x18\a \x01(\tR\rexampleNumber\"m\n" +
+	"\x0eexample_number\x18\a \x01(\tR\rexampleNumber\x12#\n" +
+	"\rlanguage_tags\x18\b \x03(\tR\flanguageTags\"m\n" +
 	"\bTimezone\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\aaliases\x18\x02 \x03(\tR\aaliases\x12#\n" +

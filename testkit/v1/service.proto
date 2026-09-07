@@ -708,6 +708,11 @@ service TestkitService {
   rpc ListCountries(reference.v1.ListCountriesRequest) returns (reference.v1.ListCountriesResponse) {
     option (google.api.http) = {get: "/api/v1/reference/countries"};
   }
+  // Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
+  // also accepted by the gateway).
+  rpc GetCountries(reference.v1.GetCountriesRequest) returns (reference.v1.GetCountriesResponse) {
+    option (google.api.http) = {get: "/api/v1/reference/countries:batch"};
+  }
   rpc ListTimezones(reference.v1.ListTimezonesRequest) returns (reference.v1.ListTimezonesResponse) {
     option (google.api.http) = {get: "/api/v1/reference/timezones"};
   }

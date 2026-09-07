@@ -28,10 +28,11 @@ var File_reference_v1_service_proto protoreflect.FileDescriptor
 
 const file_reference_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1areference/v1/service.proto\x12\freference.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto2\xce\b\n" +
+	"\x1areference/v1/service.proto\x12\freference.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a#reference/v1/request_response.proto2\xa5\t\n" +
 	"\x10ReferenceService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12X\n" +
-	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\x12X\n" +
+	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\x12U\n" +
+	"\fGetCountries\x12!.reference.v1.GetCountriesRequest\x1a\".reference.v1.GetCountriesResponse\x12X\n" +
 	"\rListTimezones\x12\".reference.v1.ListTimezonesRequest\x1a#.reference.v1.ListTimezonesResponse\x12X\n" +
 	"\rListLanguages\x12\".reference.v1.ListLanguagesRequest\x1a#.reference.v1.ListLanguagesResponse\x12[\n" +
 	"\x0eListCurrencies\x12#.reference.v1.ListCurrenciesRequest\x1a$.reference.v1.ListCurrenciesResponse\x12a\n" +
@@ -48,56 +49,60 @@ const file_reference_v1_service_proto_rawDesc = "" +
 var file_reference_v1_service_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),                 // 0: google.protobuf.Empty
 	(*ListCountriesRequest)(nil),          // 1: reference.v1.ListCountriesRequest
-	(*ListTimezonesRequest)(nil),          // 2: reference.v1.ListTimezonesRequest
-	(*ListLanguagesRequest)(nil),          // 3: reference.v1.ListLanguagesRequest
-	(*ListCurrenciesRequest)(nil),         // 4: reference.v1.ListCurrenciesRequest
-	(*ListRegionGroupsRequest)(nil),       // 5: reference.v1.ListRegionGroupsRequest
-	(*ParsePhoneRequest)(nil),             // 6: reference.v1.ParsePhoneRequest
-	(*ResolveCodesRequest)(nil),           // 7: reference.v1.ResolveCodesRequest
-	(*GetCountryProfileRequest)(nil),      // 8: reference.v1.GetCountryProfileRequest
-	(*ListCountriesByRegionRequest)(nil),  // 9: reference.v1.ListCountriesByRegionRequest
-	(*GetCountryDefaultsRequest)(nil),     // 10: reference.v1.GetCountryDefaultsRequest
-	(*GetDataInfoRequest)(nil),            // 11: reference.v1.GetDataInfoRequest
-	(*v1.Pong)(nil),                       // 12: common.v1.Pong
-	(*ListCountriesResponse)(nil),         // 13: reference.v1.ListCountriesResponse
-	(*ListTimezonesResponse)(nil),         // 14: reference.v1.ListTimezonesResponse
-	(*ListLanguagesResponse)(nil),         // 15: reference.v1.ListLanguagesResponse
-	(*ListCurrenciesResponse)(nil),        // 16: reference.v1.ListCurrenciesResponse
-	(*ListRegionGroupsResponse)(nil),      // 17: reference.v1.ListRegionGroupsResponse
-	(*ParsePhoneResponse)(nil),            // 18: reference.v1.ParsePhoneResponse
-	(*ResolveCodesResponse)(nil),          // 19: reference.v1.ResolveCodesResponse
-	(*GetCountryProfileResponse)(nil),     // 20: reference.v1.GetCountryProfileResponse
-	(*ListCountriesByRegionResponse)(nil), // 21: reference.v1.ListCountriesByRegionResponse
-	(*GetCountryDefaultsResponse)(nil),    // 22: reference.v1.GetCountryDefaultsResponse
-	(*GetDataInfoResponse)(nil),           // 23: reference.v1.GetDataInfoResponse
+	(*GetCountriesRequest)(nil),           // 2: reference.v1.GetCountriesRequest
+	(*ListTimezonesRequest)(nil),          // 3: reference.v1.ListTimezonesRequest
+	(*ListLanguagesRequest)(nil),          // 4: reference.v1.ListLanguagesRequest
+	(*ListCurrenciesRequest)(nil),         // 5: reference.v1.ListCurrenciesRequest
+	(*ListRegionGroupsRequest)(nil),       // 6: reference.v1.ListRegionGroupsRequest
+	(*ParsePhoneRequest)(nil),             // 7: reference.v1.ParsePhoneRequest
+	(*ResolveCodesRequest)(nil),           // 8: reference.v1.ResolveCodesRequest
+	(*GetCountryProfileRequest)(nil),      // 9: reference.v1.GetCountryProfileRequest
+	(*ListCountriesByRegionRequest)(nil),  // 10: reference.v1.ListCountriesByRegionRequest
+	(*GetCountryDefaultsRequest)(nil),     // 11: reference.v1.GetCountryDefaultsRequest
+	(*GetDataInfoRequest)(nil),            // 12: reference.v1.GetDataInfoRequest
+	(*v1.Pong)(nil),                       // 13: common.v1.Pong
+	(*ListCountriesResponse)(nil),         // 14: reference.v1.ListCountriesResponse
+	(*GetCountriesResponse)(nil),          // 15: reference.v1.GetCountriesResponse
+	(*ListTimezonesResponse)(nil),         // 16: reference.v1.ListTimezonesResponse
+	(*ListLanguagesResponse)(nil),         // 17: reference.v1.ListLanguagesResponse
+	(*ListCurrenciesResponse)(nil),        // 18: reference.v1.ListCurrenciesResponse
+	(*ListRegionGroupsResponse)(nil),      // 19: reference.v1.ListRegionGroupsResponse
+	(*ParsePhoneResponse)(nil),            // 20: reference.v1.ParsePhoneResponse
+	(*ResolveCodesResponse)(nil),          // 21: reference.v1.ResolveCodesResponse
+	(*GetCountryProfileResponse)(nil),     // 22: reference.v1.GetCountryProfileResponse
+	(*ListCountriesByRegionResponse)(nil), // 23: reference.v1.ListCountriesByRegionResponse
+	(*GetCountryDefaultsResponse)(nil),    // 24: reference.v1.GetCountryDefaultsResponse
+	(*GetDataInfoResponse)(nil),           // 25: reference.v1.GetDataInfoResponse
 }
 var file_reference_v1_service_proto_depIdxs = []int32{
 	0,  // 0: reference.v1.ReferenceService.Ping:input_type -> google.protobuf.Empty
 	1,  // 1: reference.v1.ReferenceService.ListCountries:input_type -> reference.v1.ListCountriesRequest
-	2,  // 2: reference.v1.ReferenceService.ListTimezones:input_type -> reference.v1.ListTimezonesRequest
-	3,  // 3: reference.v1.ReferenceService.ListLanguages:input_type -> reference.v1.ListLanguagesRequest
-	4,  // 4: reference.v1.ReferenceService.ListCurrencies:input_type -> reference.v1.ListCurrenciesRequest
-	5,  // 5: reference.v1.ReferenceService.ListRegionGroups:input_type -> reference.v1.ListRegionGroupsRequest
-	6,  // 6: reference.v1.ReferenceService.ParsePhone:input_type -> reference.v1.ParsePhoneRequest
-	7,  // 7: reference.v1.ReferenceService.ResolveCodes:input_type -> reference.v1.ResolveCodesRequest
-	8,  // 8: reference.v1.ReferenceService.GetCountryProfile:input_type -> reference.v1.GetCountryProfileRequest
-	9,  // 9: reference.v1.ReferenceService.ListCountriesByRegion:input_type -> reference.v1.ListCountriesByRegionRequest
-	10, // 10: reference.v1.ReferenceService.GetCountryDefaults:input_type -> reference.v1.GetCountryDefaultsRequest
-	11, // 11: reference.v1.ReferenceService.GetDataInfo:input_type -> reference.v1.GetDataInfoRequest
-	12, // 12: reference.v1.ReferenceService.Ping:output_type -> common.v1.Pong
-	13, // 13: reference.v1.ReferenceService.ListCountries:output_type -> reference.v1.ListCountriesResponse
-	14, // 14: reference.v1.ReferenceService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse
-	15, // 15: reference.v1.ReferenceService.ListLanguages:output_type -> reference.v1.ListLanguagesResponse
-	16, // 16: reference.v1.ReferenceService.ListCurrencies:output_type -> reference.v1.ListCurrenciesResponse
-	17, // 17: reference.v1.ReferenceService.ListRegionGroups:output_type -> reference.v1.ListRegionGroupsResponse
-	18, // 18: reference.v1.ReferenceService.ParsePhone:output_type -> reference.v1.ParsePhoneResponse
-	19, // 19: reference.v1.ReferenceService.ResolveCodes:output_type -> reference.v1.ResolveCodesResponse
-	20, // 20: reference.v1.ReferenceService.GetCountryProfile:output_type -> reference.v1.GetCountryProfileResponse
-	21, // 21: reference.v1.ReferenceService.ListCountriesByRegion:output_type -> reference.v1.ListCountriesByRegionResponse
-	22, // 22: reference.v1.ReferenceService.GetCountryDefaults:output_type -> reference.v1.GetCountryDefaultsResponse
-	23, // 23: reference.v1.ReferenceService.GetDataInfo:output_type -> reference.v1.GetDataInfoResponse
-	12, // [12:24] is the sub-list for method output_type
-	0,  // [0:12] is the sub-list for method input_type
+	2,  // 2: reference.v1.ReferenceService.GetCountries:input_type -> reference.v1.GetCountriesRequest
+	3,  // 3: reference.v1.ReferenceService.ListTimezones:input_type -> reference.v1.ListTimezonesRequest
+	4,  // 4: reference.v1.ReferenceService.ListLanguages:input_type -> reference.v1.ListLanguagesRequest
+	5,  // 5: reference.v1.ReferenceService.ListCurrencies:input_type -> reference.v1.ListCurrenciesRequest
+	6,  // 6: reference.v1.ReferenceService.ListRegionGroups:input_type -> reference.v1.ListRegionGroupsRequest
+	7,  // 7: reference.v1.ReferenceService.ParsePhone:input_type -> reference.v1.ParsePhoneRequest
+	8,  // 8: reference.v1.ReferenceService.ResolveCodes:input_type -> reference.v1.ResolveCodesRequest
+	9,  // 9: reference.v1.ReferenceService.GetCountryProfile:input_type -> reference.v1.GetCountryProfileRequest
+	10, // 10: reference.v1.ReferenceService.ListCountriesByRegion:input_type -> reference.v1.ListCountriesByRegionRequest
+	11, // 11: reference.v1.ReferenceService.GetCountryDefaults:input_type -> reference.v1.GetCountryDefaultsRequest
+	12, // 12: reference.v1.ReferenceService.GetDataInfo:input_type -> reference.v1.GetDataInfoRequest
+	13, // 13: reference.v1.ReferenceService.Ping:output_type -> common.v1.Pong
+	14, // 14: reference.v1.ReferenceService.ListCountries:output_type -> reference.v1.ListCountriesResponse
+	15, // 15: reference.v1.ReferenceService.GetCountries:output_type -> reference.v1.GetCountriesResponse
+	16, // 16: reference.v1.ReferenceService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse
+	17, // 17: reference.v1.ReferenceService.ListLanguages:output_type -> reference.v1.ListLanguagesResponse
+	18, // 18: reference.v1.ReferenceService.ListCurrencies:output_type -> reference.v1.ListCurrenciesResponse
+	19, // 19: reference.v1.ReferenceService.ListRegionGroups:output_type -> reference.v1.ListRegionGroupsResponse
+	20, // 20: reference.v1.ReferenceService.ParsePhone:output_type -> reference.v1.ParsePhoneResponse
+	21, // 21: reference.v1.ReferenceService.ResolveCodes:output_type -> reference.v1.ResolveCodesResponse
+	22, // 22: reference.v1.ReferenceService.GetCountryProfile:output_type -> reference.v1.GetCountryProfileResponse
+	23, // 23: reference.v1.ReferenceService.ListCountriesByRegion:output_type -> reference.v1.ListCountriesByRegionResponse
+	24, // 24: reference.v1.ReferenceService.GetCountryDefaults:output_type -> reference.v1.GetCountryDefaultsResponse
+	25, // 25: reference.v1.ReferenceService.GetDataInfo:output_type -> reference.v1.GetDataInfoResponse
+	13, // [13:26] is the sub-list for method output_type
+	0,  // [0:13] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

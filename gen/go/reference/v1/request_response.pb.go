@@ -122,6 +122,123 @@ func (x *ListCountriesResponse) GetDataVersion() string {
 	return ""
 }
 
+// GetCountries is the batch alpha-2 lookup for consumers that serve a
+// curated subset of the directory (e.g. only the countries a product ships
+// to): pass exactly the codes you care about, get the same rows
+// ListCountries serves — in request order, not locale collation. Unknown
+// codes land in missing_countries; the call never errors on them.
+type GetCountriesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CountryCodes  []string               `protobuf:"bytes,1,rep,name=country_codes,json=countryCodes,proto3" json:"country_codes,omitempty"`
+	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCountriesRequest) Reset() {
+	*x = GetCountriesRequest{}
+	mi := &file_reference_v1_request_response_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCountriesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCountriesRequest) ProtoMessage() {}
+
+func (x *GetCountriesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_reference_v1_request_response_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCountriesRequest.ProtoReflect.Descriptor instead.
+func (*GetCountriesRequest) Descriptor() ([]byte, []int) {
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetCountriesRequest) GetCountryCodes() []string {
+	if x != nil {
+		return x.CountryCodes
+	}
+	return nil
+}
+
+func (x *GetCountriesRequest) GetLocale() string {
+	if x != nil {
+		return x.Locale
+	}
+	return ""
+}
+
+type GetCountriesResponse struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Countries        []*Country             `protobuf:"bytes,1,rep,name=countries,proto3" json:"countries,omitempty"`                                       // request order
+	MissingCountries []string               `protobuf:"bytes,2,rep,name=missing_countries,json=missingCountries,proto3" json:"missing_countries,omitempty"` // unknown alpha-2 codes, request order
+	DataVersion      string                 `protobuf:"bytes,3,opt,name=data_version,json=dataVersion,proto3" json:"data_version,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *GetCountriesResponse) Reset() {
+	*x = GetCountriesResponse{}
+	mi := &file_reference_v1_request_response_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCountriesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCountriesResponse) ProtoMessage() {}
+
+func (x *GetCountriesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_reference_v1_request_response_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCountriesResponse.ProtoReflect.Descriptor instead.
+func (*GetCountriesResponse) Descriptor() ([]byte, []int) {
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetCountriesResponse) GetCountries() []*Country {
+	if x != nil {
+		return x.Countries
+	}
+	return nil
+}
+
+func (x *GetCountriesResponse) GetMissingCountries() []string {
+	if x != nil {
+		return x.MissingCountries
+	}
+	return nil
+}
+
+func (x *GetCountriesResponse) GetDataVersion() string {
+	if x != nil {
+		return x.DataVersion
+	}
+	return ""
+}
+
 type ListTimezonesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Locale        string                 `protobuf:"bytes,1,opt,name=locale,proto3" json:"locale,omitempty"`
@@ -131,7 +248,7 @@ type ListTimezonesRequest struct {
 
 func (x *ListTimezonesRequest) Reset() {
 	*x = ListTimezonesRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[2]
+	mi := &file_reference_v1_request_response_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -143,7 +260,7 @@ func (x *ListTimezonesRequest) String() string {
 func (*ListTimezonesRequest) ProtoMessage() {}
 
 func (x *ListTimezonesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[2]
+	mi := &file_reference_v1_request_response_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -156,7 +273,7 @@ func (x *ListTimezonesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTimezonesRequest.ProtoReflect.Descriptor instead.
 func (*ListTimezonesRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{2}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListTimezonesRequest) GetLocale() string {
@@ -176,7 +293,7 @@ type ListTimezonesResponse struct {
 
 func (x *ListTimezonesResponse) Reset() {
 	*x = ListTimezonesResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[3]
+	mi := &file_reference_v1_request_response_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -188,7 +305,7 @@ func (x *ListTimezonesResponse) String() string {
 func (*ListTimezonesResponse) ProtoMessage() {}
 
 func (x *ListTimezonesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[3]
+	mi := &file_reference_v1_request_response_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -201,7 +318,7 @@ func (x *ListTimezonesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTimezonesResponse.ProtoReflect.Descriptor instead.
 func (*ListTimezonesResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{3}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListTimezonesResponse) GetTimezones() []*Timezone {
@@ -227,7 +344,7 @@ type ListLanguagesRequest struct {
 
 func (x *ListLanguagesRequest) Reset() {
 	*x = ListLanguagesRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[4]
+	mi := &file_reference_v1_request_response_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -239,7 +356,7 @@ func (x *ListLanguagesRequest) String() string {
 func (*ListLanguagesRequest) ProtoMessage() {}
 
 func (x *ListLanguagesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[4]
+	mi := &file_reference_v1_request_response_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -252,7 +369,7 @@ func (x *ListLanguagesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLanguagesRequest.ProtoReflect.Descriptor instead.
 func (*ListLanguagesRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{4}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListLanguagesRequest) GetLocale() string {
@@ -272,7 +389,7 @@ type ListLanguagesResponse struct {
 
 func (x *ListLanguagesResponse) Reset() {
 	*x = ListLanguagesResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[5]
+	mi := &file_reference_v1_request_response_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -284,7 +401,7 @@ func (x *ListLanguagesResponse) String() string {
 func (*ListLanguagesResponse) ProtoMessage() {}
 
 func (x *ListLanguagesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[5]
+	mi := &file_reference_v1_request_response_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -297,7 +414,7 @@ func (x *ListLanguagesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLanguagesResponse.ProtoReflect.Descriptor instead.
 func (*ListLanguagesResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{5}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListLanguagesResponse) GetLanguages() []*Language {
@@ -323,7 +440,7 @@ type ListCurrenciesRequest struct {
 
 func (x *ListCurrenciesRequest) Reset() {
 	*x = ListCurrenciesRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[6]
+	mi := &file_reference_v1_request_response_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -335,7 +452,7 @@ func (x *ListCurrenciesRequest) String() string {
 func (*ListCurrenciesRequest) ProtoMessage() {}
 
 func (x *ListCurrenciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[6]
+	mi := &file_reference_v1_request_response_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -348,7 +465,7 @@ func (x *ListCurrenciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCurrenciesRequest.ProtoReflect.Descriptor instead.
 func (*ListCurrenciesRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{6}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListCurrenciesRequest) GetLocale() string {
@@ -368,7 +485,7 @@ type ListCurrenciesResponse struct {
 
 func (x *ListCurrenciesResponse) Reset() {
 	*x = ListCurrenciesResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[7]
+	mi := &file_reference_v1_request_response_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -380,7 +497,7 @@ func (x *ListCurrenciesResponse) String() string {
 func (*ListCurrenciesResponse) ProtoMessage() {}
 
 func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[7]
+	mi := &file_reference_v1_request_response_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -393,7 +510,7 @@ func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCurrenciesResponse.ProtoReflect.Descriptor instead.
 func (*ListCurrenciesResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{7}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListCurrenciesResponse) GetCurrencies() []*Currency {
@@ -419,7 +536,7 @@ type ListRegionGroupsRequest struct {
 
 func (x *ListRegionGroupsRequest) Reset() {
 	*x = ListRegionGroupsRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[8]
+	mi := &file_reference_v1_request_response_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -431,7 +548,7 @@ func (x *ListRegionGroupsRequest) String() string {
 func (*ListRegionGroupsRequest) ProtoMessage() {}
 
 func (x *ListRegionGroupsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[8]
+	mi := &file_reference_v1_request_response_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -444,7 +561,7 @@ func (x *ListRegionGroupsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRegionGroupsRequest.ProtoReflect.Descriptor instead.
 func (*ListRegionGroupsRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{8}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListRegionGroupsRequest) GetLocale() string {
@@ -464,7 +581,7 @@ type ListRegionGroupsResponse struct {
 
 func (x *ListRegionGroupsResponse) Reset() {
 	*x = ListRegionGroupsResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[9]
+	mi := &file_reference_v1_request_response_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -476,7 +593,7 @@ func (x *ListRegionGroupsResponse) String() string {
 func (*ListRegionGroupsResponse) ProtoMessage() {}
 
 func (x *ListRegionGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[9]
+	mi := &file_reference_v1_request_response_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -489,7 +606,7 @@ func (x *ListRegionGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRegionGroupsResponse.ProtoReflect.Descriptor instead.
 func (*ListRegionGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{9}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListRegionGroupsResponse) GetRegionGroups() []*RegionGroup {
@@ -521,7 +638,7 @@ type ParsePhoneRequest struct {
 
 func (x *ParsePhoneRequest) Reset() {
 	*x = ParsePhoneRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[10]
+	mi := &file_reference_v1_request_response_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -533,7 +650,7 @@ func (x *ParsePhoneRequest) String() string {
 func (*ParsePhoneRequest) ProtoMessage() {}
 
 func (x *ParsePhoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[10]
+	mi := &file_reference_v1_request_response_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -546,7 +663,7 @@ func (x *ParsePhoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParsePhoneRequest.ProtoReflect.Descriptor instead.
 func (*ParsePhoneRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{10}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ParsePhoneRequest) GetRaw() string {
@@ -579,7 +696,7 @@ type ParsePhoneResponse struct {
 
 func (x *ParsePhoneResponse) Reset() {
 	*x = ParsePhoneResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[11]
+	mi := &file_reference_v1_request_response_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -591,7 +708,7 @@ func (x *ParsePhoneResponse) String() string {
 func (*ParsePhoneResponse) ProtoMessage() {}
 
 func (x *ParsePhoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[11]
+	mi := &file_reference_v1_request_response_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -604,7 +721,7 @@ func (x *ParsePhoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParsePhoneResponse.ProtoReflect.Descriptor instead.
 func (*ParsePhoneResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{11}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ParsePhoneResponse) GetIsValid() bool {
@@ -680,7 +797,7 @@ type ResolveCodesRequest struct {
 
 func (x *ResolveCodesRequest) Reset() {
 	*x = ResolveCodesRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[12]
+	mi := &file_reference_v1_request_response_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +809,7 @@ func (x *ResolveCodesRequest) String() string {
 func (*ResolveCodesRequest) ProtoMessage() {}
 
 func (x *ResolveCodesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[12]
+	mi := &file_reference_v1_request_response_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +822,7 @@ func (x *ResolveCodesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveCodesRequest.ProtoReflect.Descriptor instead.
 func (*ResolveCodesRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{12}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ResolveCodesRequest) GetLocale() string {
@@ -760,7 +877,7 @@ type ResolveCodesResponse struct {
 
 func (x *ResolveCodesResponse) Reset() {
 	*x = ResolveCodesResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[13]
+	mi := &file_reference_v1_request_response_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -772,7 +889,7 @@ func (x *ResolveCodesResponse) String() string {
 func (*ResolveCodesResponse) ProtoMessage() {}
 
 func (x *ResolveCodesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[13]
+	mi := &file_reference_v1_request_response_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -785,7 +902,7 @@ func (x *ResolveCodesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveCodesResponse.ProtoReflect.Descriptor instead.
 func (*ResolveCodesResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{13}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ResolveCodesResponse) GetCountries() []*Country {
@@ -865,7 +982,7 @@ type GetCountryProfileRequest struct {
 
 func (x *GetCountryProfileRequest) Reset() {
 	*x = GetCountryProfileRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[14]
+	mi := &file_reference_v1_request_response_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -877,7 +994,7 @@ func (x *GetCountryProfileRequest) String() string {
 func (*GetCountryProfileRequest) ProtoMessage() {}
 
 func (x *GetCountryProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[14]
+	mi := &file_reference_v1_request_response_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -890,7 +1007,7 @@ func (x *GetCountryProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountryProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetCountryProfileRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{14}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetCountryProfileRequest) GetCountryCode() string {
@@ -926,7 +1043,7 @@ type GetCountryProfileResponse struct {
 
 func (x *GetCountryProfileResponse) Reset() {
 	*x = GetCountryProfileResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[15]
+	mi := &file_reference_v1_request_response_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -938,7 +1055,7 @@ func (x *GetCountryProfileResponse) String() string {
 func (*GetCountryProfileResponse) ProtoMessage() {}
 
 func (x *GetCountryProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[15]
+	mi := &file_reference_v1_request_response_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -951,7 +1068,7 @@ func (x *GetCountryProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountryProfileResponse.ProtoReflect.Descriptor instead.
 func (*GetCountryProfileResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{15}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetCountryProfileResponse) GetCountry() *Country {
@@ -1010,7 +1127,7 @@ type ListCountriesByRegionRequest struct {
 
 func (x *ListCountriesByRegionRequest) Reset() {
 	*x = ListCountriesByRegionRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[16]
+	mi := &file_reference_v1_request_response_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1022,7 +1139,7 @@ func (x *ListCountriesByRegionRequest) String() string {
 func (*ListCountriesByRegionRequest) ProtoMessage() {}
 
 func (x *ListCountriesByRegionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[16]
+	mi := &file_reference_v1_request_response_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1035,7 +1152,7 @@ func (x *ListCountriesByRegionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCountriesByRegionRequest.ProtoReflect.Descriptor instead.
 func (*ListCountriesByRegionRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{16}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListCountriesByRegionRequest) GetRegionCode() string {
@@ -1062,7 +1179,7 @@ type ListCountriesByRegionResponse struct {
 
 func (x *ListCountriesByRegionResponse) Reset() {
 	*x = ListCountriesByRegionResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[17]
+	mi := &file_reference_v1_request_response_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1074,7 +1191,7 @@ func (x *ListCountriesByRegionResponse) String() string {
 func (*ListCountriesByRegionResponse) ProtoMessage() {}
 
 func (x *ListCountriesByRegionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[17]
+	mi := &file_reference_v1_request_response_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1087,7 +1204,7 @@ func (x *ListCountriesByRegionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCountriesByRegionResponse.ProtoReflect.Descriptor instead.
 func (*ListCountriesByRegionResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{17}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ListCountriesByRegionResponse) GetCountries() []*Country {
@@ -1119,7 +1236,7 @@ type GetCountryDefaultsRequest struct {
 
 func (x *GetCountryDefaultsRequest) Reset() {
 	*x = GetCountryDefaultsRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[18]
+	mi := &file_reference_v1_request_response_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1131,7 +1248,7 @@ func (x *GetCountryDefaultsRequest) String() string {
 func (*GetCountryDefaultsRequest) ProtoMessage() {}
 
 func (x *GetCountryDefaultsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[18]
+	mi := &file_reference_v1_request_response_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1144,7 +1261,7 @@ func (x *GetCountryDefaultsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountryDefaultsRequest.ProtoReflect.Descriptor instead.
 func (*GetCountryDefaultsRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{18}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetCountryDefaultsRequest) GetCountryCode() string {
@@ -1179,7 +1296,7 @@ type GetCountryDefaultsResponse struct {
 
 func (x *GetCountryDefaultsResponse) Reset() {
 	*x = GetCountryDefaultsResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[19]
+	mi := &file_reference_v1_request_response_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1191,7 +1308,7 @@ func (x *GetCountryDefaultsResponse) String() string {
 func (*GetCountryDefaultsResponse) ProtoMessage() {}
 
 func (x *GetCountryDefaultsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[19]
+	mi := &file_reference_v1_request_response_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1204,7 +1321,7 @@ func (x *GetCountryDefaultsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCountryDefaultsResponse.ProtoReflect.Descriptor instead.
 func (*GetCountryDefaultsResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{19}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetCountryDefaultsResponse) GetTimezoneId() string {
@@ -1287,7 +1404,7 @@ type GetDataInfoRequest struct {
 
 func (x *GetDataInfoRequest) Reset() {
 	*x = GetDataInfoRequest{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[20]
+	mi := &file_reference_v1_request_response_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1299,7 +1416,7 @@ func (x *GetDataInfoRequest) String() string {
 func (*GetDataInfoRequest) ProtoMessage() {}
 
 func (x *GetDataInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[20]
+	mi := &file_reference_v1_request_response_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1312,7 +1429,7 @@ func (x *GetDataInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDataInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetDataInfoRequest) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{20}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{22}
 }
 
 type GetDataInfoResponse struct {
@@ -1330,7 +1447,7 @@ type GetDataInfoResponse struct {
 
 func (x *GetDataInfoResponse) Reset() {
 	*x = GetDataInfoResponse{}
-	mi := &file_reference_v1_request_response_proto_msgTypes[21]
+	mi := &file_reference_v1_request_response_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1342,7 +1459,7 @@ func (x *GetDataInfoResponse) String() string {
 func (*GetDataInfoResponse) ProtoMessage() {}
 
 func (x *GetDataInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_reference_v1_request_response_proto_msgTypes[21]
+	mi := &file_reference_v1_request_response_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1355,7 +1472,7 @@ func (x *GetDataInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDataInfoResponse.ProtoReflect.Descriptor instead.
 func (*GetDataInfoResponse) Descriptor() ([]byte, []int) {
-	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{21}
+	return file_reference_v1_request_response_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *GetDataInfoResponse) GetDataVersion() string {
@@ -1416,7 +1533,15 @@ const file_reference_v1_request_response_proto_rawDesc = "" +
 	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"o\n" +
 	"\x15ListCountriesResponse\x123\n" +
 	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12!\n" +
-	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"]\n" +
+	"\fdata_version\x18\x02 \x01(\tR\vdataVersion\"\x9e\x01\n" +
+	"\x13GetCountriesRequest\x12@\n" +
+	"\rcountry_codes\x18\x01 \x03(\tB\x1b\xbaH\x18\x92\x01\x15\x10\xfa\x01\x18\x01\"\x0er\f2\n" +
+	"^[A-Z]{2}$R\fcountryCodes\x12E\n" +
+	"\x06locale\x18\x02 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"\x9b\x01\n" +
+	"\x14GetCountriesResponse\x123\n" +
+	"\tcountries\x18\x01 \x03(\v2\x15.reference.v1.CountryR\tcountries\x12+\n" +
+	"\x11missing_countries\x18\x02 \x03(\tR\x10missingCountries\x12!\n" +
+	"\fdata_version\x18\x03 \x01(\tR\vdataVersion\"]\n" +
 	"\x14ListTimezonesRequest\x12E\n" +
 	"\x06locale\x18\x01 \x01(\tB-\xbaH*r(2&^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"p\n" +
 	"\x15ListTimezonesResponse\x124\n" +
@@ -1534,59 +1659,62 @@ func file_reference_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_reference_v1_request_response_proto_rawDescData
 }
 
-var file_reference_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_reference_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_reference_v1_request_response_proto_goTypes = []any{
 	(*ListCountriesRequest)(nil),          // 0: reference.v1.ListCountriesRequest
 	(*ListCountriesResponse)(nil),         // 1: reference.v1.ListCountriesResponse
-	(*ListTimezonesRequest)(nil),          // 2: reference.v1.ListTimezonesRequest
-	(*ListTimezonesResponse)(nil),         // 3: reference.v1.ListTimezonesResponse
-	(*ListLanguagesRequest)(nil),          // 4: reference.v1.ListLanguagesRequest
-	(*ListLanguagesResponse)(nil),         // 5: reference.v1.ListLanguagesResponse
-	(*ListCurrenciesRequest)(nil),         // 6: reference.v1.ListCurrenciesRequest
-	(*ListCurrenciesResponse)(nil),        // 7: reference.v1.ListCurrenciesResponse
-	(*ListRegionGroupsRequest)(nil),       // 8: reference.v1.ListRegionGroupsRequest
-	(*ListRegionGroupsResponse)(nil),      // 9: reference.v1.ListRegionGroupsResponse
-	(*ParsePhoneRequest)(nil),             // 10: reference.v1.ParsePhoneRequest
-	(*ParsePhoneResponse)(nil),            // 11: reference.v1.ParsePhoneResponse
-	(*ResolveCodesRequest)(nil),           // 12: reference.v1.ResolveCodesRequest
-	(*ResolveCodesResponse)(nil),          // 13: reference.v1.ResolveCodesResponse
-	(*GetCountryProfileRequest)(nil),      // 14: reference.v1.GetCountryProfileRequest
-	(*GetCountryProfileResponse)(nil),     // 15: reference.v1.GetCountryProfileResponse
-	(*ListCountriesByRegionRequest)(nil),  // 16: reference.v1.ListCountriesByRegionRequest
-	(*ListCountriesByRegionResponse)(nil), // 17: reference.v1.ListCountriesByRegionResponse
-	(*GetCountryDefaultsRequest)(nil),     // 18: reference.v1.GetCountryDefaultsRequest
-	(*GetCountryDefaultsResponse)(nil),    // 19: reference.v1.GetCountryDefaultsResponse
-	(*GetDataInfoRequest)(nil),            // 20: reference.v1.GetDataInfoRequest
-	(*GetDataInfoResponse)(nil),           // 21: reference.v1.GetDataInfoResponse
-	(*Country)(nil),                       // 22: reference.v1.Country
-	(*Timezone)(nil),                      // 23: reference.v1.Timezone
-	(*Language)(nil),                      // 24: reference.v1.Language
-	(*Currency)(nil),                      // 25: reference.v1.Currency
-	(*RegionGroup)(nil),                   // 26: reference.v1.RegionGroup
-	(PhoneType)(0),                        // 27: reference.v1.PhoneType
+	(*GetCountriesRequest)(nil),           // 2: reference.v1.GetCountriesRequest
+	(*GetCountriesResponse)(nil),          // 3: reference.v1.GetCountriesResponse
+	(*ListTimezonesRequest)(nil),          // 4: reference.v1.ListTimezonesRequest
+	(*ListTimezonesResponse)(nil),         // 5: reference.v1.ListTimezonesResponse
+	(*ListLanguagesRequest)(nil),          // 6: reference.v1.ListLanguagesRequest
+	(*ListLanguagesResponse)(nil),         // 7: reference.v1.ListLanguagesResponse
+	(*ListCurrenciesRequest)(nil),         // 8: reference.v1.ListCurrenciesRequest
+	(*ListCurrenciesResponse)(nil),        // 9: reference.v1.ListCurrenciesResponse
+	(*ListRegionGroupsRequest)(nil),       // 10: reference.v1.ListRegionGroupsRequest
+	(*ListRegionGroupsResponse)(nil),      // 11: reference.v1.ListRegionGroupsResponse
+	(*ParsePhoneRequest)(nil),             // 12: reference.v1.ParsePhoneRequest
+	(*ParsePhoneResponse)(nil),            // 13: reference.v1.ParsePhoneResponse
+	(*ResolveCodesRequest)(nil),           // 14: reference.v1.ResolveCodesRequest
+	(*ResolveCodesResponse)(nil),          // 15: reference.v1.ResolveCodesResponse
+	(*GetCountryProfileRequest)(nil),      // 16: reference.v1.GetCountryProfileRequest
+	(*GetCountryProfileResponse)(nil),     // 17: reference.v1.GetCountryProfileResponse
+	(*ListCountriesByRegionRequest)(nil),  // 18: reference.v1.ListCountriesByRegionRequest
+	(*ListCountriesByRegionResponse)(nil), // 19: reference.v1.ListCountriesByRegionResponse
+	(*GetCountryDefaultsRequest)(nil),     // 20: reference.v1.GetCountryDefaultsRequest
+	(*GetCountryDefaultsResponse)(nil),    // 21: reference.v1.GetCountryDefaultsResponse
+	(*GetDataInfoRequest)(nil),            // 22: reference.v1.GetDataInfoRequest
+	(*GetDataInfoResponse)(nil),           // 23: reference.v1.GetDataInfoResponse
+	(*Country)(nil),                       // 24: reference.v1.Country
+	(*Timezone)(nil),                      // 25: reference.v1.Timezone
+	(*Language)(nil),                      // 26: reference.v1.Language
+	(*Currency)(nil),                      // 27: reference.v1.Currency
+	(*RegionGroup)(nil),                   // 28: reference.v1.RegionGroup
+	(PhoneType)(0),                        // 29: reference.v1.PhoneType
 }
 var file_reference_v1_request_response_proto_depIdxs = []int32{
-	22, // 0: reference.v1.ListCountriesResponse.countries:type_name -> reference.v1.Country
-	23, // 1: reference.v1.ListTimezonesResponse.timezones:type_name -> reference.v1.Timezone
-	24, // 2: reference.v1.ListLanguagesResponse.languages:type_name -> reference.v1.Language
-	25, // 3: reference.v1.ListCurrenciesResponse.currencies:type_name -> reference.v1.Currency
-	26, // 4: reference.v1.ListRegionGroupsResponse.region_groups:type_name -> reference.v1.RegionGroup
-	27, // 5: reference.v1.ParsePhoneResponse.type:type_name -> reference.v1.PhoneType
-	22, // 6: reference.v1.ResolveCodesResponse.countries:type_name -> reference.v1.Country
-	23, // 7: reference.v1.ResolveCodesResponse.timezones:type_name -> reference.v1.Timezone
-	24, // 8: reference.v1.ResolveCodesResponse.languages:type_name -> reference.v1.Language
-	25, // 9: reference.v1.ResolveCodesResponse.currencies:type_name -> reference.v1.Currency
-	22, // 10: reference.v1.GetCountryProfileResponse.country:type_name -> reference.v1.Country
-	26, // 11: reference.v1.GetCountryProfileResponse.region_groups:type_name -> reference.v1.RegionGroup
-	24, // 12: reference.v1.GetCountryProfileResponse.languages:type_name -> reference.v1.Language
-	25, // 13: reference.v1.GetCountryProfileResponse.currencies:type_name -> reference.v1.Currency
-	23, // 14: reference.v1.GetCountryProfileResponse.timezones:type_name -> reference.v1.Timezone
-	22, // 15: reference.v1.ListCountriesByRegionResponse.countries:type_name -> reference.v1.Country
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	24, // 0: reference.v1.ListCountriesResponse.countries:type_name -> reference.v1.Country
+	24, // 1: reference.v1.GetCountriesResponse.countries:type_name -> reference.v1.Country
+	25, // 2: reference.v1.ListTimezonesResponse.timezones:type_name -> reference.v1.Timezone
+	26, // 3: reference.v1.ListLanguagesResponse.languages:type_name -> reference.v1.Language
+	27, // 4: reference.v1.ListCurrenciesResponse.currencies:type_name -> reference.v1.Currency
+	28, // 5: reference.v1.ListRegionGroupsResponse.region_groups:type_name -> reference.v1.RegionGroup
+	29, // 6: reference.v1.ParsePhoneResponse.type:type_name -> reference.v1.PhoneType
+	24, // 7: reference.v1.ResolveCodesResponse.countries:type_name -> reference.v1.Country
+	25, // 8: reference.v1.ResolveCodesResponse.timezones:type_name -> reference.v1.Timezone
+	26, // 9: reference.v1.ResolveCodesResponse.languages:type_name -> reference.v1.Language
+	27, // 10: reference.v1.ResolveCodesResponse.currencies:type_name -> reference.v1.Currency
+	24, // 11: reference.v1.GetCountryProfileResponse.country:type_name -> reference.v1.Country
+	28, // 12: reference.v1.GetCountryProfileResponse.region_groups:type_name -> reference.v1.RegionGroup
+	26, // 13: reference.v1.GetCountryProfileResponse.languages:type_name -> reference.v1.Language
+	27, // 14: reference.v1.GetCountryProfileResponse.currencies:type_name -> reference.v1.Currency
+	25, // 15: reference.v1.GetCountryProfileResponse.timezones:type_name -> reference.v1.Timezone
+	24, // 16: reference.v1.ListCountriesByRegionResponse.countries:type_name -> reference.v1.Country
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_reference_v1_request_response_proto_init() }
@@ -1602,7 +1730,7 @@ func file_reference_v1_request_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_reference_v1_request_response_proto_rawDesc), len(file_reference_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

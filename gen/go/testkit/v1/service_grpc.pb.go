@@ -159,6 +159,7 @@ const (
 	TestkitService_SetVersionBlocked_FullMethodName         = "/testkit.v1.TestkitService/SetVersionBlocked"
 	TestkitService_GetAppStats_FullMethodName               = "/testkit.v1.TestkitService/GetAppStats"
 	TestkitService_ListCountries_FullMethodName             = "/testkit.v1.TestkitService/ListCountries"
+	TestkitService_GetCountries_FullMethodName              = "/testkit.v1.TestkitService/GetCountries"
 	TestkitService_ListTimezones_FullMethodName             = "/testkit.v1.TestkitService/ListTimezones"
 	TestkitService_ListLanguages_FullMethodName             = "/testkit.v1.TestkitService/ListLanguages"
 	TestkitService_ListCurrencies_FullMethodName            = "/testkit.v1.TestkitService/ListCurrencies"
@@ -335,6 +336,9 @@ type TestkitServiceClient interface {
 	SetVersionBlocked(ctx context.Context, in *SetVersionBlockedRequest, opts ...grpc.CallOption) (*SetVersionBlockedResponse, error)
 	GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error)
 	ListCountries(ctx context.Context, in *v11.ListCountriesRequest, opts ...grpc.CallOption) (*v11.ListCountriesResponse, error)
+	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
+	// also accepted by the gateway).
+	GetCountries(ctx context.Context, in *v11.GetCountriesRequest, opts ...grpc.CallOption) (*v11.GetCountriesResponse, error)
 	ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error)
 	ListLanguages(ctx context.Context, in *v11.ListLanguagesRequest, opts ...grpc.CallOption) (*v11.ListLanguagesResponse, error)
 	ListCurrencies(ctx context.Context, in *v11.ListCurrenciesRequest, opts ...grpc.CallOption) (*v11.ListCurrenciesResponse, error)
@@ -1705,6 +1709,16 @@ func (c *testkitServiceClient) ListCountries(ctx context.Context, in *v11.ListCo
 	return out, nil
 }
 
+func (c *testkitServiceClient) GetCountries(ctx context.Context, in *v11.GetCountriesRequest, opts ...grpc.CallOption) (*v11.GetCountriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.GetCountriesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetCountries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *testkitServiceClient) ListTimezones(ctx context.Context, in *v11.ListTimezonesRequest, opts ...grpc.CallOption) (*v11.ListTimezonesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(v11.ListTimezonesResponse)
@@ -1969,6 +1983,9 @@ type TestkitServiceServer interface {
 	SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error)
 	GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error)
 	ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error)
+	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
+	// also accepted by the gateway).
+	GetCountries(context.Context, *v11.GetCountriesRequest) (*v11.GetCountriesResponse, error)
 	ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error)
 	ListLanguages(context.Context, *v11.ListLanguagesRequest) (*v11.ListLanguagesResponse, error)
 	ListCurrencies(context.Context, *v11.ListCurrenciesRequest) (*v11.ListCurrenciesResponse, error)
@@ -2393,6 +2410,9 @@ func (UnimplementedTestkitServiceServer) GetAppStats(context.Context, *GetAppSta
 }
 func (UnimplementedTestkitServiceServer) ListCountries(context.Context, *v11.ListCountriesRequest) (*v11.ListCountriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCountries not implemented")
+}
+func (UnimplementedTestkitServiceServer) GetCountries(context.Context, *v11.GetCountriesRequest) (*v11.GetCountriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCountries not implemented")
 }
 func (UnimplementedTestkitServiceServer) ListTimezones(context.Context, *v11.ListTimezonesRequest) (*v11.ListTimezonesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTimezones not implemented")
@@ -4875,6 +4895,24 @@ func _TestkitService_ListCountries_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_GetCountries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.GetCountriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).GetCountries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_GetCountries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).GetCountries(ctx, req.(*v11.GetCountriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TestkitService_ListTimezones_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v11.ListTimezonesRequest)
 	if err := dec(in); err != nil {
@@ -5601,6 +5639,10 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCountries",
 			Handler:    _TestkitService_ListCountries_Handler,
+		},
+		{
+			MethodName: "GetCountries",
+			Handler:    _TestkitService_GetCountries_Handler,
 		},
 		{
 			MethodName: "ListTimezones",

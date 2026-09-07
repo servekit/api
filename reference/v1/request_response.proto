@@ -21,6 +21,31 @@ message ListCountriesResponse {
   string data_version = 2;        // generation stamp, e.g. "2026-09-06"
 }
 
+// GetCountries is the batch alpha-2 lookup for consumers that serve a
+// curated subset of the directory (e.g. only the countries a product ships
+// to): pass exactly the codes you care about, get the same rows
+// ListCountries serves — in request order, not locale collation. Unknown
+// codes land in missing_countries; the call never errors on them.
+message GetCountriesRequest {
+  repeated string country_codes = 1 [
+    (buf.validate.field).repeated = {
+      unique: true
+      max_items: 250
+      items: {string: {pattern: "^[A-Z]{2}$"}}
+    }
+  ];
+  string locale = 2 [
+    (buf.validate.field).string.pattern =
+      "^$|^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+  ];
+}
+
+message GetCountriesResponse {
+  repeated Country countries = 1;         // request order
+  repeated string missing_countries = 2;  // unknown alpha-2 codes, request order
+  string data_version = 3;
+}
+
 message ListTimezonesRequest {
   string locale = 1 [
     (buf.validate.field).string.pattern =

@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ReferenceService_Ping_FullMethodName                  = "/reference.v1.ReferenceService/Ping"
 	ReferenceService_ListCountries_FullMethodName         = "/reference.v1.ReferenceService/ListCountries"
+	ReferenceService_GetCountries_FullMethodName          = "/reference.v1.ReferenceService/GetCountries"
 	ReferenceService_ListTimezones_FullMethodName         = "/reference.v1.ReferenceService/ListTimezones"
 	ReferenceService_ListLanguages_FullMethodName         = "/reference.v1.ReferenceService/ListLanguages"
 	ReferenceService_ListCurrencies_FullMethodName        = "/reference.v1.ReferenceService/ListCurrencies"
@@ -49,6 +50,11 @@ const (
 type ReferenceServiceClient interface {
 	Ping(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.Pong, error)
 	ListCountries(ctx context.Context, in *ListCountriesRequest, opts ...grpc.CallOption) (*ListCountriesResponse, error)
+	// Batch country lookup by alpha-2 codes: the same rows ListCountries
+	// serves, restricted to the requested set, in request order — for
+	// consumers that only serve a curated subset of the directory. Unknown
+	// codes land in missing_countries and never fail the call.
+	GetCountries(ctx context.Context, in *GetCountriesRequest, opts ...grpc.CallOption) (*GetCountriesResponse, error)
 	ListTimezones(ctx context.Context, in *ListTimezonesRequest, opts ...grpc.CallOption) (*ListTimezonesResponse, error)
 	ListLanguages(ctx context.Context, in *ListLanguagesRequest, opts ...grpc.CallOption) (*ListLanguagesResponse, error)
 	ListCurrencies(ctx context.Context, in *ListCurrenciesRequest, opts ...grpc.CallOption) (*ListCurrenciesResponse, error)
@@ -88,6 +94,16 @@ func (c *referenceServiceClient) ListCountries(ctx context.Context, in *ListCoun
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCountriesResponse)
 	err := c.cc.Invoke(ctx, ReferenceService_ListCountries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *referenceServiceClient) GetCountries(ctx context.Context, in *GetCountriesRequest, opts ...grpc.CallOption) (*GetCountriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCountriesResponse)
+	err := c.cc.Invoke(ctx, ReferenceService_GetCountries_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -206,6 +222,11 @@ func (c *referenceServiceClient) GetDataInfo(ctx context.Context, in *GetDataInf
 type ReferenceServiceServer interface {
 	Ping(context.Context, *emptypb.Empty) (*v1.Pong, error)
 	ListCountries(context.Context, *ListCountriesRequest) (*ListCountriesResponse, error)
+	// Batch country lookup by alpha-2 codes: the same rows ListCountries
+	// serves, restricted to the requested set, in request order — for
+	// consumers that only serve a curated subset of the directory. Unknown
+	// codes land in missing_countries and never fail the call.
+	GetCountries(context.Context, *GetCountriesRequest) (*GetCountriesResponse, error)
 	ListTimezones(context.Context, *ListTimezonesRequest) (*ListTimezonesResponse, error)
 	ListLanguages(context.Context, *ListLanguagesRequest) (*ListLanguagesResponse, error)
 	ListCurrencies(context.Context, *ListCurrenciesRequest) (*ListCurrenciesResponse, error)
@@ -236,6 +257,9 @@ func (UnimplementedReferenceServiceServer) Ping(context.Context, *emptypb.Empty)
 }
 func (UnimplementedReferenceServiceServer) ListCountries(context.Context, *ListCountriesRequest) (*ListCountriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCountries not implemented")
+}
+func (UnimplementedReferenceServiceServer) GetCountries(context.Context, *GetCountriesRequest) (*GetCountriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCountries not implemented")
 }
 func (UnimplementedReferenceServiceServer) ListTimezones(context.Context, *ListTimezonesRequest) (*ListTimezonesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTimezones not implemented")
@@ -320,6 +344,24 @@ func _ReferenceService_ListCountries_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ReferenceServiceServer).ListCountries(ctx, req.(*ListCountriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReferenceService_GetCountries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCountriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReferenceServiceServer).GetCountries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReferenceService_GetCountries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReferenceServiceServer).GetCountries(ctx, req.(*GetCountriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -518,6 +560,10 @@ var ReferenceService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCountries",
 			Handler:    _ReferenceService_ListCountries_Handler,
+		},
+		{
+			MethodName: "GetCountries",
+			Handler:    _ReferenceService_GetCountries_Handler,
 		},
 		{
 			MethodName: "ListTimezones",
