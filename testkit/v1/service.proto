@@ -462,6 +462,36 @@ service TestkitService {
   rpc AdminGetSettings(storage.v1.AdminGetSettingsRequest) returns (storage.v1.AdminGetSettingsResponse) {
     option (google.api.http) = {get: "/api/v1/admin/storage/settings"};
   }
+  // App management (calling applications of the storage platform;
+  // 1:1 forwards to storage-service admin RPCs).
+  rpc AdminListApps(storage.v1.AdminListAppsRequest) returns (storage.v1.AdminListAppsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/apps"};
+  }
+  rpc AdminCreateApp(storage.v1.AdminCreateAppRequest) returns (storage.v1.AdminCreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/storage/apps"
+      body: "*"
+    };
+  }
+  rpc AdminGetApp(storage.v1.AdminGetAppRequest) returns (storage.v1.AdminGetAppResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/apps/{app_key}"};
+  }
+  rpc AdminUpdateApp(storage.v1.AdminUpdateAppRequest) returns (storage.v1.AdminUpdateAppResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/admin/storage/apps/{app_key}"
+      body: "*"
+    };
+  }
+  rpc AdminRotateAppSecret(storage.v1.AdminRotateAppSecretRequest) returns (storage.v1.AdminRotateAppSecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/admin/storage/apps/{app_key}:rotateSecret"
+      body: "*"
+    };
+  }
+  rpc AdminDeleteApp(storage.v1.AdminDeleteAppRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/admin/storage/apps/{app_key}"};
+  }
+
   rpc AdminUpdateSettings(storage.v1.AdminUpdateSettingsRequest) returns (storage.v1.AdminUpdateSettingsResponse) {
     option (google.api.http) = {
       put: "/api/v1/admin/storage/settings"

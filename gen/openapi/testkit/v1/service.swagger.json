@@ -340,6 +340,193 @@
         ]
       }
     },
+    "/api/v1/admin/storage/apps": {
+      "get": {
+        "summary": "App management (calling applications of the storage platform;\n1:1 forwards to storage-service admin RPCs).",
+        "operationId": "AdminListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "AdminCreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminCreateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). app_secret is\nreturned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AdminCreateAppRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/apps/{appKey}": {
+      "get": {
+        "operationId": "AdminGetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminGetAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminDeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "AdminUpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpdateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminUpdateAppBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/apps/{appKey}:rotateSecret": {
+      "post": {
+        "operationId": "AdminRotateAppSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminRotateAppSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminRotateAppSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/admin/storage/buckets": {
       "get": {
         "operationId": "AdminListBuckets",
@@ -7149,6 +7336,26 @@
         }
       }
     },
+    "TestkitServiceAdminRotateAppSecretBody": {
+      "type": "object"
+    },
+    "TestkitServiceAdminUpdateAppBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "bucketId": {
+          "type": "string",
+          "format": "int64",
+          "description": "bucket_id 0 rebinds the app to the default bucket."
+        }
+      },
+      "description": "AdminUpdateAppRequest edits mutable fields; app_key and key_prefix are\nimmutable (objects already live under the prefix). Absent optional fields\nkeep their current values. bucket changes only affect new uploads."
+    },
     "TestkitServiceAdminUpdateProviderBody": {
       "type": "object",
       "properties": {
@@ -7893,6 +8100,40 @@
         }
       }
     },
+    "v1AdminCreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+        },
+        "name": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string",
+          "description": "key_prefix namespaces the app's objects; globally unique, immutable,\nmust end with '/'."
+        },
+        "bucketId": {
+          "type": "string",
+          "format": "int64",
+          "description": "bucket_id: 0 = the platform default bucket."
+        }
+      },
+      "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). app_secret is\nreturned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed."
+    },
+    "v1AdminCreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1StorageAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is shown once at creation; store it immediately."
+        }
+      }
+    },
     "v1AdminCreateProviderRequest": {
       "type": "object",
       "properties": {
@@ -8029,6 +8270,14 @@
       },
       "description": "AdminFileInfo is the admin-facing file entity (adds provider/bucket/object_key/\nobject_id internal-location fields absent from the user view)."
     },
+    "v1AdminGetAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1StorageAppInfo"
+        }
+      }
+    },
     "v1AdminGetSettingsResponse": {
       "type": "object",
       "properties": {
@@ -8079,6 +8328,18 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1BucketStats"
+          }
+        }
+      }
+    },
+    "v1AdminListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1StorageAppInfo"
           }
         }
       }
@@ -8145,6 +8406,18 @@
         }
       }
     },
+    "v1AdminRotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1StorageAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is shown once on rotation; store it immediately."
+        }
+      }
+    },
     "v1AdminSetQuotaRequest": {
       "type": "object",
       "properties": {
@@ -8191,6 +8464,14 @@
         "bytesReleased": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "v1AdminUpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1StorageAppInfo"
         }
       }
     },
@@ -12447,6 +12728,44 @@
       ],
       "default": "SORT_FIELD_UNSPECIFIED",
       "description": "SortField controls list ordering."
+    },
+    "v1StorageAppInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appKey": {
+          "type": "string",
+          "description": "app_key identifies the app on every data-plane call (x-app-key metadata);\nimmutable after creation."
+        },
+        "name": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string",
+          "description": "key_prefix namespaces every object the app writes. Global unique,\nimmutable, must end with '/'. All key composition is plain concatenation."
+        },
+        "bucketId": {
+          "type": "string",
+          "format": "int64",
+          "description": "bucket_id selects the app's private bucket; 0 = the platform default\nbucket. PUBLIC uploads always land in the public bucket regardless.\nChanging buckets only affects new uploads."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled apps fail every data-plane call immediately."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "StorageAppInfo is one calling application of the storage platform. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
     },
     "v1StorageSettings": {
       "type": "object",

@@ -116,6 +116,12 @@ const (
 	TestkitService_AdminUpsertBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminUpsertBucket"
 	TestkitService_AdminDeleteBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminDeleteBucket"
 	TestkitService_AdminGetSettings_FullMethodName            = "/testkit.v1.TestkitService/AdminGetSettings"
+	TestkitService_AdminListApps_FullMethodName               = "/testkit.v1.TestkitService/AdminListApps"
+	TestkitService_AdminCreateApp_FullMethodName              = "/testkit.v1.TestkitService/AdminCreateApp"
+	TestkitService_AdminGetApp_FullMethodName                 = "/testkit.v1.TestkitService/AdminGetApp"
+	TestkitService_AdminUpdateApp_FullMethodName              = "/testkit.v1.TestkitService/AdminUpdateApp"
+	TestkitService_AdminRotateAppSecret_FullMethodName        = "/testkit.v1.TestkitService/AdminRotateAppSecret"
+	TestkitService_AdminDeleteApp_FullMethodName              = "/testkit.v1.TestkitService/AdminDeleteApp"
 	TestkitService_AdminUpdateSettings_FullMethodName         = "/testkit.v1.TestkitService/AdminUpdateSettings"
 	TestkitService_AdminSoftDeleteOwnerFiles_FullMethodName   = "/testkit.v1.TestkitService/AdminSoftDeleteOwnerFiles"
 	TestkitService_AdminDeleteOwner_FullMethodName            = "/testkit.v1.TestkitService/AdminDeleteOwner"
@@ -317,6 +323,14 @@ type TestkitServiceClient interface {
 	AdminUpsertBucket(ctx context.Context, in *v11.AdminUpsertBucketRequest, opts ...grpc.CallOption) (*v11.AdminUpsertBucketResponse, error)
 	AdminDeleteBucket(ctx context.Context, in *v11.AdminDeleteBucketRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AdminGetSettings(ctx context.Context, in *v11.AdminGetSettingsRequest, opts ...grpc.CallOption) (*v11.AdminGetSettingsResponse, error)
+	// App management (calling applications of the storage platform;
+	// 1:1 forwards to storage-service admin RPCs).
+	AdminListApps(ctx context.Context, in *v11.AdminListAppsRequest, opts ...grpc.CallOption) (*v11.AdminListAppsResponse, error)
+	AdminCreateApp(ctx context.Context, in *v11.AdminCreateAppRequest, opts ...grpc.CallOption) (*v11.AdminCreateAppResponse, error)
+	AdminGetApp(ctx context.Context, in *v11.AdminGetAppRequest, opts ...grpc.CallOption) (*v11.AdminGetAppResponse, error)
+	AdminUpdateApp(ctx context.Context, in *v11.AdminUpdateAppRequest, opts ...grpc.CallOption) (*v11.AdminUpdateAppResponse, error)
+	AdminRotateAppSecret(ctx context.Context, in *v11.AdminRotateAppSecretRequest, opts ...grpc.CallOption) (*v11.AdminRotateAppSecretResponse, error)
+	AdminDeleteApp(ctx context.Context, in *v11.AdminDeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AdminUpdateSettings(ctx context.Context, in *v11.AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*v11.AdminUpdateSettingsResponse, error)
 	AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error)
 	AdminDeleteOwner(ctx context.Context, in *AdminDeleteOwnerRequest, opts ...grpc.CallOption) (*AdminDeleteOwnerResponse, error)
@@ -1317,6 +1331,66 @@ func (c *testkitServiceClient) AdminGetSettings(ctx context.Context, in *v11.Adm
 	return out, nil
 }
 
+func (c *testkitServiceClient) AdminListApps(ctx context.Context, in *v11.AdminListAppsRequest, opts ...grpc.CallOption) (*v11.AdminListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminListAppsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminCreateApp(ctx context.Context, in *v11.AdminCreateAppRequest, opts ...grpc.CallOption) (*v11.AdminCreateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminCreateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminCreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminGetApp(ctx context.Context, in *v11.AdminGetAppRequest, opts ...grpc.CallOption) (*v11.AdminGetAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminGetAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminGetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminUpdateApp(ctx context.Context, in *v11.AdminUpdateAppRequest, opts ...grpc.CallOption) (*v11.AdminUpdateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminUpdateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminUpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminRotateAppSecret(ctx context.Context, in *v11.AdminRotateAppSecretRequest, opts ...grpc.CallOption) (*v11.AdminRotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v11.AdminRotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_AdminRotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) AdminDeleteApp(ctx context.Context, in *v11.AdminDeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_AdminDeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *testkitServiceClient) AdminUpdateSettings(ctx context.Context, in *v11.AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*v11.AdminUpdateSettingsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(v11.AdminUpdateSettingsResponse)
@@ -2263,6 +2337,14 @@ type TestkitServiceServer interface {
 	AdminUpsertBucket(context.Context, *v11.AdminUpsertBucketRequest) (*v11.AdminUpsertBucketResponse, error)
 	AdminDeleteBucket(context.Context, *v11.AdminDeleteBucketRequest) (*emptypb.Empty, error)
 	AdminGetSettings(context.Context, *v11.AdminGetSettingsRequest) (*v11.AdminGetSettingsResponse, error)
+	// App management (calling applications of the storage platform;
+	// 1:1 forwards to storage-service admin RPCs).
+	AdminListApps(context.Context, *v11.AdminListAppsRequest) (*v11.AdminListAppsResponse, error)
+	AdminCreateApp(context.Context, *v11.AdminCreateAppRequest) (*v11.AdminCreateAppResponse, error)
+	AdminGetApp(context.Context, *v11.AdminGetAppRequest) (*v11.AdminGetAppResponse, error)
+	AdminUpdateApp(context.Context, *v11.AdminUpdateAppRequest) (*v11.AdminUpdateAppResponse, error)
+	AdminRotateAppSecret(context.Context, *v11.AdminRotateAppSecretRequest) (*v11.AdminRotateAppSecretResponse, error)
+	AdminDeleteApp(context.Context, *v11.AdminDeleteAppRequest) (*emptypb.Empty, error)
 	AdminUpdateSettings(context.Context, *v11.AdminUpdateSettingsRequest) (*v11.AdminUpdateSettingsResponse, error)
 	AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error)
 	AdminDeleteOwner(context.Context, *AdminDeleteOwnerRequest) (*AdminDeleteOwnerResponse, error)
@@ -2632,6 +2714,24 @@ func (UnimplementedTestkitServiceServer) AdminDeleteBucket(context.Context, *v11
 }
 func (UnimplementedTestkitServiceServer) AdminGetSettings(context.Context, *v11.AdminGetSettingsRequest) (*v11.AdminGetSettingsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminGetSettings not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminListApps(context.Context, *v11.AdminListAppsRequest) (*v11.AdminListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminListApps not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminCreateApp(context.Context, *v11.AdminCreateAppRequest) (*v11.AdminCreateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminCreateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminGetApp(context.Context, *v11.AdminGetAppRequest) (*v11.AdminGetAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminUpdateApp(context.Context, *v11.AdminUpdateAppRequest) (*v11.AdminUpdateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminRotateAppSecret(context.Context, *v11.AdminRotateAppSecretRequest) (*v11.AdminRotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminRotateAppSecret not implemented")
+}
+func (UnimplementedTestkitServiceServer) AdminDeleteApp(context.Context, *v11.AdminDeleteAppRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteApp not implemented")
 }
 func (UnimplementedTestkitServiceServer) AdminUpdateSettings(context.Context, *v11.AdminUpdateSettingsRequest) (*v11.AdminUpdateSettingsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminUpdateSettings not implemented")
@@ -4523,6 +4623,114 @@ func _TestkitService_AdminGetSettings_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_AdminListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminListApps(ctx, req.(*v11.AdminListAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminCreateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminCreateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminCreateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminCreateApp(ctx, req.(*v11.AdminCreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminGetAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminGetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminGetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminGetApp(ctx, req.(*v11.AdminGetAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminUpdateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminUpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminUpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminUpdateApp(ctx, req.(*v11.AdminUpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminRotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminRotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminRotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminRotateAppSecret(ctx, req.(*v11.AdminRotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_AdminDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v11.AdminDeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).AdminDeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_AdminDeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).AdminDeleteApp(ctx, req.(*v11.AdminDeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TestkitService_AdminUpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v11.AdminUpdateSettingsRequest)
 	if err := dec(in); err != nil {
@@ -6383,6 +6591,30 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AdminGetSettings",
 			Handler:    _TestkitService_AdminGetSettings_Handler,
+		},
+		{
+			MethodName: "AdminListApps",
+			Handler:    _TestkitService_AdminListApps_Handler,
+		},
+		{
+			MethodName: "AdminCreateApp",
+			Handler:    _TestkitService_AdminCreateApp_Handler,
+		},
+		{
+			MethodName: "AdminGetApp",
+			Handler:    _TestkitService_AdminGetApp_Handler,
+		},
+		{
+			MethodName: "AdminUpdateApp",
+			Handler:    _TestkitService_AdminUpdateApp_Handler,
+		},
+		{
+			MethodName: "AdminRotateAppSecret",
+			Handler:    _TestkitService_AdminRotateAppSecret_Handler,
+		},
+		{
+			MethodName: "AdminDeleteApp",
+			Handler:    _TestkitService_AdminDeleteApp_Handler,
 		},
 		{
 			MethodName: "AdminUpdateSettings",
