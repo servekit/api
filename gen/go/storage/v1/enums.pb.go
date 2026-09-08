@@ -449,6 +449,9 @@ const (
 	AuditAction_AUDIT_ACTION_ADMIN_UPSERT_BUCKET     AuditAction = 18
 	AuditAction_AUDIT_ACTION_ADMIN_DELETE_BUCKET     AuditAction = 19
 	AuditAction_AUDIT_ACTION_ADMIN_UPDATE_SETTINGS   AuditAction = 20
+	AuditAction_AUDIT_ACTION_ADMIN_CREATE_APP        AuditAction = 21
+	AuditAction_AUDIT_ACTION_ADMIN_UPDATE_APP        AuditAction = 22
+	AuditAction_AUDIT_ACTION_ADMIN_DELETE_APP        AuditAction = 23
 )
 
 // Enum value maps for AuditAction.
@@ -475,6 +478,9 @@ var (
 		18: "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
 		19: "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
 		20: "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
+		21: "AUDIT_ACTION_ADMIN_CREATE_APP",
+		22: "AUDIT_ACTION_ADMIN_UPDATE_APP",
+		23: "AUDIT_ACTION_ADMIN_DELETE_APP",
 	}
 	AuditAction_value = map[string]int32{
 		"AUDIT_ACTION_UNSPECIFIED":             0,
@@ -498,6 +504,9 @@ var (
 		"AUDIT_ACTION_ADMIN_UPSERT_BUCKET":     18,
 		"AUDIT_ACTION_ADMIN_DELETE_BUCKET":     19,
 		"AUDIT_ACTION_ADMIN_UPDATE_SETTINGS":   20,
+		"AUDIT_ACTION_ADMIN_CREATE_APP":        21,
+		"AUDIT_ACTION_ADMIN_UPDATE_APP":        22,
+		"AUDIT_ACTION_ADMIN_DELETE_APP":        23,
 	}
 )
 
@@ -702,6 +711,7 @@ const (
 	AuditLogTargetType_AUDIT_LOG_TARGET_TYPE_PROVIDER    AuditLogTargetType = 4
 	AuditLogTargetType_AUDIT_LOG_TARGET_TYPE_BUCKET      AuditLogTargetType = 5
 	AuditLogTargetType_AUDIT_LOG_TARGET_TYPE_SETTINGS    AuditLogTargetType = 6
+	AuditLogTargetType_AUDIT_LOG_TARGET_TYPE_APP         AuditLogTargetType = 7
 )
 
 // Enum value maps for AuditLogTargetType.
@@ -714,6 +724,7 @@ var (
 		4: "AUDIT_LOG_TARGET_TYPE_PROVIDER",
 		5: "AUDIT_LOG_TARGET_TYPE_BUCKET",
 		6: "AUDIT_LOG_TARGET_TYPE_SETTINGS",
+		7: "AUDIT_LOG_TARGET_TYPE_APP",
 	}
 	AuditLogTargetType_value = map[string]int32{
 		"AUDIT_LOG_TARGET_TYPE_UNSPECIFIED": 0,
@@ -723,6 +734,7 @@ var (
 		"AUDIT_LOG_TARGET_TYPE_PROVIDER":    4,
 		"AUDIT_LOG_TARGET_TYPE_BUCKET":      5,
 		"AUDIT_LOG_TARGET_TYPE_SETTINGS":    6,
+		"AUDIT_LOG_TARGET_TYPE_APP":         7,
 	}
 )
 
@@ -803,7 +815,7 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\x16SORT_FIELD_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SORT_FIELD_CREATED_AT\x10\x01\x12\x17\n" +
 	"\x13SORT_FIELD_FILENAME\x10\x02\x12\x13\n" +
-	"\x0fSORT_FIELD_SIZE\x10\x03*\xf2\x05\n" +
+	"\x0fSORT_FIELD_SIZE\x10\x03*\xdb\x06\n" +
 	"\vAuditAction\x12\x1c\n" +
 	"\x18AUDIT_ACTION_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13AUDIT_ACTION_UPLOAD\x10\x01\x12\x17\n" +
@@ -826,7 +838,10 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\"AUDIT_ACTION_ADMIN_DELETE_PROVIDER\x10\x11\x12$\n" +
 	" AUDIT_ACTION_ADMIN_UPSERT_BUCKET\x10\x12\x12$\n" +
 	" AUDIT_ACTION_ADMIN_DELETE_BUCKET\x10\x13\x12&\n" +
-	"\"AUDIT_ACTION_ADMIN_UPDATE_SETTINGS\x10\x14*\xcc\x01\n" +
+	"\"AUDIT_ACTION_ADMIN_UPDATE_SETTINGS\x10\x14\x12!\n" +
+	"\x1dAUDIT_ACTION_ADMIN_CREATE_APP\x10\x15\x12!\n" +
+	"\x1dAUDIT_ACTION_ADMIN_UPDATE_APP\x10\x16\x12!\n" +
+	"\x1dAUDIT_ACTION_ADMIN_DELETE_APP\x10\x17*\xcc\x01\n" +
 	"\x13UploadSessionStatus\x12%\n" +
 	"!UPLOAD_SESSION_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dUPLOAD_SESSION_STATUS_PENDING\x10\x01\x12#\n" +
@@ -841,7 +856,7 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\x0eAuditLogStatus\x12 \n" +
 	"\x1cAUDIT_LOG_STATUS_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18AUDIT_LOG_STATUS_SUCCESS\x10\x01\x12\x1b\n" +
-	"\x17AUDIT_LOG_STATUS_FAILED\x10\x02*\x87\x02\n" +
+	"\x17AUDIT_LOG_STATUS_FAILED\x10\x02*\xa6\x02\n" +
 	"\x12AuditLogTargetType\x12%\n" +
 	"!AUDIT_LOG_TARGET_TYPE_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aAUDIT_LOG_TARGET_TYPE_FILE\x10\x01\x12\x1f\n" +
@@ -849,7 +864,8 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\x1bAUDIT_LOG_TARGET_TYPE_OWNER\x10\x03\x12\"\n" +
 	"\x1eAUDIT_LOG_TARGET_TYPE_PROVIDER\x10\x04\x12 \n" +
 	"\x1cAUDIT_LOG_TARGET_TYPE_BUCKET\x10\x05\x12\"\n" +
-	"\x1eAUDIT_LOG_TARGET_TYPE_SETTINGS\x10\x06B\x9a\x01\n" +
+	"\x1eAUDIT_LOG_TARGET_TYPE_SETTINGS\x10\x06\x12\x1d\n" +
+	"\x19AUDIT_LOG_TARGET_TYPE_APP\x10\aB\x9a\x01\n" +
 	"\x0ecom.storage.v1B\n" +
 	"EnumsProtoP\x01Z3github.com/servekit/api/gen/go/storage/v1;storagev1\xa2\x02\x03SXX\xaa\x02\n" +
 	"Storage.V1\xca\x02\n" +

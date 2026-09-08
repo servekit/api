@@ -60,7 +60,10 @@
               "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
               "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
               "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
-              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
+              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
+              "AUDIT_ACTION_ADMIN_CREATE_APP",
+              "AUDIT_ACTION_ADMIN_UPDATE_APP",
+              "AUDIT_ACTION_ADMIN_DELETE_APP"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -76,7 +79,8 @@
               "AUDIT_LOG_TARGET_TYPE_OWNER",
               "AUDIT_LOG_TARGET_TYPE_PROVIDER",
               "AUDIT_LOG_TARGET_TYPE_BUCKET",
-              "AUDIT_LOG_TARGET_TYPE_SETTINGS"
+              "AUDIT_LOG_TARGET_TYPE_SETTINGS",
+              "AUDIT_LOG_TARGET_TYPE_APP"
             ],
             "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED"
           },
@@ -5952,7 +5956,10 @@
               "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
               "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
               "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
-              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
+              "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
+              "AUDIT_ACTION_ADMIN_CREATE_APP",
+              "AUDIT_ACTION_ADMIN_UPDATE_APP",
+              "AUDIT_ACTION_ADMIN_DELETE_APP"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -5968,7 +5975,8 @@
               "AUDIT_LOG_TARGET_TYPE_OWNER",
               "AUDIT_LOG_TARGET_TYPE_PROVIDER",
               "AUDIT_LOG_TARGET_TYPE_BUCKET",
-              "AUDIT_LOG_TARGET_TYPE_SETTINGS"
+              "AUDIT_LOG_TARGET_TYPE_SETTINGS",
+              "AUDIT_LOG_TARGET_TYPE_APP"
             ],
             "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED"
           },
@@ -8316,7 +8324,10 @@
         "AUDIT_ACTION_ADMIN_DELETE_PROVIDER",
         "AUDIT_ACTION_ADMIN_UPSERT_BUCKET",
         "AUDIT_ACTION_ADMIN_DELETE_BUCKET",
-        "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS"
+        "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
+        "AUDIT_ACTION_ADMIN_CREATE_APP",
+        "AUDIT_ACTION_ADMIN_UPDATE_APP",
+        "AUDIT_ACTION_ADMIN_DELETE_APP"
       ],
       "default": "AUDIT_ACTION_UNSPECIFIED",
       "description": "AuditAction represents types of auditable operations."
@@ -8385,7 +8396,8 @@
         "AUDIT_LOG_TARGET_TYPE_OWNER",
         "AUDIT_LOG_TARGET_TYPE_PROVIDER",
         "AUDIT_LOG_TARGET_TYPE_BUCKET",
-        "AUDIT_LOG_TARGET_TYPE_SETTINGS"
+        "AUDIT_LOG_TARGET_TYPE_SETTINGS",
+        "AUDIT_LOG_TARGET_TYPE_APP"
       ],
       "default": "AUDIT_LOG_TARGET_TYPE_UNSPECIFIED",
       "description": "AuditLogTargetType represents the kind of resource an audited operation touched."
