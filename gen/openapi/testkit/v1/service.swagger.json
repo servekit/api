@@ -8454,9 +8454,6 @@
             "$ref": "#/definitions/v1UploadFileMeta"
           }
         },
-        "bucket": {
-          "type": "string"
-        },
         "ttl": {
           "type": "string"
         },
@@ -9671,9 +9668,6 @@
         "contentType": {
           "type": "string"
         },
-        "bucket": {
-          "type": "string"
-        },
         "filePath": {
           "type": "string"
         },
@@ -9692,7 +9686,7 @@
         },
         "visibility": {
           "$ref": "#/definitions/v1Visibility",
-          "description": "visibility=PUBLIC overrides `bucket` with the configured public bucket\n(public resources like avatars); UNSPECIFIED/PRIVATE keep bucket in charge."
+          "description": "visibility=PUBLIC lands in the configured public bucket\n(public resources like avatars); UNSPECIFIED/PRIVATE keep bucket in charge."
         },
         "requestId": {
           "type": "string",
@@ -9955,9 +9949,6 @@
     "v1GetSTSCredentialRequest": {
       "type": "object",
       "properties": {
-        "bucket": {
-          "type": "string"
-        },
         "maxSize": {
           "type": "string",
           "format": "int64"

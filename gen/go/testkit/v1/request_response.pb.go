@@ -4964,12 +4964,11 @@ type GenerateUploadURLRequest struct {
 	Size        int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
 	Md5         string                 `protobuf:"bytes,3,opt,name=md5,proto3" json:"md5,omitempty"`
 	ContentType string                 `protobuf:"bytes,4,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	Bucket      string                 `protobuf:"bytes,5,opt,name=bucket,proto3" json:"bucket,omitempty"`
 	FilePath    string                 `protobuf:"bytes,6,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
 	Description string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
 	Metadata    map[string]string      `protobuf:"bytes,8,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Vendor      v11.Vendor             `protobuf:"varint,10,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"` // optional; validates bucket vendor when non-UNSPECIFIED
-	// visibility=PUBLIC overrides `bucket` with the configured public bucket
+	// visibility=PUBLIC lands in the configured public bucket
 	// (public resources like avatars); UNSPECIFIED/PRIVATE keep bucket in charge.
 	Visibility v11.Visibility `protobuf:"varint,14,opt,name=visibility,proto3,enum=storage.v1.Visibility" json:"visibility,omitempty"`
 	// request_id is optional; recorded in audit logs for traceability
@@ -5033,13 +5032,6 @@ func (x *GenerateUploadURLRequest) GetMd5() string {
 func (x *GenerateUploadURLRequest) GetContentType() string {
 	if x != nil {
 		return x.ContentType
-	}
-	return ""
-}
-
-func (x *GenerateUploadURLRequest) GetBucket() string {
-	if x != nil {
-		return x.Bucket
 	}
 	return ""
 }
@@ -5180,7 +5172,6 @@ func (x *GenerateUploadURLResponse) GetHeaders() map[string]string {
 
 type GetSTSCredentialRequest struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	Bucket            string                 `protobuf:"bytes,1,opt,name=bucket,proto3" json:"bucket,omitempty"`
 	MaxSize           int64                  `protobuf:"varint,2,opt,name=max_size,json=maxSize,proto3" json:"max_size,omitempty"`
 	Filename          string                 `protobuf:"bytes,3,opt,name=filename,proto3" json:"filename,omitempty"`
 	Md5               string                 `protobuf:"bytes,4,opt,name=md5,proto3" json:"md5,omitempty"`
@@ -5228,13 +5219,6 @@ func (x *GetSTSCredentialRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetSTSCredentialRequest.ProtoReflect.Descriptor instead.
 func (*GetSTSCredentialRequest) Descriptor() ([]byte, []int) {
 	return file_testkit_v1_request_response_proto_rawDescGZIP(), []int{79}
-}
-
-func (x *GetSTSCredentialRequest) GetBucket() string {
-	if x != nil {
-		return x.Bucket
-	}
-	return ""
 }
 
 func (x *GetSTSCredentialRequest) GetMaxSize() int64 {
@@ -5448,7 +5432,6 @@ func (x *GetSTSCredentialResponse) GetExpiresAt() int64 {
 type BatchGetSTSCredentialRequest struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Files             []*UploadFileMeta      `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
-	Bucket            string                 `protobuf:"bytes,2,opt,name=bucket,proto3" json:"bucket,omitempty"`
 	Ttl               *durationpb.Duration   `protobuf:"bytes,3,opt,name=ttl,proto3" json:"ttl,omitempty"`
 	AllowedExtensions []string               `protobuf:"bytes,4,rep,name=allowed_extensions,json=allowedExtensions,proto3" json:"allowed_extensions,omitempty"`
 	// Batch-level; same semantics as GenerateUploadURLRequest.visibility.
@@ -5495,13 +5478,6 @@ func (x *BatchGetSTSCredentialRequest) GetFiles() []*UploadFileMeta {
 		return x.Files
 	}
 	return nil
-}
-
-func (x *BatchGetSTSCredentialRequest) GetBucket() string {
-	if x != nil {
-		return x.Bucket
-	}
-	return ""
 }
 
 func (x *BatchGetSTSCredentialRequest) GetTtl() *durationpb.Duration {
@@ -13805,14 +13781,13 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06groups\x18\x01 \x03(\v2\x1b.testkit.v1.PermissionGroupR\x06groups\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
 	"nextCursor\x12\x14\n" +
-	"\x05total\x18\x03 \x01(\x05R\x05total\"\x8e\x04\n" +
+	"\x05total\x18\x03 \x01(\x05R\x05total\"\x84\x04\n" +
 	"\x18GenerateUploadURLRequest\x12&\n" +
 	"\bfilename\x18\x01 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x02R\bfilename\x12\x1b\n" +
 	"\x04size\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x04size\x12\x1a\n" +
 	"\x03md5\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x98\x01 R\x03md5\x12*\n" +
-	"\fcontent_type\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vcontentType\x12\x16\n" +
-	"\x06bucket\x18\x05 \x01(\tR\x06bucket\x12\x1b\n" +
+	"\fcontent_type\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vcontentType\x12\x1b\n" +
 	"\tfile_path\x18\x06 \x01(\tR\bfilePath\x12 \n" +
 	"\vdescription\x18\a \x01(\tR\vdescription\x12N\n" +
 	"\bmetadata\x18\b \x03(\v22.testkit.v1.GenerateUploadURLRequest.MetadataEntryR\bmetadata\x12*\n" +
@@ -13825,7 +13800,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"request_id\x18\v \x01(\tR\trequestId\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xec\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x05\x10\x06R\x06bucket\"\xec\x02\n" +
 	"\x19GenerateUploadURLResponse\x12\x18\n" +
 	"\ainstant\x18\x01 \x01(\bR\ainstant\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x03R\x06fileId\x121\n" +
@@ -13839,9 +13814,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\aheaders\x18\r \x03(\v22.testkit.v1.GenerateUploadURLResponse.HeadersEntryR\aheaders\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe6\x04\n" +
-	"\x17GetSTSCredentialRequest\x12\x16\n" +
-	"\x06bucket\x18\x01 \x01(\tR\x06bucket\x12\x19\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xdc\x04\n" +
+	"\x17GetSTSCredentialRequest\x12\x19\n" +
 	"\bmax_size\x18\x02 \x01(\x03R\amaxSize\x12&\n" +
 	"\bfilename\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x02R\bfilename\x12\x1a\n" +
@@ -13861,7 +13835,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"request_id\x18\r \x01(\tR\trequestId\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xfa\x02\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01J\x04\b\x01\x10\x02R\x06bucket\"\xfa\x02\n" +
 	"\x18GetSTSCredentialResponse\x12\x18\n" +
 	"\ainstant\x18\x01 \x01(\bR\ainstant\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x03R\x06fileId\x121\n" +
@@ -13878,18 +13852,17 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"object_key\x18\x10 \x01(\tR\tobjectKey\x12\x1d\n" +
 	"\n" +
-	"expires_at\x18\x11 \x01(\x03R\texpiresAt\"\xa7\x02\n" +
+	"expires_at\x18\x11 \x01(\x03R\texpiresAt\"\x9d\x02\n" +
 	"\x1cBatchGetSTSCredentialRequest\x12<\n" +
 	"\x05files\x18\x01 \x03(\v2\x1a.testkit.v1.UploadFileMetaB\n" +
-	"\xbaH\a\x92\x01\x04\b\x01\x10dR\x05files\x12\x16\n" +
-	"\x06bucket\x18\x02 \x01(\tR\x06bucket\x12+\n" +
+	"\xbaH\a\x92\x01\x04\b\x01\x10dR\x05files\x12+\n" +
 	"\x03ttl\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\x03ttl\x12-\n" +
 	"\x12allowed_extensions\x18\x04 \x03(\tR\x11allowedExtensions\x126\n" +
 	"\n" +
 	"visibility\x18\x06 \x01(\x0e2\x16.storage.v1.VisibilityR\n" +
 	"visibility\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tR\trequestId\"\x8f\x02\n" +
+	"request_id\x18\x05 \x01(\tR\trequestIdJ\x04\b\x02\x10\x03R\x06bucket\"\x8f\x02\n" +
 	"\x1dBatchGetSTSCredentialResponse\x12\x1d\n" +
 	"\n" +
 	"access_key\x18\x01 \x01(\tR\taccessKey\x12\x1d\n" +
