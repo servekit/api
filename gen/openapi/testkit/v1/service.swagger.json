@@ -11143,6 +11143,10 @@
           "type": "string",
           "description": "app_key is the public credential identifier passed in x-app-key\nmetadata (e.g. \"testkit\"). Unique."
         },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret echoes the stored secret (internal-trust posture: plaintext\nat rest, internal-network transport — the ops console needs to copy\ncredentials for service configuration, so it is list-visible rather\nthan show-once)."
+        },
         "name": {
           "type": "string"
         },

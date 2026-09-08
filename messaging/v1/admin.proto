@@ -17,6 +17,11 @@ message MessageAppInfo {
   // app_key is the public credential identifier passed in x-app-key
   // metadata (e.g. "testkit"). Unique.
   string app_key = 2;
+  // app_secret echoes the stored secret (internal-trust posture: plaintext
+  // at rest, internal-network transport — the ops console needs to copy
+  // credentials for service configuration, so it is list-visible rather
+  // than show-once).
+  string app_secret = 9;
   string name = 3;
   // disabled apps fail every send with ErrAppUnauthorized.
   bool disabled = 4;
