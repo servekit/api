@@ -375,7 +375,8 @@ message ProviderInfo {
 message BucketInfo {
   string name = 1;
   string provider = 2;
-  string key_prefix = 3;
+  reserved 3;
+  reserved "key_prefix"; // prefixes moved to storage apps
   storage.v1.BucketACL acl = 4;
   storage.v1.Vendor vendor = 5;
   // cdn is the bucket's CDN fronting config; null = CDN disabled.

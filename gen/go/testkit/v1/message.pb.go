@@ -2394,12 +2394,11 @@ func (x *ProviderInfo) GetBucketCount() int32 {
 }
 
 type BucketInfo struct {
-	state     protoimpl.MessageState `protogen:"open.v1"`
-	Name      string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Provider  string                 `protobuf:"bytes,2,opt,name=provider,proto3" json:"provider,omitempty"`
-	KeyPrefix string                 `protobuf:"bytes,3,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
-	Acl       v11.BucketACL          `protobuf:"varint,4,opt,name=acl,proto3,enum=storage.v1.BucketACL" json:"acl,omitempty"`
-	Vendor    v11.Vendor             `protobuf:"varint,5,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Name     string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Provider string                 `protobuf:"bytes,2,opt,name=provider,proto3" json:"provider,omitempty"`
+	Acl      v11.BucketACL          `protobuf:"varint,4,opt,name=acl,proto3,enum=storage.v1.BucketACL" json:"acl,omitempty"`
+	Vendor   v11.Vendor             `protobuf:"varint,5,opt,name=vendor,proto3,enum=storage.v1.Vendor" json:"vendor,omitempty"`
 	// cdn is the bucket's CDN fronting config; null = CDN disabled.
 	Cdn           *v11.CDNConfig `protobuf:"bytes,6,opt,name=cdn,proto3" json:"cdn,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2446,13 +2445,6 @@ func (x *BucketInfo) GetName() string {
 func (x *BucketInfo) GetProvider() string {
 	if x != nil {
 		return x.Provider
-	}
-	return ""
-}
-
-func (x *BucketInfo) GetKeyPrefix() string {
-	if x != nil {
-		return x.KeyPrefix
 	}
 	return ""
 }
@@ -4887,16 +4879,15 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x12\x1f\n" +
 	"\vsts_enabled\x18\x06 \x01(\bR\n" +
 	"stsEnabled\x12!\n" +
-	"\fbucket_count\x18\a \x01(\x05R\vbucketCount\"\xd9\x01\n" +
+	"\fbucket_count\x18\a \x01(\x05R\vbucketCount\"\xcc\x01\n" +
 	"\n" +
 	"BucketInfo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
-	"\bprovider\x18\x02 \x01(\tR\bprovider\x12\x1d\n" +
-	"\n" +
-	"key_prefix\x18\x03 \x01(\tR\tkeyPrefix\x12'\n" +
+	"\bprovider\x18\x02 \x01(\tR\bprovider\x12'\n" +
 	"\x03acl\x18\x04 \x01(\x0e2\x15.storage.v1.BucketACLR\x03acl\x12*\n" +
 	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12'\n" +
-	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdn\"P\n" +
+	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdnJ\x04\b\x03\x10\x04R\n" +
+	"key_prefix\"P\n" +
 	"\fEmailAddress\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\"\xc6\x01\n" +

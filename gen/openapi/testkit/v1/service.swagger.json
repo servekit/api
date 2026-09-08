@@ -7737,9 +7737,6 @@
         "provider": {
           "type": "string"
         },
-        "keyPrefix": {
-          "type": "string"
-        },
         "acl": {
           "$ref": "#/definitions/v1BucketACL"
         },
