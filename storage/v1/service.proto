@@ -119,6 +119,18 @@ service StorageService {
   rpc AdminGetSettings(AdminGetSettingsRequest) returns (AdminGetSettingsResponse);
   // AdminUpdateSettings updates the runtime settings row.
   rpc AdminUpdateSettings(AdminUpdateSettingsRequest) returns (AdminUpdateSettingsResponse);
+  // AdminCreateApp registers a calling application (secret shown once).
+  rpc AdminCreateApp(AdminCreateAppRequest) returns (AdminCreateAppResponse);
+  // AdminGetApp returns one app by app_key.
+  rpc AdminGetApp(AdminGetAppRequest) returns (AdminGetAppResponse);
+  // AdminUpdateApp edits name/disabled/bucket; app_key and key_prefix are immutable.
+  rpc AdminUpdateApp(AdminUpdateAppRequest) returns (AdminUpdateAppResponse);
+  // AdminRotateAppSecret mints a new secret (shown once).
+  rpc AdminRotateAppSecret(AdminRotateAppSecretRequest) returns (AdminRotateAppSecretResponse);
+  // AdminListApps lists all apps (low cardinality, no paging).
+  rpc AdminListApps(AdminListAppsRequest) returns (AdminListAppsResponse);
+  // AdminDeleteApp soft-deletes an app; data-plane calls fail immediately.
+  rpc AdminDeleteApp(AdminDeleteAppRequest) returns (google.protobuf.Empty);
   // AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
   rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse);
   // AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).

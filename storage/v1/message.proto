@@ -158,11 +158,37 @@ message ProviderInfo {
 message BucketInfo {
   string name = 1;
   string provider = 2;
-  string key_prefix = 3;
+  reserved 3;
+  reserved "key_prefix"; // moved to StorageAppInfo.key_prefix — prefixes belong to apps
   BucketACL acl = 4;
   Vendor vendor = 5;
   // cdn is the bucket's CDN fronting config; null = CDN disabled.
   CDNConfig cdn = 6;
+}
+
+// StorageAppInfo is one calling application of the storage platform. Data
+// isolation is by key_prefix: every object an app writes lives under its
+// prefix (within the app's bucket, or the default bucket when bucket_id=0);
+// PUBLIC uploads land in the public bucket but keep the same prefix. The
+// prefix is the dedup domain — identical content under different prefixes is
+// stored (and deduplicated) independently.
+message StorageAppInfo {
+  int64 id = 1;
+  // app_key identifies the app on every data-plane call (x-app-key metadata);
+  // immutable after creation.
+  string app_key = 2;
+  string name = 3;
+  // key_prefix namespaces every object the app writes. Global unique,
+  // immutable, must end with '/'. All key composition is plain concatenation.
+  string key_prefix = 4;
+  // bucket_id selects the app's private bucket; 0 = the platform default
+  // bucket. PUBLIC uploads always land in the public bucket regardless.
+  // Changing buckets only affects new uploads.
+  int64 bucket_id = 5;
+  // disabled apps fail every data-plane call immediately.
+  bool disabled = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
 }
 
 // CDNConfig is a bucket's CDN fronting configuration. auth_key signs URLs

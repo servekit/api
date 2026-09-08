@@ -18,7 +18,8 @@ message GenerateUploadURLRequest {
   int64 size = 2 [(buf.validate.field).int64 = {gt: 0}];
   string md5 = 3 [(buf.validate.field).string = {len: 32}];
   string content_type = 4 [(buf.validate.field).string = {min_len: 1}];
-  string bucket = 5;
+  reserved 5;
+  reserved "bucket"; // placement is the calling app's config, not a request field
   string file_path = 6;
   string description = 7;
   map<string, string> metadata = 8;
@@ -26,10 +27,9 @@ message GenerateUploadURLRequest {
   // the resolved bucket belongs to this vendor; mismatch returns
   // BUCKET_VENDOR_MISMATCH. Leave UNSPECIFIED to skip the check (legacy behavior).
   Vendor vendor = 10;
-  // visibility selects the audience class. PUBLIC overrides `bucket` with
-  // the configured public bucket (both must belong to a compatible vendor
-  // when vendor is pinned); UNSPECIFIED/PRIVATE keep the bucket field in
-  // charge.
+  // visibility selects the audience class: PUBLIC lands in the configured
+  // public bucket, UNSPECIFIED/PRIVATE in the calling app's bucket (or the
+  // default bucket when the app binds none).
   Visibility visibility = 12;
   Owner owner = 255;
 
@@ -53,7 +53,8 @@ message GenerateUploadURLResponse {
 }
 
 message GetSTSCredentialRequest {
-  string bucket = 1;
+  reserved 1;
+  reserved "bucket"; // placement is the calling app's config, not a request field
   int64 max_size = 2;
   string filename = 3 [(buf.validate.field).string = {
     min_len: 1
@@ -100,7 +101,8 @@ message GetSTSCredentialResponse {
 
 message BatchGetSTSCredentialRequest {
   repeated UploadFileMeta files = 1;
-  string bucket = 2;
+  reserved 2;
+  reserved "bucket"; // placement is the calling app's config, not a request field
   google.protobuf.Duration ttl = 3;
   // allowed_extensions is batch-level (the whole batch links one STS
   // credential); per-file restrictions would require one AssumeRole call per
@@ -520,7 +522,8 @@ message AdminUpsertBucketRequest {
     min_len: 1
     max_len: 64
   }];
-  string key_prefix = 3 [(buf.validate.field).string.max_len = 256];
+  reserved 3;
+  reserved "key_prefix"; // prefixes moved to apps (StorageAppInfo.key_prefix)
   BucketACL acl = 4 [(buf.validate.field).enum = {
     defined_only: true
     not_in: [0]
@@ -557,6 +560,97 @@ message AdminUpdateSettingsRequest {
 
 message AdminUpdateSettingsResponse {
   StorageSettings settings = 1;
+}
+
+// AdminCreateAppRequest registers a calling application. app_key empty = the
+// server mints one ("sto_" + 8 base36 chars, immutable). app_secret is
+// returned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed.
+message AdminCreateAppRequest {
+  // app_key pattern: lowercase letter followed by lowercase alphanumerics
+  // and dashes. Optional; empty = server-generated.
+  string app_key = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
+  ];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  // key_prefix namespaces the app's objects; globally unique, immutable,
+  // must end with '/'.
+  string key_prefix = 3 [(buf.validate.field).string = {
+    min_len: 2
+    max_len: 64
+    pattern: "^[a-z][a-z0-9-]{1,62}/$"
+  }];
+  // bucket_id: 0 = the platform default bucket.
+  int64 bucket_id = 4;
+}
+
+message AdminCreateAppResponse {
+  StorageAppInfo app = 1;
+  // app_secret is shown once at creation; store it immediately.
+  string app_secret = 2;
+}
+
+message AdminGetAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message AdminGetAppResponse {
+  StorageAppInfo app = 1;
+}
+
+// AdminUpdateAppRequest edits mutable fields; app_key and key_prefix are
+// immutable (objects already live under the prefix). Absent optional fields
+// keep their current values. bucket changes only affect new uploads.
+message AdminUpdateAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string name = 2 [(buf.validate.field).string.max_len = 128];
+  optional bool disabled = 3;
+  // bucket_id 0 rebinds the app to the default bucket.
+  optional int64 bucket_id = 4;
+}
+
+message AdminUpdateAppResponse {
+  StorageAppInfo app = 1;
+}
+
+message AdminRotateAppSecretRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message AdminRotateAppSecretResponse {
+  StorageAppInfo app = 1;
+  // app_secret is shown once on rotation; store it immediately.
+  string app_secret = 2;
+}
+
+// AdminListAppsRequest — the app registry is low-cardinality; no paging.
+message AdminListAppsRequest {}
+
+message AdminListAppsResponse {
+  repeated StorageAppInfo apps = 1;
+}
+
+// AdminDeleteAppRequest soft-deletes the app. Data-plane calls fail
+// immediately; existing objects/files stay readable (their keys are stored).
+// The app_key and key_prefix remain reserved (uniqueness is enforced over
+// live rows only, so re-creating a soft-deleted app reactivates its prefix).
+message AdminDeleteAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
 }
 
 message AdminSoftDeleteOwnerFilesRequest {
