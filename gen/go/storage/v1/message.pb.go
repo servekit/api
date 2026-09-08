@@ -1427,21 +1427,24 @@ func (x *StorageSettings) GetPublicBucket() string {
 }
 
 type AuditLogEntry struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Action        AuditAction            `protobuf:"varint,2,opt,name=action,proto3,enum=storage.v1.AuditAction" json:"action,omitempty"`
-	OwnerType     OwnerType              `protobuf:"varint,3,opt,name=owner_type,json=ownerType,proto3,enum=storage.v1.OwnerType" json:"owner_type,omitempty"`
-	OwnerId       int64                  `protobuf:"varint,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	TargetType    AuditLogTargetType     `protobuf:"varint,5,opt,name=target_type,json=targetType,proto3,enum=storage.v1.AuditLogTargetType" json:"target_type,omitempty"`
-	TargetId      int64                  `protobuf:"varint,6,opt,name=target_id,json=targetId,proto3" json:"target_id,omitempty"`
-	Before        *structpb.Struct       `protobuf:"bytes,7,opt,name=before,proto3" json:"before,omitempty"`
-	After         *structpb.Struct       `protobuf:"bytes,8,opt,name=after,proto3" json:"after,omitempty"`
-	Status        AuditLogStatus         `protobuf:"varint,9,opt,name=status,proto3,enum=storage.v1.AuditLogStatus" json:"status,omitempty"`
-	ErrorMessage  string                 `protobuf:"bytes,10,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
-	RequestId     string                 `protobuf:"bytes,11,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	Id           int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Action       AuditAction            `protobuf:"varint,2,opt,name=action,proto3,enum=storage.v1.AuditAction" json:"action,omitempty"`
+	OwnerType    OwnerType              `protobuf:"varint,3,opt,name=owner_type,json=ownerType,proto3,enum=storage.v1.OwnerType" json:"owner_type,omitempty"`
+	OwnerId      int64                  `protobuf:"varint,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	TargetType   AuditLogTargetType     `protobuf:"varint,5,opt,name=target_type,json=targetType,proto3,enum=storage.v1.AuditLogTargetType" json:"target_type,omitempty"`
+	TargetId     int64                  `protobuf:"varint,6,opt,name=target_id,json=targetId,proto3" json:"target_id,omitempty"`
+	Before       *structpb.Struct       `protobuf:"bytes,7,opt,name=before,proto3" json:"before,omitempty"`
+	After        *structpb.Struct       `protobuf:"bytes,8,opt,name=after,proto3" json:"after,omitempty"`
+	Status       AuditLogStatus         `protobuf:"varint,9,opt,name=status,proto3,enum=storage.v1.AuditLogStatus" json:"status,omitempty"`
+	ErrorMessage string                 `protobuf:"bytes,10,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
+	RequestId    string                 `protobuf:"bytes,11,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	CreatedAt    string                 `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// Verified acting user (from the request actor) who performed the
+	// operation; 0 when no actor was present (system / internal calls).
+	OperatorUserId int64 `protobuf:"varint,13,opt,name=operator_user_id,json=operatorUserId,proto3" json:"operator_user_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *AuditLogEntry) Reset() {
@@ -1556,6 +1559,13 @@ func (x *AuditLogEntry) GetCreatedAt() string {
 		return x.CreatedAt
 	}
 	return ""
+}
+
+func (x *AuditLogEntry) GetOperatorUserId() int64 {
+	if x != nil {
+		return x.OperatorUserId
+	}
+	return 0
 }
 
 var File_storage_v1_message_proto protoreflect.FileDescriptor
@@ -1713,7 +1723,7 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\vkey_pair_id\x18\x03 \x01(\tR\tkeyPairId\"]\n" +
 	"\x0fStorageSettings\x12%\n" +
 	"\x0edefault_bucket\x18\x01 \x01(\tR\rdefaultBucket\x12#\n" +
-	"\rpublic_bucket\x18\x02 \x01(\tR\fpublicBucket\"\xf6\x03\n" +
+	"\rpublic_bucket\x18\x02 \x01(\tR\fpublicBucket\"\xa0\x04\n" +
 	"\rAuditLogEntry\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
 	"\x06action\x18\x02 \x01(\x0e2\x17.storage.v1.AuditActionR\x06action\x124\n" +
@@ -1731,7 +1741,8 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"request_id\x18\v \x01(\tR\trequestId\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\f \x01(\tR\tcreatedAtB\x9c\x01\n" +
+	"created_at\x18\f \x01(\tR\tcreatedAt\x12(\n" +
+	"\x10operator_user_id\x18\r \x01(\x03R\x0eoperatorUserIdB\x9c\x01\n" +
 	"\x0ecom.storage.v1B\fMessageProtoP\x01Z3github.com/servekit/api/gen/go/storage/v1;storagev1\xa2\x02\x03SXX\xaa\x02\n" +
 	"Storage.V1\xca\x02\n" +
 	"Storage\\V1\xe2\x02\x16Storage\\V1\\GPBMetadata\xea\x02\vStorage::V1b\x06proto3"

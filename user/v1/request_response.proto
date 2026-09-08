@@ -157,12 +157,16 @@ message MiniProgramPhoneLoginRequest {
   string avatar_url = 4 [(buf.validate.field).string.max_len = 512];
 }
 
+// The caller is the verified actor (common.v1.RequestActor) carried in the
+// request context — no identity field on the wire.
 message GetProfileRequest {
-  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  reserved 1;
+  reserved "user_id";
 }
 
 message UpdateProfileRequest {
-  int64 user_id = 10 [(buf.validate.field).int64.gt = 0];
+  reserved 10;
+  reserved "user_id";
   string username = 1 [(buf.validate.field).string.max_len = 64];
   string nickname = 2 [(buf.validate.field).string.max_len = 64];
   string real_name = 3 [(buf.validate.field).string.max_len = 64];
@@ -199,7 +203,8 @@ message UpdateProfileRequest {
 }
 
 message ChangePasswordRequest {
-  int64 user_id = 3 [(buf.validate.field).int64.gt = 0];
+  reserved 3;
+  reserved "user_id";
   string old_password = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 128
@@ -240,7 +245,8 @@ message ResetPasswordRequest {
 }
 
 message ListIdentitiesRequest {
-  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  reserved 1;
+  reserved "user_id";
 }
 
 message ListIdentitiesResponse {
@@ -248,7 +254,8 @@ message ListIdentitiesResponse {
 }
 
 message BindIdentityRequest {
-  int64 user_id = 5 [(buf.validate.field).int64.gt = 0];
+  reserved 5;
+  reserved "user_id";
   IdentityProvider provider = 1 [(buf.validate.field).enum = {
     defined_only: true
     not_in: [0]
@@ -279,9 +286,10 @@ message BindIdentityRequest {
 }
 
 message BindOAuthIdentityRequest {
-  // The already-authenticated user to attach the OAuth identity to. The
-  // gateway should fill this from the session token, not trust the client.
-  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  // The already-authenticated user (the request actor) attaches the OAuth
+  // identity to themselves — identity comes from the context, not the wire.
+  reserved 1;
+  reserved "user_id";
   IdentityProvider provider = 2 [(buf.validate.field).enum = {
     defined_only: true
     not_in: [
@@ -309,8 +317,8 @@ message BindOAuthIdentityResponse {
 }
 
 message UnbindIdentityRequest {
-  // The caller. The service refuses to delete when identity.user_id != user_id.
-  int64 user_id = 3 [(buf.validate.field).int64.gt = 0];
+  reserved 3;
+  reserved "user_id";
   int64 identity_id = 1 [(buf.validate.field).int64.gt = 0];
   // Empty for OAuth identities — credentials live at the IdP and the
   // authenticated session is the proof (no code round-trip).
@@ -366,7 +374,8 @@ message SendVerificationCodeResponse {
 }
 
 message ListSessionsRequest {
-  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+  reserved 1;
+  reserved "user_id";
   // History pages are cursor-based (created_at descending). The first call
   // (empty cursor) also returns the LIVE sessions ahead of the history.
   int32 page_size = 2 [(buf.validate.field).int32 = {
@@ -392,12 +401,11 @@ message RevokeSessionRequest {
 }
 
 message RevokeAllSessionsRequest {
-  int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
-  // Optional: keep this session alive ("log out OTHER devices" — the testkit
-  // session page). The caller's current session id, injected by the edge from
-  // the authenticated context; empty revokes everything (password change /
-  // reset / user disable flows).
-  string exclude_session_id = 2 [(buf.validate.field).string = {max_len: 128}];
+  // The caller's current session (from the request actor) is kept alive
+  // ("log out OTHER devices" — the testkit session page); callers without an
+  // actor revoke everything (password change / reset / user disable flows).
+  reserved 1, 2;
+  reserved "user_id", "exclude_session_id";
 }
 
 message GetSessionRequest {

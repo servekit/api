@@ -726,9 +726,10 @@ func (x *MiniProgramPhoneLoginRequest) GetAvatarUrl() string {
 	return ""
 }
 
+// The caller is the verified actor (common.v1.RequestActor) carried in the
+// request context — no identity field on the wire.
 type GetProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -763,16 +764,8 @@ func (*GetProfileRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *GetProfileRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
 type UpdateProfileRequest struct {
 	state     protoimpl.MessageState `protogen:"open.v1"`
-	UserId    int64                  `protobuf:"varint,10,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username  string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Nickname  string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	RealName  string                 `protobuf:"bytes,3,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
@@ -820,13 +813,6 @@ func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *UpdateProfileRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 func (x *UpdateProfileRequest) GetUsername() string {
@@ -908,7 +894,6 @@ func (x *UpdateProfileRequest) GetRegionCode() string {
 
 type ChangePasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	OldPassword   string                 `protobuf:"bytes,1,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"`
 	NewPassword   string                 `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -943,13 +928,6 @@ func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *ChangePasswordRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 func (x *ChangePasswordRequest) GetOldPassword() string {
@@ -1037,7 +1015,6 @@ func (x *ResetPasswordRequest) GetPhone() string {
 
 type ListIdentitiesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1070,13 +1047,6 @@ func (x *ListIdentitiesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListIdentitiesRequest.ProtoReflect.Descriptor instead.
 func (*ListIdentitiesRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *ListIdentitiesRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 type ListIdentitiesResponse struct {
@@ -1125,7 +1095,6 @@ func (x *ListIdentitiesResponse) GetIdentities() []*Identity {
 
 type BindIdentityRequest struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
-	UserId   int64                  `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Provider IdentityProvider       `protobuf:"varint,1,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"`
 	Email    string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	Code     string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
@@ -1166,13 +1135,6 @@ func (*BindIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *BindIdentityRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
 func (x *BindIdentityRequest) GetProvider() IdentityProvider {
 	if x != nil {
 		return x.Provider
@@ -1209,12 +1171,9 @@ func (x *BindIdentityRequest) GetPhone() string {
 }
 
 type BindOAuthIdentityRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The already-authenticated user to attach the OAuth identity to. The
-	// gateway should fill this from the session token, not trust the client.
-	UserId   int64            `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Provider IdentityProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"` // OAuth only — EMAIL/PHONE go via BindIdentity
-	Code     string           `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Provider IdentityProvider       `protobuf:"varint,2,opt,name=provider,proto3,enum=user.v1.IdentityProvider" json:"provider,omitempty"` // OAuth only — EMAIL/PHONE go via BindIdentity
+	Code     string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	// state: required, must match what GetOAuthURL issued for this flow. Note
 	// this RPC does NOT need return_to — the caller already has a session,
 	// there's no post-OAuth browser redirect to worry about. state is here
@@ -1252,13 +1211,6 @@ func (x *BindOAuthIdentityRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BindOAuthIdentityRequest.ProtoReflect.Descriptor instead.
 func (*BindOAuthIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *BindOAuthIdentityRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 func (x *BindOAuthIdentityRequest) GetProvider() IdentityProvider {
@@ -1327,10 +1279,8 @@ func (x *BindOAuthIdentityResponse) GetIdentity() *Identity {
 }
 
 type UnbindIdentityRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The caller. The service refuses to delete when identity.user_id != user_id.
-	UserId     int64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	IdentityId int64 `protobuf:"varint,1,opt,name=identity_id,json=identityId,proto3" json:"identity_id,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	IdentityId int64                  `protobuf:"varint,1,opt,name=identity_id,json=identityId,proto3" json:"identity_id,omitempty"`
 	// Empty for OAuth identities — credentials live at the IdP and the
 	// authenticated session is the proof (no code round-trip).
 	Code          string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
@@ -1366,13 +1316,6 @@ func (x *UnbindIdentityRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UnbindIdentityRequest.ProtoReflect.Descriptor instead.
 func (*UnbindIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *UnbindIdentityRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 func (x *UnbindIdentityRequest) GetIdentityId() int64 {
@@ -1512,8 +1455,7 @@ func (x *SendVerificationCodeResponse) GetCaptchaId() string {
 }
 
 type ListSessionsRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	UserId int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
 	// History pages are cursor-based (created_at descending). The first call
 	// (empty cursor) also returns the LIVE sessions ahead of the history.
 	PageSize int32  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
@@ -1553,13 +1495,6 @@ func (x *ListSessionsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListSessionsRequest.ProtoReflect.Descriptor instead.
 func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *ListSessionsRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
 }
 
 func (x *ListSessionsRequest) GetPageSize() int32 {
@@ -1680,15 +1615,9 @@ func (x *RevokeSessionRequest) GetSessionId() string {
 }
 
 type RevokeAllSessionsRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	UserId int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// Optional: keep this session alive ("log out OTHER devices" — the testkit
-	// session page). The caller's current session id, injected by the edge from
-	// the authenticated context; empty revokes everything (password change /
-	// reset / user disable flows).
-	ExcludeSessionId string `protobuf:"bytes,2,opt,name=exclude_session_id,json=excludeSessionId,proto3" json:"exclude_session_id,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RevokeAllSessionsRequest) Reset() {
@@ -1719,20 +1648,6 @@ func (x *RevokeAllSessionsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RevokeAllSessionsRequest.ProtoReflect.Descriptor instead.
 func (*RevokeAllSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *RevokeAllSessionsRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-func (x *RevokeAllSessionsRequest) GetExcludeSessionId() string {
-	if x != nil {
-		return x.ExcludeSessionId
-	}
-	return ""
 }
 
 type GetSessionRequest struct {
@@ -5128,12 +5043,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"phone_code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\tphoneCode\x12#\n" +
 	"\bnickname\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
 	"\n" +
-	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\"5\n" +
-	"\x11GetProfileRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xc3\x04\n" +
-	"\x14UpdateProfileRequest\x12 \n" +
-	"\auser_id\x18\n" +
-	" \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12#\n" +
+	"avatar_url\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\tavatarUrl\"\"\n" +
+	"\x11GetProfileRequestJ\x04\b\x01\x10\x02R\auser_id\"\xb0\x04\n" +
+	"\x14UpdateProfileRequest\x12#\n" +
 	"\busername\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12$\n" +
 	"\treal_name\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\brealName\x12'\n" +
@@ -5149,13 +5061,13 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"^[A-Z]{3}$R\x0fdefaultCurrency\x125\n" +
 	"\vregion_code\x18\f \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{2}$R\n" +
-	"regionCode\"\x97\x01\n" +
-	"\x15ChangePasswordRequest\x12 \n" +
-	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12-\n" +
+	"regionCodeJ\x04\b\n" +
+	"\x10\vR\auser_id\"\x84\x01\n" +
+	"\x15ChangePasswordRequest\x12-\n" +
 	"\fold_password\x18\x01 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\voldPassword\x12-\n" +
 	"\fnew_password\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\"\xd8\x02\n" +
+	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPasswordJ\x04\b\x03\x10\x04R\auser_id\"\xd8\x02\n" +
 	"\x14ResetPasswordRequest\x12#\n" +
 	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12\x1d\n" +
@@ -5163,15 +5075,13 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\fnew_password\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\b\x18\x80\x01R\vnewPassword\x124\n" +
 	"\x05phone\x18\x05 \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
-	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"9\n" +
-	"\x15ListIdentitiesRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"K\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"&\n" +
+	"\x15ListIdentitiesRequestJ\x04\b\x01\x10\x02R\auser_id\"K\n" +
 	"\x16ListIdentitiesResponse\x121\n" +
 	"\n" +
 	"identities\x18\x01 \x03(\v2\x11.user.v1.IdentityR\n" +
-	"identities\"\xb3\x03\n" +
-	"\x13BindIdentityRequest\x12 \n" +
-	"\auser_id\x18\x05 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12A\n" +
+	"identities\"\xa0\x03\n" +
+	"\x13BindIdentityRequest\x12A\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x19.user.v1.IdentityProviderB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12#\n" +
 	"\x05email\x18\x02 \x01(\tB\r\xbaH\n" +
@@ -5179,21 +5089,19 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x04code\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x10R\x04code\x12$\n" +
 	"\bpassword\x18\x04 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\bpassword\x124\n" +
 	"\x05phone\x18\a \x01(\tB\x1e\xbaH\x1b\xd8\x01\x01r\x162\x14^\\+[1-9][0-9]{8,14}$R\x05phone:\x96\x01\xbaH\x92\x01\x1a\x8f\x01\n" +
-	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')\"\xc5\x01\n" +
-	"\x18BindOAuthIdentityRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12E\n" +
+	"\x10target_exclusive\x12)exactly one of email or phone must be set\x1aP(this.email != '' && this.phone == '') || (this.email == '' && this.phone != '')J\x04\b\x05\x10\x06R\auser_id\"\xb2\x01\n" +
+	"\x18BindOAuthIdentityRequest\x12E\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\x0e\xbaH\v\x82\x01\b\x10\x01 \x00 \x01 \x02R\bprovider\x12\x1e\n" +
 	"\x04code\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x04R\x04code\x12 \n" +
 	"\x05state\x18\x05 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\x05state\"J\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\x05stateJ\x04\b\x01\x10\x02R\auser_id\"J\n" +
 	"\x19BindOAuthIdentityResponse\x12-\n" +
-	"\bidentity\x18\x01 \x01(\v2\x11.user.v1.IdentityR\bidentity\"\x80\x01\n" +
-	"\x15UnbindIdentityRequest\x12 \n" +
-	"\auser_id\x18\x03 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12(\n" +
+	"\bidentity\x18\x01 \x01(\v2\x11.user.v1.IdentityR\bidentity\"m\n" +
+	"\x15UnbindIdentityRequest\x12(\n" +
 	"\videntity_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\n" +
 	"identityId\x12\x1b\n" +
-	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04code\"\xbd\x04\n" +
+	"\x04code\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\x04codeJ\x04\b\x03\x10\x04R\auser_id\"\xbd\x04\n" +
 	"\x1bSendVerificationCodeRequest\x12#\n" +
 	"\x05email\x18\x01 \x01(\tB\r\xbaH\n" +
 	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12B\n" +
@@ -5208,12 +5116,11 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"email_bodyR\x0femail_html_bodyR\tsign_name\"=\n" +
 	"\x1cSendVerificationCodeResponse\x12\x1d\n" +
 	"\n" +
-	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xba\x01\n" +
-	"\x13ListSessionsRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12&\n" +
+	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\"\xa7\x01\n" +
+	"\x13ListSessionsRequest\x12&\n" +
 	"\tpage_size\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1f\n" +
 	"\x06cursor\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x128\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x16.user.v1.SessionStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06status\"e\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x16.user.v1.SessionStatusB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06statusJ\x04\b\x01\x10\x02R\auser_id\"e\n" +
 	"\x14ListSessionsResponse\x12,\n" +
 	"\bsessions\x18\x01 \x03(\v2\x10.user.v1.SessionR\bsessions\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -5221,10 +5128,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x14RevokeSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"t\n" +
-	"\x18RevokeAllSessionsRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x126\n" +
-	"\x12exclude_session_id\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01R\x10excludeSessionId\">\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"C\n" +
+	"\x18RevokeAllSessionsRequestJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03R\auser_idR\x12exclude_session_id\">\n" +
 	"\x11GetSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +

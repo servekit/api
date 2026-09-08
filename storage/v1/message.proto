@@ -199,4 +199,7 @@ message AuditLogEntry {
   string error_message = 10;
   string request_id = 11;
   string created_at = 12;
+  // Verified acting user (from the request actor) who performed the
+  // operation; 0 when no actor was present (system / internal calls).
+  int64 operator_user_id = 13;
 }

@@ -1,0 +1,30 @@
+// Package-level messages shared by two or more domains. Keep it deliberately
+// small; domain-owned types stay in their own package (see README rule 2).
+syntax = "proto3";
+
+package common.v1;
+
+// RequestActor is the verified identity of the caller of the current
+// request. It is set by the edge middleware (user-service/pkg/auth) after
+// session verification and travels across service boundaries inside gRPC
+// metadata (key "x-actor", base64 of the proto-marshaled message; HTTP wire
+// form "Grpc-Metadata-X-Actor" through grpc-gateway). The ONLY writer of
+// that header is the edge middleware, which strips inbound copies first —
+// services inside the trust boundary read it, never trust client input.
+message RequestActor {
+  // Verified user id. An actor exists only for verified users: anonymous
+  // calls (public routes, internal system calls) simply carry no actor.
+  int64 user_id = 1;
+  // Opaque session id (the bearer credential).
+  string session_id = 2;
+  // Credential subject: username / email / phone / oauth uid.
+  string login_target = 3;
+  // Numeric value of user.v1.LoginMethod. Carried as int32 because common
+  // must not import the user domain (user/v1 already imports common for
+  // Pong — an enum field here would create a Go import cycle). Cast at the
+  // consumer: userv1.LoginMethod(actor.GetLoginMethod()). This is a
+  // documented reference to user.v1's value space, NOT a mirrored enum;
+  // proto enum values are append-only, so the numbers are stable. Treat
+  // unknown values as unspecified (fail closed on strength checks).
+  int32 login_method = 4;
+}
