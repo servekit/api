@@ -955,7 +955,10 @@ type LoginLog struct {
 	// resolves (see user.v1).
 	Username string `protobuf:"bytes,15,opt,name=username,proto3" json:"username,omitempty"`
 	// The credential subject of the attempt (see user.v1).
-	Target        string `protobuf:"bytes,16,opt,name=target,proto3" json:"target,omitempty"`
+	Target string `protobuf:"bytes,16,opt,name=target,proto3" json:"target,omitempty"`
+	// Tenant the attempt happened in (user_apps.app_key); "" on rows from
+	// before tenancy.
+	AppKey        string `protobuf:"bytes,17,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1098,6 +1101,13 @@ func (x *LoginLog) GetUsername() string {
 func (x *LoginLog) GetTarget() string {
 	if x != nil {
 		return x.Target
+	}
+	return ""
+}
+
+func (x *LoginLog) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
 	}
 	return ""
 }
@@ -4737,7 +4747,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"avatar_url\x18\x03 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xb2\x04\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xcb\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -4758,7 +4768,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
 	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
 	"\busername\x18\x0f \x01(\tR\busername\x12\x16\n" +
-	"\x06target\x18\x10 \x01(\tR\x06target\"\xa3\x01\n" +
+	"\x06target\x18\x10 \x01(\tR\x06target\x12\x17\n" +
+	"\aapp_key\x18\x11 \x01(\tR\x06appKey\"\xa3\x01\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\arole_id\x18\x02 \x01(\x03R\x06roleId\x12\x1b\n" +

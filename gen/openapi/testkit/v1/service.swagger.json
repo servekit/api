@@ -12136,6 +12136,10 @@
         "target": {
           "type": "string",
           "description": "The credential subject of the attempt (see user.v1)."
+        },
+        "appKey": {
+          "type": "string",
+          "description": "Tenant the attempt happened in (user_apps.app_key); \"\" on rows from\nbefore tenancy."
         }
       },
       "description": "LoginLog is one row of the login audit trail."
