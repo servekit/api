@@ -14528,10 +14528,10 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x12RotateTokenRequest\x12\"\n" +
 	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"+\n" +
 	"\x13RotateTokenResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"p\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"u\n" +
 	"\x12RevokeTokenRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x126\n" +
-	"\x06prefix\x18\x02 \x01(\tB\x1e\xbaH\x1br\x19\x10\x06\x18\x102\x13^tm_live_[a-z0-9]+$R\x06prefix\"\x15\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12;\n" +
+	"\x06prefix\x18\x02 \x01(\tB#\xbaH r\x1e\x10\x06\x18\x102\x18^tm_live_[A-Za-z0-9_-]+$R\x06prefix\"\x15\n" +
 	"\x13RevokeTokenResponse\"r\n" +
 	"\x17CreateSigningKeyRequest\x12\"\n" +
 	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x123\n" +

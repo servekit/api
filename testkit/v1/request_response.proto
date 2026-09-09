@@ -1965,7 +1965,7 @@ message RevokeTokenRequest {
   string prefix = 2 [(buf.validate.field).string = {
     min_len: 6
     max_len: 16
-    pattern: "^tm_live_[a-z0-9]+$"
+    pattern: "^tm_live_[A-Za-z0-9_-]+$"
   }];
 }
 
