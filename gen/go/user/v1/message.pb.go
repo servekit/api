@@ -66,7 +66,12 @@ type User struct {
 	// existence check at write time.
 	DefaultCurrency string `protobuf:"bytes,27,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
 	// Reserved for MFA: no write path exists until MFA ships — reads only.
-	MfaEnabled    bool `protobuf:"varint,28,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
+	MfaEnabled bool `protobuf:"varint,28,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
+	// The tenant this user belongs to (see UserAppInfo): the app_key of the
+	// application the user registered under. Set by the service from the
+	// calling app's verified credentials; empty on rows created before
+	// tenancy (platform default tenant).
+	AppKey        string `protobuf:"bytes,29,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -274,6 +279,13 @@ func (x *User) GetMfaEnabled() bool {
 		return x.MfaEnabled
 	}
 	return false
+}
+
+func (x *User) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
 }
 
 type Identity struct {
@@ -1203,11 +1215,113 @@ func (x *UserRole) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// UserAppInfo is one tenant of the user platform (a calling application's
+// user directory). Tenants follow the platform-wide ak/sk pattern: app_key
+// is minted server-side ("usr_" + 8 base36), app_secret is the data-plane
+// credential presented as x-app-key / x-app-secret metadata by trusted BFFs
+// on login/register/admin surfaces — the tenant IS the verified caller.
+type UserAppInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// app_key identifies the tenant on every tenant-scoped surface; unique,
+	// immutable after creation.
+	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// app_secret is the tenant credential. Echoed on every read —
+	// internal-trust posture, same convention as the other platform apps.
+	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	// disabled tenants fail every tenant-scoped surface immediately.
+	Disabled      bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserAppInfo) Reset() {
+	*x = UserAppInfo{}
+	mi := &file_user_v1_message_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserAppInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserAppInfo) ProtoMessage() {}
+
+func (x *UserAppInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_message_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserAppInfo.ProtoReflect.Descriptor instead.
+func (*UserAppInfo) Descriptor() ([]byte, []int) {
+	return file_user_v1_message_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *UserAppInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UserAppInfo) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *UserAppInfo) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+func (x *UserAppInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UserAppInfo) GetDisabled() bool {
+	if x != nil {
+		return x.Disabled
+	}
+	return false
+}
+
+func (x *UserAppInfo) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *UserAppInfo) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
 var File_user_v1_message_proto protoreflect.FileDescriptor
 
 const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xc0\t\n" +
+	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xd9\t\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1244,7 +1358,8 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x10default_currency\x18\x1b \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{3}$R\x0fdefaultCurrency\x12\x1f\n" +
 	"\vmfa_enabled\x18\x1c \x01(\bR\n" +
-	"mfaEnabled\"\xd5\x01\n" +
+	"mfaEnabled\x12\x17\n" +
+	"\aapp_key\x18\x1d \x01(\tR\x06appKey\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -1345,7 +1460,18 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\trole_name\x18\x03 \x01(\tR\broleName\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\x87\x01\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfb\x01\n" +
+	"\vUserAppInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x03 \x01(\tR\tappSecret\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
+	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x87\x01\n" +
 	"\vcom.user.v1B\fMessageProtoP\x01Z-github.com/servekit/api/gen/go/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
@@ -1360,7 +1486,7 @@ func file_user_v1_message_proto_rawDescGZIP() []byte {
 	return file_user_v1_message_proto_rawDescData
 }
 
-var file_user_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_user_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_user_v1_message_proto_goTypes = []any{
 	(*User)(nil),                  // 0: user.v1.User
 	(*Identity)(nil),              // 1: user.v1.Identity
@@ -1372,54 +1498,57 @@ var file_user_v1_message_proto_goTypes = []any{
 	(*Permission)(nil),            // 7: user.v1.Permission
 	(*PermissionGroup)(nil),       // 8: user.v1.PermissionGroup
 	(*UserRole)(nil),              // 9: user.v1.UserRole
-	(Gender)(0),                   // 10: user.v1.Gender
-	(UserStatus)(0),               // 11: user.v1.UserStatus
-	(IdentityProvider)(0),         // 12: user.v1.IdentityProvider
-	(UserType)(0),                 // 13: user.v1.UserType
-	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
-	(DeviceType)(0),               // 15: user.v1.DeviceType
-	(SessionStatus)(0),            // 16: user.v1.SessionStatus
-	(LoginMethod)(0),              // 17: user.v1.LoginMethod
-	(LoginAction)(0),              // 18: user.v1.LoginAction
-	(LoginFailReason)(0),          // 19: user.v1.LoginFailReason
+	(*UserAppInfo)(nil),           // 10: user.v1.UserAppInfo
+	(Gender)(0),                   // 11: user.v1.Gender
+	(UserStatus)(0),               // 12: user.v1.UserStatus
+	(IdentityProvider)(0),         // 13: user.v1.IdentityProvider
+	(UserType)(0),                 // 14: user.v1.UserType
+	(*timestamppb.Timestamp)(nil), // 15: google.protobuf.Timestamp
+	(DeviceType)(0),               // 16: user.v1.DeviceType
+	(SessionStatus)(0),            // 17: user.v1.SessionStatus
+	(LoginMethod)(0),              // 18: user.v1.LoginMethod
+	(LoginAction)(0),              // 19: user.v1.LoginAction
+	(LoginFailReason)(0),          // 20: user.v1.LoginFailReason
 }
 var file_user_v1_message_proto_depIdxs = []int32{
-	10, // 0: user.v1.User.gender:type_name -> user.v1.Gender
-	11, // 1: user.v1.User.status:type_name -> user.v1.UserStatus
-	12, // 2: user.v1.User.register_source:type_name -> user.v1.IdentityProvider
-	13, // 3: user.v1.User.user_type:type_name -> user.v1.UserType
-	14, // 4: user.v1.User.last_login_at:type_name -> google.protobuf.Timestamp
-	14, // 5: user.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	14, // 6: user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	15, // 7: user.v1.User.register_device:type_name -> user.v1.DeviceType
-	12, // 8: user.v1.Identity.provider:type_name -> user.v1.IdentityProvider
-	14, // 9: user.v1.Identity.created_at:type_name -> google.protobuf.Timestamp
-	15, // 10: user.v1.Session.device_type:type_name -> user.v1.DeviceType
-	14, // 11: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
-	14, // 12: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
-	16, // 13: user.v1.Session.status:type_name -> user.v1.SessionStatus
-	17, // 14: user.v1.Session.login_method:type_name -> user.v1.LoginMethod
-	12, // 15: user.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
-	12, // 16: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
-	18, // 17: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
-	19, // 18: user.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
-	15, // 19: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
-	14, // 20: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
-	17, // 21: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
-	14, // 22: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
-	14, // 23: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 24: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
+	11, // 0: user.v1.User.gender:type_name -> user.v1.Gender
+	12, // 1: user.v1.User.status:type_name -> user.v1.UserStatus
+	13, // 2: user.v1.User.register_source:type_name -> user.v1.IdentityProvider
+	14, // 3: user.v1.User.user_type:type_name -> user.v1.UserType
+	15, // 4: user.v1.User.last_login_at:type_name -> google.protobuf.Timestamp
+	15, // 5: user.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	15, // 6: user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	16, // 7: user.v1.User.register_device:type_name -> user.v1.DeviceType
+	13, // 8: user.v1.Identity.provider:type_name -> user.v1.IdentityProvider
+	15, // 9: user.v1.Identity.created_at:type_name -> google.protobuf.Timestamp
+	16, // 10: user.v1.Session.device_type:type_name -> user.v1.DeviceType
+	15, // 11: user.v1.Session.created_at:type_name -> google.protobuf.Timestamp
+	15, // 12: user.v1.Session.last_active_at:type_name -> google.protobuf.Timestamp
+	17, // 13: user.v1.Session.status:type_name -> user.v1.SessionStatus
+	18, // 14: user.v1.Session.login_method:type_name -> user.v1.LoginMethod
+	13, // 15: user.v1.Session.login_provider:type_name -> user.v1.IdentityProvider
+	13, // 16: user.v1.LoginLog.provider:type_name -> user.v1.IdentityProvider
+	19, // 17: user.v1.LoginLog.action:type_name -> user.v1.LoginAction
+	20, // 18: user.v1.LoginLog.fail_reason:type_name -> user.v1.LoginFailReason
+	16, // 19: user.v1.LoginLog.device_type:type_name -> user.v1.DeviceType
+	15, // 20: user.v1.LoginLog.created_at:type_name -> google.protobuf.Timestamp
+	18, // 21: user.v1.LoginLog.method:type_name -> user.v1.LoginMethod
+	15, // 22: user.v1.Group.created_at:type_name -> google.protobuf.Timestamp
+	15, // 23: user.v1.Group.updated_at:type_name -> google.protobuf.Timestamp
+	15, // 24: user.v1.GroupMember.created_at:type_name -> google.protobuf.Timestamp
 	7,  // 25: user.v1.Role.permissions:type_name -> user.v1.Permission
 	8,  // 26: user.v1.Role.perm_groups:type_name -> user.v1.PermissionGroup
-	14, // 27: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	14, // 28: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	15, // 27: user.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	15, // 28: user.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
 	7,  // 29: user.v1.PermissionGroup.permissions:type_name -> user.v1.Permission
-	14, // 30: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
-	31, // [31:31] is the sub-list for method output_type
-	31, // [31:31] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	15, // 30: user.v1.UserRole.created_at:type_name -> google.protobuf.Timestamp
+	15, // 31: user.v1.UserAppInfo.created_at:type_name -> google.protobuf.Timestamp
+	15, // 32: user.v1.UserAppInfo.updated_at:type_name -> google.protobuf.Timestamp
+	33, // [33:33] is the sub-list for method output_type
+	33, // [33:33] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_message_proto_init() }
@@ -1434,7 +1563,7 @@ func file_user_v1_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_message_proto_rawDesc), len(file_user_v1_message_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

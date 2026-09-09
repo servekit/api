@@ -462,6 +462,9 @@ message GetSessionResponse {
   string device = 10;
   // Social/mini-program IdP (see Session.login_provider).
   IdentityProvider login_provider = 11;
+  // The tenant this session lives in (user.v1 UserAppInfo.app_key): the
+  // application the user signed into. Rides the RequestActor downstream.
+  string app_key = 12;
 }
 
 // ==================== Admin ====================
@@ -885,4 +888,88 @@ message ListUserRolesRequest {
 
 message ListUserRolesResponse {
   repeated UserRole roles = 1;
+}
+
+// ==================== Admin: tenants (user apps) ====================
+// Platform-wide ak/sk pattern (see UserAppInfo). The tenant of every
+// tenant-scoped surface is the VERIFIED CALLING APP (x-app-key /
+// x-app-secret metadata), never a request field.
+
+// CreateAppRequest registers a tenant. app_key empty = the server mints
+// one ("usr_" + 8 base36 chars, immutable).
+message CreateAppRequest {
+  // app_key pattern: lowercase letter followed by lowercase alphanumerics
+  // and dashes. Optional; empty = server-generated.
+  string app_key = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
+  ];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+}
+
+message CreateAppResponse {
+  UserAppInfo app = 1;
+  // app_secret convenience echo (also visible via ListApps/GetApp).
+  string app_secret = 2;
+}
+
+message GetAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message GetAppResponse {
+  UserAppInfo app = 1;
+}
+
+// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
+// optional fields keep their current values.
+message UpdateAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  optional bool disabled = 3;
+}
+
+message UpdateAppResponse {
+  UserAppInfo app = 1;
+}
+
+message RotateAppSecretRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message RotateAppSecretResponse {
+  UserAppInfo app = 1;
+  // app_secret convenience echo (also visible via ListApps/GetApp).
+  string app_secret = 2;
+}
+
+// ListAppsRequest — the tenant registry is low-cardinality; no paging.
+message ListAppsRequest {}
+
+message ListAppsResponse {
+  repeated UserAppInfo apps = 1;
+}
+
+// DeleteAppRequest removes the tenant. Refused while users still belong
+// to it (reassign or delete them first).
+message DeleteAppRequest {
+  string app_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
 }

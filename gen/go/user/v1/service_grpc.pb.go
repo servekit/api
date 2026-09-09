@@ -81,6 +81,12 @@ const (
 	UserService_AssignRole_FullMethodName            = "/user.v1.UserService/AssignRole"
 	UserService_RevokeRole_FullMethodName            = "/user.v1.UserService/RevokeRole"
 	UserService_ListUserRoles_FullMethodName         = "/user.v1.UserService/ListUserRoles"
+	UserService_CreateApp_FullMethodName             = "/user.v1.UserService/CreateApp"
+	UserService_GetApp_FullMethodName                = "/user.v1.UserService/GetApp"
+	UserService_UpdateApp_FullMethodName             = "/user.v1.UserService/UpdateApp"
+	UserService_RotateAppSecret_FullMethodName       = "/user.v1.UserService/RotateAppSecret"
+	UserService_ListApps_FullMethodName              = "/user.v1.UserService/ListApps"
+	UserService_DeleteApp_FullMethodName             = "/user.v1.UserService/DeleteApp"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -334,6 +340,16 @@ type UserServiceClient interface {
 	// ListUserRoles returns roles for a user (direct + group-inherited).
 	// Returns direct + group-inherited roles; see UserRole.source.
 	ListUserRoles(ctx context.Context, in *ListUserRolesRequest, opts ...grpc.CallOption) (*ListUserRolesResponse, error)
+	// CreateApp registers a tenant and mints its app_secret.
+	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
+	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
+	// UpdateApp edits mutable fields; app_key is immutable.
+	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
+	// ListApps — the tenant registry is low-cardinality; no paging.
+	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
+	// DeleteApp removes the tenant; refused while users belong to it.
+	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userServiceClient struct {
@@ -924,6 +940,66 @@ func (c *userServiceClient) ListUserRoles(ctx context.Context, in *ListUserRoles
 	return out, nil
 }
 
+func (c *userServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAppResponse)
+	err := c.cc.Invoke(ctx, UserService_CreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAppResponse)
+	err := c.cc.Invoke(ctx, UserService_GetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateAppResponse)
+	err := c.cc.Invoke(ctx, UserService_UpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, UserService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAppsResponse)
+	err := c.cc.Invoke(ctx, UserService_ListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, UserService_DeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -1175,6 +1251,16 @@ type UserServiceServer interface {
 	// ListUserRoles returns roles for a user (direct + group-inherited).
 	// Returns direct + group-inherited roles; see UserRole.source.
 	ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error)
+	// CreateApp registers a tenant and mints its app_secret.
+	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
+	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
+	// UpdateApp edits mutable fields; app_key is immutable.
+	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
+	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
+	// ListApps — the tenant registry is low-cardinality; no paging.
+	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
+	// DeleteApp removes the tenant; refused while users belong to it.
+	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -1358,6 +1444,24 @@ func (UnimplementedUserServiceServer) RevokeRole(context.Context, *RevokeRoleReq
 }
 func (UnimplementedUserServiceServer) ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListUserRoles not implemented")
+}
+func (UnimplementedUserServiceServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+}
+func (UnimplementedUserServiceServer) GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+}
+func (UnimplementedUserServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
+}
+func (UnimplementedUserServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+}
+func (UnimplementedUserServiceServer) DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteApp not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -2424,6 +2528,114 @@ func _UserService_ListUserRoles_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).CreateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_CreateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetApp(ctx, req.(*GetAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_RotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListApps(ctx, req.(*ListAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_DeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteApp(ctx, req.(*DeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2662,6 +2874,30 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUserRoles",
 			Handler:    _UserService_ListUserRoles_Handler,
+		},
+		{
+			MethodName: "CreateApp",
+			Handler:    _UserService_CreateApp_Handler,
+		},
+		{
+			MethodName: "GetApp",
+			Handler:    _UserService_GetApp_Handler,
+		},
+		{
+			MethodName: "UpdateApp",
+			Handler:    _UserService_UpdateApp_Handler,
+		},
+		{
+			MethodName: "RotateAppSecret",
+			Handler:    _UserService_RotateAppSecret_Handler,
+		},
+		{
+			MethodName: "ListApps",
+			Handler:    _UserService_ListApps_Handler,
+		},
+		{
+			MethodName: "DeleteApp",
+			Handler:    _UserService_DeleteApp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

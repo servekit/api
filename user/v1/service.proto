@@ -375,4 +375,23 @@ service UserService {
   // ListUserRoles returns roles for a user (direct + group-inherited).
   // Returns direct + group-inherited roles; see UserRole.source.
   rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse);
+
+  // ---- Tenant registry (user apps; platform ak/sk pattern). The tenant
+  // of every tenant-scoped surface is the verified calling app. ----
+
+  // CreateApp registers a tenant and mints its app_secret.
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+
+  // UpdateApp edits mutable fields; app_key is immutable.
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+
+  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
+
+  // ListApps — the tenant registry is low-cardinality; no paging.
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+
+  // DeleteApp removes the tenant; refused while users belong to it.
+  rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty);
 }

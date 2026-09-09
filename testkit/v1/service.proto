@@ -15,6 +15,8 @@ import "storage/v1/request_response.proto";
 import "telemetry/v1/request_response.proto";
 import "testkit/v1/message.proto";
 import "testkit/v1/request_response.proto";
+import "user/v1/message.proto";
+import "user/v1/request_response.proto";
 
 service TestkitService {
   rpc Ping(google.protobuf.Empty) returns (common.v1.Pong) {
@@ -969,5 +971,42 @@ service TestkitService {
   }
   rpc GetDataInfo(reference.v1.GetDataInfoRequest) returns (reference.v1.GetDataInfoResponse) {
     option (google.api.http) = {get: "/api/v1/reference/data-info"};
+  }
+
+  // ---- User tenant registry (user apps; platform ak/sk pattern). The
+  // login/register/admin-user surfaces scope to the verified calling app —
+  // testkit injects its user-service credentials server-side. ----
+
+  rpc UserListApps(user.v1.ListAppsRequest) returns (user.v1.ListAppsResponse) {
+    option (google.api.http) = {get: "/api/v1/user/admin/apps"};
+  }
+
+  rpc UserCreateApp(user.v1.CreateAppRequest) returns (user.v1.CreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/user/admin/apps"
+      body: "*"
+    };
+  }
+
+  rpc UserGetApp(user.v1.GetAppRequest) returns (user.v1.GetAppResponse) {
+    option (google.api.http) = {get: "/api/v1/user/admin/apps/{app_key}"};
+  }
+
+  rpc UserUpdateApp(user.v1.UpdateAppRequest) returns (user.v1.UpdateAppResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/user/admin/apps/{app_key}"
+      body: "*"
+    };
+  }
+
+  rpc UserRotateAppSecret(user.v1.RotateAppSecretRequest) returns (user.v1.RotateAppSecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/user/admin/apps/{app_key}:rotateSecret"
+      body: "*"
+    };
+  }
+
+  rpc UserDeleteApp(user.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/user/admin/apps/{app_key}"};
   }
 }

@@ -89,6 +89,11 @@ message User {
   ];
   // Reserved for MFA: no write path exists until MFA ships — reads only.
   bool mfa_enabled = 28;
+  // The tenant this user belongs to (see UserAppInfo): the app_key of the
+  // application the user registered under. Set by the service from the
+  // calling app's verified credentials; empty on rows created before
+  // tenancy (platform default tenant).
+  string app_key = 29;
 }
 
 // ==================== Identity ====================
@@ -231,4 +236,24 @@ message UserRole {
   string role_name = 3;
   string source = 4; // "direct" / "group:{group_name}"
   google.protobuf.Timestamp created_at = 5;
+}
+
+// UserAppInfo is one tenant of the user platform (a calling application's
+// user directory). Tenants follow the platform-wide ak/sk pattern: app_key
+// is minted server-side ("usr_" + 8 base36), app_secret is the data-plane
+// credential presented as x-app-key / x-app-secret metadata by trusted BFFs
+// on login/register/admin surfaces — the tenant IS the verified caller.
+message UserAppInfo {
+  int64 id = 1;
+  // app_key identifies the tenant on every tenant-scoped surface; unique,
+  // immutable after creation.
+  string app_key = 2;
+  // app_secret is the tenant credential. Echoed on every read —
+  // internal-trust posture, same convention as the other platform apps.
+  string app_secret = 3;
+  string name = 4;
+  // disabled tenants fail every tenant-scoped surface immediately.
+  bool disabled = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }

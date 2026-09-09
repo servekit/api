@@ -16,6 +16,7 @@ import (
 	v15 "github.com/servekit/api/gen/go/reference/v1"
 	v11 "github.com/servekit/api/gen/go/storage/v1"
 	v14 "github.com/servekit/api/gen/go/telemetry/v1"
+	v16 "github.com/servekit/api/gen/go/user/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -215,6 +216,12 @@ const (
 	TestkitService_ListCountriesByRegion_FullMethodName       = "/testkit.v1.TestkitService/ListCountriesByRegion"
 	TestkitService_GetCountryDefaults_FullMethodName          = "/testkit.v1.TestkitService/GetCountryDefaults"
 	TestkitService_GetDataInfo_FullMethodName                 = "/testkit.v1.TestkitService/GetDataInfo"
+	TestkitService_UserListApps_FullMethodName                = "/testkit.v1.TestkitService/UserListApps"
+	TestkitService_UserCreateApp_FullMethodName               = "/testkit.v1.TestkitService/UserCreateApp"
+	TestkitService_UserGetApp_FullMethodName                  = "/testkit.v1.TestkitService/UserGetApp"
+	TestkitService_UserUpdateApp_FullMethodName               = "/testkit.v1.TestkitService/UserUpdateApp"
+	TestkitService_UserRotateAppSecret_FullMethodName         = "/testkit.v1.TestkitService/UserRotateAppSecret"
+	TestkitService_UserDeleteApp_FullMethodName               = "/testkit.v1.TestkitService/UserDeleteApp"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -439,6 +446,12 @@ type TestkitServiceClient interface {
 	ListCountriesByRegion(ctx context.Context, in *v15.ListCountriesByRegionRequest, opts ...grpc.CallOption) (*v15.ListCountriesByRegionResponse, error)
 	GetCountryDefaults(ctx context.Context, in *v15.GetCountryDefaultsRequest, opts ...grpc.CallOption) (*v15.GetCountryDefaultsResponse, error)
 	GetDataInfo(ctx context.Context, in *v15.GetDataInfoRequest, opts ...grpc.CallOption) (*v15.GetDataInfoResponse, error)
+	UserListApps(ctx context.Context, in *v16.ListAppsRequest, opts ...grpc.CallOption) (*v16.ListAppsResponse, error)
+	UserCreateApp(ctx context.Context, in *v16.CreateAppRequest, opts ...grpc.CallOption) (*v16.CreateAppResponse, error)
+	UserGetApp(ctx context.Context, in *v16.GetAppRequest, opts ...grpc.CallOption) (*v16.GetAppResponse, error)
+	UserUpdateApp(ctx context.Context, in *v16.UpdateAppRequest, opts ...grpc.CallOption) (*v16.UpdateAppResponse, error)
+	UserRotateAppSecret(ctx context.Context, in *v16.RotateAppSecretRequest, opts ...grpc.CallOption) (*v16.RotateAppSecretResponse, error)
+	UserDeleteApp(ctx context.Context, in *v16.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type testkitServiceClient struct {
@@ -2319,6 +2332,66 @@ func (c *testkitServiceClient) GetDataInfo(ctx context.Context, in *v15.GetDataI
 	return out, nil
 }
 
+func (c *testkitServiceClient) UserListApps(ctx context.Context, in *v16.ListAppsRequest, opts ...grpc.CallOption) (*v16.ListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v16.ListAppsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UserListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) UserCreateApp(ctx context.Context, in *v16.CreateAppRequest, opts ...grpc.CallOption) (*v16.CreateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v16.CreateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UserCreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) UserGetApp(ctx context.Context, in *v16.GetAppRequest, opts ...grpc.CallOption) (*v16.GetAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v16.GetAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UserGetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) UserUpdateApp(ctx context.Context, in *v16.UpdateAppRequest, opts ...grpc.CallOption) (*v16.UpdateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v16.UpdateAppResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UserUpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) UserRotateAppSecret(ctx context.Context, in *v16.RotateAppSecretRequest, opts ...grpc.CallOption) (*v16.RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v16.RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UserRotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) UserDeleteApp(ctx context.Context, in *v16.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_UserDeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TestkitServiceServer is the server API for TestkitService service.
 // All implementations must embed UnimplementedTestkitServiceServer
 // for forward compatibility.
@@ -2541,6 +2614,12 @@ type TestkitServiceServer interface {
 	ListCountriesByRegion(context.Context, *v15.ListCountriesByRegionRequest) (*v15.ListCountriesByRegionResponse, error)
 	GetCountryDefaults(context.Context, *v15.GetCountryDefaultsRequest) (*v15.GetCountryDefaultsResponse, error)
 	GetDataInfo(context.Context, *v15.GetDataInfoRequest) (*v15.GetDataInfoResponse, error)
+	UserListApps(context.Context, *v16.ListAppsRequest) (*v16.ListAppsResponse, error)
+	UserCreateApp(context.Context, *v16.CreateAppRequest) (*v16.CreateAppResponse, error)
+	UserGetApp(context.Context, *v16.GetAppRequest) (*v16.GetAppResponse, error)
+	UserUpdateApp(context.Context, *v16.UpdateAppRequest) (*v16.UpdateAppResponse, error)
+	UserRotateAppSecret(context.Context, *v16.RotateAppSecretRequest) (*v16.RotateAppSecretResponse, error)
+	UserDeleteApp(context.Context, *v16.DeleteAppRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -3111,6 +3190,24 @@ func (UnimplementedTestkitServiceServer) GetCountryDefaults(context.Context, *v1
 }
 func (UnimplementedTestkitServiceServer) GetDataInfo(context.Context, *v15.GetDataInfoRequest) (*v15.GetDataInfoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDataInfo not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserListApps(context.Context, *v16.ListAppsRequest) (*v16.ListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserListApps not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserCreateApp(context.Context, *v16.CreateAppRequest) (*v16.CreateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserCreateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserGetApp(context.Context, *v16.GetAppRequest) (*v16.GetAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserGetApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserUpdateApp(context.Context, *v16.UpdateAppRequest) (*v16.UpdateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserUpdateApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserRotateAppSecret(context.Context, *v16.RotateAppSecretRequest) (*v16.RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserRotateAppSecret not implemented")
+}
+func (UnimplementedTestkitServiceServer) UserDeleteApp(context.Context, *v16.DeleteAppRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserDeleteApp not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
 func (UnimplementedTestkitServiceServer) testEmbeddedByValue()                        {}
@@ -6499,6 +6596,114 @@ func _TestkitService_GetDataInfo_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_UserListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.ListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserListApps(ctx, req.(*v16.ListAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_UserCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.CreateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserCreateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserCreateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserCreateApp(ctx, req.(*v16.CreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_UserGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.GetAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserGetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserGetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserGetApp(ctx, req.(*v16.GetAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_UserUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.UpdateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserUpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserUpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserUpdateApp(ctx, req.(*v16.UpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_UserRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserRotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserRotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserRotateAppSecret(ctx, req.(*v16.RotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_UserDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v16.DeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).UserDeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_UserDeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).UserDeleteApp(ctx, req.(*v16.DeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TestkitService_ServiceDesc is the grpc.ServiceDesc for TestkitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -7253,6 +7458,30 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDataInfo",
 			Handler:    _TestkitService_GetDataInfo_Handler,
+		},
+		{
+			MethodName: "UserListApps",
+			Handler:    _TestkitService_UserListApps_Handler,
+		},
+		{
+			MethodName: "UserCreateApp",
+			Handler:    _TestkitService_UserCreateApp_Handler,
+		},
+		{
+			MethodName: "UserGetApp",
+			Handler:    _TestkitService_UserGetApp_Handler,
+		},
+		{
+			MethodName: "UserUpdateApp",
+			Handler:    _TestkitService_UserUpdateApp_Handler,
+		},
+		{
+			MethodName: "UserRotateAppSecret",
+			Handler:    _TestkitService_UserRotateAppSecret_Handler,
+		},
+		{
+			MethodName: "UserDeleteApp",
+			Handler:    _TestkitService_UserDeleteApp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

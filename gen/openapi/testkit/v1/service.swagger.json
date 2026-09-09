@@ -6864,6 +6864,192 @@
         ]
       }
     },
+    "/api/v1/user/admin/apps": {
+      "get": {
+        "operationId": "UserListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userV1ListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "UserCreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userV1CreateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "CreateAppRequest registers a tenant. app_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable).",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userV1CreateAppRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/user/admin/apps/{appKey}": {
+      "get": {
+        "operationId": "UserGetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userV1GetAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "UserDeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "UserUpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userV1UpdateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceUserUpdateAppBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/user/admin/apps/{appKey}:rotateSecret": {
+      "post": {
+        "operationId": "UserRotateAppSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userV1RotateAppSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceUserRotateAppSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/users": {
       "get": {
         "operationId": "ListUsers",
@@ -8068,6 +8254,21 @@
         }
       }
     },
+    "TestkitServiceUserRotateAppSecretBody": {
+      "type": "object"
+    },
+    "TestkitServiceUserUpdateAppBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "description": "UpdateAppRequest edits mutable fields; app_key is immutable. Absent\noptional fields keep their current values."
+    },
     "licenseV1CreateAppRequest": {
       "type": "object",
       "properties": {
@@ -8561,6 +8762,71 @@
       "properties": {
         "app": {
           "$ref": "#/definitions/testkitV1App"
+        }
+      }
+    },
+    "userV1CreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "description": "CreateAppRequest registers a tenant. app_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable)."
+    },
+    "userV1CreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
+    "userV1GetAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
+        }
+      }
+    },
+    "userV1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1UserAppInfo"
+          }
+        }
+      }
+    },
+    "userV1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
+    "userV1UpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
         }
       }
     },
@@ -13721,6 +13987,39 @@
         }
       },
       "description": "User is the frontend-facing user shape (P2 enriched). Fields are renumbered\nsequentially vs uservl.User (which has gaps from historical edits); the\nmapping layer translates field-by-name, not field-by-number. Unlike P1's\n6-field login view, this carries the full profile surface (status, gender,\ntimestamps, register_source, ...) used by profile/admin UIs. user_type is\nretained so the frontend can still do its two-track split (design spec §3.5)."
+    },
+    "v1UserAppInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appKey": {
+          "type": "string",
+          "description": "app_key identifies the tenant on every tenant-scoped surface; unique,\nimmutable after creation."
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is the tenant credential. Echoed on every read —\ninternal-trust posture, same convention as the other platform apps."
+        },
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled tenants fail every tenant-scoped surface immediately."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). Tenants follow the platform-wide ak/sk pattern: app_key\nis minted server-side (\"usr_\" + 8 base36), app_secret is the data-plane\ncredential presented as x-app-key / x-app-secret metadata by trusted BFFs\non login/register/admin surfaces — the tenant IS the verified caller."
     },
     "v1UserRole": {
       "type": "object",

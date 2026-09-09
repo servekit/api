@@ -1903,6 +1903,9 @@ type GetSessionResponse struct {
 	Device string `protobuf:"bytes,10,opt,name=device,proto3" json:"device,omitempty"`
 	// Social/mini-program IdP (see Session.login_provider).
 	LoginProvider IdentityProvider `protobuf:"varint,11,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
+	// The tenant this session lives in (user.v1 UserAppInfo.app_key): the
+	// application the user signed into. Rides the RequestActor downstream.
+	AppKey        string `protobuf:"bytes,12,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2012,6 +2015,13 @@ func (x *GetSessionResponse) GetLoginProvider() IdentityProvider {
 		return x.LoginProvider
 	}
 	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
+}
+
+func (x *GetSessionResponse) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
 }
 
 type CreateUserRequest struct {
@@ -4972,6 +4982,533 @@ func (x *ListUserRolesResponse) GetRoles() []*UserRole {
 	return nil
 }
 
+// CreateAppRequest registers a tenant. app_key empty = the server mints
+// one ("usr_" + 8 base36 chars, immutable).
+type CreateAppRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_key pattern: lowercase letter followed by lowercase alphanumerics
+	// and dashes. Optional; empty = server-generated.
+	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAppRequest) Reset() {
+	*x = CreateAppRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[78]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAppRequest) ProtoMessage() {}
+
+func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[78]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
+func (*CreateAppRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{78}
+}
+
+func (x *CreateAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *CreateAppRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type CreateAppResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	App   *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// app_secret convenience echo (also visible via ListApps/GetApp).
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAppResponse) Reset() {
+	*x = CreateAppResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[79]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAppResponse) ProtoMessage() {}
+
+func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[79]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
+func (*CreateAppResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{79}
+}
+
+func (x *CreateAppResponse) GetApp() *UserAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+func (x *CreateAppResponse) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+type GetAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAppRequest) Reset() {
+	*x = GetAppRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[80]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAppRequest) ProtoMessage() {}
+
+func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[80]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
+func (*GetAppRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{80}
+}
+
+func (x *GetAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+type GetAppResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	App           *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAppResponse) Reset() {
+	*x = GetAppResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[81]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAppResponse) ProtoMessage() {}
+
+func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[81]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
+func (*GetAppResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{81}
+}
+
+func (x *GetAppResponse) GetApp() *UserAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
+// optional fields keep their current values.
+type UpdateAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Disabled      *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateAppRequest) Reset() {
+	*x = UpdateAppRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[82]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAppRequest) ProtoMessage() {}
+
+func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[82]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
+func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{82}
+}
+
+func (x *UpdateAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *UpdateAppRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *UpdateAppRequest) GetDisabled() bool {
+	if x != nil && x.Disabled != nil {
+		return *x.Disabled
+	}
+	return false
+}
+
+type UpdateAppResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	App           *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateAppResponse) Reset() {
+	*x = UpdateAppResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[83]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAppResponse) ProtoMessage() {}
+
+func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[83]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
+func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{83}
+}
+
+func (x *UpdateAppResponse) GetApp() *UserAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+type RotateAppSecretRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RotateAppSecretRequest) Reset() {
+	*x = RotateAppSecretRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[84]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RotateAppSecretRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RotateAppSecretRequest) ProtoMessage() {}
+
+func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[84]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
+func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{84}
+}
+
+func (x *RotateAppSecretRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+type RotateAppSecretResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	App   *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// app_secret convenience echo (also visible via ListApps/GetApp).
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RotateAppSecretResponse) Reset() {
+	*x = RotateAppSecretResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[85]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RotateAppSecretResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RotateAppSecretResponse) ProtoMessage() {}
+
+func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[85]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
+func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{85}
+}
+
+func (x *RotateAppSecretResponse) GetApp() *UserAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+func (x *RotateAppSecretResponse) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+// ListAppsRequest — the tenant registry is low-cardinality; no paging.
+type ListAppsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAppsRequest) Reset() {
+	*x = ListAppsRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[86]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAppsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAppsRequest) ProtoMessage() {}
+
+func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[86]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
+func (*ListAppsRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{86}
+}
+
+type ListAppsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Apps          []*UserAppInfo         `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAppsResponse) Reset() {
+	*x = ListAppsResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[87]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAppsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAppsResponse) ProtoMessage() {}
+
+func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[87]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
+func (*ListAppsResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{87}
+}
+
+func (x *ListAppsResponse) GetApps() []*UserAppInfo {
+	if x != nil {
+		return x.Apps
+	}
+	return nil
+}
+
+// DeleteAppRequest removes the tenant. Refused while users still belong
+// to it (reassign or delete them first).
+type DeleteAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteAppRequest) Reset() {
+	*x = DeleteAppRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[88]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAppRequest) ProtoMessage() {}
+
+func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[88]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{88}
+}
+
+func (x *DeleteAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
 var File_user_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_user_v1_request_response_proto_rawDesc = "" +
@@ -5146,7 +5683,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x1bExchangeSessionCodeResponse\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xb2\x03\n" +
+	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xcb\x03\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -5162,7 +5699,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\flogin_target\x18\t \x01(\tR\vloginTarget\x12\x16\n" +
 	"\x06device\x18\n" +
 	" \x01(\tR\x06device\x12@\n" +
-	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xe3\x03\n" +
+	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\x12\x17\n" +
+	"\aapp_key\x18\f \x01(\tR\x06appKey\"\xe3\x03\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -5396,7 +5934,39 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x14ListUserRolesRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"@\n" +
 	"\x15ListUserRolesResponse\x12'\n" +
-	"\x05roles\x18\x01 \x03(\v2\x11.user.v1.UserRoleR\x05rolesB\x8f\x01\n" +
+	"\x05roles\x18\x01 \x03(\v2\x11.user.v1.UserRoleR\x05roles\"m\n" +
+	"\x10CreateAppRequest\x129\n" +
+	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\x04name\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\"Z\n" +
+	"\x11CreateAppResponse\x12&\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"3\n" +
+	"\rGetAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"8\n" +
+	"\x0eGetAppResponse\x12&\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"\x92\x01\n" +
+	"\x10UpdateAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\x04name\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
+	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01B\a\n" +
+	"\x05_nameB\v\n" +
+	"\t_disabled\";\n" +
+	"\x11UpdateAppResponse\x12&\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"<\n" +
+	"\x16RotateAppSecretRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"`\n" +
+	"\x17RotateAppSecretResponse\x12&\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x11\n" +
+	"\x0fListAppsRequest\"<\n" +
+	"\x10ListAppsResponse\x12(\n" +
+	"\x04apps\x18\x01 \x03(\v2\x14.user.v1.UserAppInfoR\x04apps\"6\n" +
+	"\x10DeleteAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKeyB\x8f\x01\n" +
 	"\vcom.user.v1B\x14RequestResponseProtoP\x01Z-github.com/servekit/api/gen/go/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
@@ -5411,7 +5981,7 @@ func file_user_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_user_v1_request_response_proto_rawDescData
 }
 
-var file_user_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 78)
+var file_user_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 89)
 var file_user_v1_request_response_proto_goTypes = []any{
 	(*RegisterRequest)(nil),              // 0: user.v1.RegisterRequest
 	(*RegisterResponse)(nil),             // 1: user.v1.RegisterResponse
@@ -5491,91 +6061,108 @@ var file_user_v1_request_response_proto_goTypes = []any{
 	(*RevokeRoleRequest)(nil),            // 75: user.v1.RevokeRoleRequest
 	(*ListUserRolesRequest)(nil),         // 76: user.v1.ListUserRolesRequest
 	(*ListUserRolesResponse)(nil),        // 77: user.v1.ListUserRolesResponse
-	(IdentityProvider)(0),                // 78: user.v1.IdentityProvider
-	(Gender)(0),                          // 79: user.v1.Gender
-	(*User)(nil),                         // 80: user.v1.User
-	(LoginMethod)(0),                     // 81: user.v1.LoginMethod
-	(*Identity)(nil),                     // 82: user.v1.Identity
-	(VerificationChannel)(0),             // 83: user.v1.VerificationChannel
-	(VerificationPurpose)(0),             // 84: user.v1.VerificationPurpose
-	(SessionStatus)(0),                   // 85: user.v1.SessionStatus
-	(*Session)(nil),                      // 86: user.v1.Session
-	(*timestamppb.Timestamp)(nil),        // 87: google.protobuf.Timestamp
-	(UserType)(0),                        // 88: user.v1.UserType
-	(UserStatus)(0),                      // 89: user.v1.UserStatus
-	(DeviceType)(0),                      // 90: user.v1.DeviceType
-	(UserSortField)(0),                   // 91: user.v1.UserSortField
-	(LoginAction)(0),                     // 92: user.v1.LoginAction
-	(*LoginLog)(nil),                     // 93: user.v1.LoginLog
-	(*Group)(nil),                        // 94: user.v1.Group
-	(*GroupMember)(nil),                  // 95: user.v1.GroupMember
-	(*Role)(nil),                         // 96: user.v1.Role
-	(*Permission)(nil),                   // 97: user.v1.Permission
-	(*PermissionGroup)(nil),              // 98: user.v1.PermissionGroup
-	(*UserRole)(nil),                     // 99: user.v1.UserRole
+	(*CreateAppRequest)(nil),             // 78: user.v1.CreateAppRequest
+	(*CreateAppResponse)(nil),            // 79: user.v1.CreateAppResponse
+	(*GetAppRequest)(nil),                // 80: user.v1.GetAppRequest
+	(*GetAppResponse)(nil),               // 81: user.v1.GetAppResponse
+	(*UpdateAppRequest)(nil),             // 82: user.v1.UpdateAppRequest
+	(*UpdateAppResponse)(nil),            // 83: user.v1.UpdateAppResponse
+	(*RotateAppSecretRequest)(nil),       // 84: user.v1.RotateAppSecretRequest
+	(*RotateAppSecretResponse)(nil),      // 85: user.v1.RotateAppSecretResponse
+	(*ListAppsRequest)(nil),              // 86: user.v1.ListAppsRequest
+	(*ListAppsResponse)(nil),             // 87: user.v1.ListAppsResponse
+	(*DeleteAppRequest)(nil),             // 88: user.v1.DeleteAppRequest
+	(IdentityProvider)(0),                // 89: user.v1.IdentityProvider
+	(Gender)(0),                          // 90: user.v1.Gender
+	(*User)(nil),                         // 91: user.v1.User
+	(LoginMethod)(0),                     // 92: user.v1.LoginMethod
+	(*Identity)(nil),                     // 93: user.v1.Identity
+	(VerificationChannel)(0),             // 94: user.v1.VerificationChannel
+	(VerificationPurpose)(0),             // 95: user.v1.VerificationPurpose
+	(SessionStatus)(0),                   // 96: user.v1.SessionStatus
+	(*Session)(nil),                      // 97: user.v1.Session
+	(*timestamppb.Timestamp)(nil),        // 98: google.protobuf.Timestamp
+	(UserType)(0),                        // 99: user.v1.UserType
+	(UserStatus)(0),                      // 100: user.v1.UserStatus
+	(DeviceType)(0),                      // 101: user.v1.DeviceType
+	(UserSortField)(0),                   // 102: user.v1.UserSortField
+	(LoginAction)(0),                     // 103: user.v1.LoginAction
+	(*LoginLog)(nil),                     // 104: user.v1.LoginLog
+	(*Group)(nil),                        // 105: user.v1.Group
+	(*GroupMember)(nil),                  // 106: user.v1.GroupMember
+	(*Role)(nil),                         // 107: user.v1.Role
+	(*Permission)(nil),                   // 108: user.v1.Permission
+	(*PermissionGroup)(nil),              // 109: user.v1.PermissionGroup
+	(*UserRole)(nil),                     // 110: user.v1.UserRole
+	(*UserAppInfo)(nil),                  // 111: user.v1.UserAppInfo
 }
 var file_user_v1_request_response_proto_depIdxs = []int32{
-	78, // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
-	79, // 1: user.v1.RegisterRequest.gender:type_name -> user.v1.Gender
-	80, // 2: user.v1.RegisterResponse.user:type_name -> user.v1.User
-	81, // 3: user.v1.LoginRequest.method:type_name -> user.v1.LoginMethod
-	80, // 4: user.v1.LoginResponse.user:type_name -> user.v1.User
-	78, // 5: user.v1.GetOAuthURLRequest.provider:type_name -> user.v1.IdentityProvider
-	78, // 6: user.v1.SocialLoginRequest.provider:type_name -> user.v1.IdentityProvider
-	79, // 7: user.v1.UpdateProfileRequest.gender:type_name -> user.v1.Gender
-	82, // 8: user.v1.ListIdentitiesResponse.identities:type_name -> user.v1.Identity
-	78, // 9: user.v1.BindIdentityRequest.provider:type_name -> user.v1.IdentityProvider
-	78, // 10: user.v1.BindOAuthIdentityRequest.provider:type_name -> user.v1.IdentityProvider
-	82, // 11: user.v1.BindOAuthIdentityResponse.identity:type_name -> user.v1.Identity
-	83, // 12: user.v1.SendVerificationCodeRequest.channel:type_name -> user.v1.VerificationChannel
-	84, // 13: user.v1.SendVerificationCodeRequest.purpose:type_name -> user.v1.VerificationPurpose
-	85, // 14: user.v1.ListSessionsRequest.status:type_name -> user.v1.SessionStatus
-	86, // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
-	87, // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
-	87, // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
-	81, // 18: user.v1.GetSessionResponse.login_method:type_name -> user.v1.LoginMethod
-	78, // 19: user.v1.GetSessionResponse.login_provider:type_name -> user.v1.IdentityProvider
-	88, // 20: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
-	79, // 21: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
-	80, // 22: user.v1.CreateUserResponse.user:type_name -> user.v1.User
-	89, // 23: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
-	79, // 24: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
-	78, // 25: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
-	90, // 26: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
-	87, // 27: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	87, // 28: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	87, // 29: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	87, // 30: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	88, // 31: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
-	91, // 32: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 33: user.v1.ListUsersResponse.users:type_name -> user.v1.User
-	89, // 34: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
-	79, // 35: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
-	78, // 36: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
-	90, // 37: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
-	88, // 38: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
-	87, // 39: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	87, // 40: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	87, // 41: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	87, // 42: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	91, // 43: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
-	80, // 44: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
-	78, // 45: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	92, // 46: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
-	81, // 47: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
-	93, // 48: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
-	94, // 49: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
-	95, // 50: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
-	96, // 51: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
-	97, // 52: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
-	98, // 53: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
-	96, // 54: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
-	99, // 55: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
-	56, // [56:56] is the sub-list for method output_type
-	56, // [56:56] is the sub-list for method input_type
-	56, // [56:56] is the sub-list for extension type_name
-	56, // [56:56] is the sub-list for extension extendee
-	0,  // [0:56] is the sub-list for field type_name
+	89,  // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
+	90,  // 1: user.v1.RegisterRequest.gender:type_name -> user.v1.Gender
+	91,  // 2: user.v1.RegisterResponse.user:type_name -> user.v1.User
+	92,  // 3: user.v1.LoginRequest.method:type_name -> user.v1.LoginMethod
+	91,  // 4: user.v1.LoginResponse.user:type_name -> user.v1.User
+	89,  // 5: user.v1.GetOAuthURLRequest.provider:type_name -> user.v1.IdentityProvider
+	89,  // 6: user.v1.SocialLoginRequest.provider:type_name -> user.v1.IdentityProvider
+	90,  // 7: user.v1.UpdateProfileRequest.gender:type_name -> user.v1.Gender
+	93,  // 8: user.v1.ListIdentitiesResponse.identities:type_name -> user.v1.Identity
+	89,  // 9: user.v1.BindIdentityRequest.provider:type_name -> user.v1.IdentityProvider
+	89,  // 10: user.v1.BindOAuthIdentityRequest.provider:type_name -> user.v1.IdentityProvider
+	93,  // 11: user.v1.BindOAuthIdentityResponse.identity:type_name -> user.v1.Identity
+	94,  // 12: user.v1.SendVerificationCodeRequest.channel:type_name -> user.v1.VerificationChannel
+	95,  // 13: user.v1.SendVerificationCodeRequest.purpose:type_name -> user.v1.VerificationPurpose
+	96,  // 14: user.v1.ListSessionsRequest.status:type_name -> user.v1.SessionStatus
+	97,  // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
+	98,  // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
+	98,  // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
+	92,  // 18: user.v1.GetSessionResponse.login_method:type_name -> user.v1.LoginMethod
+	89,  // 19: user.v1.GetSessionResponse.login_provider:type_name -> user.v1.IdentityProvider
+	99,  // 20: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
+	90,  // 21: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
+	91,  // 22: user.v1.CreateUserResponse.user:type_name -> user.v1.User
+	100, // 23: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
+	90,  // 24: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
+	89,  // 25: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
+	101, // 26: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
+	98,  // 27: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	98,  // 28: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	98,  // 29: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	98,  // 30: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	99,  // 31: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
+	102, // 32: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
+	91,  // 33: user.v1.ListUsersResponse.users:type_name -> user.v1.User
+	100, // 34: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
+	90,  // 35: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
+	89,  // 36: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
+	101, // 37: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
+	99,  // 38: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
+	98,  // 39: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	98,  // 40: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	98,  // 41: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	98,  // 42: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	102, // 43: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
+	91,  // 44: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
+	89,  // 45: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
+	103, // 46: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	92,  // 47: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	104, // 48: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
+	105, // 49: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
+	106, // 50: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
+	107, // 51: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
+	108, // 52: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
+	109, // 53: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
+	107, // 54: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
+	110, // 55: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
+	111, // 56: user.v1.CreateAppResponse.app:type_name -> user.v1.UserAppInfo
+	111, // 57: user.v1.GetAppResponse.app:type_name -> user.v1.UserAppInfo
+	111, // 58: user.v1.UpdateAppResponse.app:type_name -> user.v1.UserAppInfo
+	111, // 59: user.v1.RotateAppSecretResponse.app:type_name -> user.v1.UserAppInfo
+	111, // 60: user.v1.ListAppsResponse.apps:type_name -> user.v1.UserAppInfo
+	61,  // [61:61] is the sub-list for method output_type
+	61,  // [61:61] is the sub-list for method input_type
+	61,  // [61:61] is the sub-list for extension type_name
+	61,  // [61:61] is the sub-list for extension extendee
+	0,   // [0:61] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_request_response_proto_init() }
@@ -5586,13 +6173,14 @@ func file_user_v1_request_response_proto_init() {
 	file_user_v1_enums_proto_init()
 	file_user_v1_message_proto_init()
 	file_user_v1_request_response_proto_msgTypes[40].OneofWrappers = []any{}
+	file_user_v1_request_response_proto_msgTypes[82].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_request_response_proto_rawDesc), len(file_user_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   78,
+			NumMessages:   89,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
