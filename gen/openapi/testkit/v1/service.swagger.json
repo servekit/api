@@ -11073,6 +11073,10 @@
         },
         "loginProvider": {
           "$ref": "#/definitions/v1IdentityProvider"
+        },
+        "appKey": {
+          "type": "string",
+          "description": "Tenant the session lives in (user_apps.app_key)."
         }
       }
     },
@@ -13984,6 +13988,10 @@
         "mfaEnabled": {
           "type": "boolean",
           "description": "Reserved for MFA; false until an MFA flow exists."
+        },
+        "appKey": {
+          "type": "string",
+          "description": "Tenant label (user_apps.app_key) the user belongs to."
         }
       },
       "description": "User is the frontend-facing user shape (P2 enriched). Fields are renumbered\nsequentially vs uservl.User (which has gaps from historical edits); the\nmapping layer translates field-by-name, not field-by-number. Unlike P1's\n6-field login view, this carries the full profile surface (status, gender,\ntimestamps, register_source, ...) used by profile/admin UIs. user_type is\nretained so the frontend can still do its two-track split (design spec §3.5)."

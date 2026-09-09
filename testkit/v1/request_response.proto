@@ -334,6 +334,8 @@ message GetSessionResponse {
   string browser = 7;
   user.v1.LoginMethod login_method = 8 [(buf.validate.field).enum.defined_only = true];
   user.v1.IdentityProvider login_provider = 9 [(buf.validate.field).enum.defined_only = true];
+  // Tenant the session lives in (user_apps.app_key).
+  string app_key = 10;
 }
 
 message IssueSessionCodeRequest {

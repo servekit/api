@@ -1342,6 +1342,8 @@ type GetSessionResponse struct {
 	Browser       string                 `protobuf:"bytes,7,opt,name=browser,proto3" json:"browser,omitempty"`
 	LoginMethod   v1.LoginMethod         `protobuf:"varint,8,opt,name=login_method,json=loginMethod,proto3,enum=user.v1.LoginMethod" json:"login_method,omitempty"`
 	LoginProvider v1.IdentityProvider    `protobuf:"varint,9,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
+	// Tenant the session lives in (user_apps.app_key).
+	AppKey        string `protobuf:"bytes,10,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1437,6 +1439,13 @@ func (x *GetSessionResponse) GetLoginProvider() v1.IdentityProvider {
 		return x.LoginProvider
 	}
 	return v1.IdentityProvider(0)
+}
+
+func (x *GetSessionResponse) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
 }
 
 type IssueSessionCodeRequest struct {
@@ -13504,7 +13513,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x11GetSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"\x8b\x03\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"\xa4\x03\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -13517,7 +13526,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x02os\x18\x06 \x01(\tR\x02os\x12\x18\n" +
 	"\abrowser\x18\a \x01(\tR\abrowser\x12A\n" +
 	"\flogin_method\x18\b \x01(\x0e2\x14.user.v1.LoginMethodB\b\xbaH\x05\x82\x01\x02\x10\x01R\vloginMethod\x12J\n" +
-	"\x0elogin_provider\x18\t \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\rloginProvider\"D\n" +
+	"\x0elogin_provider\x18\t \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\rloginProvider\x12\x17\n" +
+	"\aapp_key\x18\n" +
+	" \x01(\tR\x06appKey\"D\n" +
 	"\x17IssueSessionCodeRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +

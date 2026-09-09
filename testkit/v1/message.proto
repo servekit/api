@@ -83,6 +83,8 @@ message User {
   string default_currency = 21;
   // Reserved for MFA; false until an MFA flow exists.
   bool mfa_enabled = 22;
+  // Tenant label (user_apps.app_key) the user belongs to.
+  string app_key = 23;
 }
 
 // ---- P2 linkd entity messages (curated frontend-facing shapes) ----
