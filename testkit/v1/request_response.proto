@@ -461,6 +461,8 @@ message CreateUserRequest {
       max_len: 16
     }
   ];
+  // Target tenant (user_apps.app_key). Platform-operator callers only.
+  string app_key = 12 [(buf.validate.field).string.max_len = 64];
 }
 
 message CreateUserResponse {
@@ -519,6 +521,8 @@ message ListUsersRequest {
   user.v1.UserType user_type = 21 [(buf.validate.field).enum.defined_only = true];
   user.v1.UserSortField order_by = 22 [(buf.validate.field).enum.defined_only = true];
   bool descending = 23;
+  // Tenant filter (user_apps.app_key). Platform-operator callers only.
+  string app_key = 24 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersResponse {
@@ -569,6 +573,8 @@ message ListUsersPagedRequest {
     lte: 100
   }];
   bool count = 24;
+  // Tenant filter (user_apps.app_key). Platform-operator callers only.
+  string app_key = 25 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersPagedResponse {

@@ -2033,11 +2033,15 @@ type CreateUserRequest struct {
 	Email    string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
 	// phone is the E.164 international format ("+8613800138000"). The user's
 	// country defaults to the phone's home country.
-	Phone         string `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
-	Password      string `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
-	Gender        Gender `protobuf:"varint,8,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Timezone      string `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale        string `protobuf:"bytes,10,opt,name=locale,proto3" json:"locale,omitempty"`
+	Phone    string `protobuf:"bytes,6,opt,name=phone,proto3" json:"phone,omitempty"`
+	Password string `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
+	Gender   Gender `protobuf:"varint,8,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Timezone string `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale   string `protobuf:"bytes,10,opt,name=locale,proto3" json:"locale,omitempty"`
+	// Target tenant (user_apps.app_key). Required for platform-operator
+	// callers; tenant callers may omit it (defaults to their own directory)
+	// and may not target another tenant.
+	AppKey        string `protobuf:"bytes,11,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2138,6 +2142,13 @@ func (x *CreateUserRequest) GetTimezone() string {
 func (x *CreateUserRequest) GetLocale() string {
 	if x != nil {
 		return x.Locale
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
 	}
 	return ""
 }
@@ -2259,8 +2270,11 @@ type ListUsersRequest struct {
 	UserType   UserType `protobuf:"varint,20,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
 	// Sort spec: order_by picks the column, descending flips direction.
 	// UNSPECIFIED + descending=false is equivalent to id ascending.
-	OrderBy       UserSortField `protobuf:"varint,21,opt,name=order_by,json=orderBy,proto3,enum=user.v1.UserSortField" json:"order_by,omitempty"`
-	Descending    bool          `protobuf:"varint,22,opt,name=descending,proto3" json:"descending,omitempty"`
+	OrderBy    UserSortField `protobuf:"varint,21,opt,name=order_by,json=orderBy,proto3,enum=user.v1.UserSortField" json:"order_by,omitempty"`
+	Descending bool          `protobuf:"varint,22,opt,name=descending,proto3" json:"descending,omitempty"`
+	// Tenant filter (user_apps.app_key). Platform-operator callers only;
+	// tenant callers are pinned to their own directory regardless.
+	AppKey        string `protobuf:"bytes,24,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2457,6 +2471,13 @@ func (x *ListUsersRequest) GetDescending() bool {
 	return false
 }
 
+func (x *ListUsersRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
 type ListUsersResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Users         []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
@@ -2540,9 +2561,12 @@ type ListUsersPagedRequest struct {
 	OrderBy    UserSortField `protobuf:"varint,19,opt,name=order_by,json=orderBy,proto3,enum=user.v1.UserSortField" json:"order_by,omitempty"`
 	Descending bool          `protobuf:"varint,20,opt,name=descending,proto3" json:"descending,omitempty"`
 	// Offset pagination.
-	Page          int32 `protobuf:"varint,21,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32 `protobuf:"varint,22,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Count         bool  `protobuf:"varint,23,opt,name=count,proto3" json:"count,omitempty"` // when false, total/total_pages are returned as 0 (skip COUNT)
+	Page     int32 `protobuf:"varint,21,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize int32 `protobuf:"varint,22,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Count    bool  `protobuf:"varint,23,opt,name=count,proto3" json:"count,omitempty"` // when false, total/total_pages are returned as 0 (skip COUNT)
+	// Tenant filter (user_apps.app_key). Platform-operator callers only;
+	// tenant callers are pinned to their own directory regardless.
+	AppKey        string `protobuf:"bytes,25,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2744,6 +2768,13 @@ func (x *ListUsersPagedRequest) GetCount() bool {
 		return x.Count
 	}
 	return false
+}
+
+func (x *ListUsersPagedRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
 }
 
 type ListUsersPagedResponse struct {
@@ -5700,7 +5731,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06device\x18\n" +
 	" \x01(\tR\x06device\x12@\n" +
 	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\x12\x17\n" +
-	"\aapp_key\x18\f \x01(\tR\x06appKey\"\xe3\x03\n" +
+	"\aapp_key\x18\f \x01(\tR\x06appKey\"\x85\x04\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -5715,11 +5746,12 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06gender\x18\b \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
 	"\x06locale\x18\n" +
-	" \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\"7\n" +
+	" \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12 \n" +
+	"\aapp_key\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"7\n" +
 	"\x12CreateUserResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\x8d\t\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xaf\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -5750,11 +5782,12 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\border_by\x18\x15 \x01(\x0e2\x16.user.v1.UserSortFieldB\b\xbaH\x05\x82\x01\x02\x10\x01R\aorderBy\x12\x1e\n" +
 	"\n" +
 	"descending\x18\x16 \x01(\bR\n" +
-	"descending\"Y\n" +
+	"descending\x12 \n" +
+	"\aapp_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"Y\n" +
 	"\x11ListUsersResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\x9a\t\n" +
+	"nextCursor\"\xbc\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
@@ -5786,7 +5819,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"descending\x12\x1b\n" +
 	"\x04page\x18\x15 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x04page\x12&\n" +
 	"\tpage_size\x18\x16 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x14\n" +
-	"\x05count\x18\x17 \x01(\bR\x05count\"t\n" +
+	"\x05count\x18\x17 \x01(\bR\x05count\x12 \n" +
+	"\aapp_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"t\n" +
 	"\x16ListUsersPagedResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1f\n" +

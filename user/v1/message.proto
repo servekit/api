@@ -256,4 +256,8 @@ message UserAppInfo {
   bool disabled = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
+  // is_platform marks the platform-operator tenant: its admin surfaces see
+  // across ALL tenants (with an optional app_key filter) instead of being
+  // pinned to its own directory.
+  bool is_platform = 8;
 }

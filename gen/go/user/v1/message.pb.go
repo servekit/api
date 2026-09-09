@@ -1231,9 +1231,13 @@ type UserAppInfo struct {
 	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled tenants fail every tenant-scoped surface immediately.
-	Disabled      bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Disabled  bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// is_platform marks the platform-operator tenant: its admin surfaces see
+	// across ALL tenants (with an optional app_key filter) instead of being
+	// pinned to its own directory.
+	IsPlatform    bool `protobuf:"varint,8,opt,name=is_platform,json=isPlatform,proto3" json:"is_platform,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1315,6 +1319,13 @@ func (x *UserAppInfo) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *UserAppInfo) GetIsPlatform() bool {
+	if x != nil {
+		return x.IsPlatform
+	}
+	return false
 }
 
 var File_user_v1_message_proto protoreflect.FileDescriptor
@@ -1460,7 +1471,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\trole_name\x18\x03 \x01(\tR\broleName\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfb\x01\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x9c\x02\n" +
 	"\vUserAppInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
@@ -1471,7 +1482,9 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x87\x01\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\x1f\n" +
+	"\vis_platform\x18\b \x01(\bR\n" +
+	"isPlatformB\x87\x01\n" +
 	"\vcom.user.v1B\fMessageProtoP\x01Z-github.com/servekit/api/gen/go/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (

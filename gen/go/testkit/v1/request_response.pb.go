@@ -2017,18 +2017,20 @@ func (x *SocialLoginResponse) GetSessionId() string {
 // ---- Admin-Users (P2) ----
 // target user_id is kept; GetLoginLogs.user_id is an optional filter.
 type CreateUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserType      v1.UserType            `protobuf:"varint,1,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RealName      string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
-	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
-	DialCode      string                 `protobuf:"bytes,6,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
-	Phone         string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
-	Password      string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
-	Gender        v1.Gender              `protobuf:"varint,9,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
-	Timezone      string                 `protobuf:"bytes,10,opt,name=timezone,proto3" json:"timezone,omitempty"`
-	Locale        string                 `protobuf:"bytes,11,opt,name=locale,proto3" json:"locale,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UserType v1.UserType            `protobuf:"varint,1,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
+	Username string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RealName string                 `protobuf:"bytes,4,opt,name=real_name,json=realName,proto3" json:"real_name,omitempty"`
+	Email    string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	DialCode string                 `protobuf:"bytes,6,opt,name=dial_code,json=dialCode,proto3" json:"dial_code,omitempty"`
+	Phone    string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
+	Password string                 `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
+	Gender   v1.Gender              `protobuf:"varint,9,opt,name=gender,proto3,enum=user.v1.Gender" json:"gender,omitempty"`
+	Timezone string                 `protobuf:"bytes,10,opt,name=timezone,proto3" json:"timezone,omitempty"`
+	Locale   string                 `protobuf:"bytes,11,opt,name=locale,proto3" json:"locale,omitempty"`
+	// Target tenant (user_apps.app_key). Platform-operator callers only.
+	AppKey        string `protobuf:"bytes,12,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2136,6 +2138,13 @@ func (x *CreateUserRequest) GetTimezone() string {
 func (x *CreateUserRequest) GetLocale() string {
 	if x != nil {
 		return x.Locale
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
 	}
 	return ""
 }
@@ -2313,8 +2322,10 @@ type ListUsersRequest struct {
 	UserType         v1.UserType            `protobuf:"varint,21,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
 	OrderBy          v1.UserSortField       `protobuf:"varint,22,opt,name=order_by,json=orderBy,proto3,enum=user.v1.UserSortField" json:"order_by,omitempty"`
 	Descending       bool                   `protobuf:"varint,23,opt,name=descending,proto3" json:"descending,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// Tenant filter (user_apps.app_key). Platform-operator callers only.
+	AppKey        string `protobuf:"bytes,24,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListUsersRequest) Reset() {
@@ -2508,6 +2519,13 @@ func (x *ListUsersRequest) GetDescending() bool {
 	return false
 }
 
+func (x *ListUsersRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
 type ListUsersResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Users         []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
@@ -2586,8 +2604,10 @@ type ListUsersPagedRequest struct {
 	Page             int32                  `protobuf:"varint,22,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize         int32                  `protobuf:"varint,23,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	Count            bool                   `protobuf:"varint,24,opt,name=count,proto3" json:"count,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// Tenant filter (user_apps.app_key). Platform-operator callers only.
+	AppKey        string `protobuf:"bytes,25,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListUsersPagedRequest) Reset() {
@@ -2786,6 +2806,13 @@ func (x *ListUsersPagedRequest) GetCount() bool {
 		return x.Count
 	}
 	return false
+}
+
+func (x *ListUsersPagedRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
 }
 
 type ListUsersPagedResponse struct {
@@ -13575,7 +13602,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12+\n" +
 	"\treturn_to\x18\x04 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\breturnTo\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x05 \x01(\tR\tsessionId\"\x88\x04\n" +
+	"session_id\x18\x05 \x01(\tR\tsessionId\"\xaa\x04\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -13591,7 +13618,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06gender\x18\t \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\n" +
 	" \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
-	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\":\n" +
+	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12 \n" +
+	"\aapp_key\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\":\n" +
 	"\x12CreateUserResponse\x12$\n" +
 	"\x04user\x18\x01 \x01(\v2\x10.testkit.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
@@ -13599,7 +13627,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\x89\t\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xab\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -13630,11 +13658,12 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\border_by\x18\x16 \x01(\x0e2\x16.user.v1.UserSortFieldB\b\xbaH\x05\x82\x01\x02\x10\x01R\aorderBy\x12\x1e\n" +
 	"\n" +
 	"descending\x18\x17 \x01(\bR\n" +
-	"descending\"\\\n" +
+	"descending\x12 \n" +
+	"\aapp_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"\\\n" +
 	"\x11ListUsersResponse\x12&\n" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\x96\t\n" +
+	"nextCursor\"\xb8\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
@@ -13666,7 +13695,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"descending\x12\x1b\n" +
 	"\x04page\x18\x16 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x04page\x12&\n" +
 	"\tpage_size\x18\x17 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x14\n" +
-	"\x05count\x18\x18 \x01(\bR\x05count\"w\n" +
+	"\x05count\x18\x18 \x01(\bR\x05count\x12 \n" +
+	"\aapp_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"w\n" +
 	"\x16ListUsersPagedResponse\x12&\n" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1f\n" +
