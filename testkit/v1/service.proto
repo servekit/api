@@ -858,12 +858,12 @@ service TestkitService {
   }
 
   rpc GetApp(GetAppRequest) returns (GetAppResponse) {
-    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{slug}"};
+    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{app_key}"};
   }
 
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse) {
     option (google.api.http) = {
-      put: "/api/v1/telemetry/admin/apps/{slug}"
+      put: "/api/v1/telemetry/admin/apps/{app_key}"
       body: "*"
     };
   }
@@ -874,49 +874,49 @@ service TestkitService {
 
   rpc RotateAppSecret(telemetry.v1.RotateAppSecretRequest) returns (telemetry.v1.RotateAppSecretResponse) {
     option (google.api.http) = {
-      post: "/api/v1/telemetry/admin/apps/{slug}:rotateSecret"
+      post: "/api/v1/telemetry/admin/apps/{app_key}:rotateSecret"
       body: "*"
     };
   }
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse) {
     option (google.api.http) = {
-      post: "/api/v1/telemetry/admin/apps/{slug}/tokens"
+      post: "/api/v1/telemetry/admin/apps/{app_key}/tokens"
       body: "*"
     };
   }
 
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse) {
-    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}"};
+    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{app_key}/tokens/{prefix}"};
   }
 
   rpc CreateSigningKey(CreateSigningKeyRequest) returns (CreateSigningKeyResponse) {
     option (google.api.http) = {
-      post: "/api/v1/telemetry/admin/apps/{slug}/signing-keys"
+      post: "/api/v1/telemetry/admin/apps/{app_key}/signing-keys"
       body: "*"
     };
   }
 
   rpc RevokeSigningKey(RevokeSigningKeyRequest) returns (RevokeSigningKeyResponse) {
-    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}"};
+    option (google.api.http) = {delete: "/api/v1/telemetry/admin/apps/{app_key}/signing-keys/{key_id}"};
   }
 
   rpc ReplaceEventRules(ReplaceEventRulesRequest) returns (ReplaceEventRulesResponse) {
     option (google.api.http) = {
-      put: "/api/v1/telemetry/admin/apps/{slug}/events"
+      put: "/api/v1/telemetry/admin/apps/{app_key}/events"
       body: "*"
     };
   }
 
   rpc SetVersionBlocked(SetVersionBlockedRequest) returns (SetVersionBlockedResponse) {
     option (google.api.http) = {
-      put: "/api/v1/telemetry/admin/apps/{slug}/versions/{version}"
+      put: "/api/v1/telemetry/admin/apps/{app_key}/versions/{version}"
       body: "*"
     };
   }
 
   rpc GetAppStats(GetAppStatsRequest) returns (GetAppStatsResponse) {
-    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{slug}/stats"};
+    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps/{app_key}/stats"};
   }
 
   // ==================== P7 reference-service forwarders ====================

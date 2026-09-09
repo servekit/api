@@ -58,7 +58,7 @@ message IngestResponse {
 // metric'd). For SDK integration and allowlist debugging.
 message ValidateBatchResponse {
   int32 http_code = 1; // what a real request would return
-  string app = 2; // resolved app slug, "" when 401
+  string app = 2; // resolved app_key, "" when 401
   string error_code = 3; // 4xx reason, empty otherwise
   bool signature_valid = 4; // signature check outcome (true when auth_mode=none)
   string signature_error = 5; // missing / unknown_key / bad_sig / stale_ts
@@ -67,7 +67,12 @@ message ValidateBatchResponse {
 }
 
 message CreateAppRequest {
-  string slug = 1 [(buf.validate.field).string = {pattern: "^[a-z][a-z0-9-]{0,63}$"}];
+  // app_key pattern: lowercase letter followed by lowercase alphanumerics
+  // and dashes. Optional; empty = server-generated ("tel_" + 8 base36).
+  string app_key = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
+  ];
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200
@@ -87,7 +92,7 @@ message CreateAppResponse {
 }
 
 message GetAppRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -102,7 +107,7 @@ message GetAppResponse {
 }
 
 message UpdateAppRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -158,7 +163,7 @@ message UpdateAppResponse {
 }
 
 message RotateTokenRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -174,7 +179,7 @@ message RotateTokenResponse {
 // half of the platform ak/sk pair). The old one stops working on the next
 // registry refresh (immediate in-process).
 message RotateAppSecretRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -187,7 +192,7 @@ message RotateAppSecretResponse {
 }
 
 message RevokeTokenRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -201,7 +206,7 @@ message RevokeTokenRequest {
 message RevokeTokenResponse {}
 
 message CreateSigningKeyRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -217,7 +222,7 @@ message CreateSigningKeyResponse {
 }
 
 message RevokeSigningKeyRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -227,7 +232,7 @@ message RevokeSigningKeyRequest {
 message RevokeSigningKeyResponse {}
 
 message ReplaceEventRulesRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -248,7 +253,7 @@ message ReplaceEventRulesResponse {
 }
 
 message SetVersionBlockedRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -262,7 +267,7 @@ message SetVersionBlockedRequest {
 message SetVersionBlockedResponse {}
 
 message GetAppStatsRequest {
-  string slug = 1 [(buf.validate.field).string = {
+  string app_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];

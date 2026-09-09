@@ -35,7 +35,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2\xb8\xb8\x01\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto2ָ\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -216,18 +216,18 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\x16LicenseRotateAppSecret\x12\".license.v1.RotateAppSecretRequest\x1a#.license.v1.RotateAppSecretResponse\"<\x82\xd3\xe4\x93\x026:\x01*\"1/api/v1/license/admin/apps/{app_key}:rotateSecret\x12v\n" +
 	"\x10LicenseDeleteApp\x12\x1c.license.v1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\",\x82\xd3\xe4\x93\x02&*$/api/v1/license/admin/apps/{app_key}\x12d\n" +
 	"\x06Ingest\x12\x19.testkit.v1.IngestRequest\x1a\x1a.testkit.v1.IngestResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/telemetry/ingest\x12q\n" +
-	"\tCreateApp\x12\x1c.testkit.v1.CreateAppRequest\x1a\x1d.testkit.v1.CreateAppResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/telemetry/admin/apps\x12l\n" +
-	"\x06GetApp\x12\x19.testkit.v1.GetAppRequest\x1a\x1a.testkit.v1.GetAppResponse\"+\x82\xd3\xe4\x93\x02%\x12#/api/v1/telemetry/admin/apps/{slug}\x12x\n" +
-	"\tUpdateApp\x12\x1c.testkit.v1.UpdateAppRequest\x1a\x1d.testkit.v1.UpdateAppResponse\".\x82\xd3\xe4\x93\x02(:\x01*\x1a#/api/v1/telemetry/admin/apps/{slug}\x12o\n" +
-	"\bListApps\x12\x1d.telemetry.v1.ListAppsRequest\x1a\x1e.telemetry.v1.ListAppsResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1/telemetry/admin/apps\x12\x9b\x01\n" +
-	"\x0fRotateAppSecret\x12$.telemetry.v1.RotateAppSecretRequest\x1a%.telemetry.v1.RotateAppSecretResponse\";\x82\xd3\xe4\x93\x025:\x01*\"0/api/v1/telemetry/admin/apps/{slug}:rotateSecret\x12\x85\x01\n" +
-	"\vRotateToken\x12\x1e.testkit.v1.RotateTokenRequest\x1a\x1f.testkit.v1.RotateTokenResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1/telemetry/admin/apps/{slug}/tokens\x12\x8b\x01\n" +
-	"\vRevokeToken\x12\x1e.testkit.v1.RevokeTokenRequest\x1a\x1f.testkit.v1.RevokeTokenResponse\";\x82\xd3\xe4\x93\x025*3/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}\x12\x9a\x01\n" +
-	"\x10CreateSigningKey\x12#.testkit.v1.CreateSigningKeyRequest\x1a$.testkit.v1.CreateSigningKeyResponse\";\x82\xd3\xe4\x93\x025:\x01*\"0/api/v1/telemetry/admin/apps/{slug}/signing-keys\x12\xa0\x01\n" +
-	"\x10RevokeSigningKey\x12#.testkit.v1.RevokeSigningKeyRequest\x1a$.testkit.v1.RevokeSigningKeyResponse\"A\x82\xd3\xe4\x93\x02;*9/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}\x12\x97\x01\n" +
-	"\x11ReplaceEventRules\x12$.testkit.v1.ReplaceEventRulesRequest\x1a%.testkit.v1.ReplaceEventRulesResponse\"5\x82\xd3\xe4\x93\x02/:\x01*\x1a*/api/v1/telemetry/admin/apps/{slug}/events\x12\xa3\x01\n" +
-	"\x11SetVersionBlocked\x12$.testkit.v1.SetVersionBlockedRequest\x1a%.testkit.v1.SetVersionBlockedResponse\"A\x82\xd3\xe4\x93\x02;:\x01*\x1a6/api/v1/telemetry/admin/apps/{slug}/versions/{version}\x12\x81\x01\n" +
-	"\vGetAppStats\x12\x1e.testkit.v1.GetAppStatsRequest\x1a\x1f.testkit.v1.GetAppStatsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/telemetry/admin/apps/{slug}/stats\x12}\n" +
+	"\tCreateApp\x12\x1c.testkit.v1.CreateAppRequest\x1a\x1d.testkit.v1.CreateAppResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/telemetry/admin/apps\x12o\n" +
+	"\x06GetApp\x12\x19.testkit.v1.GetAppRequest\x1a\x1a.testkit.v1.GetAppResponse\".\x82\xd3\xe4\x93\x02(\x12&/api/v1/telemetry/admin/apps/{app_key}\x12{\n" +
+	"\tUpdateApp\x12\x1c.testkit.v1.UpdateAppRequest\x1a\x1d.testkit.v1.UpdateAppResponse\"1\x82\xd3\xe4\x93\x02+:\x01*\x1a&/api/v1/telemetry/admin/apps/{app_key}\x12o\n" +
+	"\bListApps\x12\x1d.telemetry.v1.ListAppsRequest\x1a\x1e.telemetry.v1.ListAppsResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1/telemetry/admin/apps\x12\x9e\x01\n" +
+	"\x0fRotateAppSecret\x12$.telemetry.v1.RotateAppSecretRequest\x1a%.telemetry.v1.RotateAppSecretResponse\">\x82\xd3\xe4\x93\x028:\x01*\"3/api/v1/telemetry/admin/apps/{app_key}:rotateSecret\x12\x88\x01\n" +
+	"\vRotateToken\x12\x1e.testkit.v1.RotateTokenRequest\x1a\x1f.testkit.v1.RotateTokenResponse\"8\x82\xd3\xe4\x93\x022:\x01*\"-/api/v1/telemetry/admin/apps/{app_key}/tokens\x12\x8e\x01\n" +
+	"\vRevokeToken\x12\x1e.testkit.v1.RevokeTokenRequest\x1a\x1f.testkit.v1.RevokeTokenResponse\">\x82\xd3\xe4\x93\x028*6/api/v1/telemetry/admin/apps/{app_key}/tokens/{prefix}\x12\x9d\x01\n" +
+	"\x10CreateSigningKey\x12#.testkit.v1.CreateSigningKeyRequest\x1a$.testkit.v1.CreateSigningKeyResponse\">\x82\xd3\xe4\x93\x028:\x01*\"3/api/v1/telemetry/admin/apps/{app_key}/signing-keys\x12\xa3\x01\n" +
+	"\x10RevokeSigningKey\x12#.testkit.v1.RevokeSigningKeyRequest\x1a$.testkit.v1.RevokeSigningKeyResponse\"D\x82\xd3\xe4\x93\x02>*</api/v1/telemetry/admin/apps/{app_key}/signing-keys/{key_id}\x12\x9a\x01\n" +
+	"\x11ReplaceEventRules\x12$.testkit.v1.ReplaceEventRulesRequest\x1a%.testkit.v1.ReplaceEventRulesResponse\"8\x82\xd3\xe4\x93\x022:\x01*\x1a-/api/v1/telemetry/admin/apps/{app_key}/events\x12\xa6\x01\n" +
+	"\x11SetVersionBlocked\x12$.testkit.v1.SetVersionBlockedRequest\x1a%.testkit.v1.SetVersionBlockedResponse\"D\x82\xd3\xe4\x93\x02>:\x01*\x1a9/api/v1/telemetry/admin/apps/{app_key}/versions/{version}\x12\x84\x01\n" +
+	"\vGetAppStats\x12\x1e.testkit.v1.GetAppStatsRequest\x1a\x1f.testkit.v1.GetAppStatsResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/telemetry/admin/apps/{app_key}/stats\x12}\n" +
 	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/countries\x12\x80\x01\n" +
 	"\fGetCountries\x12!.reference.v1.GetCountriesRequest\x1a\".reference.v1.GetCountriesResponse\")\x82\xd3\xe4\x93\x02#\x12!/api/v1/reference/countries:batch\x12}\n" +
 	"\rListTimezones\x12\".reference.v1.ListTimezonesRequest\x1a#.reference.v1.ListTimezonesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/timezones\x12}\n" +

@@ -6461,7 +6461,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}": {
+    "/api/v1/telemetry/admin/apps/{appKey}": {
       "get": {
         "operationId": "GetApp",
         "responses": {
@@ -6480,7 +6480,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6508,7 +6508,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6527,7 +6527,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/events": {
+    "/api/v1/telemetry/admin/apps/{appKey}/events": {
       "put": {
         "operationId": "ReplaceEventRules",
         "responses": {
@@ -6546,7 +6546,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6565,7 +6565,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/signing-keys": {
+    "/api/v1/telemetry/admin/apps/{appKey}/signing-keys": {
       "post": {
         "operationId": "CreateSigningKey",
         "responses": {
@@ -6584,7 +6584,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6603,7 +6603,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/signing-keys/{keyId}": {
+    "/api/v1/telemetry/admin/apps/{appKey}/signing-keys/{keyId}": {
       "delete": {
         "operationId": "RevokeSigningKey",
         "responses": {
@@ -6622,7 +6622,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6639,7 +6639,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/stats": {
+    "/api/v1/telemetry/admin/apps/{appKey}/stats": {
       "get": {
         "operationId": "GetAppStats",
         "responses": {
@@ -6658,7 +6658,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6676,7 +6676,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/tokens": {
+    "/api/v1/telemetry/admin/apps/{appKey}/tokens": {
       "post": {
         "operationId": "RotateToken",
         "responses": {
@@ -6695,7 +6695,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6714,7 +6714,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}": {
+    "/api/v1/telemetry/admin/apps/{appKey}/tokens/{prefix}": {
       "delete": {
         "operationId": "RevokeToken",
         "responses": {
@@ -6733,7 +6733,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6750,7 +6750,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}/versions/{version}": {
+    "/api/v1/telemetry/admin/apps/{appKey}/versions/{version}": {
       "put": {
         "operationId": "SetVersionBlocked",
         "responses": {
@@ -6769,7 +6769,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6794,7 +6794,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{slug}:rotateSecret": {
+    "/api/v1/telemetry/admin/apps/{appKey}:rotateSecret": {
       "post": {
         "operationId": "RotateAppSecret",
         "responses": {
@@ -6813,7 +6813,7 @@
         },
         "parameters": [
           {
-            "name": "slug",
+            "name": "appKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -8298,9 +8298,9 @@
           "type": "string",
           "title": "uuid"
         },
-        "slug": {
+        "appKey": {
           "type": "string",
-          "title": "unique, url-safe"
+          "description": "app_key is the machine identity and the \"ak\" half of the platform-wide\nak/sk pair: minted server-side on creation (\"tel_\" + 8 base36 chars,\ncollision-checked; a caller-chosen key is accepted when non-empty),\nunique, immutable. The admin surface keys every per-app route by it."
         },
         "name": {
           "type": "string"
@@ -8347,7 +8347,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is the business-identity credential (the \"sk\" half of the\nplatform-wide ak/sk pair; the slug is the \"ak\"). Required by the\ngRPC/module ingest surface — backend callers present it as x-app-key /\nx-app-secret metadata; the raw client endpoints (/v1/e/…) keep using\nthe ingest token instead. Echoed on every read — internal-trust\nposture, same convention as the messaging/storage/license apps."
+          "description": "app_secret is the business-identity credential (the \"sk\" half of the\nplatform-wide ak/sk pair; app_key is the \"ak\"). Required by the\ngRPC/module ingest surface — backend callers present it as x-app-key /\nx-app-secret metadata; the raw client endpoints (/v1/e/…) keep using\nthe ingest token instead. Echoed on every read — internal-trust\nposture, same convention as the messaging/storage/license apps."
         },
         "createdAt": {
           "type": "string",
@@ -8390,7 +8390,7 @@
         "id": {
           "type": "string"
         },
-        "slug": {
+        "appKey": {
           "type": "string"
         },
         "name": {
@@ -8465,8 +8465,9 @@
     "testkitV1CreateAppRequest": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string"
+        "appKey": {
+          "type": "string",
+          "description": "app_key optional; empty = server-generated."
         },
         "name": {
           "type": "string"
@@ -8484,6 +8485,10 @@
         },
         "token": {
           "type": "string"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
         }
       }
     },

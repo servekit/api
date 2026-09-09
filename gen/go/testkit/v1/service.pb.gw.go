@@ -5874,13 +5874,13 @@ func request_TestkitService_GetApp_0(ctx context.Context, marshaler runtime.Mars
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -5895,13 +5895,13 @@ func local_request_TestkitService_GetApp_0(ctx context.Context, marshaler runtim
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.GetApp(ctx, &protoReq)
 	return msg, metadata, err
@@ -5916,13 +5916,13 @@ func request_TestkitService_UpdateApp_0(ctx context.Context, marshaler runtime.M
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -5940,13 +5940,13 @@ func local_request_TestkitService_UpdateApp_0(ctx context.Context, marshaler run
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.UpdateApp(ctx, &protoReq)
 	return msg, metadata, err
@@ -5982,13 +5982,13 @@ func request_TestkitService_RotateAppSecret_0(ctx context.Context, marshaler run
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6006,13 +6006,13 @@ func local_request_TestkitService_RotateAppSecret_0(ctx context.Context, marshal
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.RotateAppSecret(ctx, &protoReq)
 	return msg, metadata, err
@@ -6027,13 +6027,13 @@ func request_TestkitService_RotateToken_0(ctx context.Context, marshaler runtime
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6051,13 +6051,13 @@ func local_request_TestkitService_RotateToken_0(ctx context.Context, marshaler r
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.RotateToken(ctx, &protoReq)
 	return msg, metadata, err
@@ -6069,13 +6069,13 @@ func request_TestkitService_RevokeToken_0(ctx context.Context, marshaler runtime
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["prefix"]
 	if !ok {
@@ -6098,13 +6098,13 @@ func local_request_TestkitService_RevokeToken_0(ctx context.Context, marshaler r
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["prefix"]
 	if !ok {
@@ -6127,13 +6127,13 @@ func request_TestkitService_CreateSigningKey_0(ctx context.Context, marshaler ru
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6151,13 +6151,13 @@ func local_request_TestkitService_CreateSigningKey_0(ctx context.Context, marsha
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.CreateSigningKey(ctx, &protoReq)
 	return msg, metadata, err
@@ -6169,13 +6169,13 @@ func request_TestkitService_RevokeSigningKey_0(ctx context.Context, marshaler ru
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["key_id"]
 	if !ok {
@@ -6198,13 +6198,13 @@ func local_request_TestkitService_RevokeSigningKey_0(ctx context.Context, marsha
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["key_id"]
 	if !ok {
@@ -6227,13 +6227,13 @@ func request_TestkitService_ReplaceEventRules_0(ctx context.Context, marshaler r
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6251,13 +6251,13 @@ func local_request_TestkitService_ReplaceEventRules_0(ctx context.Context, marsh
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	msg, err := server.ReplaceEventRules(ctx, &protoReq)
 	return msg, metadata, err
@@ -6272,13 +6272,13 @@ func request_TestkitService_SetVersionBlocked_0(ctx context.Context, marshaler r
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["version"]
 	if !ok {
@@ -6304,13 +6304,13 @@ func local_request_TestkitService_SetVersionBlocked_0(ctx context.Context, marsh
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	val, ok = pathParams["version"]
 	if !ok {
@@ -6324,7 +6324,7 @@ func local_request_TestkitService_SetVersionBlocked_0(ctx context.Context, marsh
 	return msg, metadata, err
 }
 
-var filter_TestkitService_GetAppStats_0 = &utilities.DoubleArray{Encoding: map[string]int{"slug": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+var filter_TestkitService_GetAppStats_0 = &utilities.DoubleArray{Encoding: map[string]int{"app_key": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 
 func request_TestkitService_GetAppStats_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
@@ -6332,13 +6332,13 @@ func request_TestkitService_GetAppStats_0(ctx context.Context, marshaler runtime
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -6359,13 +6359,13 @@ func local_request_TestkitService_GetAppStats_0(ctx context.Context, marshaler r
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["slug"]
+	val, ok := pathParams["app_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "slug")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
 	}
-	protoReq.Slug, err = runtime.String(val)
+	protoReq.AppKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "slug", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
 	}
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -10113,7 +10113,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10133,7 +10133,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UpdateApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UpdateApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10173,7 +10173,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10193,7 +10193,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/tokens"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/tokens"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10213,7 +10213,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/tokens/{prefix}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10233,7 +10233,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/CreateSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/signing-keys"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/CreateSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/signing-keys"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10253,7 +10253,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/signing-keys/{key_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10273,7 +10273,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/ReplaceEventRules", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/events"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/ReplaceEventRules", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10293,7 +10293,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/SetVersionBlocked", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/versions/{version}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/SetVersionBlocked", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/versions/{version}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -10313,7 +10313,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetAppStats", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/stats"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/GetAppStats", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/stats"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13399,7 +13399,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13416,7 +13416,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UpdateApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UpdateApp", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13450,7 +13450,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13467,7 +13467,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/tokens"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RotateToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/tokens"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13484,7 +13484,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/tokens/{prefix}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeToken", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/tokens/{prefix}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13501,7 +13501,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/CreateSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/signing-keys"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/CreateSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/signing-keys"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13518,7 +13518,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/signing-keys/{key_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/RevokeSigningKey", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/signing-keys/{key_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13535,7 +13535,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/ReplaceEventRules", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/events"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/ReplaceEventRules", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13552,7 +13552,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/SetVersionBlocked", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/versions/{version}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/SetVersionBlocked", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/versions/{version}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13569,7 +13569,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetAppStats", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{slug}/stats"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/GetAppStats", runtime.WithHTTPPathPattern("/api/v1/telemetry/admin/apps/{app_key}/stats"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -13954,17 +13954,17 @@ var (
 	pattern_TestkitService_LicenseDeleteApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
 	pattern_TestkitService_Ingest_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "telemetry", "ingest"}, ""))
 	pattern_TestkitService_CreateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
-	pattern_TestkitService_GetApp_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "slug"}, ""))
-	pattern_TestkitService_UpdateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "slug"}, ""))
+	pattern_TestkitService_GetApp_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_UpdateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
 	pattern_TestkitService_ListApps_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
-	pattern_TestkitService_RotateAppSecret_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "slug"}, "rotateSecret"))
-	pattern_TestkitService_RotateToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "tokens"}, ""))
-	pattern_TestkitService_RevokeToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "tokens", "prefix"}, ""))
-	pattern_TestkitService_CreateSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "signing-keys"}, ""))
-	pattern_TestkitService_RevokeSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "signing-keys", "key_id"}, ""))
-	pattern_TestkitService_ReplaceEventRules_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "events"}, ""))
-	pattern_TestkitService_SetVersionBlocked_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "versions", "version"}, ""))
-	pattern_TestkitService_GetAppStats_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "slug", "stats"}, ""))
+	pattern_TestkitService_RotateAppSecret_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, "rotateSecret"))
+	pattern_TestkitService_RotateToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens"}, ""))
+	pattern_TestkitService_RevokeToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens", "prefix"}, ""))
+	pattern_TestkitService_CreateSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys"}, ""))
+	pattern_TestkitService_RevokeSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys", "key_id"}, ""))
+	pattern_TestkitService_ReplaceEventRules_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "events"}, ""))
+	pattern_TestkitService_SetVersionBlocked_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "versions", "version"}, ""))
+	pattern_TestkitService_GetAppStats_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "stats"}, ""))
 	pattern_TestkitService_ListCountries_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, ""))
 	pattern_TestkitService_GetCountries_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, "batch"))
 	pattern_TestkitService_ListTimezones_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "timezones"}, ""))

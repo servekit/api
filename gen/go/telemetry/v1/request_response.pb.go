@@ -199,7 +199,7 @@ func (x *IngestResponse) GetDrops() map[string]int32 {
 type ValidateBatchResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	HttpCode       int32                  `protobuf:"varint,1,opt,name=http_code,json=httpCode,proto3" json:"http_code,omitempty"`                   // what a real request would return
-	App            string                 `protobuf:"bytes,2,opt,name=app,proto3" json:"app,omitempty"`                                              // resolved app slug, "" when 401
+	App            string                 `protobuf:"bytes,2,opt,name=app,proto3" json:"app,omitempty"`                                              // resolved app_key, "" when 401
 	ErrorCode      string                 `protobuf:"bytes,3,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`                 // 4xx reason, empty otherwise
 	SignatureValid bool                   `protobuf:"varint,4,opt,name=signature_valid,json=signatureValid,proto3" json:"signature_valid,omitempty"` // signature check outcome (true when auth_mode=none)
 	SignatureError string                 `protobuf:"bytes,5,opt,name=signature_error,json=signatureError,proto3" json:"signature_error,omitempty"`  // missing / unknown_key / bad_sig / stale_ts
@@ -289,10 +289,12 @@ func (x *ValidateBatchResponse) GetEvents() []*ValidateEventResult {
 }
 
 type CreateAppRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_key pattern: lowercase letter followed by lowercase alphanumerics
+	// and dashes. Optional; empty = server-generated ("tel_" + 8 base36).
+	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email         string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -327,9 +329,9 @@ func (*CreateAppRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateAppRequest) GetSlug() string {
+func (x *CreateAppRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -412,7 +414,7 @@ func (x *CreateAppResponse) GetAppSecret() string {
 
 type GetAppRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -447,9 +449,9 @@ func (*GetAppRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetAppRequest) GetSlug() string {
+func (x *GetAppRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -531,8 +533,8 @@ func (x *GetAppResponse) GetVersions() []*VersionInfo {
 }
 
 type UpdateAppRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Slug  string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	// All other fields are optional; only present fields are applied.
 	Name           *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Email          *string                `protobuf:"bytes,3,opt,name=email,proto3,oneof" json:"email,omitempty"`
@@ -586,9 +588,9 @@ func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateAppRequest) GetSlug() string {
+func (x *UpdateAppRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -798,7 +800,7 @@ func (x *UpdateAppResponse) GetApp() *App {
 
 type RotateTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -833,9 +835,9 @@ func (*RotateTokenRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *RotateTokenRequest) GetSlug() string {
+func (x *RotateTokenRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -891,7 +893,7 @@ func (x *RotateTokenResponse) GetToken() string {
 // registry refresh (immediate in-process).
 type RotateAppSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -926,9 +928,9 @@ func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *RotateAppSecretRequest) GetSlug() string {
+func (x *RotateAppSecretRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -988,7 +990,7 @@ func (x *RotateAppSecretResponse) GetAppSecret() string {
 
 type RevokeTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Prefix        string                 `protobuf:"bytes,2,opt,name=prefix,proto3" json:"prefix,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1024,9 +1026,9 @@ func (*RevokeTokenRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *RevokeTokenRequest) GetSlug() string {
+func (x *RevokeTokenRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1075,8 +1077,8 @@ func (*RevokeTokenResponse) Descriptor() ([]byte, []int) {
 }
 
 type CreateSigningKeyRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Slug  string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	// Caller-chosen key id (e.g. "k202609"); one key per client version band.
 	KeyId         string `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1113,9 +1115,9 @@ func (*CreateSigningKeyRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *CreateSigningKeyRequest) GetSlug() string {
+func (x *CreateSigningKeyRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1183,7 +1185,7 @@ func (x *CreateSigningKeyResponse) GetSecret() string {
 
 type RevokeSigningKeyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	KeyId         string                 `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1219,9 +1221,9 @@ func (*RevokeSigningKeyRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *RevokeSigningKeyRequest) GetSlug() string {
+func (x *RevokeSigningKeyRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1270,8 +1272,8 @@ func (*RevokeSigningKeyResponse) Descriptor() ([]byte, []int) {
 }
 
 type ReplaceEventRulesRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	Slug  string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	// Full replacement: an empty list clears the allowlist (the app then
 	// accepts no events at all). Event names must be unique.
 	Rules         []*EventRule `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
@@ -1309,9 +1311,9 @@ func (*ReplaceEventRulesRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *ReplaceEventRulesRequest) GetSlug() string {
+func (x *ReplaceEventRulesRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1369,7 +1371,7 @@ func (x *ReplaceEventRulesResponse) GetRules() []*EventRule {
 
 type SetVersionBlockedRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
 	Blocked       bool                   `protobuf:"varint,3,opt,name=blocked,proto3" json:"blocked,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1406,9 +1408,9 @@ func (*SetVersionBlockedRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *SetVersionBlockedRequest) GetSlug() string {
+func (x *SetVersionBlockedRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1465,7 +1467,7 @@ func (*SetVersionBlockedResponse) Descriptor() ([]byte, []int) {
 
 type GetAppStatsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Days          int32                  `protobuf:"varint,2,opt,name=days,proto3" json:"days,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1501,9 +1503,9 @@ func (*GetAppStatsRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *GetAppStatsRequest) GetSlug() string {
+func (x *GetAppStatsRequest) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -1605,9 +1607,9 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\x0fsignature_valid\x18\x04 \x01(\bR\x0esignatureValid\x12'\n" +
 	"\x0fsignature_error\x18\x05 \x01(\tR\x0esignatureError\x12%\n" +
 	"\x0eenvelope_error\x18\x06 \x01(\tR\renvelopeError\x129\n" +
-	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\x87\x01\n" +
-	"\x10CreateAppRequest\x121\n" +
-	"\x04slug\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x182\x16^[a-z][a-z0-9-]{0,63}$R\x04slug\x12\x1e\n" +
+	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\x8f\x01\n" +
+	"\x10CreateAppRequest\x129\n" +
+	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12 \n" +
 	"\x05email\x18\x03 \x01(\tB\n" +
@@ -1616,17 +1618,17 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x03 \x01(\tR\tappSecret\".\n" +
-	"\rGetAppRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\"\x93\x02\n" +
+	"app_secret\x18\x03 \x01(\tR\tappSecret\"3\n" +
+	"\rGetAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"\x93\x02\n" +
 	"\x0eGetAppResponse\x12#\n" +
 	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x125\n" +
 	"\x06tokens\x18\x02 \x03(\v2\x1d.telemetry.v1.IngestTokenInfoR\x06tokens\x12?\n" +
 	"\fsigning_keys\x18\x03 \x03(\v2\x1c.telemetry.v1.SigningKeyInfoR\vsigningKeys\x12-\n" +
 	"\x05rules\x18\x04 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\x125\n" +
-	"\bversions\x18\x05 \x03(\v2\x19.telemetry.v1.VersionInfoR\bversions\"\x99\x06\n" +
-	"\x10UpdateAppRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x12#\n" +
+	"\bversions\x18\x05 \x03(\v2\x19.telemetry.v1.VersionInfoR\bversions\"\x9e\x06\n" +
+	"\x10UpdateAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\"\n" +
 	"\x05email\x18\x03 \x01(\tB\a\xbaH\x04r\x02`\x01H\x01R\x05email\x88\x01\x01\x12,\n" +
@@ -1659,44 +1661,44 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\x10ListAppsResponse\x12%\n" +
 	"\x04apps\x18\x01 \x03(\v2\x11.telemetry.v1.AppR\x04apps\"8\n" +
 	"\x11UpdateAppResponse\x12#\n" +
-	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\"3\n" +
-	"\x12RotateTokenRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\"+\n" +
+	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\"8\n" +
+	"\x12RotateTokenRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"+\n" +
 	"\x13RotateTokenResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"7\n" +
-	"\x16RotateAppSecretRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\"]\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"<\n" +
+	"\x16RotateAppSecretRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"]\n" +
 	"\x17RotateAppSecretResponse\x12#\n" +
 	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"k\n" +
-	"\x12RevokeTokenRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x126\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"p\n" +
+	"\x12RevokeTokenRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x126\n" +
 	"\x06prefix\x18\x02 \x01(\tB\x1e\xbaH\x1br\x19\x10\x06\x18\x102\x13^tm_live_[a-z0-9]+$R\x06prefix\"\x15\n" +
-	"\x13RevokeTokenResponse\"m\n" +
-	"\x17CreateSigningKeyRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x123\n" +
+	"\x13RevokeTokenResponse\"r\n" +
+	"\x17CreateSigningKeyRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x123\n" +
 	"\x06key_id\x18\x02 \x01(\tB\x1c\xbaH\x19r\x172\x15^[a-zA-Z0-9_-]{1,32}$R\x05keyId\"I\n" +
 	"\x18CreateSigningKeyResponse\x12\x15\n" +
 	"\x06key_id\x18\x01 \x01(\tR\x05keyId\x12\x16\n" +
-	"\x06secret\x18\x02 \x01(\tR\x06secret\"m\n" +
-	"\x17RevokeSigningKeyRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x123\n" +
+	"\x06secret\x18\x02 \x01(\tR\x06secret\"r\n" +
+	"\x17RevokeSigningKeyRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x123\n" +
 	"\x06key_id\x18\x02 \x01(\tB\x1c\xbaH\x19r\x172\x15^[a-zA-Z0-9_-]{1,32}$R\x05keyId\"\x1a\n" +
-	"\x18RevokeSigningKeyResponse\"\xd1\x01\n" +
-	"\x18ReplaceEventRulesRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x12\x95\x01\n" +
+	"\x18RevokeSigningKeyResponse\"\xd6\x01\n" +
+	"\x18ReplaceEventRulesRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12\x95\x01\n" +
 	"\x05rules\x18\x02 \x03(\v2\x17.telemetry.v1.EventRuleBf\xbaHc\xba\x01Z\n" +
 	"\x18rules.unique_event_names\x12\x1aevent names must be unique\x1a\"this.map(r, r.event_name).unique()\x92\x01\x03\x10\xf4\x03R\x05rules\"J\n" +
 	"\x19ReplaceEventRulesResponse\x12-\n" +
-	"\x05rules\x18\x01 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\"x\n" +
-	"\x18SetVersionBlockedRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x12#\n" +
+	"\x05rules\x18\x01 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\"}\n" +
+	"\x18SetVersionBlockedRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
 	"\aversion\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\aversion\x12\x18\n" +
 	"\ablocked\x18\x03 \x01(\bR\ablocked\"\x1b\n" +
-	"\x19SetVersionBlockedResponse\"R\n" +
-	"\x12GetAppStatsRequest\x12\x1d\n" +
-	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x12\x1d\n" +
+	"\x19SetVersionBlockedResponse\"W\n" +
+	"\x12GetAppStatsRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12\x1d\n" +
 	"\x04days\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18Z(\x01R\x04days\"\xcb\x02\n" +
 	"\x13GetAppStatsResponse\x12+\n" +
 	"\x04days\x18\x01 \x03(\v2\x17.telemetry.v1.DailyStatR\x04days\x12B\n" +

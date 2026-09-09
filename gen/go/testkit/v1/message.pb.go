@@ -4140,7 +4140,7 @@ func (x *ValidateEventResult) GetDropReason() string {
 type App struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Slug             string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
+	AppKey           string                 `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Name             string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Email            string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
 	StrictVersions   bool                   `protobuf:"varint,5,opt,name=strict_versions,json=strictVersions,proto3" json:"strict_versions,omitempty"`
@@ -4195,9 +4195,9 @@ func (x *App) GetId() string {
 	return ""
 }
 
-func (x *App) GetSlug() string {
+func (x *App) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -5074,10 +5074,10 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\xdd\x04\n" +
+	"dropReason\"\xe2\x04\n" +
 	"\x03App\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
 	"\x05email\x18\x04 \x01(\tB\r\xbaH\n" +
 	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12'\n" +

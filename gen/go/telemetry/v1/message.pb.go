@@ -104,9 +104,13 @@ func (x *ValidateEventResult) GetDropReason() string {
 
 // App is one registered publisher (spec §3.2).
 type App struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`     // uuid
-	Slug             string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"` // unique, url-safe
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // uuid
+	// app_key is the machine identity and the "ak" half of the platform-wide
+	// ak/sk pair: minted server-side on creation ("tel_" + 8 base36 chars,
+	// collision-checked; a caller-chosen key is accepted when non-empty),
+	// unique, immutable. The admin surface keys every per-app route by it.
+	AppKey           string                 `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Name             string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Email            string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`                                          // optional operator contact
 	StrictVersions   bool                   `protobuf:"varint,5,opt,name=strict_versions,json=strictVersions,proto3" json:"strict_versions,omitempty"` // drop unknown versions instead of auto-registering
@@ -124,7 +128,7 @@ type App struct {
 	// kill-switch; tokens and signing keys stay in place for re-enable.
 	Disabled bool `protobuf:"varint,14,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	// app_secret is the business-identity credential (the "sk" half of the
-	// platform-wide ak/sk pair; the slug is the "ak"). Required by the
+	// platform-wide ak/sk pair; app_key is the "ak"). Required by the
 	// gRPC/module ingest surface — backend callers present it as x-app-key /
 	// x-app-secret metadata; the raw client endpoints (/v1/e/…) keep using
 	// the ingest token instead. Echoed on every read — internal-trust
@@ -173,9 +177,9 @@ func (x *App) GetId() string {
 	return ""
 }
 
-func (x *App) GetSlug() string {
+func (x *App) GetAppKey() string {
 	if x != nil {
-		return x.Slug
+		return x.AppKey
 	}
 	return ""
 }
@@ -616,10 +620,10 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\xdd\x04\n" +
+	"dropReason\"\xe2\x04\n" +
 	"\x03App\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
 	"\x05email\x18\x04 \x01(\tB\r\xbaH\n" +
 	"\xd8\x01\x01r\x05\x18\x80\x02`\x01R\x05email\x12'\n" +

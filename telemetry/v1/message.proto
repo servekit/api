@@ -19,7 +19,11 @@ message ValidateEventResult {
 // App is one registered publisher (spec §3.2).
 message App {
   string id = 1; // uuid
-  string slug = 2; // unique, url-safe
+  // app_key is the machine identity and the "ak" half of the platform-wide
+  // ak/sk pair: minted server-side on creation ("tel_" + 8 base36 chars,
+  // collision-checked; a caller-chosen key is accepted when non-empty),
+  // unique, immutable. The admin surface keys every per-app route by it.
+  string app_key = 2;
   string name = 3;
   string email = 4 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
@@ -43,7 +47,7 @@ message App {
   // kill-switch; tokens and signing keys stay in place for re-enable.
   bool disabled = 14;
   // app_secret is the business-identity credential (the "sk" half of the
-  // platform-wide ak/sk pair; the slug is the "ak"). Required by the
+  // platform-wide ak/sk pair; app_key is the "ak"). Required by the
   // gRPC/module ingest surface — backend callers present it as x-app-key /
   // x-app-secret metadata; the raw client endpoints (/v1/e/…) keep using
   // the ingest token instead. Echoed on every read — internal-trust
