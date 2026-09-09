@@ -707,6 +707,106 @@ func (x *SigningKeyInfo) GetPublicKeyB64() string {
 	return ""
 }
 
+// LicenseAppInfo is one calling application of the licensing platform (a
+// business system identity, NOT an end-user license). Data-plane callers
+// present app_key/app_secret as x-app-key / x-app-secret metadata.
+type LicenseAppInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// app_key identifies the app on every data-plane call; unique, immutable.
+	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// app_secret is the data-plane credential. Echoed on every read —
+	// internal-trust posture, same convention as the messaging/storage apps;
+	// the ops console is the intended reader.
+	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	// disabled apps fail every data-plane call immediately.
+	Disabled      bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LicenseAppInfo) Reset() {
+	*x = LicenseAppInfo{}
+	mi := &file_license_v1_message_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LicenseAppInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LicenseAppInfo) ProtoMessage() {}
+
+func (x *LicenseAppInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_message_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LicenseAppInfo.ProtoReflect.Descriptor instead.
+func (*LicenseAppInfo) Descriptor() ([]byte, []int) {
+	return file_license_v1_message_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *LicenseAppInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *LicenseAppInfo) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *LicenseAppInfo) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+func (x *LicenseAppInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *LicenseAppInfo) GetDisabled() bool {
+	if x != nil {
+		return x.Disabled
+	}
+	return false
+}
+
+func (x *LicenseAppInfo) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *LicenseAppInfo) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
 var File_license_v1_message_proto protoreflect.FileDescriptor
 
 const file_license_v1_message_proto_rawDesc = "" +
@@ -776,7 +876,18 @@ const file_license_v1_message_proto_rawDesc = "" +
 	"\x12first_device_token\x18\x05 \x01(\tR\x10firstDeviceToken\"M\n" +
 	"\x0eSigningKeyInfo\x12\x15\n" +
 	"\x06key_id\x18\x01 \x01(\tR\x05keyId\x12$\n" +
-	"\x0epublic_key_b64\x18\x02 \x01(\tR\fpublicKeyB64B\x9c\x01\n" +
+	"\x0epublic_key_b64\x18\x02 \x01(\tR\fpublicKeyB64\"\xfe\x01\n" +
+	"\x0eLicenseAppInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x03 \x01(\tR\tappSecret\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
+	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x9c\x01\n" +
 	"\x0ecom.license.v1B\fMessageProtoP\x01Z3github.com/servekit/api/gen/go/license/v1;licensev1\xa2\x02\x03LXX\xaa\x02\n" +
 	"License.V1\xca\x02\n" +
 	"License\\V1\xe2\x02\x16License\\V1\\GPBMetadata\xea\x02\vLicense::V1b\x06proto3"
@@ -793,7 +904,7 @@ func file_license_v1_message_proto_rawDescGZIP() []byte {
 	return file_license_v1_message_proto_rawDescData
 }
 
-var file_license_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_license_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_license_v1_message_proto_goTypes = []any{
 	(*DeviceSlotInfo)(nil),        // 0: license.v1.DeviceSlotInfo
 	(*SlotSummary)(nil),           // 1: license.v1.SlotSummary
@@ -805,36 +916,39 @@ var file_license_v1_message_proto_goTypes = []any{
 	(*KeyInfo)(nil),               // 7: license.v1.KeyInfo
 	(*TrialInfo)(nil),             // 8: license.v1.TrialInfo
 	(*SigningKeyInfo)(nil),        // 9: license.v1.SigningKeyInfo
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
-	(Module)(0),                   // 11: license.v1.Module
-	(EntitlementKind)(0),          // 12: license.v1.EntitlementKind
-	(KeyStatus)(0),                // 13: license.v1.KeyStatus
+	(*LicenseAppInfo)(nil),        // 10: license.v1.LicenseAppInfo
+	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
+	(Module)(0),                   // 12: license.v1.Module
+	(EntitlementKind)(0),          // 13: license.v1.EntitlementKind
+	(KeyStatus)(0),                // 14: license.v1.KeyStatus
 }
 var file_license_v1_message_proto_depIdxs = []int32{
-	10, // 0: license.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
-	10, // 1: license.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
+	11, // 0: license.v1.DeviceSlotInfo.first_seen_at:type_name -> google.protobuf.Timestamp
+	11, // 1: license.v1.DeviceSlotInfo.last_seen_at:type_name -> google.protobuf.Timestamp
 	0,  // 2: license.v1.SlotSummary.devices:type_name -> license.v1.DeviceSlotInfo
 	0,  // 3: license.v1.SlotLimitInfo.devices:type_name -> license.v1.DeviceSlotInfo
-	11, // 4: license.v1.EntitlementInput.module:type_name -> license.v1.Module
-	12, // 5: license.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
-	10, // 6: license.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
-	11, // 7: license.v1.EntitlementInfo.module:type_name -> license.v1.Module
-	12, // 8: license.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
-	10, // 9: license.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
-	10, // 10: license.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
-	13, // 11: license.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
-	10, // 12: license.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
-	10, // 13: license.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
+	12, // 4: license.v1.EntitlementInput.module:type_name -> license.v1.Module
+	13, // 5: license.v1.EntitlementInput.kind:type_name -> license.v1.EntitlementKind
+	11, // 6: license.v1.EntitlementInput.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 7: license.v1.EntitlementInfo.module:type_name -> license.v1.Module
+	13, // 8: license.v1.EntitlementInfo.kind:type_name -> license.v1.EntitlementKind
+	11, // 9: license.v1.EntitlementInfo.expires_at:type_name -> google.protobuf.Timestamp
+	11, // 10: license.v1.EntitlementInfo.granted_at:type_name -> google.protobuf.Timestamp
+	14, // 11: license.v1.KeyInfo.status:type_name -> license.v1.KeyStatus
+	11, // 12: license.v1.KeyInfo.created_at:type_name -> google.protobuf.Timestamp
+	11, // 13: license.v1.KeyInfo.revoked_at:type_name -> google.protobuf.Timestamp
 	6,  // 14: license.v1.KeyInfo.entitlements:type_name -> license.v1.EntitlementInfo
 	0,  // 15: license.v1.KeyInfo.devices:type_name -> license.v1.DeviceSlotInfo
-	11, // 16: license.v1.TrialInfo.module:type_name -> license.v1.Module
-	10, // 17: license.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
-	10, // 18: license.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	12, // 16: license.v1.TrialInfo.module:type_name -> license.v1.Module
+	11, // 17: license.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
+	11, // 18: license.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
+	11, // 19: license.v1.LicenseAppInfo.created_at:type_name -> google.protobuf.Timestamp
+	11, // 20: license.v1.LicenseAppInfo.updated_at:type_name -> google.protobuf.Timestamp
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_license_v1_message_proto_init() }
@@ -850,7 +964,7 @@ func file_license_v1_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_license_v1_message_proto_rawDesc), len(file_license_v1_message_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

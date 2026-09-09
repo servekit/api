@@ -49,6 +49,9 @@ service TelemetryAdminService {
 
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
 
+  // ListApps — the app registry is low-cardinality; no paging.
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
 
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);

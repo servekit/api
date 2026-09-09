@@ -6,10 +6,13 @@ package testkit.v1;
 import "common/v1/pong.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "license/v1/message.proto";
+import "license/v1/request_response.proto";
 import "messaging/v1/admin.proto";
 import "messaging/v1/admin_request_response.proto";
 import "reference/v1/request_response.proto";
 import "storage/v1/request_response.proto";
+import "telemetry/v1/request_response.proto";
 import "testkit/v1/message.proto";
 import "testkit/v1/request_response.proto";
 
@@ -803,6 +806,43 @@ service TestkitService {
     option (google.api.http) = {get: "/api/v1/license/admin/signing/pubkey"};
   }
 
+  // ---- License app management (calling applications of the licensing
+  // platform; 1:1 forwards to license-service admin RPCs, types imported
+  // across domains like the storage/message app forwards) ----
+
+  rpc LicenseListApps(license.v1.ListAppsRequest) returns (license.v1.ListAppsResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/apps"};
+  }
+
+  rpc LicenseCreateApp(license.v1.CreateAppRequest) returns (license.v1.CreateAppResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/apps"
+      body: "*"
+    };
+  }
+
+  rpc LicenseGetApp(license.v1.GetAppRequest) returns (license.v1.GetAppResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/apps/{app_key}"};
+  }
+
+  rpc LicenseUpdateApp(license.v1.UpdateAppRequest) returns (license.v1.UpdateAppResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/license/admin/apps/{app_key}"
+      body: "*"
+    };
+  }
+
+  rpc LicenseRotateAppSecret(license.v1.RotateAppSecretRequest) returns (license.v1.RotateAppSecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/license/admin/apps/{app_key}:rotateSecret"
+      body: "*"
+    };
+  }
+
+  rpc LicenseDeleteApp(license.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/apps/{app_key}"};
+  }
+
   rpc Ingest(IngestRequest) returns (IngestResponse) {
     option (google.api.http) = {
       post: "/api/v1/telemetry/ingest"
@@ -826,6 +866,10 @@ service TestkitService {
       put: "/api/v1/telemetry/admin/apps/{slug}"
       body: "*"
     };
+  }
+
+  rpc ListApps(telemetry.v1.ListAppsRequest) returns (telemetry.v1.ListAppsResponse) {
+    option (google.api.http) = {get: "/api/v1/telemetry/admin/apps"};
   }
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse) {

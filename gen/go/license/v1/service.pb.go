@@ -37,7 +37,7 @@ const file_license_v1_service_proto_rawDesc = "" +
 	"Deactivate\x12\x1d.license.v1.DeactivateRequest\x1a\x1e.license.v1.DeactivateResponse\x12K\n" +
 	"\n" +
 	"TrialStart\x12\x1d.license.v1.TrialStartRequest\x1a\x1e.license.v1.TrialStartResponse\x12?\n" +
-	"\x06Health\x12\x19.license.v1.HealthRequest\x1a\x1a.license.v1.HealthResponse2\xc5\b\n" +
+	"\x06Health\x12\x19.license.v1.HealthRequest\x1a\x1a.license.v1.HealthResponse2\x80\f\n" +
 	"\x13LicenseAdminService\x12H\n" +
 	"\tCreateKey\x12\x1c.license.v1.CreateKeyRequest\x1a\x1d.license.v1.CreateKeyResponse\x12B\n" +
 	"\aShowKey\x12\x1a.license.v1.ShowKeyRequest\x1a\x1b.license.v1.ShowKeyResponse\x12E\n" +
@@ -55,50 +55,67 @@ const file_license_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"ResetTrial\x12\x1d.license.v1.ResetTrialRequest\x1a\x1e.license.v1.ResetTrialResponse\x12K\n" +
 	"\n" +
-	"ShowPubKey\x12\x1d.license.v1.ShowPubKeyRequest\x1a\x1e.license.v1.ShowPubKeyResponseB\x9c\x01\n" +
+	"ShowPubKey\x12\x1d.license.v1.ShowPubKeyRequest\x1a\x1e.license.v1.ShowPubKeyResponse\x12H\n" +
+	"\tCreateApp\x12\x1c.license.v1.CreateAppRequest\x1a\x1d.license.v1.CreateAppResponse\x12?\n" +
+	"\x06GetApp\x12\x19.license.v1.GetAppRequest\x1a\x1a.license.v1.GetAppResponse\x12H\n" +
+	"\tUpdateApp\x12\x1c.license.v1.UpdateAppRequest\x1a\x1d.license.v1.UpdateAppResponse\x12Z\n" +
+	"\x0fRotateAppSecret\x12\".license.v1.RotateAppSecretRequest\x1a#.license.v1.RotateAppSecretResponse\x12E\n" +
+	"\bListApps\x12\x1b.license.v1.ListAppsRequest\x1a\x1c.license.v1.ListAppsResponse\x12A\n" +
+	"\tDeleteApp\x12\x1c.license.v1.DeleteAppRequest\x1a\x16.google.protobuf.EmptyB\x9c\x01\n" +
 	"\x0ecom.license.v1B\fServiceProtoP\x01Z3github.com/servekit/api/gen/go/license/v1;licensev1\xa2\x02\x03LXX\xaa\x02\n" +
 	"License.V1\xca\x02\n" +
 	"License\\V1\xe2\x02\x16License\\V1\\GPBMetadata\xea\x02\vLicense::V1b\x06proto3"
 
 var file_license_v1_service_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),          // 0: google.protobuf.Empty
-	(*ActivateRequest)(nil),        // 1: license.v1.ActivateRequest
-	(*DeactivateRequest)(nil),      // 2: license.v1.DeactivateRequest
-	(*TrialStartRequest)(nil),      // 3: license.v1.TrialStartRequest
-	(*HealthRequest)(nil),          // 4: license.v1.HealthRequest
-	(*CreateKeyRequest)(nil),       // 5: license.v1.CreateKeyRequest
-	(*ShowKeyRequest)(nil),         // 6: license.v1.ShowKeyRequest
-	(*ListKeysRequest)(nil),        // 7: license.v1.ListKeysRequest
-	(*UpdateKeyRequest)(nil),       // 8: license.v1.UpdateKeyRequest
-	(*RevokeKeyRequest)(nil),       // 9: license.v1.RevokeKeyRequest
-	(*UnrevokeKeyRequest)(nil),     // 10: license.v1.UnrevokeKeyRequest
-	(*DeleteKeyRequest)(nil),       // 11: license.v1.DeleteKeyRequest
-	(*GrantModuleRequest)(nil),     // 12: license.v1.GrantModuleRequest
-	(*RevokeModuleRequest)(nil),    // 13: license.v1.RevokeModuleRequest
-	(*ListKeyDevicesRequest)(nil),  // 14: license.v1.ListKeyDevicesRequest
-	(*KickDeviceRequest)(nil),      // 15: license.v1.KickDeviceRequest
-	(*ShowTrialRequest)(nil),       // 16: license.v1.ShowTrialRequest
-	(*ResetTrialRequest)(nil),      // 17: license.v1.ResetTrialRequest
-	(*ShowPubKeyRequest)(nil),      // 18: license.v1.ShowPubKeyRequest
-	(*v1.Pong)(nil),                // 19: common.v1.Pong
-	(*ActivateResponse)(nil),       // 20: license.v1.ActivateResponse
-	(*DeactivateResponse)(nil),     // 21: license.v1.DeactivateResponse
-	(*TrialStartResponse)(nil),     // 22: license.v1.TrialStartResponse
-	(*HealthResponse)(nil),         // 23: license.v1.HealthResponse
-	(*CreateKeyResponse)(nil),      // 24: license.v1.CreateKeyResponse
-	(*ShowKeyResponse)(nil),        // 25: license.v1.ShowKeyResponse
-	(*ListKeysResponse)(nil),       // 26: license.v1.ListKeysResponse
-	(*UpdateKeyResponse)(nil),      // 27: license.v1.UpdateKeyResponse
-	(*RevokeKeyResponse)(nil),      // 28: license.v1.RevokeKeyResponse
-	(*UnrevokeKeyResponse)(nil),    // 29: license.v1.UnrevokeKeyResponse
-	(*DeleteKeyResponse)(nil),      // 30: license.v1.DeleteKeyResponse
-	(*GrantModuleResponse)(nil),    // 31: license.v1.GrantModuleResponse
-	(*RevokeModuleResponse)(nil),   // 32: license.v1.RevokeModuleResponse
-	(*ListKeyDevicesResponse)(nil), // 33: license.v1.ListKeyDevicesResponse
-	(*KickDeviceResponse)(nil),     // 34: license.v1.KickDeviceResponse
-	(*ShowTrialResponse)(nil),      // 35: license.v1.ShowTrialResponse
-	(*ResetTrialResponse)(nil),     // 36: license.v1.ResetTrialResponse
-	(*ShowPubKeyResponse)(nil),     // 37: license.v1.ShowPubKeyResponse
+	(*emptypb.Empty)(nil),           // 0: google.protobuf.Empty
+	(*ActivateRequest)(nil),         // 1: license.v1.ActivateRequest
+	(*DeactivateRequest)(nil),       // 2: license.v1.DeactivateRequest
+	(*TrialStartRequest)(nil),       // 3: license.v1.TrialStartRequest
+	(*HealthRequest)(nil),           // 4: license.v1.HealthRequest
+	(*CreateKeyRequest)(nil),        // 5: license.v1.CreateKeyRequest
+	(*ShowKeyRequest)(nil),          // 6: license.v1.ShowKeyRequest
+	(*ListKeysRequest)(nil),         // 7: license.v1.ListKeysRequest
+	(*UpdateKeyRequest)(nil),        // 8: license.v1.UpdateKeyRequest
+	(*RevokeKeyRequest)(nil),        // 9: license.v1.RevokeKeyRequest
+	(*UnrevokeKeyRequest)(nil),      // 10: license.v1.UnrevokeKeyRequest
+	(*DeleteKeyRequest)(nil),        // 11: license.v1.DeleteKeyRequest
+	(*GrantModuleRequest)(nil),      // 12: license.v1.GrantModuleRequest
+	(*RevokeModuleRequest)(nil),     // 13: license.v1.RevokeModuleRequest
+	(*ListKeyDevicesRequest)(nil),   // 14: license.v1.ListKeyDevicesRequest
+	(*KickDeviceRequest)(nil),       // 15: license.v1.KickDeviceRequest
+	(*ShowTrialRequest)(nil),        // 16: license.v1.ShowTrialRequest
+	(*ResetTrialRequest)(nil),       // 17: license.v1.ResetTrialRequest
+	(*ShowPubKeyRequest)(nil),       // 18: license.v1.ShowPubKeyRequest
+	(*CreateAppRequest)(nil),        // 19: license.v1.CreateAppRequest
+	(*GetAppRequest)(nil),           // 20: license.v1.GetAppRequest
+	(*UpdateAppRequest)(nil),        // 21: license.v1.UpdateAppRequest
+	(*RotateAppSecretRequest)(nil),  // 22: license.v1.RotateAppSecretRequest
+	(*ListAppsRequest)(nil),         // 23: license.v1.ListAppsRequest
+	(*DeleteAppRequest)(nil),        // 24: license.v1.DeleteAppRequest
+	(*v1.Pong)(nil),                 // 25: common.v1.Pong
+	(*ActivateResponse)(nil),        // 26: license.v1.ActivateResponse
+	(*DeactivateResponse)(nil),      // 27: license.v1.DeactivateResponse
+	(*TrialStartResponse)(nil),      // 28: license.v1.TrialStartResponse
+	(*HealthResponse)(nil),          // 29: license.v1.HealthResponse
+	(*CreateKeyResponse)(nil),       // 30: license.v1.CreateKeyResponse
+	(*ShowKeyResponse)(nil),         // 31: license.v1.ShowKeyResponse
+	(*ListKeysResponse)(nil),        // 32: license.v1.ListKeysResponse
+	(*UpdateKeyResponse)(nil),       // 33: license.v1.UpdateKeyResponse
+	(*RevokeKeyResponse)(nil),       // 34: license.v1.RevokeKeyResponse
+	(*UnrevokeKeyResponse)(nil),     // 35: license.v1.UnrevokeKeyResponse
+	(*DeleteKeyResponse)(nil),       // 36: license.v1.DeleteKeyResponse
+	(*GrantModuleResponse)(nil),     // 37: license.v1.GrantModuleResponse
+	(*RevokeModuleResponse)(nil),    // 38: license.v1.RevokeModuleResponse
+	(*ListKeyDevicesResponse)(nil),  // 39: license.v1.ListKeyDevicesResponse
+	(*KickDeviceResponse)(nil),      // 40: license.v1.KickDeviceResponse
+	(*ShowTrialResponse)(nil),       // 41: license.v1.ShowTrialResponse
+	(*ResetTrialResponse)(nil),      // 42: license.v1.ResetTrialResponse
+	(*ShowPubKeyResponse)(nil),      // 43: license.v1.ShowPubKeyResponse
+	(*CreateAppResponse)(nil),       // 44: license.v1.CreateAppResponse
+	(*GetAppResponse)(nil),          // 45: license.v1.GetAppResponse
+	(*UpdateAppResponse)(nil),       // 46: license.v1.UpdateAppResponse
+	(*RotateAppSecretResponse)(nil), // 47: license.v1.RotateAppSecretResponse
+	(*ListAppsResponse)(nil),        // 48: license.v1.ListAppsResponse
 }
 var file_license_v1_service_proto_depIdxs = []int32{
 	0,  // 0: license.v1.LicenseService.Ping:input_type -> google.protobuf.Empty
@@ -120,27 +137,39 @@ var file_license_v1_service_proto_depIdxs = []int32{
 	16, // 16: license.v1.LicenseAdminService.ShowTrial:input_type -> license.v1.ShowTrialRequest
 	17, // 17: license.v1.LicenseAdminService.ResetTrial:input_type -> license.v1.ResetTrialRequest
 	18, // 18: license.v1.LicenseAdminService.ShowPubKey:input_type -> license.v1.ShowPubKeyRequest
-	19, // 19: license.v1.LicenseService.Ping:output_type -> common.v1.Pong
-	20, // 20: license.v1.LicenseService.Activate:output_type -> license.v1.ActivateResponse
-	21, // 21: license.v1.LicenseService.Deactivate:output_type -> license.v1.DeactivateResponse
-	22, // 22: license.v1.LicenseService.TrialStart:output_type -> license.v1.TrialStartResponse
-	23, // 23: license.v1.LicenseService.Health:output_type -> license.v1.HealthResponse
-	24, // 24: license.v1.LicenseAdminService.CreateKey:output_type -> license.v1.CreateKeyResponse
-	25, // 25: license.v1.LicenseAdminService.ShowKey:output_type -> license.v1.ShowKeyResponse
-	26, // 26: license.v1.LicenseAdminService.ListKeys:output_type -> license.v1.ListKeysResponse
-	27, // 27: license.v1.LicenseAdminService.UpdateKey:output_type -> license.v1.UpdateKeyResponse
-	28, // 28: license.v1.LicenseAdminService.RevokeKey:output_type -> license.v1.RevokeKeyResponse
-	29, // 29: license.v1.LicenseAdminService.UnrevokeKey:output_type -> license.v1.UnrevokeKeyResponse
-	30, // 30: license.v1.LicenseAdminService.DeleteKey:output_type -> license.v1.DeleteKeyResponse
-	31, // 31: license.v1.LicenseAdminService.GrantModule:output_type -> license.v1.GrantModuleResponse
-	32, // 32: license.v1.LicenseAdminService.RevokeModule:output_type -> license.v1.RevokeModuleResponse
-	33, // 33: license.v1.LicenseAdminService.ListKeyDevices:output_type -> license.v1.ListKeyDevicesResponse
-	34, // 34: license.v1.LicenseAdminService.KickDevice:output_type -> license.v1.KickDeviceResponse
-	35, // 35: license.v1.LicenseAdminService.ShowTrial:output_type -> license.v1.ShowTrialResponse
-	36, // 36: license.v1.LicenseAdminService.ResetTrial:output_type -> license.v1.ResetTrialResponse
-	37, // 37: license.v1.LicenseAdminService.ShowPubKey:output_type -> license.v1.ShowPubKeyResponse
-	19, // [19:38] is the sub-list for method output_type
-	0,  // [0:19] is the sub-list for method input_type
+	19, // 19: license.v1.LicenseAdminService.CreateApp:input_type -> license.v1.CreateAppRequest
+	20, // 20: license.v1.LicenseAdminService.GetApp:input_type -> license.v1.GetAppRequest
+	21, // 21: license.v1.LicenseAdminService.UpdateApp:input_type -> license.v1.UpdateAppRequest
+	22, // 22: license.v1.LicenseAdminService.RotateAppSecret:input_type -> license.v1.RotateAppSecretRequest
+	23, // 23: license.v1.LicenseAdminService.ListApps:input_type -> license.v1.ListAppsRequest
+	24, // 24: license.v1.LicenseAdminService.DeleteApp:input_type -> license.v1.DeleteAppRequest
+	25, // 25: license.v1.LicenseService.Ping:output_type -> common.v1.Pong
+	26, // 26: license.v1.LicenseService.Activate:output_type -> license.v1.ActivateResponse
+	27, // 27: license.v1.LicenseService.Deactivate:output_type -> license.v1.DeactivateResponse
+	28, // 28: license.v1.LicenseService.TrialStart:output_type -> license.v1.TrialStartResponse
+	29, // 29: license.v1.LicenseService.Health:output_type -> license.v1.HealthResponse
+	30, // 30: license.v1.LicenseAdminService.CreateKey:output_type -> license.v1.CreateKeyResponse
+	31, // 31: license.v1.LicenseAdminService.ShowKey:output_type -> license.v1.ShowKeyResponse
+	32, // 32: license.v1.LicenseAdminService.ListKeys:output_type -> license.v1.ListKeysResponse
+	33, // 33: license.v1.LicenseAdminService.UpdateKey:output_type -> license.v1.UpdateKeyResponse
+	34, // 34: license.v1.LicenseAdminService.RevokeKey:output_type -> license.v1.RevokeKeyResponse
+	35, // 35: license.v1.LicenseAdminService.UnrevokeKey:output_type -> license.v1.UnrevokeKeyResponse
+	36, // 36: license.v1.LicenseAdminService.DeleteKey:output_type -> license.v1.DeleteKeyResponse
+	37, // 37: license.v1.LicenseAdminService.GrantModule:output_type -> license.v1.GrantModuleResponse
+	38, // 38: license.v1.LicenseAdminService.RevokeModule:output_type -> license.v1.RevokeModuleResponse
+	39, // 39: license.v1.LicenseAdminService.ListKeyDevices:output_type -> license.v1.ListKeyDevicesResponse
+	40, // 40: license.v1.LicenseAdminService.KickDevice:output_type -> license.v1.KickDeviceResponse
+	41, // 41: license.v1.LicenseAdminService.ShowTrial:output_type -> license.v1.ShowTrialResponse
+	42, // 42: license.v1.LicenseAdminService.ResetTrial:output_type -> license.v1.ResetTrialResponse
+	43, // 43: license.v1.LicenseAdminService.ShowPubKey:output_type -> license.v1.ShowPubKeyResponse
+	44, // 44: license.v1.LicenseAdminService.CreateApp:output_type -> license.v1.CreateAppResponse
+	45, // 45: license.v1.LicenseAdminService.GetApp:output_type -> license.v1.GetAppResponse
+	46, // 46: license.v1.LicenseAdminService.UpdateApp:output_type -> license.v1.UpdateAppResponse
+	47, // 47: license.v1.LicenseAdminService.RotateAppSecret:output_type -> license.v1.RotateAppSecretResponse
+	48, // 48: license.v1.LicenseAdminService.ListApps:output_type -> license.v1.ListAppsResponse
+	0,  // 49: license.v1.LicenseAdminService.DeleteApp:output_type -> google.protobuf.Empty
+	25, // [25:50] is the sub-list for method output_type
+	0,  // [0:25] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

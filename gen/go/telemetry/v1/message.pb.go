@@ -119,11 +119,14 @@ type App struct {
 	// it drops the batch's events silently with a 204 and fires the
 	// app_budget_exceeded metric — the bounded-garbage abuse backstop that
 	// per-device limits cannot provide (spec §4.6 #1).
-	DailyEventBudget int64                  `protobuf:"varint,13,opt,name=daily_event_budget,json=dailyEventBudget,proto3" json:"daily_event_budget,omitempty"`
-	CreatedAt        *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt        *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	DailyEventBudget int64 `protobuf:"varint,13,opt,name=daily_event_budget,json=dailyEventBudget,proto3" json:"daily_event_budget,omitempty"`
+	// Disabled apps fail every ingest call immediately (401) — the operator
+	// kill-switch; tokens and signing keys stay in place for re-enable.
+	Disabled      bool                   `protobuf:"varint,14,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *App) Reset() {
@@ -231,6 +234,13 @@ func (x *App) GetDailyEventBudget() int64 {
 		return x.DailyEventBudget
 	}
 	return 0
+}
+
+func (x *App) GetDisabled() bool {
+	if x != nil {
+		return x.Disabled
+	}
+	return false
 }
 
 func (x *App) GetCreatedAt() *timestamppb.Timestamp {
@@ -592,7 +602,7 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\xa2\x04\n" +
+	"dropReason\"\xbe\x04\n" +
 	"\x03App\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
@@ -607,7 +617,8 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"ratePerDay\x12,\n" +
 	"\x12raw_retention_days\x18\n" +
 	" \x01(\x05R\x10rawRetentionDays\x12,\n" +
-	"\x12daily_event_budget\x18\r \x01(\x03R\x10dailyEventBudget\x129\n" +
+	"\x12daily_event_budget\x18\r \x01(\x03R\x10dailyEventBudget\x12\x1a\n" +
+	"\bdisabled\x18\x0e \x01(\bR\bdisabled\x129\n" +
 	"\n" +
 	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +

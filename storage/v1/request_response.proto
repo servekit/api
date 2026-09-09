@@ -563,8 +563,8 @@ message AdminUpdateSettingsResponse {
 }
 
 // AdminCreateAppRequest registers a calling application. app_key empty = the
-// server mints one ("sto_" + 8 base36 chars, immutable). app_secret is
-// returned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed.
+// server mints one ("sto_" + 8 base36 chars, immutable). The app_secret is
+// also echoed on every read of StorageAppInfo (internal-trust posture).
 message AdminCreateAppRequest {
   // app_key pattern: lowercase letter followed by lowercase alphanumerics
   // and dashes. Optional; empty = server-generated.
@@ -574,7 +574,7 @@ message AdminCreateAppRequest {
   ];
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
-    max_len: 128
+    max_len: 200
   }];
   // key_prefix namespaces the app's objects; globally unique, immutable,
   // must end with '/'.
@@ -589,7 +589,7 @@ message AdminCreateAppRequest {
 
 message AdminCreateAppResponse {
   StorageAppInfo app = 1;
-  // app_secret is shown once at creation; store it immediately.
+  // app_secret convenience echo (also visible via AdminListApps/GetApp).
   string app_secret = 2;
 }
 
@@ -612,7 +612,10 @@ message AdminUpdateAppRequest {
     min_len: 1
     max_len: 64
   }];
-  optional string name = 2 [(buf.validate.field).string.max_len = 128];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
   optional bool disabled = 3;
   // bucket_id 0 rebinds the app to the default bucket.
   optional int64 bucket_id = 4;
@@ -631,7 +634,7 @@ message AdminRotateAppSecretRequest {
 
 message AdminRotateAppSecretResponse {
   StorageAppInfo app = 1;
-  // app_secret is shown once on rotation; store it immediately.
+  // app_secret convenience echo (also visible via AdminListApps/GetApp).
   string app_secret = 2;
 }
 

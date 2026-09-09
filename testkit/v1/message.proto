@@ -622,6 +622,7 @@ message App {
   int32 raw_retention_days = 10;
 
   int64 daily_event_budget = 13;
+  bool disabled = 14;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
 }

@@ -39,6 +39,9 @@ message App {
   // app_budget_exceeded metric — the bounded-garbage abuse backstop that
   // per-device limits cannot provide (spec §4.6 #1).
   int64 daily_event_budget = 13;
+  // Disabled apps fail every ingest call immediately (401) — the operator
+  // kill-switch; tokens and signing keys stay in place for re-enable.
+  bool disabled = 14;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
 }

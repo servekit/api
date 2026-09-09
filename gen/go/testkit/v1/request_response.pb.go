@@ -12526,6 +12526,7 @@ type UpdateAppRequest struct {
 	RatePerDay       *int32                 `protobuf:"varint,9,opt,name=rate_per_day,json=ratePerDay,proto3,oneof" json:"rate_per_day,omitempty"`
 	RawRetentionDays *int32                 `protobuf:"varint,10,opt,name=raw_retention_days,json=rawRetentionDays,proto3,oneof" json:"raw_retention_days,omitempty"`
 	DailyEventBudget *int64                 `protobuf:"varint,11,opt,name=daily_event_budget,json=dailyEventBudget,proto3,oneof" json:"daily_event_budget,omitempty"`
+	Disabled         *bool                  `protobuf:"varint,12,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -12635,6 +12636,13 @@ func (x *UpdateAppRequest) GetDailyEventBudget() int64 {
 		return *x.DailyEventBudget
 	}
 	return 0
+}
+
+func (x *UpdateAppRequest) GetDisabled() bool {
+	if x != nil && x.Disabled != nil {
+		return *x.Disabled
+	}
+	return false
 }
 
 type UpdateAppResponse struct {
@@ -14472,7 +14480,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06tokens\x18\x02 \x03(\v2\x1b.testkit.v1.IngestTokenInfoR\x06tokens\x12F\n" +
 	"\fsigning_keys\x18\x03 \x03(\v2#.testkit.v1.TelemetrySigningKeyInfoR\vsigningKeys\x12+\n" +
 	"\x05rules\x18\x04 \x03(\v2\x15.testkit.v1.EventRuleR\x05rules\x123\n" +
-	"\bversions\x18\x05 \x03(\v2\x17.testkit.v1.VersionInfoR\bversions\"\xeb\x05\n" +
+	"\bversions\x18\x05 \x03(\v2\x17.testkit.v1.VersionInfoR\bversions\"\x99\x06\n" +
 	"\x10UpdateAppRequest\x12\x1d\n" +
 	"\x04slug\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04slug\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
@@ -14490,7 +14498,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x12raw_retention_days\x18\n" +
 	" \x01(\x05B\t\xbaH\x06\x1a\x04\x18Z(\aH\aR\x10rawRetentionDays\x88\x01\x01\x12@\n" +
 	"\x12daily_event_budget\x18\v \x01(\x03B\r\xbaH\n" +
-	"\"\b\x18\x80\xc2\xd7/(\x90NH\bR\x10dailyEventBudget\x88\x01\x01B\a\n" +
+	"\"\b\x18\x80\xc2\xd7/(\x90NH\bR\x10dailyEventBudget\x88\x01\x01\x12\x1f\n" +
+	"\bdisabled\x18\f \x01(\bH\tR\bdisabled\x88\x01\x01B\a\n" +
 	"\x05_nameB\b\n" +
 	"\x06_emailB\x12\n" +
 	"\x10_strict_versionsB\f\n" +
@@ -14500,7 +14509,8 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x10_rate_per_minuteB\x0f\n" +
 	"\r_rate_per_dayB\x15\n" +
 	"\x13_raw_retention_daysB\x15\n" +
-	"\x13_daily_event_budget\"6\n" +
+	"\x13_daily_event_budgetB\v\n" +
+	"\t_disabled\"6\n" +
 	"\x11UpdateAppResponse\x12!\n" +
 	"\x03app\x18\x01 \x01(\v2\x0f.testkit.v1.AppR\x03app\"3\n" +
 	"\x12RotateTokenRequest\x12\x1d\n" +

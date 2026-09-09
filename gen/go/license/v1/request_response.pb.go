@@ -1886,6 +1886,533 @@ func (x *ShowPubKeyResponse) GetKeys() []*SigningKeyInfo {
 	return nil
 }
 
+// CreateAppRequest registers a calling application. app_key empty = the
+// server mints one ("lic_" + 8 base36 chars, immutable).
+type CreateAppRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_key pattern: lowercase letter followed by lowercase alphanumerics
+	// and dashes. Optional; empty = server-generated.
+	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAppRequest) Reset() {
+	*x = CreateAppRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAppRequest) ProtoMessage() {}
+
+func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
+func (*CreateAppRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *CreateAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *CreateAppRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type CreateAppResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	App   *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// app_secret convenience echo (also visible via ListApps/GetApp).
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAppResponse) Reset() {
+	*x = CreateAppResponse{}
+	mi := &file_license_v1_request_response_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAppResponse) ProtoMessage() {}
+
+func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
+func (*CreateAppResponse) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *CreateAppResponse) GetApp() *LicenseAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+func (x *CreateAppResponse) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+type GetAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAppRequest) Reset() {
+	*x = GetAppRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAppRequest) ProtoMessage() {}
+
+func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
+func (*GetAppRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *GetAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+type GetAppResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	App           *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAppResponse) Reset() {
+	*x = GetAppResponse{}
+	mi := &file_license_v1_request_response_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAppResponse) ProtoMessage() {}
+
+func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
+func (*GetAppResponse) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *GetAppResponse) GetApp() *LicenseAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
+// optional fields keep their current values.
+type UpdateAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Disabled      *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateAppRequest) Reset() {
+	*x = UpdateAppRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAppRequest) ProtoMessage() {}
+
+func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
+func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *UpdateAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+func (x *UpdateAppRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *UpdateAppRequest) GetDisabled() bool {
+	if x != nil && x.Disabled != nil {
+		return *x.Disabled
+	}
+	return false
+}
+
+type UpdateAppResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	App           *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateAppResponse) Reset() {
+	*x = UpdateAppResponse{}
+	mi := &file_license_v1_request_response_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAppResponse) ProtoMessage() {}
+
+func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
+func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *UpdateAppResponse) GetApp() *LicenseAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+type RotateAppSecretRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RotateAppSecretRequest) Reset() {
+	*x = RotateAppSecretRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RotateAppSecretRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RotateAppSecretRequest) ProtoMessage() {}
+
+func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
+func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *RotateAppSecretRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
+type RotateAppSecretResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	App   *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// app_secret convenience echo (also visible via ListApps/GetApp).
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RotateAppSecretResponse) Reset() {
+	*x = RotateAppSecretResponse{}
+	mi := &file_license_v1_request_response_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RotateAppSecretResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RotateAppSecretResponse) ProtoMessage() {}
+
+func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
+func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *RotateAppSecretResponse) GetApp() *LicenseAppInfo {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+func (x *RotateAppSecretResponse) GetAppSecret() string {
+	if x != nil {
+		return x.AppSecret
+	}
+	return ""
+}
+
+// ListAppsRequest — the app registry is low-cardinality; no paging.
+type ListAppsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAppsRequest) Reset() {
+	*x = ListAppsRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAppsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAppsRequest) ProtoMessage() {}
+
+func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
+func (*ListAppsRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{44}
+}
+
+type ListAppsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Apps          []*LicenseAppInfo      `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAppsResponse) Reset() {
+	*x = ListAppsResponse{}
+	mi := &file_license_v1_request_response_proto_msgTypes[45]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAppsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAppsResponse) ProtoMessage() {}
+
+func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[45]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
+func (*ListAppsResponse) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{45}
+}
+
+func (x *ListAppsResponse) GetApps() []*LicenseAppInfo {
+	if x != nil {
+		return x.Apps
+	}
+	return nil
+}
+
+// DeleteAppRequest removes the app row (hard delete). Existing licenses and
+// devices are untouched; the app_key becomes reusable.
+type DeleteAppRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteAppRequest) Reset() {
+	*x = DeleteAppRequest{}
+	mi := &file_license_v1_request_response_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAppRequest) ProtoMessage() {}
+
+func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_license_v1_request_response_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
+	return file_license_v1_request_response_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *DeleteAppRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
+	}
+	return ""
+}
+
 var File_license_v1_request_response_proto protoreflect.FileDescriptor
 
 const file_license_v1_request_response_proto_rawDesc = "" +
@@ -2013,7 +2540,39 @@ const file_license_v1_request_response_proto_rawDesc = "" +
 	"\x11ShowPubKeyRequest\"\xac\x01\n" +
 	"\x12ShowPubKeyResponse\x12\"\n" +
 	"\ractive_key_id\x18\x04 \x01(\tR\vactiveKeyId\x12.\n" +
-	"\x04keys\x18\x05 \x03(\v2\x1a.license.v1.SigningKeyInfoR\x04keysJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0epublic_key_b64R\x06key_idR\x18secondary_public_key_b64B\xa4\x01\n" +
+	"\x04keys\x18\x05 \x03(\v2\x1a.license.v1.SigningKeyInfoR\x04keysJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0epublic_key_b64R\x06key_idR\x18secondary_public_key_b64\"m\n" +
+	"\x10CreateAppRequest\x129\n" +
+	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\x04name\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\"`\n" +
+	"\x11CreateAppResponse\x12,\n" +
+	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"3\n" +
+	"\rGetAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\">\n" +
+	"\x0eGetAppResponse\x12,\n" +
+	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\"\x92\x01\n" +
+	"\x10UpdateAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\x04name\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
+	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01B\a\n" +
+	"\x05_nameB\v\n" +
+	"\t_disabled\"A\n" +
+	"\x11UpdateAppResponse\x12,\n" +
+	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\"<\n" +
+	"\x16RotateAppSecretRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"f\n" +
+	"\x17RotateAppSecretResponse\x12,\n" +
+	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x11\n" +
+	"\x0fListAppsRequest\"B\n" +
+	"\x10ListAppsResponse\x12.\n" +
+	"\x04apps\x18\x01 \x03(\v2\x1a.license.v1.LicenseAppInfoR\x04apps\"6\n" +
+	"\x10DeleteAppRequest\x12\"\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKeyB\xa4\x01\n" +
 	"\x0ecom.license.v1B\x14RequestResponseProtoP\x01Z3github.com/servekit/api/gen/go/license/v1;licensev1\xa2\x02\x03LXX\xaa\x02\n" +
 	"License.V1\xca\x02\n" +
 	"License\\V1\xe2\x02\x16License\\V1\\GPBMetadata\xea\x02\vLicense::V1b\x06proto3"
@@ -2030,83 +2589,100 @@ func file_license_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_license_v1_request_response_proto_rawDescData
 }
 
-var file_license_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
+var file_license_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
 var file_license_v1_request_response_proto_goTypes = []any{
-	(*ActivateRequest)(nil),        // 0: license.v1.ActivateRequest
-	(*ActivateResponse)(nil),       // 1: license.v1.ActivateResponse
-	(*DeactivateRequest)(nil),      // 2: license.v1.DeactivateRequest
-	(*DeactivateResponse)(nil),     // 3: license.v1.DeactivateResponse
-	(*TrialStartRequest)(nil),      // 4: license.v1.TrialStartRequest
-	(*TrialStartResponse)(nil),     // 5: license.v1.TrialStartResponse
-	(*HealthRequest)(nil),          // 6: license.v1.HealthRequest
-	(*HealthResponse)(nil),         // 7: license.v1.HealthResponse
-	(*CreateKeyRequest)(nil),       // 8: license.v1.CreateKeyRequest
-	(*CreateKeyResponse)(nil),      // 9: license.v1.CreateKeyResponse
-	(*ShowKeyRequest)(nil),         // 10: license.v1.ShowKeyRequest
-	(*ShowKeyResponse)(nil),        // 11: license.v1.ShowKeyResponse
-	(*ListKeysRequest)(nil),        // 12: license.v1.ListKeysRequest
-	(*ListKeysResponse)(nil),       // 13: license.v1.ListKeysResponse
-	(*UpdateKeyRequest)(nil),       // 14: license.v1.UpdateKeyRequest
-	(*UpdateKeyResponse)(nil),      // 15: license.v1.UpdateKeyResponse
-	(*RevokeKeyRequest)(nil),       // 16: license.v1.RevokeKeyRequest
-	(*RevokeKeyResponse)(nil),      // 17: license.v1.RevokeKeyResponse
-	(*UnrevokeKeyRequest)(nil),     // 18: license.v1.UnrevokeKeyRequest
-	(*UnrevokeKeyResponse)(nil),    // 19: license.v1.UnrevokeKeyResponse
-	(*DeleteKeyRequest)(nil),       // 20: license.v1.DeleteKeyRequest
-	(*DeleteKeyResponse)(nil),      // 21: license.v1.DeleteKeyResponse
-	(*GrantModuleRequest)(nil),     // 22: license.v1.GrantModuleRequest
-	(*GrantModuleResponse)(nil),    // 23: license.v1.GrantModuleResponse
-	(*RevokeModuleRequest)(nil),    // 24: license.v1.RevokeModuleRequest
-	(*RevokeModuleResponse)(nil),   // 25: license.v1.RevokeModuleResponse
-	(*ListKeyDevicesRequest)(nil),  // 26: license.v1.ListKeyDevicesRequest
-	(*ListKeyDevicesResponse)(nil), // 27: license.v1.ListKeyDevicesResponse
-	(*KickDeviceRequest)(nil),      // 28: license.v1.KickDeviceRequest
-	(*KickDeviceResponse)(nil),     // 29: license.v1.KickDeviceResponse
-	(*ShowTrialRequest)(nil),       // 30: license.v1.ShowTrialRequest
-	(*ShowTrialResponse)(nil),      // 31: license.v1.ShowTrialResponse
-	(*ResetTrialRequest)(nil),      // 32: license.v1.ResetTrialRequest
-	(*ResetTrialResponse)(nil),     // 33: license.v1.ResetTrialResponse
-	(*ShowPubKeyRequest)(nil),      // 34: license.v1.ShowPubKeyRequest
-	(*ShowPubKeyResponse)(nil),     // 35: license.v1.ShowPubKeyResponse
-	(*SlotSummary)(nil),            // 36: license.v1.SlotSummary
-	(*HealthChecks)(nil),           // 37: license.v1.HealthChecks
-	(*EntitlementInput)(nil),       // 38: license.v1.EntitlementInput
-	(*KeyInfo)(nil),                // 39: license.v1.KeyInfo
-	(KeyStatus)(0),                 // 40: license.v1.KeyStatus
-	(Module)(0),                    // 41: license.v1.Module
-	(EntitlementKind)(0),           // 42: license.v1.EntitlementKind
-	(*timestamppb.Timestamp)(nil),  // 43: google.protobuf.Timestamp
-	(*EntitlementInfo)(nil),        // 44: license.v1.EntitlementInfo
-	(*DeviceSlotInfo)(nil),         // 45: license.v1.DeviceSlotInfo
-	(*TrialInfo)(nil),              // 46: license.v1.TrialInfo
-	(*SigningKeyInfo)(nil),         // 47: license.v1.SigningKeyInfo
+	(*ActivateRequest)(nil),         // 0: license.v1.ActivateRequest
+	(*ActivateResponse)(nil),        // 1: license.v1.ActivateResponse
+	(*DeactivateRequest)(nil),       // 2: license.v1.DeactivateRequest
+	(*DeactivateResponse)(nil),      // 3: license.v1.DeactivateResponse
+	(*TrialStartRequest)(nil),       // 4: license.v1.TrialStartRequest
+	(*TrialStartResponse)(nil),      // 5: license.v1.TrialStartResponse
+	(*HealthRequest)(nil),           // 6: license.v1.HealthRequest
+	(*HealthResponse)(nil),          // 7: license.v1.HealthResponse
+	(*CreateKeyRequest)(nil),        // 8: license.v1.CreateKeyRequest
+	(*CreateKeyResponse)(nil),       // 9: license.v1.CreateKeyResponse
+	(*ShowKeyRequest)(nil),          // 10: license.v1.ShowKeyRequest
+	(*ShowKeyResponse)(nil),         // 11: license.v1.ShowKeyResponse
+	(*ListKeysRequest)(nil),         // 12: license.v1.ListKeysRequest
+	(*ListKeysResponse)(nil),        // 13: license.v1.ListKeysResponse
+	(*UpdateKeyRequest)(nil),        // 14: license.v1.UpdateKeyRequest
+	(*UpdateKeyResponse)(nil),       // 15: license.v1.UpdateKeyResponse
+	(*RevokeKeyRequest)(nil),        // 16: license.v1.RevokeKeyRequest
+	(*RevokeKeyResponse)(nil),       // 17: license.v1.RevokeKeyResponse
+	(*UnrevokeKeyRequest)(nil),      // 18: license.v1.UnrevokeKeyRequest
+	(*UnrevokeKeyResponse)(nil),     // 19: license.v1.UnrevokeKeyResponse
+	(*DeleteKeyRequest)(nil),        // 20: license.v1.DeleteKeyRequest
+	(*DeleteKeyResponse)(nil),       // 21: license.v1.DeleteKeyResponse
+	(*GrantModuleRequest)(nil),      // 22: license.v1.GrantModuleRequest
+	(*GrantModuleResponse)(nil),     // 23: license.v1.GrantModuleResponse
+	(*RevokeModuleRequest)(nil),     // 24: license.v1.RevokeModuleRequest
+	(*RevokeModuleResponse)(nil),    // 25: license.v1.RevokeModuleResponse
+	(*ListKeyDevicesRequest)(nil),   // 26: license.v1.ListKeyDevicesRequest
+	(*ListKeyDevicesResponse)(nil),  // 27: license.v1.ListKeyDevicesResponse
+	(*KickDeviceRequest)(nil),       // 28: license.v1.KickDeviceRequest
+	(*KickDeviceResponse)(nil),      // 29: license.v1.KickDeviceResponse
+	(*ShowTrialRequest)(nil),        // 30: license.v1.ShowTrialRequest
+	(*ShowTrialResponse)(nil),       // 31: license.v1.ShowTrialResponse
+	(*ResetTrialRequest)(nil),       // 32: license.v1.ResetTrialRequest
+	(*ResetTrialResponse)(nil),      // 33: license.v1.ResetTrialResponse
+	(*ShowPubKeyRequest)(nil),       // 34: license.v1.ShowPubKeyRequest
+	(*ShowPubKeyResponse)(nil),      // 35: license.v1.ShowPubKeyResponse
+	(*CreateAppRequest)(nil),        // 36: license.v1.CreateAppRequest
+	(*CreateAppResponse)(nil),       // 37: license.v1.CreateAppResponse
+	(*GetAppRequest)(nil),           // 38: license.v1.GetAppRequest
+	(*GetAppResponse)(nil),          // 39: license.v1.GetAppResponse
+	(*UpdateAppRequest)(nil),        // 40: license.v1.UpdateAppRequest
+	(*UpdateAppResponse)(nil),       // 41: license.v1.UpdateAppResponse
+	(*RotateAppSecretRequest)(nil),  // 42: license.v1.RotateAppSecretRequest
+	(*RotateAppSecretResponse)(nil), // 43: license.v1.RotateAppSecretResponse
+	(*ListAppsRequest)(nil),         // 44: license.v1.ListAppsRequest
+	(*ListAppsResponse)(nil),        // 45: license.v1.ListAppsResponse
+	(*DeleteAppRequest)(nil),        // 46: license.v1.DeleteAppRequest
+	(*SlotSummary)(nil),             // 47: license.v1.SlotSummary
+	(*HealthChecks)(nil),            // 48: license.v1.HealthChecks
+	(*EntitlementInput)(nil),        // 49: license.v1.EntitlementInput
+	(*KeyInfo)(nil),                 // 50: license.v1.KeyInfo
+	(KeyStatus)(0),                  // 51: license.v1.KeyStatus
+	(Module)(0),                     // 52: license.v1.Module
+	(EntitlementKind)(0),            // 53: license.v1.EntitlementKind
+	(*timestamppb.Timestamp)(nil),   // 54: google.protobuf.Timestamp
+	(*EntitlementInfo)(nil),         // 55: license.v1.EntitlementInfo
+	(*DeviceSlotInfo)(nil),          // 56: license.v1.DeviceSlotInfo
+	(*TrialInfo)(nil),               // 57: license.v1.TrialInfo
+	(*SigningKeyInfo)(nil),          // 58: license.v1.SigningKeyInfo
+	(*LicenseAppInfo)(nil),          // 59: license.v1.LicenseAppInfo
 }
 var file_license_v1_request_response_proto_depIdxs = []int32{
-	36, // 0: license.v1.ActivateResponse.slots:type_name -> license.v1.SlotSummary
-	37, // 1: license.v1.HealthResponse.checks:type_name -> license.v1.HealthChecks
-	38, // 2: license.v1.CreateKeyRequest.grants:type_name -> license.v1.EntitlementInput
-	39, // 3: license.v1.CreateKeyResponse.key:type_name -> license.v1.KeyInfo
-	39, // 4: license.v1.ShowKeyResponse.key:type_name -> license.v1.KeyInfo
-	40, // 5: license.v1.ListKeysRequest.status:type_name -> license.v1.KeyStatus
-	39, // 6: license.v1.ListKeysResponse.keys:type_name -> license.v1.KeyInfo
-	39, // 7: license.v1.UpdateKeyResponse.key:type_name -> license.v1.KeyInfo
-	39, // 8: license.v1.RevokeKeyResponse.key:type_name -> license.v1.KeyInfo
-	39, // 9: license.v1.UnrevokeKeyResponse.key:type_name -> license.v1.KeyInfo
-	41, // 10: license.v1.GrantModuleRequest.module:type_name -> license.v1.Module
-	42, // 11: license.v1.GrantModuleRequest.kind:type_name -> license.v1.EntitlementKind
-	43, // 12: license.v1.GrantModuleRequest.expires_at:type_name -> google.protobuf.Timestamp
-	44, // 13: license.v1.GrantModuleResponse.entitlement:type_name -> license.v1.EntitlementInfo
-	41, // 14: license.v1.RevokeModuleRequest.module:type_name -> license.v1.Module
-	45, // 15: license.v1.ListKeyDevicesResponse.devices:type_name -> license.v1.DeviceSlotInfo
-	41, // 16: license.v1.ShowTrialRequest.module:type_name -> license.v1.Module
-	46, // 17: license.v1.ShowTrialResponse.trials:type_name -> license.v1.TrialInfo
-	41, // 18: license.v1.ResetTrialRequest.module:type_name -> license.v1.Module
-	47, // 19: license.v1.ShowPubKeyResponse.keys:type_name -> license.v1.SigningKeyInfo
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	47, // 0: license.v1.ActivateResponse.slots:type_name -> license.v1.SlotSummary
+	48, // 1: license.v1.HealthResponse.checks:type_name -> license.v1.HealthChecks
+	49, // 2: license.v1.CreateKeyRequest.grants:type_name -> license.v1.EntitlementInput
+	50, // 3: license.v1.CreateKeyResponse.key:type_name -> license.v1.KeyInfo
+	50, // 4: license.v1.ShowKeyResponse.key:type_name -> license.v1.KeyInfo
+	51, // 5: license.v1.ListKeysRequest.status:type_name -> license.v1.KeyStatus
+	50, // 6: license.v1.ListKeysResponse.keys:type_name -> license.v1.KeyInfo
+	50, // 7: license.v1.UpdateKeyResponse.key:type_name -> license.v1.KeyInfo
+	50, // 8: license.v1.RevokeKeyResponse.key:type_name -> license.v1.KeyInfo
+	50, // 9: license.v1.UnrevokeKeyResponse.key:type_name -> license.v1.KeyInfo
+	52, // 10: license.v1.GrantModuleRequest.module:type_name -> license.v1.Module
+	53, // 11: license.v1.GrantModuleRequest.kind:type_name -> license.v1.EntitlementKind
+	54, // 12: license.v1.GrantModuleRequest.expires_at:type_name -> google.protobuf.Timestamp
+	55, // 13: license.v1.GrantModuleResponse.entitlement:type_name -> license.v1.EntitlementInfo
+	52, // 14: license.v1.RevokeModuleRequest.module:type_name -> license.v1.Module
+	56, // 15: license.v1.ListKeyDevicesResponse.devices:type_name -> license.v1.DeviceSlotInfo
+	52, // 16: license.v1.ShowTrialRequest.module:type_name -> license.v1.Module
+	57, // 17: license.v1.ShowTrialResponse.trials:type_name -> license.v1.TrialInfo
+	52, // 18: license.v1.ResetTrialRequest.module:type_name -> license.v1.Module
+	58, // 19: license.v1.ShowPubKeyResponse.keys:type_name -> license.v1.SigningKeyInfo
+	59, // 20: license.v1.CreateAppResponse.app:type_name -> license.v1.LicenseAppInfo
+	59, // 21: license.v1.GetAppResponse.app:type_name -> license.v1.LicenseAppInfo
+	59, // 22: license.v1.UpdateAppResponse.app:type_name -> license.v1.LicenseAppInfo
+	59, // 23: license.v1.RotateAppSecretResponse.app:type_name -> license.v1.LicenseAppInfo
+	59, // 24: license.v1.ListAppsResponse.apps:type_name -> license.v1.LicenseAppInfo
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_license_v1_request_response_proto_init() }
@@ -2122,13 +2698,14 @@ func file_license_v1_request_response_proto_init() {
 	file_license_v1_request_response_proto_msgTypes[20].OneofWrappers = []any{}
 	file_license_v1_request_response_proto_msgTypes[24].OneofWrappers = []any{}
 	file_license_v1_request_response_proto_msgTypes[28].OneofWrappers = []any{}
+	file_license_v1_request_response_proto_msgTypes[40].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_license_v1_request_response_proto_rawDesc), len(file_license_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   36,
+			NumMessages:   47,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

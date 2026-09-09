@@ -3569,8 +3569,8 @@ func (x *AdminUpdateSettingsResponse) GetSettings() *StorageSettings {
 }
 
 // AdminCreateAppRequest registers a calling application. app_key empty = the
-// server mints one ("sto_" + 8 base36 chars, immutable). app_secret is
-// returned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed.
+// server mints one ("sto_" + 8 base36 chars, immutable). The app_secret is
+// also echoed on every read of StorageAppInfo (internal-trust posture).
 type AdminCreateAppRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// app_key pattern: lowercase letter followed by lowercase alphanumerics
@@ -3647,7 +3647,7 @@ func (x *AdminCreateAppRequest) GetBucketId() int64 {
 type AdminCreateAppResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	App   *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret is shown once at creation; store it immediately.
+	// app_secret convenience echo (also visible via AdminListApps/GetApp).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3948,7 +3948,7 @@ func (x *AdminRotateAppSecretRequest) GetAppKey() string {
 type AdminRotateAppSecretResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	App   *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret is shown once on rotation; store it immediately.
+	// app_secret convenience echo (also visible via AdminListApps/GetApp).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -5195,7 +5195,7 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x15AdminCreateAppRequest\x129\n" +
 	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\x04name\x12A\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12A\n" +
 	"\n" +
 	"key_prefix\x18\x03 \x01(\tB\"\xbaH\x1fr\x1d\x10\x02\x18@2\x17^[a-z][a-z0-9-]{1,62}/$R\tkeyPrefix\x12\x1b\n" +
 	"\tbucket_id\x18\x04 \x01(\x03R\bbucketId\"e\n" +
@@ -5206,10 +5206,11 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x12AdminGetAppRequest\x12\"\n" +
 	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"C\n" +
 	"\x13AdminGetAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\"\xc5\x01\n" +
+	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\"\xc7\x01\n" +
 	"\x15AdminUpdateAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12!\n" +
-	"\x04name\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
+	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\x04name\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
 	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01\x12 \n" +
 	"\tbucket_id\x18\x04 \x01(\x03H\x02R\bbucketId\x88\x01\x01B\a\n" +
 	"\x05_nameB\v\n" +

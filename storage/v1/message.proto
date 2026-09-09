@@ -189,6 +189,10 @@ message StorageAppInfo {
   bool disabled = 6;
   int64 created_at = 7;
   int64 updated_at = 8;
+  // app_secret is the data-plane credential (x-app-secret metadata). Echoed
+  // on every read — internal-trust posture, same convention as messaging
+  // apps; the ops console is the intended reader.
+  string app_secret = 9;
 }
 
 // CDNConfig is a bucket's CDN fronting configuration. auth_key signs URLs

@@ -252,6 +252,7 @@ const (
 	TelemetryAdminService_CreateApp_FullMethodName         = "/telemetry.v1.TelemetryAdminService/CreateApp"
 	TelemetryAdminService_GetApp_FullMethodName            = "/telemetry.v1.TelemetryAdminService/GetApp"
 	TelemetryAdminService_UpdateApp_FullMethodName         = "/telemetry.v1.TelemetryAdminService/UpdateApp"
+	TelemetryAdminService_ListApps_FullMethodName          = "/telemetry.v1.TelemetryAdminService/ListApps"
 	TelemetryAdminService_RotateToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RotateToken"
 	TelemetryAdminService_RevokeToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RevokeToken"
 	TelemetryAdminService_CreateSigningKey_FullMethodName  = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
@@ -273,6 +274,8 @@ type TelemetryAdminServiceClient interface {
 	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+	// ListApps — the app registry is low-cardinality; no paging.
+	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
@@ -314,6 +317,16 @@ func (c *telemetryAdminServiceClient) UpdateApp(ctx context.Context, in *UpdateA
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateAppResponse)
 	err := c.cc.Invoke(ctx, TelemetryAdminService_UpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *telemetryAdminServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAppsResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_ListApps_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -402,6 +415,8 @@ type TelemetryAdminServiceServer interface {
 	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
+	// ListApps — the app registry is low-cardinality; no paging.
+	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
@@ -427,6 +442,9 @@ func (UnimplementedTelemetryAdminServiceServer) GetApp(context.Context, *GetAppR
 }
 func (UnimplementedTelemetryAdminServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+}
+func (UnimplementedTelemetryAdminServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
@@ -520,6 +538,24 @@ func _TelemetryAdminService_UpdateApp_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TelemetryAdminServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TelemetryAdminService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TelemetryAdminServiceServer).ListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TelemetryAdminService_ListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TelemetryAdminServiceServer).ListApps(ctx, req.(*ListAppsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -668,6 +704,10 @@ var TelemetryAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateApp",
 			Handler:    _TelemetryAdminService_UpdateApp_Handler,
+		},
+		{
+			MethodName: "ListApps",
+			Handler:    _TelemetryAdminService_ListApps_Handler,
 		},
 		{
 			MethodName: "RotateToken",

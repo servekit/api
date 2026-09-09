@@ -139,6 +139,16 @@ message UpdateAppRequest {
     gte: 10000
     lte: 100000000
   }];
+  // Operator kill-switch: disabled apps fail every ingest call immediately.
+  optional bool disabled = 12;
+}
+
+// ListAppsRequest — the app registry is low-cardinality; no paging. Served
+// from the registry snapshot (converges within 60s cross-process).
+message ListAppsRequest {}
+
+message ListAppsResponse {
+  repeated App apps = 1;
 }
 
 message UpdateAppResponse {

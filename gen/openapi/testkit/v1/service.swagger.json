@@ -63,7 +63,8 @@
               "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
               "AUDIT_ACTION_ADMIN_CREATE_APP",
               "AUDIT_ACTION_ADMIN_UPDATE_APP",
-              "AUDIT_ACTION_ADMIN_DELETE_APP"
+              "AUDIT_ACTION_ADMIN_DELETE_APP",
+              "AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -381,7 +382,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). app_secret is\nreturned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed.",
+            "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). The app_secret is\nalso echoed on every read of StorageAppInfo (internal-trust posture).",
             "in": "body",
             "required": true,
             "schema": {
@@ -2389,6 +2390,192 @@
         ]
       }
     },
+    "/api/v1/license/admin/apps": {
+      "get": {
+        "operationId": "LicenseListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1ListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "LicenseCreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1CreateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "CreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"lic_\" + 8 base36 chars, immutable).",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/licenseV1CreateAppRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/license/admin/apps/{appKey}": {
+      "get": {
+        "operationId": "LicenseGetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1GetAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "LicenseDeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "LicenseUpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1UpdateAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceLicenseUpdateAppBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/license/admin/apps/{appKey}:rotateSecret": {
+      "post": {
+        "operationId": "LicenseRotateAppSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1RotateAppSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceLicenseRotateAppSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/license/admin/keys": {
       "get": {
         "operationId": "ListKeys",
@@ -3162,7 +3349,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListAppsResponse"
+              "$ref": "#/definitions/messagingV1ListAppsResponse"
             }
           },
           "default": {
@@ -3312,7 +3499,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1RotateAppSecretResponse"
+              "$ref": "#/definitions/messagingV1RotateAppSecretResponse"
             }
           },
           "default": {
@@ -6146,7 +6333,8 @@
               "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
               "AUDIT_ACTION_ADMIN_CREATE_APP",
               "AUDIT_ACTION_ADMIN_UPDATE_APP",
-              "AUDIT_ACTION_ADMIN_DELETE_APP"
+              "AUDIT_ACTION_ADMIN_DELETE_APP",
+              "AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET"
             ],
             "default": "AUDIT_ACTION_UNSPECIFIED"
           },
@@ -6222,6 +6410,26 @@
       }
     },
     "/api/v1/telemetry/admin/apps": {
+      "get": {
+        "operationId": "ListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/telemetryV1ListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
       "post": {
         "operationId": "CreateApp",
         "responses": {
@@ -7509,6 +7717,21 @@
         }
       }
     },
+    "TestkitServiceLicenseRotateAppSecretBody": {
+      "type": "object"
+    },
+    "TestkitServiceLicenseUpdateAppBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "description": "UpdateAppRequest edits mutable fields; app_key is immutable. Absent\noptional fields keep their current values."
+    },
     "TestkitServiceMessageRotateAppSecretBody": {
       "type": "object",
       "description": "RotateAppSecret mints a new app_secret. The old secret becomes invalid\nimmediately; the new plaintext is returned exactly once."
@@ -7690,6 +7913,9 @@
         "dailyEventBudget": {
           "type": "string",
           "format": "int64"
+        },
+        "disabled": {
+          "type": "boolean"
         }
       }
     },
@@ -7800,6 +8026,71 @@
         }
       }
     },
+    "licenseV1CreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "appKey": {
+          "type": "string",
+          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "description": "CreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"lic_\" + 8 base36 chars, immutable)."
+    },
+    "licenseV1CreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1LicenseAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
+    "licenseV1GetAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1LicenseAppInfo"
+        }
+      }
+    },
+    "licenseV1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1LicenseAppInfo"
+          }
+        }
+      }
+    },
+    "licenseV1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1LicenseAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
+    "licenseV1UpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1LicenseAppInfo"
+        }
+      }
+    },
     "messagingV1CreateAppRequest": {
       "type": "object",
       "properties": {
@@ -7837,6 +8128,29 @@
       "properties": {
         "app": {
           "$ref": "#/definitions/v1MessageAppInfo"
+        }
+      }
+    },
+    "messagingV1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MessageAppInfo"
+          }
+        }
+      }
+    },
+    "messagingV1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1MessageAppInfo"
+        },
+        "appSecret": {
+          "type": "string"
         }
       }
     },
@@ -7935,6 +8249,137 @@
         }
       }
     },
+    "telemetryV1App": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "uuid"
+        },
+        "slug": {
+          "type": "string",
+          "title": "unique, url-safe"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "title": "optional operator contact"
+        },
+        "strictVersions": {
+          "type": "boolean",
+          "title": "drop unknown versions instead of auto-registering"
+        },
+        "authMode": {
+          "$ref": "#/definitions/v1AuthMode"
+        },
+        "authGraceUntil": {
+          "type": "string",
+          "format": "date-time",
+          "title": "while set+future: hmac apps still accept unsigned batches"
+        },
+        "ratePerMinute": {
+          "type": "integer",
+          "format": "int32",
+          "title": "per device"
+        },
+        "ratePerDay": {
+          "type": "integer",
+          "format": "int32",
+          "title": "per device"
+        },
+        "rawRetentionDays": {
+          "type": "integer",
+          "format": "int32",
+          "title": "events_raw TTL (≥ partition horizon)"
+        },
+        "dailyEventBudget": {
+          "type": "string",
+          "format": "int64",
+          "description": "Per-app daily ingestion budget (events/day, attempts counted). Exceeding\nit drops the batch's events silently with a 204 and fires the\napp_budget_exceeded metric — the bounded-garbage abuse backstop that\nper-device limits cannot provide (spec §4.6 #1)."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled apps fail every ingest call immediately (401) — the operator\nkill-switch; tokens and signing keys stay in place for re-enable."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "App is one registered publisher (spec §3.2)."
+    },
+    "telemetryV1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/telemetryV1App"
+          }
+        }
+      }
+    },
+    "testkitV1App": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "strictVersions": {
+          "type": "boolean"
+        },
+        "authMode": {
+          "$ref": "#/definitions/v1AuthMode"
+        },
+        "authGraceUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ratePerMinute": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ratePerDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rawRetentionDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dailyEventBudget": {
+          "type": "string",
+          "format": "int64"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "testkitV1BucketInfo": {
       "type": "object",
       "properties": {
@@ -7974,7 +8419,7 @@
       "type": "object",
       "properties": {
         "app": {
-          "$ref": "#/definitions/v1App"
+          "$ref": "#/definitions/testkitV1App"
         },
         "token": {
           "type": "string"
@@ -7985,7 +8430,7 @@
       "type": "object",
       "properties": {
         "app": {
-          "$ref": "#/definitions/v1App"
+          "$ref": "#/definitions/testkitV1App"
         },
         "tokens": {
           "type": "array",
@@ -8049,7 +8494,7 @@
       "type": "object",
       "properties": {
         "app": {
-          "$ref": "#/definitions/v1App"
+          "$ref": "#/definitions/testkitV1App"
         }
       }
     },
@@ -8120,7 +8565,7 @@
           "description": "bucket_id: 0 = the platform default bucket."
         }
       },
-      "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). app_secret is\nreturned by AdminCreateApp / AdminRotateAppSecret ONLY — it is not listed."
+      "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). The app_secret is\nalso echoed on every read of StorageAppInfo (internal-trust posture)."
     },
     "v1AdminCreateAppResponse": {
       "type": "object",
@@ -8130,7 +8575,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is shown once at creation; store it immediately."
+          "description": "app_secret convenience echo (also visible via AdminListApps/GetApp)."
         }
       }
     },
@@ -8414,7 +8859,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is shown once on rotation; store it immediately."
+          "description": "app_secret convenience echo (also visible via AdminListApps/GetApp)."
         }
       }
     },
@@ -8528,57 +8973,6 @@
       },
       "description": "AliyunSmsCredentials configures an Aliyun SMS account."
     },
-    "v1App": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "slug": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "strictVersions": {
-          "type": "boolean"
-        },
-        "authMode": {
-          "$ref": "#/definitions/v1AuthMode"
-        },
-        "authGraceUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "ratePerMinute": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "ratePerDay": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "rawRetentionDays": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "dailyEventBudget": {
-          "type": "string",
-          "format": "int64"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "v1AuditAction": {
       "type": "string",
       "enum": [
@@ -8605,7 +8999,8 @@
         "AUDIT_ACTION_ADMIN_UPDATE_SETTINGS",
         "AUDIT_ACTION_ADMIN_CREATE_APP",
         "AUDIT_ACTION_ADMIN_UPDATE_APP",
-        "AUDIT_ACTION_ADMIN_DELETE_APP"
+        "AUDIT_ACTION_ADMIN_DELETE_APP",
+        "AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET"
       ],
       "default": "AUDIT_ACTION_UNSPECIFIED",
       "description": "AuditAction represents types of auditable operations."
@@ -10752,17 +11147,38 @@
       },
       "description": "Language is one selectable BCP 47 tag."
     },
-    "v1ListAppsResponse": {
+    "v1LicenseAppInfo": {
       "type": "object",
       "properties": {
-        "apps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1MessageAppInfo"
-          }
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "appKey": {
+          "type": "string",
+          "description": "app_key identifies the app on every data-plane call; unique, immutable."
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is the data-plane credential. Echoed on every read —\ninternal-trust posture, same convention as the messaging/storage apps;\nthe ops console is the intended reader."
+        },
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled apps fail every data-plane call immediately."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         }
-      }
+      },
+      "description": "LicenseAppInfo is one calling application of the licensing platform (a\nbusiness system identity, NOT an end-user license). Data-plane callers\npresent app_key/app_secret as x-app-key / x-app-secret metadata."
     },
     "v1ListChannelAccountsResponse": {
       "type": "object",
@@ -12104,17 +12520,6 @@
       },
       "description": "Role is a named bundle of permissions assignable to users or groups."
     },
-    "v1RotateAppSecretResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1MessageAppInfo"
-        },
-        "appSecret": {
-          "type": "string"
-        }
-      }
-    },
     "v1RotateTokenResponse": {
       "type": "object",
       "properties": {
@@ -12763,6 +13168,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is the data-plane credential (x-app-secret metadata). Echoed\non every read — internal-trust posture, same convention as messaging\napps; the ops console is the intended reader."
         }
       },
       "description": "StorageAppInfo is one calling application of the storage platform. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."

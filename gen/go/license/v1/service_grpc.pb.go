@@ -297,20 +297,26 @@ var LicenseService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	LicenseAdminService_CreateKey_FullMethodName      = "/license.v1.LicenseAdminService/CreateKey"
-	LicenseAdminService_ShowKey_FullMethodName        = "/license.v1.LicenseAdminService/ShowKey"
-	LicenseAdminService_ListKeys_FullMethodName       = "/license.v1.LicenseAdminService/ListKeys"
-	LicenseAdminService_UpdateKey_FullMethodName      = "/license.v1.LicenseAdminService/UpdateKey"
-	LicenseAdminService_RevokeKey_FullMethodName      = "/license.v1.LicenseAdminService/RevokeKey"
-	LicenseAdminService_UnrevokeKey_FullMethodName    = "/license.v1.LicenseAdminService/UnrevokeKey"
-	LicenseAdminService_DeleteKey_FullMethodName      = "/license.v1.LicenseAdminService/DeleteKey"
-	LicenseAdminService_GrantModule_FullMethodName    = "/license.v1.LicenseAdminService/GrantModule"
-	LicenseAdminService_RevokeModule_FullMethodName   = "/license.v1.LicenseAdminService/RevokeModule"
-	LicenseAdminService_ListKeyDevices_FullMethodName = "/license.v1.LicenseAdminService/ListKeyDevices"
-	LicenseAdminService_KickDevice_FullMethodName     = "/license.v1.LicenseAdminService/KickDevice"
-	LicenseAdminService_ShowTrial_FullMethodName      = "/license.v1.LicenseAdminService/ShowTrial"
-	LicenseAdminService_ResetTrial_FullMethodName     = "/license.v1.LicenseAdminService/ResetTrial"
-	LicenseAdminService_ShowPubKey_FullMethodName     = "/license.v1.LicenseAdminService/ShowPubKey"
+	LicenseAdminService_CreateKey_FullMethodName       = "/license.v1.LicenseAdminService/CreateKey"
+	LicenseAdminService_ShowKey_FullMethodName         = "/license.v1.LicenseAdminService/ShowKey"
+	LicenseAdminService_ListKeys_FullMethodName        = "/license.v1.LicenseAdminService/ListKeys"
+	LicenseAdminService_UpdateKey_FullMethodName       = "/license.v1.LicenseAdminService/UpdateKey"
+	LicenseAdminService_RevokeKey_FullMethodName       = "/license.v1.LicenseAdminService/RevokeKey"
+	LicenseAdminService_UnrevokeKey_FullMethodName     = "/license.v1.LicenseAdminService/UnrevokeKey"
+	LicenseAdminService_DeleteKey_FullMethodName       = "/license.v1.LicenseAdminService/DeleteKey"
+	LicenseAdminService_GrantModule_FullMethodName     = "/license.v1.LicenseAdminService/GrantModule"
+	LicenseAdminService_RevokeModule_FullMethodName    = "/license.v1.LicenseAdminService/RevokeModule"
+	LicenseAdminService_ListKeyDevices_FullMethodName  = "/license.v1.LicenseAdminService/ListKeyDevices"
+	LicenseAdminService_KickDevice_FullMethodName      = "/license.v1.LicenseAdminService/KickDevice"
+	LicenseAdminService_ShowTrial_FullMethodName       = "/license.v1.LicenseAdminService/ShowTrial"
+	LicenseAdminService_ResetTrial_FullMethodName      = "/license.v1.LicenseAdminService/ResetTrial"
+	LicenseAdminService_ShowPubKey_FullMethodName      = "/license.v1.LicenseAdminService/ShowPubKey"
+	LicenseAdminService_CreateApp_FullMethodName       = "/license.v1.LicenseAdminService/CreateApp"
+	LicenseAdminService_GetApp_FullMethodName          = "/license.v1.LicenseAdminService/GetApp"
+	LicenseAdminService_UpdateApp_FullMethodName       = "/license.v1.LicenseAdminService/UpdateApp"
+	LicenseAdminService_RotateAppSecret_FullMethodName = "/license.v1.LicenseAdminService/RotateAppSecret"
+	LicenseAdminService_ListApps_FullMethodName        = "/license.v1.LicenseAdminService/ListApps"
+	LicenseAdminService_DeleteApp_FullMethodName       = "/license.v1.LicenseAdminService/DeleteApp"
 )
 
 // LicenseAdminServiceClient is the client API for LicenseAdminService service.
@@ -336,6 +342,18 @@ type LicenseAdminServiceClient interface {
 	ShowTrial(ctx context.Context, in *ShowTrialRequest, opts ...grpc.CallOption) (*ShowTrialResponse, error)
 	ResetTrial(ctx context.Context, in *ResetTrialRequest, opts ...grpc.CallOption) (*ResetTrialResponse, error)
 	ShowPubKey(ctx context.Context, in *ShowPubKeyRequest, opts ...grpc.CallOption) (*ShowPubKeyResponse, error)
+	// CreateApp registers a calling app and mints its app_secret.
+	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
+	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
+	// UpdateApp edits mutable fields; app_key is immutable. Absent optional
+	// fields keep their current values.
+	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
+	// ListApps — the app registry is low-cardinality; no paging.
+	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
+	// DeleteApp removes the app row (hard delete — licensing keeps no
+	// soft-delete rows). Existing licenses/devices are untouched.
+	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type licenseAdminServiceClient struct {
@@ -486,6 +504,66 @@ func (c *licenseAdminServiceClient) ShowPubKey(ctx context.Context, in *ShowPubK
 	return out, nil
 }
 
+func (c *licenseAdminServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAppResponse)
+	err := c.cc.Invoke(ctx, LicenseAdminService_CreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *licenseAdminServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAppResponse)
+	err := c.cc.Invoke(ctx, LicenseAdminService_GetApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *licenseAdminServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateAppResponse)
+	err := c.cc.Invoke(ctx, LicenseAdminService_UpdateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *licenseAdminServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, LicenseAdminService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *licenseAdminServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAppsResponse)
+	err := c.cc.Invoke(ctx, LicenseAdminService_ListApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *licenseAdminServiceClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, LicenseAdminService_DeleteApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LicenseAdminServiceServer is the server API for LicenseAdminService service.
 // All implementations must embed UnimplementedLicenseAdminServiceServer
 // for forward compatibility.
@@ -509,6 +587,18 @@ type LicenseAdminServiceServer interface {
 	ShowTrial(context.Context, *ShowTrialRequest) (*ShowTrialResponse, error)
 	ResetTrial(context.Context, *ResetTrialRequest) (*ResetTrialResponse, error)
 	ShowPubKey(context.Context, *ShowPubKeyRequest) (*ShowPubKeyResponse, error)
+	// CreateApp registers a calling app and mints its app_secret.
+	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
+	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
+	// UpdateApp edits mutable fields; app_key is immutable. Absent optional
+	// fields keep their current values.
+	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
+	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
+	// ListApps — the app registry is low-cardinality; no paging.
+	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
+	// DeleteApp removes the app row (hard delete — licensing keeps no
+	// soft-delete rows). Existing licenses/devices are untouched.
+	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedLicenseAdminServiceServer()
 }
 
@@ -560,6 +650,24 @@ func (UnimplementedLicenseAdminServiceServer) ResetTrial(context.Context, *Reset
 }
 func (UnimplementedLicenseAdminServiceServer) ShowPubKey(context.Context, *ShowPubKeyRequest) (*ShowPubKeyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ShowPubKey not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+}
+func (UnimplementedLicenseAdminServiceServer) DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteApp not implemented")
 }
 func (UnimplementedLicenseAdminServiceServer) mustEmbedUnimplementedLicenseAdminServiceServer() {}
 func (UnimplementedLicenseAdminServiceServer) testEmbeddedByValue()                             {}
@@ -834,6 +942,114 @@ func _LicenseAdminService_ShowPubKey_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LicenseAdminService_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).CreateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_CreateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LicenseAdminService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).GetApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_GetApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).GetApp(ctx, req.(*GetAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LicenseAdminService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).UpdateApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_UpdateApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LicenseAdminService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).RotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_RotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LicenseAdminService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAppsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).ListApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_ListApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).ListApps(ctx, req.(*ListAppsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LicenseAdminService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LicenseAdminServiceServer).DeleteApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LicenseAdminService_DeleteApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LicenseAdminServiceServer).DeleteApp(ctx, req.(*DeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LicenseAdminService_ServiceDesc is the grpc.ServiceDesc for LicenseAdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -896,6 +1112,30 @@ var LicenseAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ShowPubKey",
 			Handler:    _LicenseAdminService_ShowPubKey_Handler,
+		},
+		{
+			MethodName: "CreateApp",
+			Handler:    _LicenseAdminService_CreateApp_Handler,
+		},
+		{
+			MethodName: "GetApp",
+			Handler:    _LicenseAdminService_GetApp_Handler,
+		},
+		{
+			MethodName: "UpdateApp",
+			Handler:    _LicenseAdminService_UpdateApp_Handler,
+		},
+		{
+			MethodName: "RotateAppSecret",
+			Handler:    _LicenseAdminService_RotateAppSecret_Handler,
+		},
+		{
+			MethodName: "ListApps",
+			Handler:    _LicenseAdminService_ListApps_Handler,
+		},
+		{
+			MethodName: "DeleteApp",
+			Handler:    _LicenseAdminService_DeleteApp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

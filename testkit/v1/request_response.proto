@@ -1931,6 +1931,8 @@ message UpdateAppRequest {
     gte: 10000
     lte: 100000000
   }];
+
+  optional bool disabled = 12;
 }
 
 message UpdateAppResponse {

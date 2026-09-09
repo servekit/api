@@ -64,4 +64,27 @@ service LicenseAdminService {
   rpc ResetTrial(ResetTrialRequest) returns (ResetTrialResponse);
 
   rpc ShowPubKey(ShowPubKeyRequest) returns (ShowPubKeyResponse);
+
+  // ── App registry (calling-application credentials) ──
+  // Same shape as the messaging/storage platform apps: a business system
+  // identity that data-plane callers present as x-app-key / x-app-secret
+  // metadata. NOT an end-user license.
+
+  // CreateApp registers a calling app and mints its app_secret.
+  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+
+  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+
+  // UpdateApp edits mutable fields; app_key is immutable. Absent optional
+  // fields keep their current values.
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+
+  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
+
+  // ListApps — the app registry is low-cardinality; no paging.
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+
+  // DeleteApp removes the app row (hard delete — licensing keeps no
+  // soft-delete rows). Existing licenses/devices are untouched.
+  rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty);
 }

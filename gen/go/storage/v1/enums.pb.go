@@ -452,6 +452,7 @@ const (
 	AuditAction_AUDIT_ACTION_ADMIN_CREATE_APP        AuditAction = 21
 	AuditAction_AUDIT_ACTION_ADMIN_UPDATE_APP        AuditAction = 22
 	AuditAction_AUDIT_ACTION_ADMIN_DELETE_APP        AuditAction = 23
+	AuditAction_AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET AuditAction = 24
 )
 
 // Enum value maps for AuditAction.
@@ -481,6 +482,7 @@ var (
 		21: "AUDIT_ACTION_ADMIN_CREATE_APP",
 		22: "AUDIT_ACTION_ADMIN_UPDATE_APP",
 		23: "AUDIT_ACTION_ADMIN_DELETE_APP",
+		24: "AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET",
 	}
 	AuditAction_value = map[string]int32{
 		"AUDIT_ACTION_UNSPECIFIED":             0,
@@ -507,6 +509,7 @@ var (
 		"AUDIT_ACTION_ADMIN_CREATE_APP":        21,
 		"AUDIT_ACTION_ADMIN_UPDATE_APP":        22,
 		"AUDIT_ACTION_ADMIN_DELETE_APP":        23,
+		"AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET": 24,
 	}
 )
 
@@ -815,7 +818,7 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\x16SORT_FIELD_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15SORT_FIELD_CREATED_AT\x10\x01\x12\x17\n" +
 	"\x13SORT_FIELD_FILENAME\x10\x02\x12\x13\n" +
-	"\x0fSORT_FIELD_SIZE\x10\x03*\xdb\x06\n" +
+	"\x0fSORT_FIELD_SIZE\x10\x03*\x85\a\n" +
 	"\vAuditAction\x12\x1c\n" +
 	"\x18AUDIT_ACTION_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13AUDIT_ACTION_UPLOAD\x10\x01\x12\x17\n" +
@@ -841,7 +844,8 @@ const file_storage_v1_enums_proto_rawDesc = "" +
 	"\"AUDIT_ACTION_ADMIN_UPDATE_SETTINGS\x10\x14\x12!\n" +
 	"\x1dAUDIT_ACTION_ADMIN_CREATE_APP\x10\x15\x12!\n" +
 	"\x1dAUDIT_ACTION_ADMIN_UPDATE_APP\x10\x16\x12!\n" +
-	"\x1dAUDIT_ACTION_ADMIN_DELETE_APP\x10\x17*\xcc\x01\n" +
+	"\x1dAUDIT_ACTION_ADMIN_DELETE_APP\x10\x17\x12(\n" +
+	"$AUDIT_ACTION_ADMIN_ROTATE_APP_SECRET\x10\x18*\xcc\x01\n" +
 	"\x13UploadSessionStatus\x12%\n" +
 	"!UPLOAD_SESSION_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dUPLOAD_SESSION_STATUS_PENDING\x10\x01\x12#\n" +
