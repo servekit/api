@@ -32,13 +32,14 @@ const file_telemetry_v1_service_proto_rawDesc = "" +
 	"\x10TelemetryService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12C\n" +
 	"\x06Ingest\x12\x1b.telemetry.v1.IngestRequest\x1a\x1c.telemetry.v1.IngestResponse\x12Q\n" +
-	"\rValidateBatch\x12\x1b.telemetry.v1.IngestRequest\x1a#.telemetry.v1.ValidateBatchResponse2\xd1\a\n" +
+	"\rValidateBatch\x12\x1b.telemetry.v1.IngestRequest\x1a#.telemetry.v1.ValidateBatchResponse2\xb1\b\n" +
 	"\x15TelemetryAdminService\x12L\n" +
 	"\tCreateApp\x12\x1e.telemetry.v1.CreateAppRequest\x1a\x1f.telemetry.v1.CreateAppResponse\x12C\n" +
 	"\x06GetApp\x12\x1b.telemetry.v1.GetAppRequest\x1a\x1c.telemetry.v1.GetAppResponse\x12L\n" +
 	"\tUpdateApp\x12\x1e.telemetry.v1.UpdateAppRequest\x1a\x1f.telemetry.v1.UpdateAppResponse\x12I\n" +
 	"\bListApps\x12\x1d.telemetry.v1.ListAppsRequest\x1a\x1e.telemetry.v1.ListAppsResponse\x12R\n" +
-	"\vRotateToken\x12 .telemetry.v1.RotateTokenRequest\x1a!.telemetry.v1.RotateTokenResponse\x12R\n" +
+	"\vRotateToken\x12 .telemetry.v1.RotateTokenRequest\x1a!.telemetry.v1.RotateTokenResponse\x12^\n" +
+	"\x0fRotateAppSecret\x12$.telemetry.v1.RotateAppSecretRequest\x1a%.telemetry.v1.RotateAppSecretResponse\x12R\n" +
 	"\vRevokeToken\x12 .telemetry.v1.RevokeTokenRequest\x1a!.telemetry.v1.RevokeTokenResponse\x12a\n" +
 	"\x10CreateSigningKey\x12%.telemetry.v1.CreateSigningKeyRequest\x1a&.telemetry.v1.CreateSigningKeyResponse\x12a\n" +
 	"\x10RevokeSigningKey\x12%.telemetry.v1.RevokeSigningKeyRequest\x1a&.telemetry.v1.RevokeSigningKeyResponse\x12d\n" +
@@ -55,26 +56,28 @@ var file_telemetry_v1_service_proto_goTypes = []any{
 	(*UpdateAppRequest)(nil),          // 4: telemetry.v1.UpdateAppRequest
 	(*ListAppsRequest)(nil),           // 5: telemetry.v1.ListAppsRequest
 	(*RotateTokenRequest)(nil),        // 6: telemetry.v1.RotateTokenRequest
-	(*RevokeTokenRequest)(nil),        // 7: telemetry.v1.RevokeTokenRequest
-	(*CreateSigningKeyRequest)(nil),   // 8: telemetry.v1.CreateSigningKeyRequest
-	(*RevokeSigningKeyRequest)(nil),   // 9: telemetry.v1.RevokeSigningKeyRequest
-	(*ReplaceEventRulesRequest)(nil),  // 10: telemetry.v1.ReplaceEventRulesRequest
-	(*SetVersionBlockedRequest)(nil),  // 11: telemetry.v1.SetVersionBlockedRequest
-	(*GetAppStatsRequest)(nil),        // 12: telemetry.v1.GetAppStatsRequest
-	(*v1.Pong)(nil),                   // 13: common.v1.Pong
-	(*IngestResponse)(nil),            // 14: telemetry.v1.IngestResponse
-	(*ValidateBatchResponse)(nil),     // 15: telemetry.v1.ValidateBatchResponse
-	(*CreateAppResponse)(nil),         // 16: telemetry.v1.CreateAppResponse
-	(*GetAppResponse)(nil),            // 17: telemetry.v1.GetAppResponse
-	(*UpdateAppResponse)(nil),         // 18: telemetry.v1.UpdateAppResponse
-	(*ListAppsResponse)(nil),          // 19: telemetry.v1.ListAppsResponse
-	(*RotateTokenResponse)(nil),       // 20: telemetry.v1.RotateTokenResponse
-	(*RevokeTokenResponse)(nil),       // 21: telemetry.v1.RevokeTokenResponse
-	(*CreateSigningKeyResponse)(nil),  // 22: telemetry.v1.CreateSigningKeyResponse
-	(*RevokeSigningKeyResponse)(nil),  // 23: telemetry.v1.RevokeSigningKeyResponse
-	(*ReplaceEventRulesResponse)(nil), // 24: telemetry.v1.ReplaceEventRulesResponse
-	(*SetVersionBlockedResponse)(nil), // 25: telemetry.v1.SetVersionBlockedResponse
-	(*GetAppStatsResponse)(nil),       // 26: telemetry.v1.GetAppStatsResponse
+	(*RotateAppSecretRequest)(nil),    // 7: telemetry.v1.RotateAppSecretRequest
+	(*RevokeTokenRequest)(nil),        // 8: telemetry.v1.RevokeTokenRequest
+	(*CreateSigningKeyRequest)(nil),   // 9: telemetry.v1.CreateSigningKeyRequest
+	(*RevokeSigningKeyRequest)(nil),   // 10: telemetry.v1.RevokeSigningKeyRequest
+	(*ReplaceEventRulesRequest)(nil),  // 11: telemetry.v1.ReplaceEventRulesRequest
+	(*SetVersionBlockedRequest)(nil),  // 12: telemetry.v1.SetVersionBlockedRequest
+	(*GetAppStatsRequest)(nil),        // 13: telemetry.v1.GetAppStatsRequest
+	(*v1.Pong)(nil),                   // 14: common.v1.Pong
+	(*IngestResponse)(nil),            // 15: telemetry.v1.IngestResponse
+	(*ValidateBatchResponse)(nil),     // 16: telemetry.v1.ValidateBatchResponse
+	(*CreateAppResponse)(nil),         // 17: telemetry.v1.CreateAppResponse
+	(*GetAppResponse)(nil),            // 18: telemetry.v1.GetAppResponse
+	(*UpdateAppResponse)(nil),         // 19: telemetry.v1.UpdateAppResponse
+	(*ListAppsResponse)(nil),          // 20: telemetry.v1.ListAppsResponse
+	(*RotateTokenResponse)(nil),       // 21: telemetry.v1.RotateTokenResponse
+	(*RotateAppSecretResponse)(nil),   // 22: telemetry.v1.RotateAppSecretResponse
+	(*RevokeTokenResponse)(nil),       // 23: telemetry.v1.RevokeTokenResponse
+	(*CreateSigningKeyResponse)(nil),  // 24: telemetry.v1.CreateSigningKeyResponse
+	(*RevokeSigningKeyResponse)(nil),  // 25: telemetry.v1.RevokeSigningKeyResponse
+	(*ReplaceEventRulesResponse)(nil), // 26: telemetry.v1.ReplaceEventRulesResponse
+	(*SetVersionBlockedResponse)(nil), // 27: telemetry.v1.SetVersionBlockedResponse
+	(*GetAppStatsResponse)(nil),       // 28: telemetry.v1.GetAppStatsResponse
 }
 var file_telemetry_v1_service_proto_depIdxs = []int32{
 	0,  // 0: telemetry.v1.TelemetryService.Ping:input_type -> google.protobuf.Empty
@@ -85,28 +88,30 @@ var file_telemetry_v1_service_proto_depIdxs = []int32{
 	4,  // 5: telemetry.v1.TelemetryAdminService.UpdateApp:input_type -> telemetry.v1.UpdateAppRequest
 	5,  // 6: telemetry.v1.TelemetryAdminService.ListApps:input_type -> telemetry.v1.ListAppsRequest
 	6,  // 7: telemetry.v1.TelemetryAdminService.RotateToken:input_type -> telemetry.v1.RotateTokenRequest
-	7,  // 8: telemetry.v1.TelemetryAdminService.RevokeToken:input_type -> telemetry.v1.RevokeTokenRequest
-	8,  // 9: telemetry.v1.TelemetryAdminService.CreateSigningKey:input_type -> telemetry.v1.CreateSigningKeyRequest
-	9,  // 10: telemetry.v1.TelemetryAdminService.RevokeSigningKey:input_type -> telemetry.v1.RevokeSigningKeyRequest
-	10, // 11: telemetry.v1.TelemetryAdminService.ReplaceEventRules:input_type -> telemetry.v1.ReplaceEventRulesRequest
-	11, // 12: telemetry.v1.TelemetryAdminService.SetVersionBlocked:input_type -> telemetry.v1.SetVersionBlockedRequest
-	12, // 13: telemetry.v1.TelemetryAdminService.GetAppStats:input_type -> telemetry.v1.GetAppStatsRequest
-	13, // 14: telemetry.v1.TelemetryService.Ping:output_type -> common.v1.Pong
-	14, // 15: telemetry.v1.TelemetryService.Ingest:output_type -> telemetry.v1.IngestResponse
-	15, // 16: telemetry.v1.TelemetryService.ValidateBatch:output_type -> telemetry.v1.ValidateBatchResponse
-	16, // 17: telemetry.v1.TelemetryAdminService.CreateApp:output_type -> telemetry.v1.CreateAppResponse
-	17, // 18: telemetry.v1.TelemetryAdminService.GetApp:output_type -> telemetry.v1.GetAppResponse
-	18, // 19: telemetry.v1.TelemetryAdminService.UpdateApp:output_type -> telemetry.v1.UpdateAppResponse
-	19, // 20: telemetry.v1.TelemetryAdminService.ListApps:output_type -> telemetry.v1.ListAppsResponse
-	20, // 21: telemetry.v1.TelemetryAdminService.RotateToken:output_type -> telemetry.v1.RotateTokenResponse
-	21, // 22: telemetry.v1.TelemetryAdminService.RevokeToken:output_type -> telemetry.v1.RevokeTokenResponse
-	22, // 23: telemetry.v1.TelemetryAdminService.CreateSigningKey:output_type -> telemetry.v1.CreateSigningKeyResponse
-	23, // 24: telemetry.v1.TelemetryAdminService.RevokeSigningKey:output_type -> telemetry.v1.RevokeSigningKeyResponse
-	24, // 25: telemetry.v1.TelemetryAdminService.ReplaceEventRules:output_type -> telemetry.v1.ReplaceEventRulesResponse
-	25, // 26: telemetry.v1.TelemetryAdminService.SetVersionBlocked:output_type -> telemetry.v1.SetVersionBlockedResponse
-	26, // 27: telemetry.v1.TelemetryAdminService.GetAppStats:output_type -> telemetry.v1.GetAppStatsResponse
-	14, // [14:28] is the sub-list for method output_type
-	0,  // [0:14] is the sub-list for method input_type
+	7,  // 8: telemetry.v1.TelemetryAdminService.RotateAppSecret:input_type -> telemetry.v1.RotateAppSecretRequest
+	8,  // 9: telemetry.v1.TelemetryAdminService.RevokeToken:input_type -> telemetry.v1.RevokeTokenRequest
+	9,  // 10: telemetry.v1.TelemetryAdminService.CreateSigningKey:input_type -> telemetry.v1.CreateSigningKeyRequest
+	10, // 11: telemetry.v1.TelemetryAdminService.RevokeSigningKey:input_type -> telemetry.v1.RevokeSigningKeyRequest
+	11, // 12: telemetry.v1.TelemetryAdminService.ReplaceEventRules:input_type -> telemetry.v1.ReplaceEventRulesRequest
+	12, // 13: telemetry.v1.TelemetryAdminService.SetVersionBlocked:input_type -> telemetry.v1.SetVersionBlockedRequest
+	13, // 14: telemetry.v1.TelemetryAdminService.GetAppStats:input_type -> telemetry.v1.GetAppStatsRequest
+	14, // 15: telemetry.v1.TelemetryService.Ping:output_type -> common.v1.Pong
+	15, // 16: telemetry.v1.TelemetryService.Ingest:output_type -> telemetry.v1.IngestResponse
+	16, // 17: telemetry.v1.TelemetryService.ValidateBatch:output_type -> telemetry.v1.ValidateBatchResponse
+	17, // 18: telemetry.v1.TelemetryAdminService.CreateApp:output_type -> telemetry.v1.CreateAppResponse
+	18, // 19: telemetry.v1.TelemetryAdminService.GetApp:output_type -> telemetry.v1.GetAppResponse
+	19, // 20: telemetry.v1.TelemetryAdminService.UpdateApp:output_type -> telemetry.v1.UpdateAppResponse
+	20, // 21: telemetry.v1.TelemetryAdminService.ListApps:output_type -> telemetry.v1.ListAppsResponse
+	21, // 22: telemetry.v1.TelemetryAdminService.RotateToken:output_type -> telemetry.v1.RotateTokenResponse
+	22, // 23: telemetry.v1.TelemetryAdminService.RotateAppSecret:output_type -> telemetry.v1.RotateAppSecretResponse
+	23, // 24: telemetry.v1.TelemetryAdminService.RevokeToken:output_type -> telemetry.v1.RevokeTokenResponse
+	24, // 25: telemetry.v1.TelemetryAdminService.CreateSigningKey:output_type -> telemetry.v1.CreateSigningKeyResponse
+	25, // 26: telemetry.v1.TelemetryAdminService.RevokeSigningKey:output_type -> telemetry.v1.RevokeSigningKeyResponse
+	26, // 27: telemetry.v1.TelemetryAdminService.ReplaceEventRules:output_type -> telemetry.v1.ReplaceEventRulesResponse
+	27, // 28: telemetry.v1.TelemetryAdminService.SetVersionBlocked:output_type -> telemetry.v1.SetVersionBlockedResponse
+	28, // 29: telemetry.v1.TelemetryAdminService.GetAppStats:output_type -> telemetry.v1.GetAppStatsResponse
+	15, // [15:30] is the sub-list for method output_type
+	0,  // [0:15] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

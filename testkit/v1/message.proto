@@ -623,6 +623,7 @@ message App {
 
   int64 daily_event_budget = 13;
   bool disabled = 14;
+  string app_secret = 15;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
 }

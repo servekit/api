@@ -195,6 +195,7 @@ const (
 	TestkitService_GetApp_FullMethodName                      = "/testkit.v1.TestkitService/GetApp"
 	TestkitService_UpdateApp_FullMethodName                   = "/testkit.v1.TestkitService/UpdateApp"
 	TestkitService_ListApps_FullMethodName                    = "/testkit.v1.TestkitService/ListApps"
+	TestkitService_RotateAppSecret_FullMethodName             = "/testkit.v1.TestkitService/RotateAppSecret"
 	TestkitService_RotateToken_FullMethodName                 = "/testkit.v1.TestkitService/RotateToken"
 	TestkitService_RevokeToken_FullMethodName                 = "/testkit.v1.TestkitService/RevokeToken"
 	TestkitService_CreateSigningKey_FullMethodName            = "/testkit.v1.TestkitService/CreateSigningKey"
@@ -416,6 +417,7 @@ type TestkitServiceClient interface {
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
 	ListApps(ctx context.Context, in *v14.ListAppsRequest, opts ...grpc.CallOption) (*v14.ListAppsResponse, error)
+	RotateAppSecret(ctx context.Context, in *v14.RotateAppSecretRequest, opts ...grpc.CallOption) (*v14.RotateAppSecretResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
@@ -2117,6 +2119,16 @@ func (c *testkitServiceClient) ListApps(ctx context.Context, in *v14.ListAppsReq
 	return out, nil
 }
 
+func (c *testkitServiceClient) RotateAppSecret(ctx context.Context, in *v14.RotateAppSecretRequest, opts ...grpc.CallOption) (*v14.RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v14.RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *testkitServiceClient) RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RotateTokenResponse)
@@ -2507,6 +2519,7 @@ type TestkitServiceServer interface {
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
 	ListApps(context.Context, *v14.ListAppsRequest) (*v14.ListAppsResponse, error)
+	RotateAppSecret(context.Context, *v14.RotateAppSecretRequest) (*v14.RotateAppSecretResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
@@ -3038,6 +3051,9 @@ func (UnimplementedTestkitServiceServer) UpdateApp(context.Context, *UpdateAppRe
 }
 func (UnimplementedTestkitServiceServer) ListApps(context.Context, *v14.ListAppsRequest) (*v14.ListAppsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+}
+func (UnimplementedTestkitServiceServer) RotateAppSecret(context.Context, *v14.RotateAppSecretRequest) (*v14.RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
 }
 func (UnimplementedTestkitServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
@@ -6123,6 +6139,24 @@ func _TestkitService_ListApps_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v14.RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).RotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_RotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).RotateAppSecret(ctx, req.(*v14.RotateAppSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TestkitService_RotateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RotateTokenRequest)
 	if err := dec(in); err != nil {
@@ -7139,6 +7173,10 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListApps",
 			Handler:    _TestkitService_ListApps_Handler,
+		},
+		{
+			MethodName: "RotateAppSecret",
+			Handler:    _TestkitService_RotateAppSecret_Handler,
 		},
 		{
 			MethodName: "RotateToken",

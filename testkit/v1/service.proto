@@ -872,6 +872,13 @@ service TestkitService {
     option (google.api.http) = {get: "/api/v1/telemetry/admin/apps"};
   }
 
+  rpc RotateAppSecret(telemetry.v1.RotateAppSecretRequest) returns (telemetry.v1.RotateAppSecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/telemetry/admin/apps/{slug}:rotateSecret"
+      body: "*"
+    };
+  }
+
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse) {
     option (google.api.http) = {
       post: "/api/v1/telemetry/admin/apps/{slug}/tokens"

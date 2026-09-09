@@ -54,6 +54,10 @@ service TelemetryAdminService {
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
 
+  // RotateAppSecret mints a new business-identity credential (platform
+  // ak/sk pair; see App.app_secret).
+  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
+
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
 
   rpc CreateSigningKey(CreateSigningKeyRequest) returns (CreateSigningKeyResponse);

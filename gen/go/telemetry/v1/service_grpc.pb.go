@@ -254,6 +254,7 @@ const (
 	TelemetryAdminService_UpdateApp_FullMethodName         = "/telemetry.v1.TelemetryAdminService/UpdateApp"
 	TelemetryAdminService_ListApps_FullMethodName          = "/telemetry.v1.TelemetryAdminService/ListApps"
 	TelemetryAdminService_RotateToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RotateToken"
+	TelemetryAdminService_RotateAppSecret_FullMethodName   = "/telemetry.v1.TelemetryAdminService/RotateAppSecret"
 	TelemetryAdminService_RevokeToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RevokeToken"
 	TelemetryAdminService_CreateSigningKey_FullMethodName  = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
 	TelemetryAdminService_RevokeSigningKey_FullMethodName  = "/telemetry.v1.TelemetryAdminService/RevokeSigningKey"
@@ -277,6 +278,9 @@ type TelemetryAdminServiceClient interface {
 	// ListApps — the app registry is low-cardinality; no paging.
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
+	// RotateAppSecret mints a new business-identity credential (platform
+	// ak/sk pair; see App.app_secret).
+	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(ctx context.Context, in *RevokeSigningKeyRequest, opts ...grpc.CallOption) (*RevokeSigningKeyResponse, error)
@@ -337,6 +341,16 @@ func (c *telemetryAdminServiceClient) RotateToken(ctx context.Context, in *Rotat
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RotateTokenResponse)
 	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *telemetryAdminServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RotateAppSecretResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateAppSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -418,6 +432,9 @@ type TelemetryAdminServiceServer interface {
 	// ListApps — the app registry is low-cardinality; no paging.
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
+	// RotateAppSecret mints a new business-identity credential (platform
+	// ak/sk pair; see App.app_secret).
+	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(context.Context, *RevokeSigningKeyRequest) (*RevokeSigningKeyResponse, error)
@@ -448,6 +465,9 @@ func (UnimplementedTelemetryAdminServiceServer) ListApps(context.Context, *ListA
 }
 func (UnimplementedTelemetryAdminServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
+}
+func (UnimplementedTelemetryAdminServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeToken not implemented")
@@ -574,6 +594,24 @@ func _TelemetryAdminService_RotateToken_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TelemetryAdminServiceServer).RotateToken(ctx, req.(*RotateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TelemetryAdminService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RotateAppSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TelemetryAdminServiceServer).RotateAppSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TelemetryAdminService_RotateAppSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TelemetryAdminServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -712,6 +750,10 @@ var TelemetryAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RotateToken",
 			Handler:    _TelemetryAdminService_RotateToken_Handler,
+		},
+		{
+			MethodName: "RotateAppSecret",
+			Handler:    _TelemetryAdminService_RotateAppSecret_Handler,
 		},
 		{
 			MethodName: "RevokeToken",

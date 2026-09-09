@@ -6794,6 +6794,44 @@
         ]
       }
     },
+    "/api/v1/telemetry/admin/apps/{slug}:rotateSecret": {
+      "post": {
+        "operationId": "RotateAppSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/telemetryV1RotateAppSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceRotateAppSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/telemetry/ingest": {
       "post": {
         "operationId": "Ingest",
@@ -7853,6 +7891,10 @@
         }
       }
     },
+    "TestkitServiceRotateAppSecretBody": {
+      "type": "object",
+      "description": "RotateAppSecretRequest mints a new business-identity credential (the sk\nhalf of the platform ak/sk pair). The old one stops working on the next\nregistry refresh (immediate in-process)."
+    },
     "TestkitServiceRotateTokenBody": {
       "type": "object"
     },
@@ -8303,6 +8345,10 @@
           "type": "boolean",
           "description": "Disabled apps fail every ingest call immediately (401) — the operator\nkill-switch; tokens and signing keys stay in place for re-enable."
         },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret is the business-identity credential (the \"sk\" half of the\nplatform-wide ak/sk pair; the slug is the \"ak\"). Required by the\ngRPC/module ingest surface — backend callers present it as x-app-key /\nx-app-secret metadata; the raw client endpoints (/v1/e/…) keep using\nthe ingest token instead. Echoed on every read — internal-trust\nposture, same convention as the messaging/storage/license apps."
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -8323,6 +8369,18 @@
             "type": "object",
             "$ref": "#/definitions/telemetryV1App"
           }
+        }
+      }
+    },
+    "telemetryV1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/telemetryV1App"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
         }
       }
     },
@@ -8369,6 +8427,9 @@
         },
         "disabled": {
           "type": "boolean"
+        },
+        "appSecret": {
+          "type": "string"
         },
         "createdAt": {
           "type": "string",

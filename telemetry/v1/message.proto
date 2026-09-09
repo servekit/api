@@ -42,6 +42,13 @@ message App {
   // Disabled apps fail every ingest call immediately (401) — the operator
   // kill-switch; tokens and signing keys stay in place for re-enable.
   bool disabled = 14;
+  // app_secret is the business-identity credential (the "sk" half of the
+  // platform-wide ak/sk pair; the slug is the "ak"). Required by the
+  // gRPC/module ingest surface — backend callers present it as x-app-key /
+  // x-app-secret metadata; the raw client endpoints (/v1/e/…) keep using
+  // the ingest token instead. Echoed on every read — internal-trust
+  // posture, same convention as the messaging/storage/license apps.
+  string app_secret = 15;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
 }

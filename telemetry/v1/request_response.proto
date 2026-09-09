@@ -82,6 +82,8 @@ message CreateAppResponse {
   App app = 1;
   // Full plaintext ingest token — returned exactly once, never stored.
   string token = 2;
+  // app_secret convenience echo (also visible via ListApps/GetApp).
+  string app_secret = 3;
 }
 
 message GetAppRequest {
@@ -166,6 +168,22 @@ message RotateTokenResponse {
   // Full plaintext ingest token — returned exactly once, never stored. The
   // previous token stays valid until explicitly revoked.
   string token = 1;
+}
+
+// RotateAppSecretRequest mints a new business-identity credential (the sk
+// half of the platform ak/sk pair). The old one stops working on the next
+// registry refresh (immediate in-process).
+message RotateAppSecretRequest {
+  string slug = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message RotateAppSecretResponse {
+  App app = 1;
+  // app_secret convenience echo (also visible via ListApps/GetApp).
+  string app_secret = 2;
 }
 
 message RevokeTokenRequest {
