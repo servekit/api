@@ -2910,7 +2910,10 @@ type GetLoginLogsRequest struct {
 	Method   LoginMethod `protobuf:"varint,7,opt,name=method,proto3,enum=user.v1.LoginMethod" json:"method,omitempty"` // optional filter (0 = all)
 	// Alternative to user_id: resolve the username server-side. user_id wins
 	// when both are set; an unknown username yields an empty page.
-	Username      string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
+	Username string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
+	// Tenant filter (user_apps.app_key). Platform-operator callers only;
+	// tenant callers are pinned to their own directory regardless.
+	AppKey        string `protobuf:"bytes,9,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2997,6 +3000,13 @@ func (x *GetLoginLogsRequest) GetMethod() LoginMethod {
 func (x *GetLoginLogsRequest) GetUsername() string {
 	if x != nil {
 		return x.Username
+	}
+	return ""
+}
+
+func (x *GetLoginLogsRequest) GetAppKey() string {
+	if x != nil {
+		return x.AppKey
 	}
 	return ""
 }
@@ -5829,7 +5839,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xda\x02\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xfc\x02\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
@@ -5838,7 +5848,8 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
 	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
 	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12#\n" +
-	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busernameB\n" +
+	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12 \n" +
+	"\aapp_key\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKeyB\n" +
 	"\n" +
 	"\b_success\"t\n" +
 	"\x14GetLoginLogsResponse\x12%\n" +

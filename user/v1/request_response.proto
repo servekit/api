@@ -662,6 +662,9 @@ message GetLoginLogsRequest {
   // Alternative to user_id: resolve the username server-side. user_id wins
   // when both are set; an unknown username yields an empty page.
   string username = 8 [(buf.validate.field).string.max_len = 64];
+  // Tenant filter (user_apps.app_key). Platform-operator callers only;
+  // tenant callers are pinned to their own directory regardless.
+  string app_key = 9 [(buf.validate.field).string.max_len = 64];
 }
 
 message GetLoginLogsResponse {

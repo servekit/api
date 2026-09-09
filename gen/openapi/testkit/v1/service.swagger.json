@@ -7418,6 +7418,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "appKey",
+            "description": "Tenant filter (user_apps.app_key). Platform-operator callers only;\ntenant callers are pinned to their own directory regardless.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
