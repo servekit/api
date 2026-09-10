@@ -133,7 +133,13 @@ type App struct {
 	// x-app-secret metadata; the raw client endpoints (/v1/e/…) keep using
 	// the ingest token instead. Echoed on every read — internal-trust
 	// posture, same convention as the messaging/storage/license apps.
-	AppSecret     string                 `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	AppSecret string `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	// tenant_key is the tenant this app maps to (phase ③ dual-stack window):
+	// the UUID row is the tenant's config row. Empty on rows not yet
+	// backfilled — the service falls back to the app_key literal until T10
+	// clears the empties. New tenants first seen on the trusted path are
+	// lazily created with the wire-contract defaults.
+	TenantKey     string                 `protobuf:"bytes,16,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -257,6 +263,13 @@ func (x *App) GetDisabled() bool {
 func (x *App) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
+	}
+	return ""
+}
+
+func (x *App) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
 	}
 	return ""
 }
@@ -620,7 +633,7 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\xe2\x04\n" +
+	"dropReason\"\x81\x05\n" +
 	"\x03App\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -638,7 +651,9 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x12daily_event_budget\x18\r \x01(\x03R\x10dailyEventBudget\x12\x1a\n" +
 	"\bdisabled\x18\x0e \x01(\bR\bdisabled\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x0f \x01(\tR\tappSecret\x129\n" +
+	"app_secret\x18\x0f \x01(\tR\tappSecret\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x10 \x01(\tR\ttenantKey\x129\n" +
 	"\n" +
 	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +

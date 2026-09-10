@@ -53,6 +53,12 @@ message App {
   // the ingest token instead. Echoed on every read — internal-trust
   // posture, same convention as the messaging/storage/license apps.
   string app_secret = 15;
+  // tenant_key is the tenant this app maps to (phase ③ dual-stack window):
+  // the UUID row is the tenant's config row. Empty on rows not yet
+  // backfilled — the service falls back to the app_key literal until T10
+  // clears the empties. New tenants first seen on the trusted path are
+  // lazily created with the wire-contract defaults.
+  string tenant_key = 16;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
 }

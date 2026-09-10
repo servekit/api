@@ -81,6 +81,15 @@ message CreateAppRequest {
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.email = true
   ];
+  // tenant_key optionally maps the new app to a tenant (phase ③). Empty =
+  // the app_key literal (the legacy→tenant fallback value). Unique across
+  // apps — one config row per tenant.
+  string tenant_key = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
+    (buf.validate.field).string = {
+      pattern: "^[a-z][a-z0-9_]{0,15}$"
+    }
+  ];
 }
 
 message CreateAppResponse {

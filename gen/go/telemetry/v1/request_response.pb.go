@@ -292,9 +292,13 @@ type CreateAppRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// app_key pattern: lowercase letter followed by lowercase alphanumerics
 	// and dashes. Optional; empty = server-generated ("tel_" + 8 base36).
-	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Email         string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	AppKey string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	Name   string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email  string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	// tenant_key optionally maps the new app to a tenant (phase ③). Empty =
+	// the app_key literal (the legacy→tenant fallback value). Unique across
+	// apps — one config row per tenant.
+	TenantKey     string `protobuf:"bytes,4,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -346,6 +350,13 @@ func (x *CreateAppRequest) GetName() string {
 func (x *CreateAppRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
+	}
+	return ""
+}
+
+func (x *CreateAppRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1607,13 +1618,15 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\x0fsignature_valid\x18\x04 \x01(\bR\x0esignatureValid\x12'\n" +
 	"\x0fsignature_error\x18\x05 \x01(\tR\x0esignatureError\x12%\n" +
 	"\x0eenvelope_error\x18\x06 \x01(\tR\renvelopeError\x129\n" +
-	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\x8f\x01\n" +
+	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\xd0\x01\n" +
 	"\x10CreateAppRequest\x129\n" +
 	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12 \n" +
 	"\x05email\x18\x03 \x01(\tB\n" +
-	"\xbaH\a\xd8\x01\x01r\x02`\x01R\x05email\"m\n" +
+	"\xbaH\a\xd8\x01\x01r\x02`\x01R\x05email\x12?\n" +
+	"\n" +
+	"tenant_key\x18\x04 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9_]{0,15}$R\ttenantKey\"m\n" +
 	"\x11CreateAppResponse\x12#\n" +
 	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x1d\n" +

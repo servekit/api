@@ -8577,6 +8577,10 @@
           "type": "string",
           "description": "app_secret is the business-identity credential (the \"sk\" half of the\nplatform-wide ak/sk pair; app_key is the \"ak\"). Required by the\ngRPC/module ingest surface — backend callers present it as x-app-key /\nx-app-secret metadata; the raw client endpoints (/v1/e/…) keep using\nthe ingest token instead. Echoed on every read — internal-trust\nposture, same convention as the messaging/storage/license apps."
         },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window):\nthe UUID row is the tenant's config row. Empty on rows not yet\nbackfilled — the service falls back to the app_key literal until T10\nclears the empties. New tenants first seen on the trusted path are\nlazily created with the wire-contract defaults."
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
