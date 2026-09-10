@@ -229,6 +229,11 @@ service UserService {
   // success status. Cursor-paginated. Useful for security dashboards.
   rpc GetLoginLogs(GetLoginLogsRequest) returns (GetLoginLogsResponse);
 
+  // LookupSubject resolves an email or phone across directories (platform
+  // authority). Used by portal's bootstrap-admin logic to decide bind-vs-create.
+  // PLATFORM actor only.
+  rpc LookupSubject(LookupSubjectRequest) returns (LookupSubjectResponse);
+
   // ============================================================
   // RBAC — Groups — organizational units; members inherit group roles.
   // Typical setup: CreateGroup → AddGroupMember → AddGroupRole.

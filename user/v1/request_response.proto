@@ -676,6 +676,42 @@ message GetLoginLogsResponse {
   int32 total = 3;
 }
 
+// LookupSubjectRequest resolves one contact across EVERY directory (platform
+// authority). The response lists each matching account; an identifier no
+// directory knows is a valid empty result — this is an explicit cross-directory
+// query, not a per-tenant read, so the anti-enumeration ErrUserNotFound
+// convention does not apply. PLATFORM actor only.
+message LookupSubjectRequest {
+  oneof contact {
+    // email mechanism (exact match)
+    string email = 1 [(buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }];
+    // phone mechanism; E.164-normalized server-side before comparison
+    string phone = 2 [(buf.validate.field).string.pattern = "^\\+[1-9][0-9]{8,14}$"];
+  }
+
+  option (buf.validate.message).cel = {
+    id: "lookup_subject_contact_exclusive"
+    message: "exactly one of email or phone must be set"
+    expression: "has(this.email) != has(this.phone)"
+  };
+}
+
+message LookupSubjectResponse {
+  repeated SubjectMatch matches = 1;
+}
+
+// SubjectMatch is one account owning the queried contact. tenant_key is the
+// directory the account lives in (phase ②: that directory's app_key) — never
+// a tenant_id or any other alias.
+message SubjectMatch {
+  int64 user_id = 1;
+  string tenant_key = 2; // directory the account lives in (phase ②: app_key)
+  UserType user_type = 3; // END_USER / TENANT_ADMIN / PLATFORM
+}
+
 message CreateGroupRequest {
   string name = 1 [(buf.validate.field).string = {
     min_len: 1

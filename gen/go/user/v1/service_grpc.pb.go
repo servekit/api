@@ -52,6 +52,7 @@ const (
 	UserService_ListUsersPaged_FullMethodName        = "/user.v1.UserService/ListUsersPaged"
 	UserService_DisableUser_FullMethodName           = "/user.v1.UserService/DisableUser"
 	UserService_GetLoginLogs_FullMethodName          = "/user.v1.UserService/GetLoginLogs"
+	UserService_LookupSubject_FullMethodName         = "/user.v1.UserService/LookupSubject"
 	UserService_CreateGroup_FullMethodName           = "/user.v1.UserService/CreateGroup"
 	UserService_GetGroup_FullMethodName              = "/user.v1.UserService/GetGroup"
 	UserService_UpdateGroup_FullMethodName           = "/user.v1.UserService/UpdateGroup"
@@ -246,6 +247,10 @@ type UserServiceClient interface {
 	// GetLoginLogs returns login audit logs filtered by user_id (optional) and
 	// success status. Cursor-paginated. Useful for security dashboards.
 	GetLoginLogs(ctx context.Context, in *GetLoginLogsRequest, opts ...grpc.CallOption) (*GetLoginLogsResponse, error)
+	// LookupSubject resolves an email or phone across directories (platform
+	// authority). Used by portal's bootstrap-admin logic to decide bind-vs-create.
+	// PLATFORM actor only.
+	LookupSubject(ctx context.Context, in *LookupSubjectRequest, opts ...grpc.CallOption) (*LookupSubjectResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
 	// parent_id builds a hierarchy. After creating, add members via
 	// AddGroupMember and grant roles via AddGroupRole — members inherit the
@@ -644,6 +649,16 @@ func (c *userServiceClient) GetLoginLogs(ctx context.Context, in *GetLoginLogsRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetLoginLogsResponse)
 	err := c.cc.Invoke(ctx, UserService_GetLoginLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) LookupSubject(ctx context.Context, in *LookupSubjectRequest, opts ...grpc.CallOption) (*LookupSubjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LookupSubjectResponse)
+	err := c.cc.Invoke(ctx, UserService_LookupSubject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1157,6 +1172,10 @@ type UserServiceServer interface {
 	// GetLoginLogs returns login audit logs filtered by user_id (optional) and
 	// success status. Cursor-paginated. Useful for security dashboards.
 	GetLoginLogs(context.Context, *GetLoginLogsRequest) (*GetLoginLogsResponse, error)
+	// LookupSubject resolves an email or phone across directories (platform
+	// authority). Used by portal's bootstrap-admin logic to decide bind-vs-create.
+	// PLATFORM actor only.
+	LookupSubject(context.Context, *LookupSubjectRequest) (*LookupSubjectResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
 	// parent_id builds a hierarchy. After creating, add members via
 	// AddGroupMember and grant roles via AddGroupRole — members inherit the
@@ -1357,6 +1376,9 @@ func (UnimplementedUserServiceServer) DisableUser(context.Context, *DisableUserR
 }
 func (UnimplementedUserServiceServer) GetLoginLogs(context.Context, *GetLoginLogsRequest) (*GetLoginLogsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetLoginLogs not implemented")
+}
+func (UnimplementedUserServiceServer) LookupSubject(context.Context, *LookupSubjectRequest) (*LookupSubjectResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LookupSubject not implemented")
 }
 func (UnimplementedUserServiceServer) CreateGroup(context.Context, *CreateGroupRequest) (*Group, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateGroup not implemented")
@@ -2002,6 +2024,24 @@ func _UserService_GetLoginLogs_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetLoginLogs(ctx, req.(*GetLoginLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_LookupSubject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LookupSubjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).LookupSubject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_LookupSubject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).LookupSubject(ctx, req.(*LookupSubjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2758,6 +2798,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLoginLogs",
 			Handler:    _UserService_GetLoginLogs_Handler,
+		},
+		{
+			MethodName: "LookupSubject",
+			Handler:    _UserService_LookupSubject_Handler,
 		},
 		{
 			MethodName: "CreateGroup",

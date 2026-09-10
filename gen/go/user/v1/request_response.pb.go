@@ -3081,6 +3081,202 @@ func (x *GetLoginLogsResponse) GetTotal() int32 {
 	return 0
 }
 
+// LookupSubjectRequest resolves one contact across EVERY directory (platform
+// authority). The response lists each matching account; an identifier no
+// directory knows is a valid empty result — this is an explicit cross-directory
+// query, not a per-tenant read, so the anti-enumeration ErrUserNotFound
+// convention does not apply. PLATFORM actor only.
+type LookupSubjectRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Contact:
+	//
+	//	*LookupSubjectRequest_Email
+	//	*LookupSubjectRequest_Phone
+	Contact       isLookupSubjectRequest_Contact `protobuf_oneof:"contact"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LookupSubjectRequest) Reset() {
+	*x = LookupSubjectRequest{}
+	mi := &file_user_v1_request_response_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LookupSubjectRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LookupSubjectRequest) ProtoMessage() {}
+
+func (x *LookupSubjectRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LookupSubjectRequest.ProtoReflect.Descriptor instead.
+func (*LookupSubjectRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *LookupSubjectRequest) GetContact() isLookupSubjectRequest_Contact {
+	if x != nil {
+		return x.Contact
+	}
+	return nil
+}
+
+func (x *LookupSubjectRequest) GetEmail() string {
+	if x != nil {
+		if x, ok := x.Contact.(*LookupSubjectRequest_Email); ok {
+			return x.Email
+		}
+	}
+	return ""
+}
+
+func (x *LookupSubjectRequest) GetPhone() string {
+	if x != nil {
+		if x, ok := x.Contact.(*LookupSubjectRequest_Phone); ok {
+			return x.Phone
+		}
+	}
+	return ""
+}
+
+type isLookupSubjectRequest_Contact interface {
+	isLookupSubjectRequest_Contact()
+}
+
+type LookupSubjectRequest_Email struct {
+	// email mechanism (exact match)
+	Email string `protobuf:"bytes,1,opt,name=email,proto3,oneof"`
+}
+
+type LookupSubjectRequest_Phone struct {
+	// phone mechanism; E.164-normalized server-side before comparison
+	Phone string `protobuf:"bytes,2,opt,name=phone,proto3,oneof"`
+}
+
+func (*LookupSubjectRequest_Email) isLookupSubjectRequest_Contact() {}
+
+func (*LookupSubjectRequest_Phone) isLookupSubjectRequest_Contact() {}
+
+type LookupSubjectResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Matches       []*SubjectMatch        `protobuf:"bytes,1,rep,name=matches,proto3" json:"matches,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LookupSubjectResponse) Reset() {
+	*x = LookupSubjectResponse{}
+	mi := &file_user_v1_request_response_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LookupSubjectResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LookupSubjectResponse) ProtoMessage() {}
+
+func (x *LookupSubjectResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LookupSubjectResponse.ProtoReflect.Descriptor instead.
+func (*LookupSubjectResponse) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *LookupSubjectResponse) GetMatches() []*SubjectMatch {
+	if x != nil {
+		return x.Matches
+	}
+	return nil
+}
+
+// SubjectMatch is one account owning the queried contact. tenant_key is the
+// directory the account lives in (phase ②: that directory's app_key) — never
+// a tenant_id or any other alias.
+type SubjectMatch struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,2,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`                     // directory the account lives in (phase ②: app_key)
+	UserType      UserType               `protobuf:"varint,3,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"` // END_USER / TENANT_ADMIN / PLATFORM
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubjectMatch) Reset() {
+	*x = SubjectMatch{}
+	mi := &file_user_v1_request_response_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubjectMatch) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubjectMatch) ProtoMessage() {}
+
+func (x *SubjectMatch) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_request_response_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubjectMatch.ProtoReflect.Descriptor instead.
+func (*SubjectMatch) Descriptor() ([]byte, []int) {
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *SubjectMatch) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *SubjectMatch) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
+func (x *SubjectMatch) GetUserType() UserType {
+	if x != nil {
+		return x.UserType
+	}
+	return UserType_USER_TYPE_UNSPECIFIED
+}
+
 type CreateGroupRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -3092,7 +3288,7 @@ type CreateGroupRequest struct {
 
 func (x *CreateGroupRequest) Reset() {
 	*x = CreateGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[42]
+	mi := &file_user_v1_request_response_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3104,7 +3300,7 @@ func (x *CreateGroupRequest) String() string {
 func (*CreateGroupRequest) ProtoMessage() {}
 
 func (x *CreateGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[42]
+	mi := &file_user_v1_request_response_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3117,7 +3313,7 @@ func (x *CreateGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGroupRequest.ProtoReflect.Descriptor instead.
 func (*CreateGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{42}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *CreateGroupRequest) GetName() string {
@@ -3150,7 +3346,7 @@ type GetGroupRequest struct {
 
 func (x *GetGroupRequest) Reset() {
 	*x = GetGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[43]
+	mi := &file_user_v1_request_response_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3162,7 +3358,7 @@ func (x *GetGroupRequest) String() string {
 func (*GetGroupRequest) ProtoMessage() {}
 
 func (x *GetGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[43]
+	mi := &file_user_v1_request_response_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3175,7 +3371,7 @@ func (x *GetGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupRequest.ProtoReflect.Descriptor instead.
 func (*GetGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{43}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *GetGroupRequest) GetGroupId() int64 {
@@ -3196,7 +3392,7 @@ type UpdateGroupRequest struct {
 
 func (x *UpdateGroupRequest) Reset() {
 	*x = UpdateGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[44]
+	mi := &file_user_v1_request_response_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3208,7 +3404,7 @@ func (x *UpdateGroupRequest) String() string {
 func (*UpdateGroupRequest) ProtoMessage() {}
 
 func (x *UpdateGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[44]
+	mi := &file_user_v1_request_response_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3221,7 +3417,7 @@ func (x *UpdateGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateGroupRequest.ProtoReflect.Descriptor instead.
 func (*UpdateGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{44}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *UpdateGroupRequest) GetGroupId() int64 {
@@ -3256,7 +3452,7 @@ type ListGroupsRequest struct {
 
 func (x *ListGroupsRequest) Reset() {
 	*x = ListGroupsRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[45]
+	mi := &file_user_v1_request_response_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3268,7 +3464,7 @@ func (x *ListGroupsRequest) String() string {
 func (*ListGroupsRequest) ProtoMessage() {}
 
 func (x *ListGroupsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[45]
+	mi := &file_user_v1_request_response_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3281,7 +3477,7 @@ func (x *ListGroupsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupsRequest.ProtoReflect.Descriptor instead.
 func (*ListGroupsRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{45}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListGroupsRequest) GetStatus() string {
@@ -3316,7 +3512,7 @@ type ListGroupsResponse struct {
 
 func (x *ListGroupsResponse) Reset() {
 	*x = ListGroupsResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[46]
+	mi := &file_user_v1_request_response_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3328,7 +3524,7 @@ func (x *ListGroupsResponse) String() string {
 func (*ListGroupsResponse) ProtoMessage() {}
 
 func (x *ListGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[46]
+	mi := &file_user_v1_request_response_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3341,7 +3537,7 @@ func (x *ListGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupsResponse.ProtoReflect.Descriptor instead.
 func (*ListGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{46}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ListGroupsResponse) GetGroups() []*Group {
@@ -3374,7 +3570,7 @@ type DeleteGroupRequest struct {
 
 func (x *DeleteGroupRequest) Reset() {
 	*x = DeleteGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[47]
+	mi := &file_user_v1_request_response_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3386,7 +3582,7 @@ func (x *DeleteGroupRequest) String() string {
 func (*DeleteGroupRequest) ProtoMessage() {}
 
 func (x *DeleteGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[47]
+	mi := &file_user_v1_request_response_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3399,7 +3595,7 @@ func (x *DeleteGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteGroupRequest.ProtoReflect.Descriptor instead.
 func (*DeleteGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{47}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *DeleteGroupRequest) GetGroupId() int64 {
@@ -3420,7 +3616,7 @@ type AddGroupMemberRequest struct {
 
 func (x *AddGroupMemberRequest) Reset() {
 	*x = AddGroupMemberRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[48]
+	mi := &file_user_v1_request_response_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3432,7 +3628,7 @@ func (x *AddGroupMemberRequest) String() string {
 func (*AddGroupMemberRequest) ProtoMessage() {}
 
 func (x *AddGroupMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[48]
+	mi := &file_user_v1_request_response_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3445,7 +3641,7 @@ func (x *AddGroupMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGroupMemberRequest.ProtoReflect.Descriptor instead.
 func (*AddGroupMemberRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{48}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *AddGroupMemberRequest) GetGroupId() int64 {
@@ -3479,7 +3675,7 @@ type RemoveGroupMemberRequest struct {
 
 func (x *RemoveGroupMemberRequest) Reset() {
 	*x = RemoveGroupMemberRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[49]
+	mi := &file_user_v1_request_response_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3491,7 +3687,7 @@ func (x *RemoveGroupMemberRequest) String() string {
 func (*RemoveGroupMemberRequest) ProtoMessage() {}
 
 func (x *RemoveGroupMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[49]
+	mi := &file_user_v1_request_response_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3504,7 +3700,7 @@ func (x *RemoveGroupMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveGroupMemberRequest.ProtoReflect.Descriptor instead.
 func (*RemoveGroupMemberRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{49}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *RemoveGroupMemberRequest) GetGroupId() int64 {
@@ -3533,7 +3729,7 @@ type ListGroupMembersRequest struct {
 
 func (x *ListGroupMembersRequest) Reset() {
 	*x = ListGroupMembersRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[50]
+	mi := &file_user_v1_request_response_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3545,7 +3741,7 @@ func (x *ListGroupMembersRequest) String() string {
 func (*ListGroupMembersRequest) ProtoMessage() {}
 
 func (x *ListGroupMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[50]
+	mi := &file_user_v1_request_response_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3558,7 +3754,7 @@ func (x *ListGroupMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupMembersRequest.ProtoReflect.Descriptor instead.
 func (*ListGroupMembersRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{50}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *ListGroupMembersRequest) GetGroupId() int64 {
@@ -3600,7 +3796,7 @@ type ListGroupMembersResponse struct {
 
 func (x *ListGroupMembersResponse) Reset() {
 	*x = ListGroupMembersResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[51]
+	mi := &file_user_v1_request_response_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3612,7 +3808,7 @@ func (x *ListGroupMembersResponse) String() string {
 func (*ListGroupMembersResponse) ProtoMessage() {}
 
 func (x *ListGroupMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[51]
+	mi := &file_user_v1_request_response_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3625,7 +3821,7 @@ func (x *ListGroupMembersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupMembersResponse.ProtoReflect.Descriptor instead.
 func (*ListGroupMembersResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{51}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *ListGroupMembersResponse) GetMembers() []*GroupMember {
@@ -3661,7 +3857,7 @@ type CreateRoleRequest struct {
 
 func (x *CreateRoleRequest) Reset() {
 	*x = CreateRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[52]
+	mi := &file_user_v1_request_response_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3673,7 +3869,7 @@ func (x *CreateRoleRequest) String() string {
 func (*CreateRoleRequest) ProtoMessage() {}
 
 func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[52]
+	mi := &file_user_v1_request_response_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3686,7 +3882,7 @@ func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRoleRequest.ProtoReflect.Descriptor instead.
 func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{52}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *CreateRoleRequest) GetName() string {
@@ -3730,7 +3926,7 @@ type UpdateRoleRequest struct {
 
 func (x *UpdateRoleRequest) Reset() {
 	*x = UpdateRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[53]
+	mi := &file_user_v1_request_response_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3742,7 +3938,7 @@ func (x *UpdateRoleRequest) String() string {
 func (*UpdateRoleRequest) ProtoMessage() {}
 
 func (x *UpdateRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[53]
+	mi := &file_user_v1_request_response_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3755,7 +3951,7 @@ func (x *UpdateRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRoleRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{53}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *UpdateRoleRequest) GetRoleId() int64 {
@@ -3802,7 +3998,7 @@ type DeleteRoleRequest struct {
 
 func (x *DeleteRoleRequest) Reset() {
 	*x = DeleteRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[54]
+	mi := &file_user_v1_request_response_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3814,7 +4010,7 @@ func (x *DeleteRoleRequest) String() string {
 func (*DeleteRoleRequest) ProtoMessage() {}
 
 func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[54]
+	mi := &file_user_v1_request_response_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3827,7 +4023,7 @@ func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRoleRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{54}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *DeleteRoleRequest) GetRoleId() int64 {
@@ -3847,7 +4043,7 @@ type ListRolesRequest struct {
 
 func (x *ListRolesRequest) Reset() {
 	*x = ListRolesRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[55]
+	mi := &file_user_v1_request_response_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3859,7 +4055,7 @@ func (x *ListRolesRequest) String() string {
 func (*ListRolesRequest) ProtoMessage() {}
 
 func (x *ListRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[55]
+	mi := &file_user_v1_request_response_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3872,7 +4068,7 @@ func (x *ListRolesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRolesRequest.ProtoReflect.Descriptor instead.
 func (*ListRolesRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{55}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *ListRolesRequest) GetPageSize() int32 {
@@ -3900,7 +4096,7 @@ type ListRolesResponse struct {
 
 func (x *ListRolesResponse) Reset() {
 	*x = ListRolesResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[56]
+	mi := &file_user_v1_request_response_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3912,7 +4108,7 @@ func (x *ListRolesResponse) String() string {
 func (*ListRolesResponse) ProtoMessage() {}
 
 func (x *ListRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[56]
+	mi := &file_user_v1_request_response_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3925,7 +4121,7 @@ func (x *ListRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRolesResponse.ProtoReflect.Descriptor instead.
 func (*ListRolesResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{56}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *ListRolesResponse) GetRoles() []*Role {
@@ -3959,7 +4155,7 @@ type ListPermissionsRequest struct {
 
 func (x *ListPermissionsRequest) Reset() {
 	*x = ListPermissionsRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[57]
+	mi := &file_user_v1_request_response_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3971,7 +4167,7 @@ func (x *ListPermissionsRequest) String() string {
 func (*ListPermissionsRequest) ProtoMessage() {}
 
 func (x *ListPermissionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[57]
+	mi := &file_user_v1_request_response_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3984,7 +4180,7 @@ func (x *ListPermissionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionsRequest.ProtoReflect.Descriptor instead.
 func (*ListPermissionsRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{57}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ListPermissionsRequest) GetPageSize() int32 {
@@ -4012,7 +4208,7 @@ type ListPermissionsResponse struct {
 
 func (x *ListPermissionsResponse) Reset() {
 	*x = ListPermissionsResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[58]
+	mi := &file_user_v1_request_response_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4024,7 +4220,7 @@ func (x *ListPermissionsResponse) String() string {
 func (*ListPermissionsResponse) ProtoMessage() {}
 
 func (x *ListPermissionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[58]
+	mi := &file_user_v1_request_response_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4037,7 +4233,7 @@ func (x *ListPermissionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionsResponse.ProtoReflect.Descriptor instead.
 func (*ListPermissionsResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{58}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *ListPermissionsResponse) GetPermissions() []*Permission {
@@ -4072,7 +4268,7 @@ type CreatePermissionRequest struct {
 
 func (x *CreatePermissionRequest) Reset() {
 	*x = CreatePermissionRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[59]
+	mi := &file_user_v1_request_response_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4084,7 +4280,7 @@ func (x *CreatePermissionRequest) String() string {
 func (*CreatePermissionRequest) ProtoMessage() {}
 
 func (x *CreatePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[59]
+	mi := &file_user_v1_request_response_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4097,7 +4293,7 @@ func (x *CreatePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePermissionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{59}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *CreatePermissionRequest) GetResource() string {
@@ -4130,7 +4326,7 @@ type GetPermissionRequest struct {
 
 func (x *GetPermissionRequest) Reset() {
 	*x = GetPermissionRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[60]
+	mi := &file_user_v1_request_response_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4142,7 +4338,7 @@ func (x *GetPermissionRequest) String() string {
 func (*GetPermissionRequest) ProtoMessage() {}
 
 func (x *GetPermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[60]
+	mi := &file_user_v1_request_response_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4155,7 +4351,7 @@ func (x *GetPermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPermissionRequest.ProtoReflect.Descriptor instead.
 func (*GetPermissionRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{60}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *GetPermissionRequest) GetPermissionId() int64 {
@@ -4177,7 +4373,7 @@ type UpdatePermissionRequest struct {
 
 func (x *UpdatePermissionRequest) Reset() {
 	*x = UpdatePermissionRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[61]
+	mi := &file_user_v1_request_response_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4189,7 +4385,7 @@ func (x *UpdatePermissionRequest) String() string {
 func (*UpdatePermissionRequest) ProtoMessage() {}
 
 func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[61]
+	mi := &file_user_v1_request_response_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4202,7 +4398,7 @@ func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePermissionRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{61}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *UpdatePermissionRequest) GetPermissionId() int64 {
@@ -4242,7 +4438,7 @@ type DeletePermissionRequest struct {
 
 func (x *DeletePermissionRequest) Reset() {
 	*x = DeletePermissionRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[62]
+	mi := &file_user_v1_request_response_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4254,7 +4450,7 @@ func (x *DeletePermissionRequest) String() string {
 func (*DeletePermissionRequest) ProtoMessage() {}
 
 func (x *DeletePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[62]
+	mi := &file_user_v1_request_response_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4267,7 +4463,7 @@ func (x *DeletePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePermissionRequest.ProtoReflect.Descriptor instead.
 func (*DeletePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{62}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *DeletePermissionRequest) GetPermissionId() int64 {
@@ -4287,7 +4483,7 @@ type ListPermissionGroupsRequest struct {
 
 func (x *ListPermissionGroupsRequest) Reset() {
 	*x = ListPermissionGroupsRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[63]
+	mi := &file_user_v1_request_response_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4299,7 +4495,7 @@ func (x *ListPermissionGroupsRequest) String() string {
 func (*ListPermissionGroupsRequest) ProtoMessage() {}
 
 func (x *ListPermissionGroupsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[63]
+	mi := &file_user_v1_request_response_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4312,7 +4508,7 @@ func (x *ListPermissionGroupsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionGroupsRequest.ProtoReflect.Descriptor instead.
 func (*ListPermissionGroupsRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{63}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *ListPermissionGroupsRequest) GetPageSize() int32 {
@@ -4340,7 +4536,7 @@ type ListPermissionGroupsResponse struct {
 
 func (x *ListPermissionGroupsResponse) Reset() {
 	*x = ListPermissionGroupsResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[64]
+	mi := &file_user_v1_request_response_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4352,7 +4548,7 @@ func (x *ListPermissionGroupsResponse) String() string {
 func (*ListPermissionGroupsResponse) ProtoMessage() {}
 
 func (x *ListPermissionGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[64]
+	mi := &file_user_v1_request_response_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4365,7 +4561,7 @@ func (x *ListPermissionGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionGroupsResponse.ProtoReflect.Descriptor instead.
 func (*ListPermissionGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{64}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *ListPermissionGroupsResponse) GetGroups() []*PermissionGroup {
@@ -4400,7 +4596,7 @@ type CreatePermissionGroupRequest struct {
 
 func (x *CreatePermissionGroupRequest) Reset() {
 	*x = CreatePermissionGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[65]
+	mi := &file_user_v1_request_response_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4412,7 +4608,7 @@ func (x *CreatePermissionGroupRequest) String() string {
 func (*CreatePermissionGroupRequest) ProtoMessage() {}
 
 func (x *CreatePermissionGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[65]
+	mi := &file_user_v1_request_response_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4425,7 +4621,7 @@ func (x *CreatePermissionGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePermissionGroupRequest.ProtoReflect.Descriptor instead.
 func (*CreatePermissionGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{65}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *CreatePermissionGroupRequest) GetName() string {
@@ -4458,7 +4654,7 @@ type GetPermissionGroupRequest struct {
 
 func (x *GetPermissionGroupRequest) Reset() {
 	*x = GetPermissionGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[66]
+	mi := &file_user_v1_request_response_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4470,7 +4666,7 @@ func (x *GetPermissionGroupRequest) String() string {
 func (*GetPermissionGroupRequest) ProtoMessage() {}
 
 func (x *GetPermissionGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[66]
+	mi := &file_user_v1_request_response_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4483,7 +4679,7 @@ func (x *GetPermissionGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPermissionGroupRequest.ProtoReflect.Descriptor instead.
 func (*GetPermissionGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{66}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *GetPermissionGroupRequest) GetPermissionGroupId() int64 {
@@ -4505,7 +4701,7 @@ type UpdatePermissionGroupRequest struct {
 
 func (x *UpdatePermissionGroupRequest) Reset() {
 	*x = UpdatePermissionGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[67]
+	mi := &file_user_v1_request_response_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4517,7 +4713,7 @@ func (x *UpdatePermissionGroupRequest) String() string {
 func (*UpdatePermissionGroupRequest) ProtoMessage() {}
 
 func (x *UpdatePermissionGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[67]
+	mi := &file_user_v1_request_response_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4530,7 +4726,7 @@ func (x *UpdatePermissionGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePermissionGroupRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePermissionGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{67}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *UpdatePermissionGroupRequest) GetPermissionGroupId() int64 {
@@ -4570,7 +4766,7 @@ type DeletePermissionGroupRequest struct {
 
 func (x *DeletePermissionGroupRequest) Reset() {
 	*x = DeletePermissionGroupRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[68]
+	mi := &file_user_v1_request_response_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4582,7 +4778,7 @@ func (x *DeletePermissionGroupRequest) String() string {
 func (*DeletePermissionGroupRequest) ProtoMessage() {}
 
 func (x *DeletePermissionGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[68]
+	mi := &file_user_v1_request_response_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4595,7 +4791,7 @@ func (x *DeletePermissionGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePermissionGroupRequest.ProtoReflect.Descriptor instead.
 func (*DeletePermissionGroupRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{68}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *DeletePermissionGroupRequest) GetPermissionGroupId() int64 {
@@ -4614,7 +4810,7 @@ type GetRoleRequest struct {
 
 func (x *GetRoleRequest) Reset() {
 	*x = GetRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[69]
+	mi := &file_user_v1_request_response_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4626,7 +4822,7 @@ func (x *GetRoleRequest) String() string {
 func (*GetRoleRequest) ProtoMessage() {}
 
 func (x *GetRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[69]
+	mi := &file_user_v1_request_response_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4639,7 +4835,7 @@ func (x *GetRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleRequest.ProtoReflect.Descriptor instead.
 func (*GetRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{69}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *GetRoleRequest) GetRoleId() int64 {
@@ -4659,7 +4855,7 @@ type AddGroupRoleRequest struct {
 
 func (x *AddGroupRoleRequest) Reset() {
 	*x = AddGroupRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[70]
+	mi := &file_user_v1_request_response_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4671,7 +4867,7 @@ func (x *AddGroupRoleRequest) String() string {
 func (*AddGroupRoleRequest) ProtoMessage() {}
 
 func (x *AddGroupRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[70]
+	mi := &file_user_v1_request_response_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4684,7 +4880,7 @@ func (x *AddGroupRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddGroupRoleRequest.ProtoReflect.Descriptor instead.
 func (*AddGroupRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{70}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *AddGroupRoleRequest) GetGroupId() int64 {
@@ -4711,7 +4907,7 @@ type RemoveGroupRoleRequest struct {
 
 func (x *RemoveGroupRoleRequest) Reset() {
 	*x = RemoveGroupRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[71]
+	mi := &file_user_v1_request_response_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4723,7 +4919,7 @@ func (x *RemoveGroupRoleRequest) String() string {
 func (*RemoveGroupRoleRequest) ProtoMessage() {}
 
 func (x *RemoveGroupRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[71]
+	mi := &file_user_v1_request_response_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4736,7 +4932,7 @@ func (x *RemoveGroupRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveGroupRoleRequest.ProtoReflect.Descriptor instead.
 func (*RemoveGroupRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{71}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *RemoveGroupRoleRequest) GetGroupId() int64 {
@@ -4762,7 +4958,7 @@ type ListGroupRolesRequest struct {
 
 func (x *ListGroupRolesRequest) Reset() {
 	*x = ListGroupRolesRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[72]
+	mi := &file_user_v1_request_response_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4774,7 +4970,7 @@ func (x *ListGroupRolesRequest) String() string {
 func (*ListGroupRolesRequest) ProtoMessage() {}
 
 func (x *ListGroupRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[72]
+	mi := &file_user_v1_request_response_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4787,7 +4983,7 @@ func (x *ListGroupRolesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupRolesRequest.ProtoReflect.Descriptor instead.
 func (*ListGroupRolesRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{72}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *ListGroupRolesRequest) GetGroupId() int64 {
@@ -4806,7 +5002,7 @@ type ListGroupRolesResponse struct {
 
 func (x *ListGroupRolesResponse) Reset() {
 	*x = ListGroupRolesResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[73]
+	mi := &file_user_v1_request_response_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4818,7 +5014,7 @@ func (x *ListGroupRolesResponse) String() string {
 func (*ListGroupRolesResponse) ProtoMessage() {}
 
 func (x *ListGroupRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[73]
+	mi := &file_user_v1_request_response_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4831,7 +5027,7 @@ func (x *ListGroupRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupRolesResponse.ProtoReflect.Descriptor instead.
 func (*ListGroupRolesResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{73}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *ListGroupRolesResponse) GetRoles() []*Role {
@@ -4851,7 +5047,7 @@ type AssignRoleRequest struct {
 
 func (x *AssignRoleRequest) Reset() {
 	*x = AssignRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[74]
+	mi := &file_user_v1_request_response_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4863,7 +5059,7 @@ func (x *AssignRoleRequest) String() string {
 func (*AssignRoleRequest) ProtoMessage() {}
 
 func (x *AssignRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[74]
+	mi := &file_user_v1_request_response_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4876,7 +5072,7 @@ func (x *AssignRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssignRoleRequest.ProtoReflect.Descriptor instead.
 func (*AssignRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{74}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *AssignRoleRequest) GetUserId() int64 {
@@ -4903,7 +5099,7 @@ type RevokeRoleRequest struct {
 
 func (x *RevokeRoleRequest) Reset() {
 	*x = RevokeRoleRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[75]
+	mi := &file_user_v1_request_response_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4915,7 +5111,7 @@ func (x *RevokeRoleRequest) String() string {
 func (*RevokeRoleRequest) ProtoMessage() {}
 
 func (x *RevokeRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[75]
+	mi := &file_user_v1_request_response_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4928,7 +5124,7 @@ func (x *RevokeRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeRoleRequest.ProtoReflect.Descriptor instead.
 func (*RevokeRoleRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{75}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *RevokeRoleRequest) GetUserId() int64 {
@@ -4954,7 +5150,7 @@ type ListUserRolesRequest struct {
 
 func (x *ListUserRolesRequest) Reset() {
 	*x = ListUserRolesRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[76]
+	mi := &file_user_v1_request_response_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4966,7 +5162,7 @@ func (x *ListUserRolesRequest) String() string {
 func (*ListUserRolesRequest) ProtoMessage() {}
 
 func (x *ListUserRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[76]
+	mi := &file_user_v1_request_response_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4979,7 +5175,7 @@ func (x *ListUserRolesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserRolesRequest.ProtoReflect.Descriptor instead.
 func (*ListUserRolesRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{76}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *ListUserRolesRequest) GetUserId() int64 {
@@ -4998,7 +5194,7 @@ type ListUserRolesResponse struct {
 
 func (x *ListUserRolesResponse) Reset() {
 	*x = ListUserRolesResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[77]
+	mi := &file_user_v1_request_response_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5010,7 +5206,7 @@ func (x *ListUserRolesResponse) String() string {
 func (*ListUserRolesResponse) ProtoMessage() {}
 
 func (x *ListUserRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[77]
+	mi := &file_user_v1_request_response_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5023,7 +5219,7 @@ func (x *ListUserRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserRolesResponse.ProtoReflect.Descriptor instead.
 func (*ListUserRolesResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{77}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *ListUserRolesResponse) GetRoles() []*UserRole {
@@ -5047,7 +5243,7 @@ type CreateAppRequest struct {
 
 func (x *CreateAppRequest) Reset() {
 	*x = CreateAppRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[78]
+	mi := &file_user_v1_request_response_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5059,7 +5255,7 @@ func (x *CreateAppRequest) String() string {
 func (*CreateAppRequest) ProtoMessage() {}
 
 func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[78]
+	mi := &file_user_v1_request_response_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5072,7 +5268,7 @@ func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
 func (*CreateAppRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{78}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *CreateAppRequest) GetAppKey() string {
@@ -5100,7 +5296,7 @@ type CreateAppResponse struct {
 
 func (x *CreateAppResponse) Reset() {
 	*x = CreateAppResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[79]
+	mi := &file_user_v1_request_response_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5112,7 +5308,7 @@ func (x *CreateAppResponse) String() string {
 func (*CreateAppResponse) ProtoMessage() {}
 
 func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[79]
+	mi := &file_user_v1_request_response_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5125,7 +5321,7 @@ func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
 func (*CreateAppResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{79}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *CreateAppResponse) GetApp() *UserAppInfo {
@@ -5151,7 +5347,7 @@ type GetAppRequest struct {
 
 func (x *GetAppRequest) Reset() {
 	*x = GetAppRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[80]
+	mi := &file_user_v1_request_response_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5163,7 +5359,7 @@ func (x *GetAppRequest) String() string {
 func (*GetAppRequest) ProtoMessage() {}
 
 func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[80]
+	mi := &file_user_v1_request_response_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5176,7 +5372,7 @@ func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
 func (*GetAppRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{80}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *GetAppRequest) GetAppKey() string {
@@ -5195,7 +5391,7 @@ type GetAppResponse struct {
 
 func (x *GetAppResponse) Reset() {
 	*x = GetAppResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[81]
+	mi := &file_user_v1_request_response_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5207,7 +5403,7 @@ func (x *GetAppResponse) String() string {
 func (*GetAppResponse) ProtoMessage() {}
 
 func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[81]
+	mi := &file_user_v1_request_response_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5220,7 +5416,7 @@ func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
 func (*GetAppResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{81}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *GetAppResponse) GetApp() *UserAppInfo {
@@ -5243,7 +5439,7 @@ type UpdateAppRequest struct {
 
 func (x *UpdateAppRequest) Reset() {
 	*x = UpdateAppRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[82]
+	mi := &file_user_v1_request_response_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5255,7 +5451,7 @@ func (x *UpdateAppRequest) String() string {
 func (*UpdateAppRequest) ProtoMessage() {}
 
 func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[82]
+	mi := &file_user_v1_request_response_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5268,7 +5464,7 @@ func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
 func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{82}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *UpdateAppRequest) GetAppKey() string {
@@ -5301,7 +5497,7 @@ type UpdateAppResponse struct {
 
 func (x *UpdateAppResponse) Reset() {
 	*x = UpdateAppResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[83]
+	mi := &file_user_v1_request_response_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5313,7 +5509,7 @@ func (x *UpdateAppResponse) String() string {
 func (*UpdateAppResponse) ProtoMessage() {}
 
 func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[83]
+	mi := &file_user_v1_request_response_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5326,7 +5522,7 @@ func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
 func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{83}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *UpdateAppResponse) GetApp() *UserAppInfo {
@@ -5345,7 +5541,7 @@ type RotateAppSecretRequest struct {
 
 func (x *RotateAppSecretRequest) Reset() {
 	*x = RotateAppSecretRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[84]
+	mi := &file_user_v1_request_response_proto_msgTypes[87]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5357,7 +5553,7 @@ func (x *RotateAppSecretRequest) String() string {
 func (*RotateAppSecretRequest) ProtoMessage() {}
 
 func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[84]
+	mi := &file_user_v1_request_response_proto_msgTypes[87]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5370,7 +5566,7 @@ func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
 func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{84}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *RotateAppSecretRequest) GetAppKey() string {
@@ -5391,7 +5587,7 @@ type RotateAppSecretResponse struct {
 
 func (x *RotateAppSecretResponse) Reset() {
 	*x = RotateAppSecretResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[85]
+	mi := &file_user_v1_request_response_proto_msgTypes[88]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5403,7 +5599,7 @@ func (x *RotateAppSecretResponse) String() string {
 func (*RotateAppSecretResponse) ProtoMessage() {}
 
 func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[85]
+	mi := &file_user_v1_request_response_proto_msgTypes[88]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5416,7 +5612,7 @@ func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
 func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{85}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *RotateAppSecretResponse) GetApp() *UserAppInfo {
@@ -5442,7 +5638,7 @@ type ListAppsRequest struct {
 
 func (x *ListAppsRequest) Reset() {
 	*x = ListAppsRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[86]
+	mi := &file_user_v1_request_response_proto_msgTypes[89]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5454,7 +5650,7 @@ func (x *ListAppsRequest) String() string {
 func (*ListAppsRequest) ProtoMessage() {}
 
 func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[86]
+	mi := &file_user_v1_request_response_proto_msgTypes[89]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5467,7 +5663,7 @@ func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
 func (*ListAppsRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{86}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{89}
 }
 
 type ListAppsResponse struct {
@@ -5479,7 +5675,7 @@ type ListAppsResponse struct {
 
 func (x *ListAppsResponse) Reset() {
 	*x = ListAppsResponse{}
-	mi := &file_user_v1_request_response_proto_msgTypes[87]
+	mi := &file_user_v1_request_response_proto_msgTypes[90]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5491,7 +5687,7 @@ func (x *ListAppsResponse) String() string {
 func (*ListAppsResponse) ProtoMessage() {}
 
 func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[87]
+	mi := &file_user_v1_request_response_proto_msgTypes[90]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5504,7 +5700,7 @@ func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
 func (*ListAppsResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{87}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *ListAppsResponse) GetApps() []*UserAppInfo {
@@ -5525,7 +5721,7 @@ type DeleteAppRequest struct {
 
 func (x *DeleteAppRequest) Reset() {
 	*x = DeleteAppRequest{}
-	mi := &file_user_v1_request_response_proto_msgTypes[88]
+	mi := &file_user_v1_request_response_proto_msgTypes[91]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5537,7 +5733,7 @@ func (x *DeleteAppRequest) String() string {
 func (*DeleteAppRequest) ProtoMessage() {}
 
 func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_request_response_proto_msgTypes[88]
+	mi := &file_user_v1_request_response_proto_msgTypes[91]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5550,7 +5746,7 @@ func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_request_response_proto_rawDescGZIP(), []int{88}
+	return file_user_v1_request_response_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *DeleteAppRequest) GetAppKey() string {
@@ -5867,7 +6063,20 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x04logs\x18\x01 \x03(\v2\x11.user.v1.LoginLogR\x04logs\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
 	"nextCursor\x12\x14\n" +
-	"\x05total\x18\x03 \x01(\x05R\x05total\"|\n" +
+	"\x05total\x18\x03 \x01(\x05R\x05total\"\xf2\x01\n" +
+	"\x14LookupSubjectRequest\x12\"\n" +
+	"\x05email\x18\x01 \x01(\tB\n" +
+	"\xbaH\ar\x05\x18\x80\x02`\x01H\x00R\x05email\x123\n" +
+	"\x05phone\x18\x02 \x01(\tB\x1b\xbaH\x18r\x162\x14^\\+[1-9][0-9]{8,14}$H\x00R\x05phone:v\xbaHs\x1aq\n" +
+	" lookup_subject_contact_exclusive\x12)exactly one of email or phone must be set\x1a\"has(this.email) != has(this.phone)B\t\n" +
+	"\acontact\"H\n" +
+	"\x15LookupSubjectResponse\x12/\n" +
+	"\amatches\x18\x01 \x03(\v2\x15.user.v1.SubjectMatchR\amatches\"v\n" +
+	"\fSubjectMatch\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x02 \x01(\tR\ttenantKey\x12.\n" +
+	"\tuser_type\x18\x03 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\"|\n" +
 	"\x12CreateGroupRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04name\x12*\n" +
 	"\vdescription\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\vdescription\x12\x1b\n" +
@@ -6037,7 +6246,7 @@ func file_user_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_user_v1_request_response_proto_rawDescData
 }
 
-var file_user_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 89)
+var file_user_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 92)
 var file_user_v1_request_response_proto_goTypes = []any{
 	(*RegisterRequest)(nil),              // 0: user.v1.RegisterRequest
 	(*RegisterResponse)(nil),             // 1: user.v1.RegisterResponse
@@ -6081,145 +6290,150 @@ var file_user_v1_request_response_proto_goTypes = []any{
 	(*DisableUserRequest)(nil),           // 39: user.v1.DisableUserRequest
 	(*GetLoginLogsRequest)(nil),          // 40: user.v1.GetLoginLogsRequest
 	(*GetLoginLogsResponse)(nil),         // 41: user.v1.GetLoginLogsResponse
-	(*CreateGroupRequest)(nil),           // 42: user.v1.CreateGroupRequest
-	(*GetGroupRequest)(nil),              // 43: user.v1.GetGroupRequest
-	(*UpdateGroupRequest)(nil),           // 44: user.v1.UpdateGroupRequest
-	(*ListGroupsRequest)(nil),            // 45: user.v1.ListGroupsRequest
-	(*ListGroupsResponse)(nil),           // 46: user.v1.ListGroupsResponse
-	(*DeleteGroupRequest)(nil),           // 47: user.v1.DeleteGroupRequest
-	(*AddGroupMemberRequest)(nil),        // 48: user.v1.AddGroupMemberRequest
-	(*RemoveGroupMemberRequest)(nil),     // 49: user.v1.RemoveGroupMemberRequest
-	(*ListGroupMembersRequest)(nil),      // 50: user.v1.ListGroupMembersRequest
-	(*ListGroupMembersResponse)(nil),     // 51: user.v1.ListGroupMembersResponse
-	(*CreateRoleRequest)(nil),            // 52: user.v1.CreateRoleRequest
-	(*UpdateRoleRequest)(nil),            // 53: user.v1.UpdateRoleRequest
-	(*DeleteRoleRequest)(nil),            // 54: user.v1.DeleteRoleRequest
-	(*ListRolesRequest)(nil),             // 55: user.v1.ListRolesRequest
-	(*ListRolesResponse)(nil),            // 56: user.v1.ListRolesResponse
-	(*ListPermissionsRequest)(nil),       // 57: user.v1.ListPermissionsRequest
-	(*ListPermissionsResponse)(nil),      // 58: user.v1.ListPermissionsResponse
-	(*CreatePermissionRequest)(nil),      // 59: user.v1.CreatePermissionRequest
-	(*GetPermissionRequest)(nil),         // 60: user.v1.GetPermissionRequest
-	(*UpdatePermissionRequest)(nil),      // 61: user.v1.UpdatePermissionRequest
-	(*DeletePermissionRequest)(nil),      // 62: user.v1.DeletePermissionRequest
-	(*ListPermissionGroupsRequest)(nil),  // 63: user.v1.ListPermissionGroupsRequest
-	(*ListPermissionGroupsResponse)(nil), // 64: user.v1.ListPermissionGroupsResponse
-	(*CreatePermissionGroupRequest)(nil), // 65: user.v1.CreatePermissionGroupRequest
-	(*GetPermissionGroupRequest)(nil),    // 66: user.v1.GetPermissionGroupRequest
-	(*UpdatePermissionGroupRequest)(nil), // 67: user.v1.UpdatePermissionGroupRequest
-	(*DeletePermissionGroupRequest)(nil), // 68: user.v1.DeletePermissionGroupRequest
-	(*GetRoleRequest)(nil),               // 69: user.v1.GetRoleRequest
-	(*AddGroupRoleRequest)(nil),          // 70: user.v1.AddGroupRoleRequest
-	(*RemoveGroupRoleRequest)(nil),       // 71: user.v1.RemoveGroupRoleRequest
-	(*ListGroupRolesRequest)(nil),        // 72: user.v1.ListGroupRolesRequest
-	(*ListGroupRolesResponse)(nil),       // 73: user.v1.ListGroupRolesResponse
-	(*AssignRoleRequest)(nil),            // 74: user.v1.AssignRoleRequest
-	(*RevokeRoleRequest)(nil),            // 75: user.v1.RevokeRoleRequest
-	(*ListUserRolesRequest)(nil),         // 76: user.v1.ListUserRolesRequest
-	(*ListUserRolesResponse)(nil),        // 77: user.v1.ListUserRolesResponse
-	(*CreateAppRequest)(nil),             // 78: user.v1.CreateAppRequest
-	(*CreateAppResponse)(nil),            // 79: user.v1.CreateAppResponse
-	(*GetAppRequest)(nil),                // 80: user.v1.GetAppRequest
-	(*GetAppResponse)(nil),               // 81: user.v1.GetAppResponse
-	(*UpdateAppRequest)(nil),             // 82: user.v1.UpdateAppRequest
-	(*UpdateAppResponse)(nil),            // 83: user.v1.UpdateAppResponse
-	(*RotateAppSecretRequest)(nil),       // 84: user.v1.RotateAppSecretRequest
-	(*RotateAppSecretResponse)(nil),      // 85: user.v1.RotateAppSecretResponse
-	(*ListAppsRequest)(nil),              // 86: user.v1.ListAppsRequest
-	(*ListAppsResponse)(nil),             // 87: user.v1.ListAppsResponse
-	(*DeleteAppRequest)(nil),             // 88: user.v1.DeleteAppRequest
-	(IdentityProvider)(0),                // 89: user.v1.IdentityProvider
-	(Gender)(0),                          // 90: user.v1.Gender
-	(*User)(nil),                         // 91: user.v1.User
-	(LoginMethod)(0),                     // 92: user.v1.LoginMethod
-	(*Identity)(nil),                     // 93: user.v1.Identity
-	(VerificationChannel)(0),             // 94: user.v1.VerificationChannel
-	(VerificationPurpose)(0),             // 95: user.v1.VerificationPurpose
-	(SessionStatus)(0),                   // 96: user.v1.SessionStatus
-	(*Session)(nil),                      // 97: user.v1.Session
-	(*timestamppb.Timestamp)(nil),        // 98: google.protobuf.Timestamp
-	(UserType)(0),                        // 99: user.v1.UserType
-	(UserStatus)(0),                      // 100: user.v1.UserStatus
-	(DeviceType)(0),                      // 101: user.v1.DeviceType
-	(UserSortField)(0),                   // 102: user.v1.UserSortField
-	(LoginAction)(0),                     // 103: user.v1.LoginAction
-	(*LoginLog)(nil),                     // 104: user.v1.LoginLog
-	(*Group)(nil),                        // 105: user.v1.Group
-	(*GroupMember)(nil),                  // 106: user.v1.GroupMember
-	(*Role)(nil),                         // 107: user.v1.Role
-	(*Permission)(nil),                   // 108: user.v1.Permission
-	(*PermissionGroup)(nil),              // 109: user.v1.PermissionGroup
-	(*UserRole)(nil),                     // 110: user.v1.UserRole
-	(*UserAppInfo)(nil),                  // 111: user.v1.UserAppInfo
+	(*LookupSubjectRequest)(nil),         // 42: user.v1.LookupSubjectRequest
+	(*LookupSubjectResponse)(nil),        // 43: user.v1.LookupSubjectResponse
+	(*SubjectMatch)(nil),                 // 44: user.v1.SubjectMatch
+	(*CreateGroupRequest)(nil),           // 45: user.v1.CreateGroupRequest
+	(*GetGroupRequest)(nil),              // 46: user.v1.GetGroupRequest
+	(*UpdateGroupRequest)(nil),           // 47: user.v1.UpdateGroupRequest
+	(*ListGroupsRequest)(nil),            // 48: user.v1.ListGroupsRequest
+	(*ListGroupsResponse)(nil),           // 49: user.v1.ListGroupsResponse
+	(*DeleteGroupRequest)(nil),           // 50: user.v1.DeleteGroupRequest
+	(*AddGroupMemberRequest)(nil),        // 51: user.v1.AddGroupMemberRequest
+	(*RemoveGroupMemberRequest)(nil),     // 52: user.v1.RemoveGroupMemberRequest
+	(*ListGroupMembersRequest)(nil),      // 53: user.v1.ListGroupMembersRequest
+	(*ListGroupMembersResponse)(nil),     // 54: user.v1.ListGroupMembersResponse
+	(*CreateRoleRequest)(nil),            // 55: user.v1.CreateRoleRequest
+	(*UpdateRoleRequest)(nil),            // 56: user.v1.UpdateRoleRequest
+	(*DeleteRoleRequest)(nil),            // 57: user.v1.DeleteRoleRequest
+	(*ListRolesRequest)(nil),             // 58: user.v1.ListRolesRequest
+	(*ListRolesResponse)(nil),            // 59: user.v1.ListRolesResponse
+	(*ListPermissionsRequest)(nil),       // 60: user.v1.ListPermissionsRequest
+	(*ListPermissionsResponse)(nil),      // 61: user.v1.ListPermissionsResponse
+	(*CreatePermissionRequest)(nil),      // 62: user.v1.CreatePermissionRequest
+	(*GetPermissionRequest)(nil),         // 63: user.v1.GetPermissionRequest
+	(*UpdatePermissionRequest)(nil),      // 64: user.v1.UpdatePermissionRequest
+	(*DeletePermissionRequest)(nil),      // 65: user.v1.DeletePermissionRequest
+	(*ListPermissionGroupsRequest)(nil),  // 66: user.v1.ListPermissionGroupsRequest
+	(*ListPermissionGroupsResponse)(nil), // 67: user.v1.ListPermissionGroupsResponse
+	(*CreatePermissionGroupRequest)(nil), // 68: user.v1.CreatePermissionGroupRequest
+	(*GetPermissionGroupRequest)(nil),    // 69: user.v1.GetPermissionGroupRequest
+	(*UpdatePermissionGroupRequest)(nil), // 70: user.v1.UpdatePermissionGroupRequest
+	(*DeletePermissionGroupRequest)(nil), // 71: user.v1.DeletePermissionGroupRequest
+	(*GetRoleRequest)(nil),               // 72: user.v1.GetRoleRequest
+	(*AddGroupRoleRequest)(nil),          // 73: user.v1.AddGroupRoleRequest
+	(*RemoveGroupRoleRequest)(nil),       // 74: user.v1.RemoveGroupRoleRequest
+	(*ListGroupRolesRequest)(nil),        // 75: user.v1.ListGroupRolesRequest
+	(*ListGroupRolesResponse)(nil),       // 76: user.v1.ListGroupRolesResponse
+	(*AssignRoleRequest)(nil),            // 77: user.v1.AssignRoleRequest
+	(*RevokeRoleRequest)(nil),            // 78: user.v1.RevokeRoleRequest
+	(*ListUserRolesRequest)(nil),         // 79: user.v1.ListUserRolesRequest
+	(*ListUserRolesResponse)(nil),        // 80: user.v1.ListUserRolesResponse
+	(*CreateAppRequest)(nil),             // 81: user.v1.CreateAppRequest
+	(*CreateAppResponse)(nil),            // 82: user.v1.CreateAppResponse
+	(*GetAppRequest)(nil),                // 83: user.v1.GetAppRequest
+	(*GetAppResponse)(nil),               // 84: user.v1.GetAppResponse
+	(*UpdateAppRequest)(nil),             // 85: user.v1.UpdateAppRequest
+	(*UpdateAppResponse)(nil),            // 86: user.v1.UpdateAppResponse
+	(*RotateAppSecretRequest)(nil),       // 87: user.v1.RotateAppSecretRequest
+	(*RotateAppSecretResponse)(nil),      // 88: user.v1.RotateAppSecretResponse
+	(*ListAppsRequest)(nil),              // 89: user.v1.ListAppsRequest
+	(*ListAppsResponse)(nil),             // 90: user.v1.ListAppsResponse
+	(*DeleteAppRequest)(nil),             // 91: user.v1.DeleteAppRequest
+	(IdentityProvider)(0),                // 92: user.v1.IdentityProvider
+	(Gender)(0),                          // 93: user.v1.Gender
+	(*User)(nil),                         // 94: user.v1.User
+	(LoginMethod)(0),                     // 95: user.v1.LoginMethod
+	(*Identity)(nil),                     // 96: user.v1.Identity
+	(VerificationChannel)(0),             // 97: user.v1.VerificationChannel
+	(VerificationPurpose)(0),             // 98: user.v1.VerificationPurpose
+	(SessionStatus)(0),                   // 99: user.v1.SessionStatus
+	(*Session)(nil),                      // 100: user.v1.Session
+	(*timestamppb.Timestamp)(nil),        // 101: google.protobuf.Timestamp
+	(UserType)(0),                        // 102: user.v1.UserType
+	(UserStatus)(0),                      // 103: user.v1.UserStatus
+	(DeviceType)(0),                      // 104: user.v1.DeviceType
+	(UserSortField)(0),                   // 105: user.v1.UserSortField
+	(LoginAction)(0),                     // 106: user.v1.LoginAction
+	(*LoginLog)(nil),                     // 107: user.v1.LoginLog
+	(*Group)(nil),                        // 108: user.v1.Group
+	(*GroupMember)(nil),                  // 109: user.v1.GroupMember
+	(*Role)(nil),                         // 110: user.v1.Role
+	(*Permission)(nil),                   // 111: user.v1.Permission
+	(*PermissionGroup)(nil),              // 112: user.v1.PermissionGroup
+	(*UserRole)(nil),                     // 113: user.v1.UserRole
+	(*UserAppInfo)(nil),                  // 114: user.v1.UserAppInfo
 }
 var file_user_v1_request_response_proto_depIdxs = []int32{
-	89,  // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
-	90,  // 1: user.v1.RegisterRequest.gender:type_name -> user.v1.Gender
-	91,  // 2: user.v1.RegisterResponse.user:type_name -> user.v1.User
-	92,  // 3: user.v1.LoginRequest.method:type_name -> user.v1.LoginMethod
-	91,  // 4: user.v1.LoginResponse.user:type_name -> user.v1.User
-	89,  // 5: user.v1.GetOAuthURLRequest.provider:type_name -> user.v1.IdentityProvider
-	89,  // 6: user.v1.SocialLoginRequest.provider:type_name -> user.v1.IdentityProvider
-	90,  // 7: user.v1.UpdateProfileRequest.gender:type_name -> user.v1.Gender
-	93,  // 8: user.v1.ListIdentitiesResponse.identities:type_name -> user.v1.Identity
-	89,  // 9: user.v1.BindIdentityRequest.provider:type_name -> user.v1.IdentityProvider
-	89,  // 10: user.v1.BindOAuthIdentityRequest.provider:type_name -> user.v1.IdentityProvider
-	93,  // 11: user.v1.BindOAuthIdentityResponse.identity:type_name -> user.v1.Identity
-	94,  // 12: user.v1.SendVerificationCodeRequest.channel:type_name -> user.v1.VerificationChannel
-	95,  // 13: user.v1.SendVerificationCodeRequest.purpose:type_name -> user.v1.VerificationPurpose
-	96,  // 14: user.v1.ListSessionsRequest.status:type_name -> user.v1.SessionStatus
-	97,  // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
-	98,  // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
-	98,  // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
-	92,  // 18: user.v1.GetSessionResponse.login_method:type_name -> user.v1.LoginMethod
-	89,  // 19: user.v1.GetSessionResponse.login_provider:type_name -> user.v1.IdentityProvider
-	99,  // 20: user.v1.GetSessionResponse.user_type:type_name -> user.v1.UserType
-	99,  // 21: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
-	90,  // 22: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
-	91,  // 23: user.v1.CreateUserResponse.user:type_name -> user.v1.User
-	100, // 24: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
-	90,  // 25: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
-	89,  // 26: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
-	101, // 27: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
-	98,  // 28: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	98,  // 29: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	98,  // 30: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	98,  // 31: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	99,  // 32: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
-	102, // 33: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
-	91,  // 34: user.v1.ListUsersResponse.users:type_name -> user.v1.User
-	100, // 35: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
-	90,  // 36: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
-	89,  // 37: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
-	101, // 38: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
-	99,  // 39: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
-	98,  // 40: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
-	98,  // 41: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
-	98,  // 42: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
-	98,  // 43: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
-	102, // 44: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
-	91,  // 45: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
-	89,  // 46: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
-	103, // 47: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
-	92,  // 48: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
-	104, // 49: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
-	105, // 50: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
-	106, // 51: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
-	107, // 52: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
-	108, // 53: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
-	109, // 54: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
-	107, // 55: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
-	110, // 56: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
-	111, // 57: user.v1.CreateAppResponse.app:type_name -> user.v1.UserAppInfo
-	111, // 58: user.v1.GetAppResponse.app:type_name -> user.v1.UserAppInfo
-	111, // 59: user.v1.UpdateAppResponse.app:type_name -> user.v1.UserAppInfo
-	111, // 60: user.v1.RotateAppSecretResponse.app:type_name -> user.v1.UserAppInfo
-	111, // 61: user.v1.ListAppsResponse.apps:type_name -> user.v1.UserAppInfo
-	62,  // [62:62] is the sub-list for method output_type
-	62,  // [62:62] is the sub-list for method input_type
-	62,  // [62:62] is the sub-list for extension type_name
-	62,  // [62:62] is the sub-list for extension extendee
-	0,   // [0:62] is the sub-list for field type_name
+	92,  // 0: user.v1.RegisterRequest.provider:type_name -> user.v1.IdentityProvider
+	93,  // 1: user.v1.RegisterRequest.gender:type_name -> user.v1.Gender
+	94,  // 2: user.v1.RegisterResponse.user:type_name -> user.v1.User
+	95,  // 3: user.v1.LoginRequest.method:type_name -> user.v1.LoginMethod
+	94,  // 4: user.v1.LoginResponse.user:type_name -> user.v1.User
+	92,  // 5: user.v1.GetOAuthURLRequest.provider:type_name -> user.v1.IdentityProvider
+	92,  // 6: user.v1.SocialLoginRequest.provider:type_name -> user.v1.IdentityProvider
+	93,  // 7: user.v1.UpdateProfileRequest.gender:type_name -> user.v1.Gender
+	96,  // 8: user.v1.ListIdentitiesResponse.identities:type_name -> user.v1.Identity
+	92,  // 9: user.v1.BindIdentityRequest.provider:type_name -> user.v1.IdentityProvider
+	92,  // 10: user.v1.BindOAuthIdentityRequest.provider:type_name -> user.v1.IdentityProvider
+	96,  // 11: user.v1.BindOAuthIdentityResponse.identity:type_name -> user.v1.Identity
+	97,  // 12: user.v1.SendVerificationCodeRequest.channel:type_name -> user.v1.VerificationChannel
+	98,  // 13: user.v1.SendVerificationCodeRequest.purpose:type_name -> user.v1.VerificationPurpose
+	99,  // 14: user.v1.ListSessionsRequest.status:type_name -> user.v1.SessionStatus
+	100, // 15: user.v1.ListSessionsResponse.sessions:type_name -> user.v1.Session
+	101, // 16: user.v1.GetSessionResponse.expires_at:type_name -> google.protobuf.Timestamp
+	101, // 17: user.v1.GetSessionResponse.created_at:type_name -> google.protobuf.Timestamp
+	95,  // 18: user.v1.GetSessionResponse.login_method:type_name -> user.v1.LoginMethod
+	92,  // 19: user.v1.GetSessionResponse.login_provider:type_name -> user.v1.IdentityProvider
+	102, // 20: user.v1.GetSessionResponse.user_type:type_name -> user.v1.UserType
+	102, // 21: user.v1.CreateUserRequest.user_type:type_name -> user.v1.UserType
+	93,  // 22: user.v1.CreateUserRequest.gender:type_name -> user.v1.Gender
+	94,  // 23: user.v1.CreateUserResponse.user:type_name -> user.v1.User
+	103, // 24: user.v1.ListUsersRequest.status:type_name -> user.v1.UserStatus
+	93,  // 25: user.v1.ListUsersRequest.gender:type_name -> user.v1.Gender
+	92,  // 26: user.v1.ListUsersRequest.register_source:type_name -> user.v1.IdentityProvider
+	104, // 27: user.v1.ListUsersRequest.register_device:type_name -> user.v1.DeviceType
+	101, // 28: user.v1.ListUsersRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	101, // 29: user.v1.ListUsersRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	101, // 30: user.v1.ListUsersRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	101, // 31: user.v1.ListUsersRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	102, // 32: user.v1.ListUsersRequest.user_type:type_name -> user.v1.UserType
+	105, // 33: user.v1.ListUsersRequest.order_by:type_name -> user.v1.UserSortField
+	94,  // 34: user.v1.ListUsersResponse.users:type_name -> user.v1.User
+	103, // 35: user.v1.ListUsersPagedRequest.status:type_name -> user.v1.UserStatus
+	93,  // 36: user.v1.ListUsersPagedRequest.gender:type_name -> user.v1.Gender
+	92,  // 37: user.v1.ListUsersPagedRequest.register_source:type_name -> user.v1.IdentityProvider
+	104, // 38: user.v1.ListUsersPagedRequest.register_device:type_name -> user.v1.DeviceType
+	102, // 39: user.v1.ListUsersPagedRequest.user_type:type_name -> user.v1.UserType
+	101, // 40: user.v1.ListUsersPagedRequest.created_at_start:type_name -> google.protobuf.Timestamp
+	101, // 41: user.v1.ListUsersPagedRequest.created_at_end:type_name -> google.protobuf.Timestamp
+	101, // 42: user.v1.ListUsersPagedRequest.last_login_at_start:type_name -> google.protobuf.Timestamp
+	101, // 43: user.v1.ListUsersPagedRequest.last_login_at_end:type_name -> google.protobuf.Timestamp
+	105, // 44: user.v1.ListUsersPagedRequest.order_by:type_name -> user.v1.UserSortField
+	94,  // 45: user.v1.ListUsersPagedResponse.users:type_name -> user.v1.User
+	92,  // 46: user.v1.GetLoginLogsRequest.provider:type_name -> user.v1.IdentityProvider
+	106, // 47: user.v1.GetLoginLogsRequest.action:type_name -> user.v1.LoginAction
+	95,  // 48: user.v1.GetLoginLogsRequest.method:type_name -> user.v1.LoginMethod
+	107, // 49: user.v1.GetLoginLogsResponse.logs:type_name -> user.v1.LoginLog
+	44,  // 50: user.v1.LookupSubjectResponse.matches:type_name -> user.v1.SubjectMatch
+	102, // 51: user.v1.SubjectMatch.user_type:type_name -> user.v1.UserType
+	108, // 52: user.v1.ListGroupsResponse.groups:type_name -> user.v1.Group
+	109, // 53: user.v1.ListGroupMembersResponse.members:type_name -> user.v1.GroupMember
+	110, // 54: user.v1.ListRolesResponse.roles:type_name -> user.v1.Role
+	111, // 55: user.v1.ListPermissionsResponse.permissions:type_name -> user.v1.Permission
+	112, // 56: user.v1.ListPermissionGroupsResponse.groups:type_name -> user.v1.PermissionGroup
+	110, // 57: user.v1.ListGroupRolesResponse.roles:type_name -> user.v1.Role
+	113, // 58: user.v1.ListUserRolesResponse.roles:type_name -> user.v1.UserRole
+	114, // 59: user.v1.CreateAppResponse.app:type_name -> user.v1.UserAppInfo
+	114, // 60: user.v1.GetAppResponse.app:type_name -> user.v1.UserAppInfo
+	114, // 61: user.v1.UpdateAppResponse.app:type_name -> user.v1.UserAppInfo
+	114, // 62: user.v1.RotateAppSecretResponse.app:type_name -> user.v1.UserAppInfo
+	114, // 63: user.v1.ListAppsResponse.apps:type_name -> user.v1.UserAppInfo
+	64,  // [64:64] is the sub-list for method output_type
+	64,  // [64:64] is the sub-list for method input_type
+	64,  // [64:64] is the sub-list for extension type_name
+	64,  // [64:64] is the sub-list for extension extendee
+	0,   // [0:64] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_request_response_proto_init() }
@@ -6230,14 +6444,18 @@ func file_user_v1_request_response_proto_init() {
 	file_user_v1_enums_proto_init()
 	file_user_v1_message_proto_init()
 	file_user_v1_request_response_proto_msgTypes[40].OneofWrappers = []any{}
-	file_user_v1_request_response_proto_msgTypes[82].OneofWrappers = []any{}
+	file_user_v1_request_response_proto_msgTypes[42].OneofWrappers = []any{
+		(*LookupSubjectRequest_Email)(nil),
+		(*LookupSubjectRequest_Phone)(nil),
+	}
+	file_user_v1_request_response_proto_msgTypes[85].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_request_response_proto_rawDesc), len(file_user_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   89,
+			NumMessages:   92,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
