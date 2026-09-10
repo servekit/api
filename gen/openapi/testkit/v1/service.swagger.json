@@ -341,193 +341,6 @@
         ]
       }
     },
-    "/api/v1/admin/storage/apps": {
-      "get": {
-        "summary": "App management (calling applications of the storage platform;\n1:1 forwards to storage-service admin RPCs).",
-        "operationId": "AdminListApps",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminListAppsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "post": {
-        "operationId": "AdminCreateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminCreateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). The app_secret is\nalso echoed on every read of StorageAppInfo (internal-trust posture).",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1AdminCreateAppRequest"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/admin/storage/apps/{appKey}": {
-      "get": {
-        "operationId": "AdminGetApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminGetAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "delete": {
-        "operationId": "AdminDeleteApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "put": {
-        "operationId": "AdminUpdateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminUpdateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceAdminUpdateAppBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/admin/storage/apps/{appKey}:rotateSecret": {
-      "post": {
-        "operationId": "AdminRotateAppSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminRotateAppSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceAdminRotateAppSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/admin/storage/buckets": {
       "get": {
         "operationId": "AdminListBuckets",
@@ -971,6 +784,195 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/tenant-configs": {
+      "get": {
+        "summary": "Tenant-config management (one config row per tenant of the storage\nplatform; 1:1 forwards to storage-service admin RPCs — phase ④ T6\nrename of the apps forwards).",
+        "operationId": "AdminListTenantConfigs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminListTenantConfigsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/tenant-configs/{tenantKey}": {
+      "get": {
+        "operationId": "AdminGetTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminGetTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminDeleteTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "AdminUpdateTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminUpdateTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminUpdateTenantConfigBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/tenant-configs/{tenantKey}:rotateSecret": {
+      "post": {
+        "operationId": "AdminRotateTenantConfigSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminRotateTenantConfigSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceAdminRotateTenantConfigSecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/admin/storage/tenant-configs:ensure": {
+      "post": {
+        "operationId": "AdminEnsureTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AdminEnsureTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable) and the\napp_secret is echoed on every read of StorageTenantConfigInfo\n(internal-trust posture).",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AdminEnsureTenantConfigRequest"
+            }
           }
         ],
         "tags": [
@@ -8186,25 +8188,8 @@
         }
       }
     },
-    "TestkitServiceAdminRotateAppSecretBody": {
+    "TestkitServiceAdminRotateTenantConfigSecretBody": {
       "type": "object"
-    },
-    "TestkitServiceAdminUpdateAppBody": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "disabled": {
-          "type": "boolean"
-        },
-        "bucketId": {
-          "type": "string",
-          "format": "int64",
-          "description": "bucket_id 0 rebinds the app to the default bucket."
-        }
-      },
-      "description": "AdminUpdateAppRequest edits mutable fields; app_key and key_prefix are\nimmutable (objects already live under the prefix). Absent optional fields\nkeep their current values. bucket changes only affect new uploads."
     },
     "TestkitServiceAdminUpdateProviderBody": {
       "type": "object",
@@ -8233,6 +8218,23 @@
         }
       },
       "description": "AdminUpdateProviderRequest edits a provider. name and vendor are\nimmutable. Credential fields are optional: absent = keep current\n(edit endpoint/disabled without re-entering keys); present = replace."
+    },
+    "TestkitServiceAdminUpdateTenantConfigBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "bucketId": {
+          "type": "string",
+          "format": "int64",
+          "description": "bucket_id 0 rebinds the row to the default bucket."
+        }
+      },
+      "description": "AdminUpdateTenantConfigRequest edits mutable fields; the row's identity\nand key_prefix are immutable (objects already live under the prefix).\nAbsent optional fields keep their current values. bucket changes only\naffect new uploads."
     },
     "TestkitServiceAdminUpsertBucketBody": {
       "type": "object",
@@ -9290,44 +9292,6 @@
         }
       }
     },
-    "v1AdminCreateAppRequest": {
-      "type": "object",
-      "properties": {
-        "appKey": {
-          "type": "string",
-          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
-        },
-        "name": {
-          "type": "string"
-        },
-        "keyPrefix": {
-          "type": "string",
-          "description": "key_prefix namespaces the app's objects; globally unique, immutable,\nmust end with '/'."
-        },
-        "bucketId": {
-          "type": "string",
-          "format": "int64",
-          "description": "bucket_id: 0 = the platform default bucket."
-        },
-        "tenantKey": {
-          "type": "string",
-          "description": "tenant_key optionally maps the app to a tenant (phase ③). Empty = the\napp_key literal (the legacy→tenant fallback value). Unique across apps."
-        }
-      },
-      "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). The app_secret is\nalso echoed on every read of StorageAppInfo (internal-trust posture)."
-    },
-    "v1AdminCreateAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1StorageAppInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret convenience echo (also visible via AdminListApps/GetApp)."
-        }
-      }
-    },
     "v1AdminCreateProviderRequest": {
       "type": "object",
       "properties": {
@@ -9394,6 +9358,40 @@
         "bytesReleased": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "v1AdminEnsureTenantConfigRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "keyPrefix": {
+          "type": "string",
+          "description": "key_prefix namespaces the row's objects; globally unique, immutable,\nmust end with '/'. Ignored when the tenant already has a row."
+        },
+        "bucketId": {
+          "type": "string",
+          "format": "int64",
+          "description": "bucket_id: 0 = the platform default bucket. Ignored when the tenant\nalready has a row."
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key; the PLATFORM cross-view needs\nit explicit — when empty there the server-minted app key literal is\nthe legacy→tenant fallback value. Unique across rows."
+        }
+      },
+      "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable) and the\napp_secret is echoed on every read of StorageTenantConfigInfo\n(internal-trust posture)."
+    },
+    "v1AdminEnsureTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1StorageTenantConfigInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via\nAdminListTenantConfigs/AdminGetTenantConfig)."
         }
       }
     },
@@ -9464,14 +9462,6 @@
       },
       "description": "AdminFileInfo is the admin-facing file entity (adds provider/bucket/object_key/\nobject_id internal-location fields absent from the user view)."
     },
-    "v1AdminGetAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1StorageAppInfo"
-        }
-      }
-    },
     "v1AdminGetSettingsResponse": {
       "type": "object",
       "properties": {
@@ -9526,15 +9516,11 @@
         }
       }
     },
-    "v1AdminListAppsResponse": {
+    "v1AdminGetTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "apps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1StorageAppInfo"
-          }
+        "config": {
+          "$ref": "#/definitions/v1StorageTenantConfigInfo"
         }
       }
     },
@@ -9600,15 +9586,27 @@
         }
       }
     },
-    "v1AdminRotateAppSecretResponse": {
+    "v1AdminListTenantConfigsResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1StorageAppInfo"
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1StorageTenantConfigInfo"
+          }
+        }
+      }
+    },
+    "v1AdminRotateTenantConfigSecretResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1StorageTenantConfigInfo"
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via AdminListApps/GetApp)."
+          "description": "app_secret convenience echo (also visible via\nAdminListTenantConfigs/AdminGetTenantConfig)."
         }
       }
     },
@@ -9661,14 +9659,6 @@
         }
       }
     },
-    "v1AdminUpdateAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1StorageAppInfo"
-        }
-      }
-    },
     "v1AdminUpdateProviderResponse": {
       "type": "object",
       "properties": {
@@ -9695,6 +9685,14 @@
       "properties": {
         "settings": {
           "$ref": "#/definitions/v1StorageSettings"
+        }
+      }
+    },
+    "v1AdminUpdateTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1StorageTenantConfigInfo"
         }
       }
     },
@@ -14089,7 +14087,21 @@
       "default": "SORT_FIELD_UNSPECIFIED",
       "description": "SortField controls list ordering."
     },
-    "v1StorageAppInfo": {
+    "v1StorageSettings": {
+      "type": "object",
+      "properties": {
+        "defaultBucket": {
+          "type": "string",
+          "description": "default_bucket receives uploads that do not specify a bucket."
+        },
+        "publicBucket": {
+          "type": "string",
+          "description": "public_bucket receives visibility=PUBLIC uploads; empty = PUBLIC\nuploads are rejected."
+        }
+      },
+      "description": "StorageSettings is the runtime-editable service-level settings row\n(moved out of YAML config; managed via AdminGet/UpdateSettings)."
+    },
+    "v1StorageTenantConfigInfo": {
       "type": "object",
       "properties": {
         "id": {
@@ -14133,21 +14145,7 @@
           "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties. New tenants first seen on the\ntrusted path are lazily created with key_prefix \"{tenant_key}/\"."
         }
       },
-      "description": "StorageAppInfo is one calling application of the storage platform. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
-    },
-    "v1StorageSettings": {
-      "type": "object",
-      "properties": {
-        "defaultBucket": {
-          "type": "string",
-          "description": "default_bucket receives uploads that do not specify a bucket."
-        },
-        "publicBucket": {
-          "type": "string",
-          "description": "public_bucket receives visibility=PUBLIC uploads; empty = PUBLIC\nuploads are rejected."
-        }
-      },
-      "description": "StorageSettings is the runtime-editable service-level settings row\n(moved out of YAML config; managed via AdminGet/UpdateSettings)."
+      "description": "StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nStorageAppInfo). The row keeps its calling-application identity for the\ndata plane. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
     },
     "v1TelemetrySigningKeyInfo": {
       "type": "object",

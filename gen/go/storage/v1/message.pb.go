@@ -1298,13 +1298,15 @@ func (x *BucketInfo) GetCdn() *CDNConfig {
 	return nil
 }
 
-// StorageAppInfo is one calling application of the storage platform. Data
+// StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
+// StorageAppInfo). The row keeps its calling-application identity for the
+// data plane. Data
 // isolation is by key_prefix: every object an app writes lives under its
 // prefix (within the app's bucket, or the default bucket when bucket_id=0);
 // PUBLIC uploads land in the public bucket but keep the same prefix. The
 // prefix is the dedup domain — identical content under different prefixes is
 // stored (and deduplicated) independently.
-type StorageAppInfo struct {
+type StorageTenantConfigInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// app_key identifies the app on every data-plane call (x-app-key metadata);
@@ -1335,20 +1337,20 @@ type StorageAppInfo struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StorageAppInfo) Reset() {
-	*x = StorageAppInfo{}
+func (x *StorageTenantConfigInfo) Reset() {
+	*x = StorageTenantConfigInfo{}
 	mi := &file_storage_v1_message_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StorageAppInfo) String() string {
+func (x *StorageTenantConfigInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StorageAppInfo) ProtoMessage() {}
+func (*StorageTenantConfigInfo) ProtoMessage() {}
 
-func (x *StorageAppInfo) ProtoReflect() protoreflect.Message {
+func (x *StorageTenantConfigInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_message_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1360,75 +1362,75 @@ func (x *StorageAppInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StorageAppInfo.ProtoReflect.Descriptor instead.
-func (*StorageAppInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use StorageTenantConfigInfo.ProtoReflect.Descriptor instead.
+func (*StorageTenantConfigInfo) Descriptor() ([]byte, []int) {
 	return file_storage_v1_message_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *StorageAppInfo) GetId() int64 {
+func (x *StorageTenantConfigInfo) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *StorageAppInfo) GetAppKey() string {
+func (x *StorageTenantConfigInfo) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
 	}
 	return ""
 }
 
-func (x *StorageAppInfo) GetName() string {
+func (x *StorageTenantConfigInfo) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *StorageAppInfo) GetKeyPrefix() string {
+func (x *StorageTenantConfigInfo) GetKeyPrefix() string {
 	if x != nil {
 		return x.KeyPrefix
 	}
 	return ""
 }
 
-func (x *StorageAppInfo) GetBucketId() int64 {
+func (x *StorageTenantConfigInfo) GetBucketId() int64 {
 	if x != nil {
 		return x.BucketId
 	}
 	return 0
 }
 
-func (x *StorageAppInfo) GetDisabled() bool {
+func (x *StorageTenantConfigInfo) GetDisabled() bool {
 	if x != nil {
 		return x.Disabled
 	}
 	return false
 }
 
-func (x *StorageAppInfo) GetCreatedAt() int64 {
+func (x *StorageTenantConfigInfo) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return 0
 }
 
-func (x *StorageAppInfo) GetUpdatedAt() int64 {
+func (x *StorageTenantConfigInfo) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
 	return 0
 }
 
-func (x *StorageAppInfo) GetAppSecret() string {
+func (x *StorageTenantConfigInfo) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-func (x *StorageAppInfo) GetTenantKey() string {
+func (x *StorageTenantConfigInfo) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
@@ -1844,8 +1846,8 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\x03acl\x18\x04 \x01(\x0e2\x15.storage.v1.BucketACLR\x03acl\x12*\n" +
 	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12'\n" +
 	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdnJ\x04\b\x03\x10\x04R\n" +
-	"key_prefix\"\xa1\x02\n" +
-	"\x0eStorageAppInfo\x12\x0e\n" +
+	"key_prefix\"\xaa\x02\n" +
+	"\x17StorageTenantConfigInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1d\n" +
@@ -1907,37 +1909,37 @@ func file_storage_v1_message_proto_rawDescGZIP() []byte {
 var file_storage_v1_message_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_storage_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_storage_v1_message_proto_goTypes = []any{
-	(ImageProcessOp_Type)(0),     // 0: storage.v1.ImageProcessOp.Type
-	(*Owner)(nil),                // 1: storage.v1.Owner
-	(*UploadFileMeta)(nil),       // 2: storage.v1.UploadFileMeta
-	(*UploadCredentialItem)(nil), // 3: storage.v1.UploadCredentialItem
-	(*UploadTokenInfo)(nil),      // 4: storage.v1.UploadTokenInfo
-	(*ItemError)(nil),            // 5: storage.v1.ItemError
-	(*ImageProcessOp)(nil),       // 6: storage.v1.ImageProcessOp
-	(*QuotaInfo)(nil),            // 7: storage.v1.QuotaInfo
-	(*UserFileInfo)(nil),         // 8: storage.v1.UserFileInfo
-	(*AdminFileInfo)(nil),        // 9: storage.v1.AdminFileInfo
-	(*OwnerStats)(nil),           // 10: storage.v1.OwnerStats
-	(*ProviderStats)(nil),        // 11: storage.v1.ProviderStats
-	(*BucketStats)(nil),          // 12: storage.v1.BucketStats
-	(*ProviderInfo)(nil),         // 13: storage.v1.ProviderInfo
-	(*BucketInfo)(nil),           // 14: storage.v1.BucketInfo
-	(*StorageAppInfo)(nil),       // 15: storage.v1.StorageAppInfo
-	(*CDNConfig)(nil),            // 16: storage.v1.CDNConfig
-	(*StorageSettings)(nil),      // 17: storage.v1.StorageSettings
-	(*AuditLogEntry)(nil),        // 18: storage.v1.AuditLogEntry
-	nil,                          // 19: storage.v1.UploadFileMeta.MetadataEntry
-	nil,                          // 20: storage.v1.UserFileInfo.MetadataEntry
-	nil,                          // 21: storage.v1.AdminFileInfo.MetadataEntry
-	(OwnerType)(0),               // 22: storage.v1.OwnerType
-	(ImageFormat)(0),             // 23: storage.v1.ImageFormat
-	(ImageResizeMode)(0),         // 24: storage.v1.ImageResizeMode
-	(Vendor)(0),                  // 25: storage.v1.Vendor
-	(BucketACL)(0),               // 26: storage.v1.BucketACL
-	(AuditAction)(0),             // 27: storage.v1.AuditAction
-	(AuditLogTargetType)(0),      // 28: storage.v1.AuditLogTargetType
-	(*structpb.Struct)(nil),      // 29: google.protobuf.Struct
-	(AuditLogStatus)(0),          // 30: storage.v1.AuditLogStatus
+	(ImageProcessOp_Type)(0),        // 0: storage.v1.ImageProcessOp.Type
+	(*Owner)(nil),                   // 1: storage.v1.Owner
+	(*UploadFileMeta)(nil),          // 2: storage.v1.UploadFileMeta
+	(*UploadCredentialItem)(nil),    // 3: storage.v1.UploadCredentialItem
+	(*UploadTokenInfo)(nil),         // 4: storage.v1.UploadTokenInfo
+	(*ItemError)(nil),               // 5: storage.v1.ItemError
+	(*ImageProcessOp)(nil),          // 6: storage.v1.ImageProcessOp
+	(*QuotaInfo)(nil),               // 7: storage.v1.QuotaInfo
+	(*UserFileInfo)(nil),            // 8: storage.v1.UserFileInfo
+	(*AdminFileInfo)(nil),           // 9: storage.v1.AdminFileInfo
+	(*OwnerStats)(nil),              // 10: storage.v1.OwnerStats
+	(*ProviderStats)(nil),           // 11: storage.v1.ProviderStats
+	(*BucketStats)(nil),             // 12: storage.v1.BucketStats
+	(*ProviderInfo)(nil),            // 13: storage.v1.ProviderInfo
+	(*BucketInfo)(nil),              // 14: storage.v1.BucketInfo
+	(*StorageTenantConfigInfo)(nil), // 15: storage.v1.StorageTenantConfigInfo
+	(*CDNConfig)(nil),               // 16: storage.v1.CDNConfig
+	(*StorageSettings)(nil),         // 17: storage.v1.StorageSettings
+	(*AuditLogEntry)(nil),           // 18: storage.v1.AuditLogEntry
+	nil,                             // 19: storage.v1.UploadFileMeta.MetadataEntry
+	nil,                             // 20: storage.v1.UserFileInfo.MetadataEntry
+	nil,                             // 21: storage.v1.AdminFileInfo.MetadataEntry
+	(OwnerType)(0),                  // 22: storage.v1.OwnerType
+	(ImageFormat)(0),                // 23: storage.v1.ImageFormat
+	(ImageResizeMode)(0),            // 24: storage.v1.ImageResizeMode
+	(Vendor)(0),                     // 25: storage.v1.Vendor
+	(BucketACL)(0),                  // 26: storage.v1.BucketACL
+	(AuditAction)(0),                // 27: storage.v1.AuditAction
+	(AuditLogTargetType)(0),         // 28: storage.v1.AuditLogTargetType
+	(*structpb.Struct)(nil),         // 29: google.protobuf.Struct
+	(AuditLogStatus)(0),             // 30: storage.v1.AuditLogStatus
 }
 var file_storage_v1_message_proto_depIdxs = []int32{
 	22, // 0: storage.v1.Owner.owner_type:type_name -> storage.v1.OwnerType

@@ -3227,30 +3227,30 @@ func local_request_TestkitService_AdminGetSettings_0(ctx context.Context, marsha
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminListApps_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminListTenantConfigs_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminListAppsRequest
+		protoReq storagev1.AdminListTenantConfigsRequest
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminListApps(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminListTenantConfigs(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminListApps_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminListTenantConfigs_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminListAppsRequest
+		protoReq storagev1.AdminListTenantConfigsRequest
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.AdminListApps(ctx, &protoReq)
+	msg, err := server.AdminListTenantConfigs(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminCreateApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminEnsureTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminCreateAppRequest
+		protoReq storagev1.AdminEnsureTenantConfigRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -3259,187 +3259,187 @@ func request_TestkitService_AdminCreateApp_0(ctx context.Context, marshaler runt
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminCreateApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminEnsureTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminCreateApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminEnsureTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminCreateAppRequest
+		protoReq storagev1.AdminEnsureTenantConfigRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.AdminCreateApp(ctx, &protoReq)
+	msg, err := server.AdminEnsureTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminGetApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminGetTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminGetAppRequest
+		protoReq storagev1.AdminGetTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminGetApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminGetTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminGetApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminGetTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminGetAppRequest
+		protoReq storagev1.AdminGetTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
-	msg, err := server.AdminGetApp(ctx, &protoReq)
+	msg, err := server.AdminGetTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminUpdateApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminUpdateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminUpdateAppRequest
+		protoReq storagev1.AdminUpdateTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminUpdateApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminUpdateTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminUpdateApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminUpdateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminUpdateAppRequest
+		protoReq storagev1.AdminUpdateTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
-	msg, err := server.AdminUpdateApp(ctx, &protoReq)
+	msg, err := server.AdminUpdateTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminRotateAppSecret_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminRotateTenantConfigSecret_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminRotateAppSecretRequest
+		protoReq storagev1.AdminRotateTenantConfigSecretRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminRotateAppSecret(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminRotateTenantConfigSecret(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminRotateAppSecret_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminRotateTenantConfigSecret_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminRotateAppSecretRequest
+		protoReq storagev1.AdminRotateTenantConfigSecretRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
-	msg, err := server.AdminRotateAppSecret(ctx, &protoReq)
+	msg, err := server.AdminRotateTenantConfigSecret(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_AdminDeleteApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_AdminDeleteTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminDeleteAppRequest
+		protoReq storagev1.AdminDeleteTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.AdminDeleteApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AdminDeleteTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_AdminDeleteApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_AdminDeleteTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq storagev1.AdminDeleteAppRequest
+		protoReq storagev1.AdminDeleteTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
-	msg, err := server.AdminDeleteApp(ctx, &protoReq)
+	msg, err := server.AdminDeleteTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -9310,125 +9310,125 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 		forward_TestkitService_AdminGetSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_AdminListApps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_AdminListTenantConfigs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminListApps", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminListTenantConfigs", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminListApps_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminListTenantConfigs_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminListApps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminListTenantConfigs_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_AdminCreateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_AdminEnsureTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminCreateApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminEnsureTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs:ensure"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminCreateApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminEnsureTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminCreateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminEnsureTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_AdminGetApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_AdminGetTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminGetApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminGetTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminGetApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminGetTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminGetApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminGetTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminUpdateApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminUpdateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminUpdateApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminUpdateTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminUpdateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminUpdateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_AdminRotateAppSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_AdminRotateTenantConfigSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminRotateTenantConfigSecret", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminRotateAppSecret_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminRotateTenantConfigSecret_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminRotateAppSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminRotateTenantConfigSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodDelete, pattern_TestkitService_AdminDeleteApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodDelete, pattern_TestkitService_AdminDeleteTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminDeleteApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminDeleteTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_AdminDeleteApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_AdminDeleteTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminDeleteApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminDeleteTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -13180,107 +13180,107 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		}
 		forward_TestkitService_AdminGetSettings_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_AdminListApps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_AdminListTenantConfigs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminListApps", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminListTenantConfigs", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminListApps_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminListTenantConfigs_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminListApps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminListTenantConfigs_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_AdminCreateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_AdminEnsureTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminCreateApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminEnsureTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs:ensure"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminCreateApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminEnsureTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminCreateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminEnsureTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_AdminGetApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_AdminGetTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminGetApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminGetTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminGetApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminGetTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminGetApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminGetTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminUpdateApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminUpdateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminUpdateApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminUpdateTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminUpdateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminUpdateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_AdminRotateAppSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_AdminRotateTenantConfigSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminRotateTenantConfigSecret", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminRotateAppSecret_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminRotateTenantConfigSecret_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminRotateAppSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminRotateTenantConfigSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodDelete, pattern_TestkitService_AdminDeleteApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodDelete, pattern_TestkitService_AdminDeleteTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminDeleteApp", runtime.WithHTTPPathPattern("/api/v1/admin/storage/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/AdminDeleteTenantConfig", runtime.WithHTTPPathPattern("/api/v1/admin/storage/tenant-configs/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_AdminDeleteApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_AdminDeleteTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_AdminDeleteApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_AdminDeleteTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPut, pattern_TestkitService_AdminUpdateSettings_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -15229,12 +15229,12 @@ var (
 	pattern_TestkitService_AdminUpsertBucket_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
 	pattern_TestkitService_AdminDeleteBucket_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
 	pattern_TestkitService_AdminGetSettings_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
-	pattern_TestkitService_AdminListApps_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
-	pattern_TestkitService_AdminCreateApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
-	pattern_TestkitService_AdminGetApp_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
-	pattern_TestkitService_AdminUpdateApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
-	pattern_TestkitService_AdminRotateAppSecret_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, "rotateSecret"))
-	pattern_TestkitService_AdminDeleteApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
+	pattern_TestkitService_AdminListTenantConfigs_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "tenant-configs"}, ""))
+	pattern_TestkitService_AdminEnsureTenantConfig_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "tenant-configs"}, "ensure"))
+	pattern_TestkitService_AdminGetTenantConfig_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "tenant-configs", "tenant_key"}, ""))
+	pattern_TestkitService_AdminUpdateTenantConfig_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "tenant-configs", "tenant_key"}, ""))
+	pattern_TestkitService_AdminRotateTenantConfigSecret_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "tenant-configs", "tenant_key"}, "rotateSecret"))
+	pattern_TestkitService_AdminDeleteTenantConfig_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "tenant-configs", "tenant_key"}, ""))
 	pattern_TestkitService_AdminUpdateSettings_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
 	pattern_TestkitService_AdminSoftDeleteOwnerFiles_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "softDeleteFiles"))
 	pattern_TestkitService_AdminDeleteOwner_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "delete"))
@@ -15437,12 +15437,12 @@ var (
 	forward_TestkitService_AdminUpsertBucket_0               = runtime.ForwardResponseMessage
 	forward_TestkitService_AdminDeleteBucket_0               = runtime.ForwardResponseMessage
 	forward_TestkitService_AdminGetSettings_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListApps_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminCreateApp_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetApp_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminUpdateApp_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminRotateAppSecret_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteApp_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListTenantConfigs_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminEnsureTenantConfig_0         = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetTenantConfig_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminUpdateTenantConfig_0         = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminRotateTenantConfigSecret_0   = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteTenantConfig_0         = runtime.ForwardResponseMessage
 	forward_TestkitService_AdminUpdateSettings_0             = runtime.ForwardResponseMessage
 	forward_TestkitService_AdminSoftDeleteOwnerFiles_0       = runtime.ForwardResponseMessage
 	forward_TestkitService_AdminDeleteOwner_0                = runtime.ForwardResponseMessage

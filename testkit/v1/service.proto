@@ -468,34 +468,35 @@ service TestkitService {
   rpc AdminGetSettings(storage.v1.AdminGetSettingsRequest) returns (storage.v1.AdminGetSettingsResponse) {
     option (google.api.http) = {get: "/api/v1/admin/storage/settings"};
   }
-  // App management (calling applications of the storage platform;
-  // 1:1 forwards to storage-service admin RPCs).
-  rpc AdminListApps(storage.v1.AdminListAppsRequest) returns (storage.v1.AdminListAppsResponse) {
-    option (google.api.http) = {get: "/api/v1/admin/storage/apps"};
+  // Tenant-config management (one config row per tenant of the storage
+  // platform; 1:1 forwards to storage-service admin RPCs — phase ④ T6
+  // rename of the apps forwards).
+  rpc AdminListTenantConfigs(storage.v1.AdminListTenantConfigsRequest) returns (storage.v1.AdminListTenantConfigsResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/tenant-configs"};
   }
-  rpc AdminCreateApp(storage.v1.AdminCreateAppRequest) returns (storage.v1.AdminCreateAppResponse) {
+  rpc AdminEnsureTenantConfig(storage.v1.AdminEnsureTenantConfigRequest) returns (storage.v1.AdminEnsureTenantConfigResponse) {
     option (google.api.http) = {
-      post: "/api/v1/admin/storage/apps"
+      post: "/api/v1/admin/storage/tenant-configs:ensure"
       body: "*"
     };
   }
-  rpc AdminGetApp(storage.v1.AdminGetAppRequest) returns (storage.v1.AdminGetAppResponse) {
-    option (google.api.http) = {get: "/api/v1/admin/storage/apps/{app_key}"};
+  rpc AdminGetTenantConfig(storage.v1.AdminGetTenantConfigRequest) returns (storage.v1.AdminGetTenantConfigResponse) {
+    option (google.api.http) = {get: "/api/v1/admin/storage/tenant-configs/{tenant_key}"};
   }
-  rpc AdminUpdateApp(storage.v1.AdminUpdateAppRequest) returns (storage.v1.AdminUpdateAppResponse) {
+  rpc AdminUpdateTenantConfig(storage.v1.AdminUpdateTenantConfigRequest) returns (storage.v1.AdminUpdateTenantConfigResponse) {
     option (google.api.http) = {
-      put: "/api/v1/admin/storage/apps/{app_key}"
+      put: "/api/v1/admin/storage/tenant-configs/{tenant_key}"
       body: "*"
     };
   }
-  rpc AdminRotateAppSecret(storage.v1.AdminRotateAppSecretRequest) returns (storage.v1.AdminRotateAppSecretResponse) {
+  rpc AdminRotateTenantConfigSecret(storage.v1.AdminRotateTenantConfigSecretRequest) returns (storage.v1.AdminRotateTenantConfigSecretResponse) {
     option (google.api.http) = {
-      post: "/api/v1/admin/storage/apps/{app_key}:rotateSecret"
+      post: "/api/v1/admin/storage/tenant-configs/{tenant_key}:rotateSecret"
       body: "*"
     };
   }
-  rpc AdminDeleteApp(storage.v1.AdminDeleteAppRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/admin/storage/apps/{app_key}"};
+  rpc AdminDeleteTenantConfig(storage.v1.AdminDeleteTenantConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/admin/storage/tenant-configs/{tenant_key}"};
   }
 
   rpc AdminUpdateSettings(storage.v1.AdminUpdateSettingsRequest) returns (storage.v1.AdminUpdateSettingsResponse) {

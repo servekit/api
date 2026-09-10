@@ -23,51 +23,51 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StorageService_Ping_FullMethodName                      = "/storage.v1.StorageService/Ping"
-	StorageService_GenerateUploadURL_FullMethodName         = "/storage.v1.StorageService/GenerateUploadURL"
-	StorageService_GetSTSCredential_FullMethodName          = "/storage.v1.StorageService/GetSTSCredential"
-	StorageService_BatchGetSTSCredential_FullMethodName     = "/storage.v1.StorageService/BatchGetSTSCredential"
-	StorageService_ConfirmUpload_FullMethodName             = "/storage.v1.StorageService/ConfirmUpload"
-	StorageService_CancelUpload_FullMethodName              = "/storage.v1.StorageService/CancelUpload"
-	StorageService_GenerateDownloadURL_FullMethodName       = "/storage.v1.StorageService/GenerateDownloadURL"
-	StorageService_CreateFileLink_FullMethodName            = "/storage.v1.StorageService/CreateFileLink"
-	StorageService_GetFileLinkDownload_FullMethodName       = "/storage.v1.StorageService/GetFileLinkDownload"
-	StorageService_ListMyFiles_FullMethodName               = "/storage.v1.StorageService/ListMyFiles"
-	StorageService_ListMyFilesPaged_FullMethodName          = "/storage.v1.StorageService/ListMyFilesPaged"
-	StorageService_GetMyFile_FullMethodName                 = "/storage.v1.StorageService/GetMyFile"
-	StorageService_UpdateMyFile_FullMethodName              = "/storage.v1.StorageService/UpdateMyFile"
-	StorageService_DeleteMyFile_FullMethodName              = "/storage.v1.StorageService/DeleteMyFile"
-	StorageService_BatchDeleteMyFiles_FullMethodName        = "/storage.v1.StorageService/BatchDeleteMyFiles"
-	StorageService_GenerateProcessURL_FullMethodName        = "/storage.v1.StorageService/GenerateProcessURL"
-	StorageService_GenerateCDNURL_FullMethodName            = "/storage.v1.StorageService/GenerateCDNURL"
-	StorageService_GetMyQuota_FullMethodName                = "/storage.v1.StorageService/GetMyQuota"
-	StorageService_AdminListFiles_FullMethodName            = "/storage.v1.StorageService/AdminListFiles"
-	StorageService_AdminGetFile_FullMethodName              = "/storage.v1.StorageService/AdminGetFile"
-	StorageService_AdminDeleteFile_FullMethodName           = "/storage.v1.StorageService/AdminDeleteFile"
-	StorageService_AdminGetQuota_FullMethodName             = "/storage.v1.StorageService/AdminGetQuota"
-	StorageService_AdminSetQuota_FullMethodName             = "/storage.v1.StorageService/AdminSetQuota"
-	StorageService_AdminGetStats_FullMethodName             = "/storage.v1.StorageService/AdminGetStats"
-	StorageService_AdminListProviders_FullMethodName        = "/storage.v1.StorageService/AdminListProviders"
-	StorageService_AdminListBuckets_FullMethodName          = "/storage.v1.StorageService/AdminListBuckets"
-	StorageService_AdminCreateProvider_FullMethodName       = "/storage.v1.StorageService/AdminCreateProvider"
-	StorageService_AdminUpdateProvider_FullMethodName       = "/storage.v1.StorageService/AdminUpdateProvider"
-	StorageService_AdminDeleteProvider_FullMethodName       = "/storage.v1.StorageService/AdminDeleteProvider"
-	StorageService_AdminUpsertBucket_FullMethodName         = "/storage.v1.StorageService/AdminUpsertBucket"
-	StorageService_AdminDeleteBucket_FullMethodName         = "/storage.v1.StorageService/AdminDeleteBucket"
-	StorageService_AdminGetSettings_FullMethodName          = "/storage.v1.StorageService/AdminGetSettings"
-	StorageService_AdminUpdateSettings_FullMethodName       = "/storage.v1.StorageService/AdminUpdateSettings"
-	StorageService_AdminCreateApp_FullMethodName            = "/storage.v1.StorageService/AdminCreateApp"
-	StorageService_AdminGetApp_FullMethodName               = "/storage.v1.StorageService/AdminGetApp"
-	StorageService_AdminUpdateApp_FullMethodName            = "/storage.v1.StorageService/AdminUpdateApp"
-	StorageService_AdminRotateAppSecret_FullMethodName      = "/storage.v1.StorageService/AdminRotateAppSecret"
-	StorageService_AdminListApps_FullMethodName             = "/storage.v1.StorageService/AdminListApps"
-	StorageService_AdminDeleteApp_FullMethodName            = "/storage.v1.StorageService/AdminDeleteApp"
-	StorageService_AdminSoftDeleteOwnerFiles_FullMethodName = "/storage.v1.StorageService/AdminSoftDeleteOwnerFiles"
-	StorageService_AdminDeleteOwner_FullMethodName          = "/storage.v1.StorageService/AdminDeleteOwner"
-	StorageService_ListMyAuditLogs_FullMethodName           = "/storage.v1.StorageService/ListMyAuditLogs"
-	StorageService_AdminListAuditLogs_FullMethodName        = "/storage.v1.StorageService/AdminListAuditLogs"
-	StorageService_SetOwnerQuota_FullMethodName             = "/storage.v1.StorageService/SetOwnerQuota"
-	StorageService_AddOwnerQuota_FullMethodName             = "/storage.v1.StorageService/AddOwnerQuota"
+	StorageService_Ping_FullMethodName                          = "/storage.v1.StorageService/Ping"
+	StorageService_GenerateUploadURL_FullMethodName             = "/storage.v1.StorageService/GenerateUploadURL"
+	StorageService_GetSTSCredential_FullMethodName              = "/storage.v1.StorageService/GetSTSCredential"
+	StorageService_BatchGetSTSCredential_FullMethodName         = "/storage.v1.StorageService/BatchGetSTSCredential"
+	StorageService_ConfirmUpload_FullMethodName                 = "/storage.v1.StorageService/ConfirmUpload"
+	StorageService_CancelUpload_FullMethodName                  = "/storage.v1.StorageService/CancelUpload"
+	StorageService_GenerateDownloadURL_FullMethodName           = "/storage.v1.StorageService/GenerateDownloadURL"
+	StorageService_CreateFileLink_FullMethodName                = "/storage.v1.StorageService/CreateFileLink"
+	StorageService_GetFileLinkDownload_FullMethodName           = "/storage.v1.StorageService/GetFileLinkDownload"
+	StorageService_ListMyFiles_FullMethodName                   = "/storage.v1.StorageService/ListMyFiles"
+	StorageService_ListMyFilesPaged_FullMethodName              = "/storage.v1.StorageService/ListMyFilesPaged"
+	StorageService_GetMyFile_FullMethodName                     = "/storage.v1.StorageService/GetMyFile"
+	StorageService_UpdateMyFile_FullMethodName                  = "/storage.v1.StorageService/UpdateMyFile"
+	StorageService_DeleteMyFile_FullMethodName                  = "/storage.v1.StorageService/DeleteMyFile"
+	StorageService_BatchDeleteMyFiles_FullMethodName            = "/storage.v1.StorageService/BatchDeleteMyFiles"
+	StorageService_GenerateProcessURL_FullMethodName            = "/storage.v1.StorageService/GenerateProcessURL"
+	StorageService_GenerateCDNURL_FullMethodName                = "/storage.v1.StorageService/GenerateCDNURL"
+	StorageService_GetMyQuota_FullMethodName                    = "/storage.v1.StorageService/GetMyQuota"
+	StorageService_AdminListFiles_FullMethodName                = "/storage.v1.StorageService/AdminListFiles"
+	StorageService_AdminGetFile_FullMethodName                  = "/storage.v1.StorageService/AdminGetFile"
+	StorageService_AdminDeleteFile_FullMethodName               = "/storage.v1.StorageService/AdminDeleteFile"
+	StorageService_AdminGetQuota_FullMethodName                 = "/storage.v1.StorageService/AdminGetQuota"
+	StorageService_AdminSetQuota_FullMethodName                 = "/storage.v1.StorageService/AdminSetQuota"
+	StorageService_AdminGetStats_FullMethodName                 = "/storage.v1.StorageService/AdminGetStats"
+	StorageService_AdminListProviders_FullMethodName            = "/storage.v1.StorageService/AdminListProviders"
+	StorageService_AdminListBuckets_FullMethodName              = "/storage.v1.StorageService/AdminListBuckets"
+	StorageService_AdminCreateProvider_FullMethodName           = "/storage.v1.StorageService/AdminCreateProvider"
+	StorageService_AdminUpdateProvider_FullMethodName           = "/storage.v1.StorageService/AdminUpdateProvider"
+	StorageService_AdminDeleteProvider_FullMethodName           = "/storage.v1.StorageService/AdminDeleteProvider"
+	StorageService_AdminUpsertBucket_FullMethodName             = "/storage.v1.StorageService/AdminUpsertBucket"
+	StorageService_AdminDeleteBucket_FullMethodName             = "/storage.v1.StorageService/AdminDeleteBucket"
+	StorageService_AdminGetSettings_FullMethodName              = "/storage.v1.StorageService/AdminGetSettings"
+	StorageService_AdminUpdateSettings_FullMethodName           = "/storage.v1.StorageService/AdminUpdateSettings"
+	StorageService_AdminEnsureTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminEnsureTenantConfig"
+	StorageService_AdminGetTenantConfig_FullMethodName          = "/storage.v1.StorageService/AdminGetTenantConfig"
+	StorageService_AdminUpdateTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminUpdateTenantConfig"
+	StorageService_AdminRotateTenantConfigSecret_FullMethodName = "/storage.v1.StorageService/AdminRotateTenantConfigSecret"
+	StorageService_AdminListTenantConfigs_FullMethodName        = "/storage.v1.StorageService/AdminListTenantConfigs"
+	StorageService_AdminDeleteTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminDeleteTenantConfig"
+	StorageService_AdminSoftDeleteOwnerFiles_FullMethodName     = "/storage.v1.StorageService/AdminSoftDeleteOwnerFiles"
+	StorageService_AdminDeleteOwner_FullMethodName              = "/storage.v1.StorageService/AdminDeleteOwner"
+	StorageService_ListMyAuditLogs_FullMethodName               = "/storage.v1.StorageService/ListMyAuditLogs"
+	StorageService_AdminListAuditLogs_FullMethodName            = "/storage.v1.StorageService/AdminListAuditLogs"
+	StorageService_SetOwnerQuota_FullMethodName                 = "/storage.v1.StorageService/SetOwnerQuota"
+	StorageService_AddOwnerQuota_FullMethodName                 = "/storage.v1.StorageService/AddOwnerQuota"
 )
 
 // StorageServiceClient is the client API for StorageService service.
@@ -163,18 +163,23 @@ type StorageServiceClient interface {
 	AdminGetSettings(ctx context.Context, in *AdminGetSettingsRequest, opts ...grpc.CallOption) (*AdminGetSettingsResponse, error)
 	// AdminUpdateSettings updates the runtime settings row.
 	AdminUpdateSettings(ctx context.Context, in *AdminUpdateSettingsRequest, opts ...grpc.CallOption) (*AdminUpdateSettingsResponse, error)
-	// AdminCreateApp registers a calling application (secret shown once).
-	AdminCreateApp(ctx context.Context, in *AdminCreateAppRequest, opts ...grpc.CallOption) (*AdminCreateAppResponse, error)
-	// AdminGetApp returns one app by app_key.
-	AdminGetApp(ctx context.Context, in *AdminGetAppRequest, opts ...grpc.CallOption) (*AdminGetAppResponse, error)
-	// AdminUpdateApp edits name/disabled/bucket; app_key and key_prefix are immutable.
-	AdminUpdateApp(ctx context.Context, in *AdminUpdateAppRequest, opts ...grpc.CallOption) (*AdminUpdateAppResponse, error)
-	// AdminRotateAppSecret mints a new secret (shown once).
-	AdminRotateAppSecret(ctx context.Context, in *AdminRotateAppSecretRequest, opts ...grpc.CallOption) (*AdminRotateAppSecretResponse, error)
-	// AdminListApps lists all apps (low cardinality, no paging).
-	AdminListApps(ctx context.Context, in *AdminListAppsRequest, opts ...grpc.CallOption) (*AdminListAppsResponse, error)
-	// AdminDeleteApp soft-deletes an app; data-plane calls fail immediately.
-	AdminDeleteApp(ctx context.Context, in *AdminDeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AdminEnsureTenantConfig idempotently provisions the tenant's config row
+	// (one row per tenant; the row keeps its internal app identity — secret
+	// echoed on every read). Phase ④ T6 rename of AdminCreateApp.
+	AdminEnsureTenantConfig(ctx context.Context, in *AdminEnsureTenantConfigRequest, opts ...grpc.CallOption) (*AdminEnsureTenantConfigResponse, error)
+	// AdminGetTenantConfig returns one tenant config by tenant_key.
+	AdminGetTenantConfig(ctx context.Context, in *AdminGetTenantConfigRequest, opts ...grpc.CallOption) (*AdminGetTenantConfigResponse, error)
+	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
+	// key_prefix are immutable.
+	AdminUpdateTenantConfig(ctx context.Context, in *AdminUpdateTenantConfigRequest, opts ...grpc.CallOption) (*AdminUpdateTenantConfigResponse, error)
+	// AdminRotateTenantConfigSecret mints a new secret (shown once).
+	AdminRotateTenantConfigSecret(ctx context.Context, in *AdminRotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*AdminRotateTenantConfigSecretResponse, error)
+	// AdminListTenantConfigs lists the configs in the caller's scope (low
+	// cardinality, no paging).
+	AdminListTenantConfigs(ctx context.Context, in *AdminListTenantConfigsRequest, opts ...grpc.CallOption) (*AdminListTenantConfigsResponse, error)
+	// AdminDeleteTenantConfig soft-deletes a config; its data-plane calls
+	// fail immediately.
+	AdminDeleteTenantConfig(ctx context.Context, in *AdminDeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
 	AdminSoftDeleteOwnerFiles(ctx context.Context, in *AdminSoftDeleteOwnerFilesRequest, opts ...grpc.CallOption) (*AdminSoftDeleteOwnerFilesResponse, error)
 	// AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
@@ -531,60 +536,60 @@ func (c *storageServiceClient) AdminUpdateSettings(ctx context.Context, in *Admi
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminCreateApp(ctx context.Context, in *AdminCreateAppRequest, opts ...grpc.CallOption) (*AdminCreateAppResponse, error) {
+func (c *storageServiceClient) AdminEnsureTenantConfig(ctx context.Context, in *AdminEnsureTenantConfigRequest, opts ...grpc.CallOption) (*AdminEnsureTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminCreateAppResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminCreateApp_FullMethodName, in, out, cOpts...)
+	out := new(AdminEnsureTenantConfigResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminEnsureTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminGetApp(ctx context.Context, in *AdminGetAppRequest, opts ...grpc.CallOption) (*AdminGetAppResponse, error) {
+func (c *storageServiceClient) AdminGetTenantConfig(ctx context.Context, in *AdminGetTenantConfigRequest, opts ...grpc.CallOption) (*AdminGetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminGetAppResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminGetApp_FullMethodName, in, out, cOpts...)
+	out := new(AdminGetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminGetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminUpdateApp(ctx context.Context, in *AdminUpdateAppRequest, opts ...grpc.CallOption) (*AdminUpdateAppResponse, error) {
+func (c *storageServiceClient) AdminUpdateTenantConfig(ctx context.Context, in *AdminUpdateTenantConfigRequest, opts ...grpc.CallOption) (*AdminUpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminUpdateAppResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminUpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(AdminUpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminUpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminRotateAppSecret(ctx context.Context, in *AdminRotateAppSecretRequest, opts ...grpc.CallOption) (*AdminRotateAppSecretResponse, error) {
+func (c *storageServiceClient) AdminRotateTenantConfigSecret(ctx context.Context, in *AdminRotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*AdminRotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminRotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminRotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(AdminRotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminRotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminListApps(ctx context.Context, in *AdminListAppsRequest, opts ...grpc.CallOption) (*AdminListAppsResponse, error) {
+func (c *storageServiceClient) AdminListTenantConfigs(ctx context.Context, in *AdminListTenantConfigsRequest, opts ...grpc.CallOption) (*AdminListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminListAppsResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminListApps_FullMethodName, in, out, cOpts...)
+	out := new(AdminListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, StorageService_AdminListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminDeleteApp(ctx context.Context, in *AdminDeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *storageServiceClient) AdminDeleteTenantConfig(ctx context.Context, in *AdminDeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, StorageService_AdminDeleteApp_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, StorageService_AdminDeleteTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -744,18 +749,23 @@ type StorageServiceServer interface {
 	AdminGetSettings(context.Context, *AdminGetSettingsRequest) (*AdminGetSettingsResponse, error)
 	// AdminUpdateSettings updates the runtime settings row.
 	AdminUpdateSettings(context.Context, *AdminUpdateSettingsRequest) (*AdminUpdateSettingsResponse, error)
-	// AdminCreateApp registers a calling application (secret shown once).
-	AdminCreateApp(context.Context, *AdminCreateAppRequest) (*AdminCreateAppResponse, error)
-	// AdminGetApp returns one app by app_key.
-	AdminGetApp(context.Context, *AdminGetAppRequest) (*AdminGetAppResponse, error)
-	// AdminUpdateApp edits name/disabled/bucket; app_key and key_prefix are immutable.
-	AdminUpdateApp(context.Context, *AdminUpdateAppRequest) (*AdminUpdateAppResponse, error)
-	// AdminRotateAppSecret mints a new secret (shown once).
-	AdminRotateAppSecret(context.Context, *AdminRotateAppSecretRequest) (*AdminRotateAppSecretResponse, error)
-	// AdminListApps lists all apps (low cardinality, no paging).
-	AdminListApps(context.Context, *AdminListAppsRequest) (*AdminListAppsResponse, error)
-	// AdminDeleteApp soft-deletes an app; data-plane calls fail immediately.
-	AdminDeleteApp(context.Context, *AdminDeleteAppRequest) (*emptypb.Empty, error)
+	// AdminEnsureTenantConfig idempotently provisions the tenant's config row
+	// (one row per tenant; the row keeps its internal app identity — secret
+	// echoed on every read). Phase ④ T6 rename of AdminCreateApp.
+	AdminEnsureTenantConfig(context.Context, *AdminEnsureTenantConfigRequest) (*AdminEnsureTenantConfigResponse, error)
+	// AdminGetTenantConfig returns one tenant config by tenant_key.
+	AdminGetTenantConfig(context.Context, *AdminGetTenantConfigRequest) (*AdminGetTenantConfigResponse, error)
+	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
+	// key_prefix are immutable.
+	AdminUpdateTenantConfig(context.Context, *AdminUpdateTenantConfigRequest) (*AdminUpdateTenantConfigResponse, error)
+	// AdminRotateTenantConfigSecret mints a new secret (shown once).
+	AdminRotateTenantConfigSecret(context.Context, *AdminRotateTenantConfigSecretRequest) (*AdminRotateTenantConfigSecretResponse, error)
+	// AdminListTenantConfigs lists the configs in the caller's scope (low
+	// cardinality, no paging).
+	AdminListTenantConfigs(context.Context, *AdminListTenantConfigsRequest) (*AdminListTenantConfigsResponse, error)
+	// AdminDeleteTenantConfig soft-deletes a config; its data-plane calls
+	// fail immediately.
+	AdminDeleteTenantConfig(context.Context, *AdminDeleteTenantConfigRequest) (*emptypb.Empty, error)
 	// AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
 	AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error)
 	// AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).
@@ -881,23 +891,23 @@ func (UnimplementedStorageServiceServer) AdminGetSettings(context.Context, *Admi
 func (UnimplementedStorageServiceServer) AdminUpdateSettings(context.Context, *AdminUpdateSettingsRequest) (*AdminUpdateSettingsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminUpdateSettings not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminCreateApp(context.Context, *AdminCreateAppRequest) (*AdminCreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminCreateApp not implemented")
+func (UnimplementedStorageServiceServer) AdminEnsureTenantConfig(context.Context, *AdminEnsureTenantConfigRequest) (*AdminEnsureTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminEnsureTenantConfig not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminGetApp(context.Context, *AdminGetAppRequest) (*AdminGetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminGetApp not implemented")
+func (UnimplementedStorageServiceServer) AdminGetTenantConfig(context.Context, *AdminGetTenantConfigRequest) (*AdminGetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetTenantConfig not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminUpdateApp(context.Context, *AdminUpdateAppRequest) (*AdminUpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminUpdateApp not implemented")
+func (UnimplementedStorageServiceServer) AdminUpdateTenantConfig(context.Context, *AdminUpdateTenantConfigRequest) (*AdminUpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateTenantConfig not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminRotateAppSecret(context.Context, *AdminRotateAppSecretRequest) (*AdminRotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminRotateAppSecret not implemented")
+func (UnimplementedStorageServiceServer) AdminRotateTenantConfigSecret(context.Context, *AdminRotateTenantConfigSecretRequest) (*AdminRotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminRotateTenantConfigSecret not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminListApps(context.Context, *AdminListAppsRequest) (*AdminListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminListApps not implemented")
+func (UnimplementedStorageServiceServer) AdminListTenantConfigs(context.Context, *AdminListTenantConfigsRequest) (*AdminListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminListTenantConfigs not implemented")
 }
-func (UnimplementedStorageServiceServer) AdminDeleteApp(context.Context, *AdminDeleteAppRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminDeleteApp not implemented")
+func (UnimplementedStorageServiceServer) AdminDeleteTenantConfig(context.Context, *AdminDeleteTenantConfigRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteTenantConfig not implemented")
 }
 func (UnimplementedStorageServiceServer) AdminSoftDeleteOwnerFiles(context.Context, *AdminSoftDeleteOwnerFilesRequest) (*AdminSoftDeleteOwnerFilesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminSoftDeleteOwnerFiles not implemented")
@@ -1532,110 +1542,110 @@ func _StorageService_AdminUpdateSettings_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminCreateAppRequest)
+func _StorageService_AdminEnsureTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminEnsureTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminCreateApp(ctx, in)
+		return srv.(StorageServiceServer).AdminEnsureTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminCreateApp_FullMethodName,
+		FullMethod: StorageService_AdminEnsureTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminCreateApp(ctx, req.(*AdminCreateAppRequest))
+		return srv.(StorageServiceServer).AdminEnsureTenantConfig(ctx, req.(*AdminEnsureTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminGetAppRequest)
+func _StorageService_AdminGetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminGetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminGetApp(ctx, in)
+		return srv.(StorageServiceServer).AdminGetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminGetApp_FullMethodName,
+		FullMethod: StorageService_AdminGetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminGetApp(ctx, req.(*AdminGetAppRequest))
+		return srv.(StorageServiceServer).AdminGetTenantConfig(ctx, req.(*AdminGetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminUpdateAppRequest)
+func _StorageService_AdminUpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminUpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminUpdateApp(ctx, in)
+		return srv.(StorageServiceServer).AdminUpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminUpdateApp_FullMethodName,
+		FullMethod: StorageService_AdminUpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminUpdateApp(ctx, req.(*AdminUpdateAppRequest))
+		return srv.(StorageServiceServer).AdminUpdateTenantConfig(ctx, req.(*AdminUpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminRotateAppSecretRequest)
+func _StorageService_AdminRotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminRotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminRotateAppSecret(ctx, in)
+		return srv.(StorageServiceServer).AdminRotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminRotateAppSecret_FullMethodName,
+		FullMethod: StorageService_AdminRotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminRotateAppSecret(ctx, req.(*AdminRotateAppSecretRequest))
+		return srv.(StorageServiceServer).AdminRotateTenantConfigSecret(ctx, req.(*AdminRotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminListAppsRequest)
+func _StorageService_AdminListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminListApps(ctx, in)
+		return srv.(StorageServiceServer).AdminListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminListApps_FullMethodName,
+		FullMethod: StorageService_AdminListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminListApps(ctx, req.(*AdminListAppsRequest))
+		return srv.(StorageServiceServer).AdminListTenantConfigs(ctx, req.(*AdminListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminDeleteAppRequest)
+func _StorageService_AdminDeleteTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDeleteTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminDeleteApp(ctx, in)
+		return srv.(StorageServiceServer).AdminDeleteTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StorageService_AdminDeleteApp_FullMethodName,
+		FullMethod: StorageService_AdminDeleteTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminDeleteApp(ctx, req.(*AdminDeleteAppRequest))
+		return srv.(StorageServiceServer).AdminDeleteTenantConfig(ctx, req.(*AdminDeleteTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1888,28 +1898,28 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StorageService_AdminUpdateSettings_Handler,
 		},
 		{
-			MethodName: "AdminCreateApp",
-			Handler:    _StorageService_AdminCreateApp_Handler,
+			MethodName: "AdminEnsureTenantConfig",
+			Handler:    _StorageService_AdminEnsureTenantConfig_Handler,
 		},
 		{
-			MethodName: "AdminGetApp",
-			Handler:    _StorageService_AdminGetApp_Handler,
+			MethodName: "AdminGetTenantConfig",
+			Handler:    _StorageService_AdminGetTenantConfig_Handler,
 		},
 		{
-			MethodName: "AdminUpdateApp",
-			Handler:    _StorageService_AdminUpdateApp_Handler,
+			MethodName: "AdminUpdateTenantConfig",
+			Handler:    _StorageService_AdminUpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "AdminRotateAppSecret",
-			Handler:    _StorageService_AdminRotateAppSecret_Handler,
+			MethodName: "AdminRotateTenantConfigSecret",
+			Handler:    _StorageService_AdminRotateTenantConfigSecret_Handler,
 		},
 		{
-			MethodName: "AdminListApps",
-			Handler:    _StorageService_AdminListApps_Handler,
+			MethodName: "AdminListTenantConfigs",
+			Handler:    _StorageService_AdminListTenantConfigs_Handler,
 		},
 		{
-			MethodName: "AdminDeleteApp",
-			Handler:    _StorageService_AdminDeleteApp_Handler,
+			MethodName: "AdminDeleteTenantConfig",
+			Handler:    _StorageService_AdminDeleteTenantConfig_Handler,
 		},
 		{
 			MethodName: "AdminSoftDeleteOwnerFiles",

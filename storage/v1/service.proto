@@ -119,18 +119,23 @@ service StorageService {
   rpc AdminGetSettings(AdminGetSettingsRequest) returns (AdminGetSettingsResponse);
   // AdminUpdateSettings updates the runtime settings row.
   rpc AdminUpdateSettings(AdminUpdateSettingsRequest) returns (AdminUpdateSettingsResponse);
-  // AdminCreateApp registers a calling application (secret shown once).
-  rpc AdminCreateApp(AdminCreateAppRequest) returns (AdminCreateAppResponse);
-  // AdminGetApp returns one app by app_key.
-  rpc AdminGetApp(AdminGetAppRequest) returns (AdminGetAppResponse);
-  // AdminUpdateApp edits name/disabled/bucket; app_key and key_prefix are immutable.
-  rpc AdminUpdateApp(AdminUpdateAppRequest) returns (AdminUpdateAppResponse);
-  // AdminRotateAppSecret mints a new secret (shown once).
-  rpc AdminRotateAppSecret(AdminRotateAppSecretRequest) returns (AdminRotateAppSecretResponse);
-  // AdminListApps lists all apps (low cardinality, no paging).
-  rpc AdminListApps(AdminListAppsRequest) returns (AdminListAppsResponse);
-  // AdminDeleteApp soft-deletes an app; data-plane calls fail immediately.
-  rpc AdminDeleteApp(AdminDeleteAppRequest) returns (google.protobuf.Empty);
+  // AdminEnsureTenantConfig idempotently provisions the tenant's config row
+  // (one row per tenant; the row keeps its internal app identity — secret
+  // echoed on every read). Phase ④ T6 rename of AdminCreateApp.
+  rpc AdminEnsureTenantConfig(AdminEnsureTenantConfigRequest) returns (AdminEnsureTenantConfigResponse);
+  // AdminGetTenantConfig returns one tenant config by tenant_key.
+  rpc AdminGetTenantConfig(AdminGetTenantConfigRequest) returns (AdminGetTenantConfigResponse);
+  // AdminUpdateTenantConfig edits name/disabled/bucket; identity and
+  // key_prefix are immutable.
+  rpc AdminUpdateTenantConfig(AdminUpdateTenantConfigRequest) returns (AdminUpdateTenantConfigResponse);
+  // AdminRotateTenantConfigSecret mints a new secret (shown once).
+  rpc AdminRotateTenantConfigSecret(AdminRotateTenantConfigSecretRequest) returns (AdminRotateTenantConfigSecretResponse);
+  // AdminListTenantConfigs lists the configs in the caller's scope (low
+  // cardinality, no paging).
+  rpc AdminListTenantConfigs(AdminListTenantConfigsRequest) returns (AdminListTenantConfigsResponse);
+  // AdminDeleteTenantConfig soft-deletes a config; its data-plane calls
+  // fail immediately.
+  rpc AdminDeleteTenantConfig(AdminDeleteTenantConfigRequest) returns (google.protobuf.Empty);
   // AdminSoftDeleteOwnerFiles soft-deletes all files for an owner (admin only).
   rpc AdminSoftDeleteOwnerFiles(AdminSoftDeleteOwnerFilesRequest) returns (AdminSoftDeleteOwnerFilesResponse);
   // AdminDeleteOwner soft-deletes all files and quota for an owner (admin only).

@@ -3568,41 +3568,45 @@ func (x *AdminUpdateSettingsResponse) GetSettings() *StorageSettings {
 	return nil
 }
 
-// AdminCreateAppRequest registers a calling application. app_key empty = the
-// server mints one ("sto_" + 8 base36 chars, immutable). The app_secret is
-// also echoed on every read of StorageAppInfo (internal-trust posture).
-type AdminCreateAppRequest struct {
+// AdminEnsureTenantConfigRequest idempotently provisions the tenant's
+// config row (phase ④ T6 rename of AdminCreateApp): when the tenant
+// already has a live row it is returned as-is (key_prefix/bucket only
+// apply to a fresh create); otherwise a row is created — the internal app
+// identity is minted server-side ("sto_" + 8 base36, immutable) and the
+// app_secret is echoed on every read of StorageTenantConfigInfo
+// (internal-trust posture).
+type AdminEnsureTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key pattern: lowercase letter followed by lowercase alphanumerics
-	// and dashes. Optional; empty = server-generated.
-	AppKey string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	Name   string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// key_prefix namespaces the app's objects; globally unique, immutable,
-	// must end with '/'.
+	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// key_prefix namespaces the row's objects; globally unique, immutable,
+	// must end with '/'. Ignored when the tenant already has a row.
 	KeyPrefix string `protobuf:"bytes,3,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
-	// bucket_id: 0 = the platform default bucket.
+	// bucket_id: 0 = the platform default bucket. Ignored when the tenant
+	// already has a row.
 	BucketId int64 `protobuf:"varint,4,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
-	// tenant_key optionally maps the app to a tenant (phase ③). Empty = the
-	// app_key literal (the legacy→tenant fallback value). Unique across apps.
+	// tenant_key names the tenant this config row belongs to. A scoped
+	// caller is clamped to the injected key; the PLATFORM cross-view needs
+	// it explicit — when empty there the server-minted app key literal is
+	// the legacy→tenant fallback value. Unique across rows.
 	TenantKey     string `protobuf:"bytes,5,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminCreateAppRequest) Reset() {
-	*x = AdminCreateAppRequest{}
+func (x *AdminEnsureTenantConfigRequest) Reset() {
+	*x = AdminEnsureTenantConfigRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminCreateAppRequest) String() string {
+func (x *AdminEnsureTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminCreateAppRequest) ProtoMessage() {}
+func (*AdminEnsureTenantConfigRequest) ProtoMessage() {}
 
-func (x *AdminCreateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminEnsureTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3614,69 +3618,63 @@ func (x *AdminCreateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminCreateAppRequest.ProtoReflect.Descriptor instead.
-func (*AdminCreateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminEnsureTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*AdminEnsureTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{51}
 }
 
-func (x *AdminCreateAppRequest) GetAppKey() string {
-	if x != nil {
-		return x.AppKey
-	}
-	return ""
-}
-
-func (x *AdminCreateAppRequest) GetName() string {
+func (x *AdminEnsureTenantConfigRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *AdminCreateAppRequest) GetKeyPrefix() string {
+func (x *AdminEnsureTenantConfigRequest) GetKeyPrefix() string {
 	if x != nil {
 		return x.KeyPrefix
 	}
 	return ""
 }
 
-func (x *AdminCreateAppRequest) GetBucketId() int64 {
+func (x *AdminEnsureTenantConfigRequest) GetBucketId() int64 {
 	if x != nil {
 		return x.BucketId
 	}
 	return 0
 }
 
-func (x *AdminCreateAppRequest) GetTenantKey() string {
+func (x *AdminEnsureTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
 	return ""
 }
 
-type AdminCreateAppResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via AdminListApps/GetApp).
+type AdminEnsureTenantConfigResponse struct {
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret convenience echo (also visible via
+	// AdminListTenantConfigs/AdminGetTenantConfig).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminCreateAppResponse) Reset() {
-	*x = AdminCreateAppResponse{}
+func (x *AdminEnsureTenantConfigResponse) Reset() {
+	*x = AdminEnsureTenantConfigResponse{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminCreateAppResponse) String() string {
+func (x *AdminEnsureTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminCreateAppResponse) ProtoMessage() {}
+func (*AdminEnsureTenantConfigResponse) ProtoMessage() {}
 
-func (x *AdminCreateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *AdminEnsureTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3688,46 +3686,46 @@ func (x *AdminCreateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminCreateAppResponse.ProtoReflect.Descriptor instead.
-func (*AdminCreateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminEnsureTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*AdminEnsureTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{52}
 }
 
-func (x *AdminCreateAppResponse) GetApp() *StorageAppInfo {
+func (x *AdminEnsureTenantConfigResponse) GetConfig() *StorageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *AdminCreateAppResponse) GetAppSecret() string {
+func (x *AdminEnsureTenantConfigResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-type AdminGetAppRequest struct {
+type AdminGetTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminGetAppRequest) Reset() {
-	*x = AdminGetAppRequest{}
+func (x *AdminGetTenantConfigRequest) Reset() {
+	*x = AdminGetTenantConfigRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminGetAppRequest) String() string {
+func (x *AdminGetTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminGetAppRequest) ProtoMessage() {}
+func (*AdminGetTenantConfigRequest) ProtoMessage() {}
 
-func (x *AdminGetAppRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminGetTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3739,39 +3737,39 @@ func (x *AdminGetAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminGetAppRequest.ProtoReflect.Descriptor instead.
-func (*AdminGetAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminGetTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*AdminGetTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{53}
 }
 
-func (x *AdminGetAppRequest) GetAppKey() string {
+func (x *AdminGetTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type AdminGetAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type AdminGetTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminGetAppResponse) Reset() {
-	*x = AdminGetAppResponse{}
+func (x *AdminGetTenantConfigResponse) Reset() {
+	*x = AdminGetTenantConfigResponse{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminGetAppResponse) String() string {
+func (x *AdminGetTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminGetAppResponse) ProtoMessage() {}
+func (*AdminGetTenantConfigResponse) ProtoMessage() {}
 
-func (x *AdminGetAppResponse) ProtoReflect() protoreflect.Message {
+func (x *AdminGetTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3783,46 +3781,47 @@ func (x *AdminGetAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminGetAppResponse.ProtoReflect.Descriptor instead.
-func (*AdminGetAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminGetTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*AdminGetTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{54}
 }
 
-func (x *AdminGetAppResponse) GetApp() *StorageAppInfo {
+func (x *AdminGetTenantConfigResponse) GetConfig() *StorageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-// AdminUpdateAppRequest edits mutable fields; app_key and key_prefix are
-// immutable (objects already live under the prefix). Absent optional fields
-// keep their current values. bucket changes only affect new uploads.
-type AdminUpdateAppRequest struct {
-	state    protoimpl.MessageState `protogen:"open.v1"`
-	AppKey   string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	Name     *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Disabled *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
-	// bucket_id 0 rebinds the app to the default bucket.
+// AdminUpdateTenantConfigRequest edits mutable fields; the row's identity
+// and key_prefix are immutable (objects already live under the prefix).
+// Absent optional fields keep their current values. bucket changes only
+// affect new uploads.
+type AdminUpdateTenantConfigRequest struct {
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	TenantKey string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	Name      *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Disabled  *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
+	// bucket_id 0 rebinds the row to the default bucket.
 	BucketId      *int64 `protobuf:"varint,4,opt,name=bucket_id,json=bucketId,proto3,oneof" json:"bucket_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminUpdateAppRequest) Reset() {
-	*x = AdminUpdateAppRequest{}
+func (x *AdminUpdateTenantConfigRequest) Reset() {
+	*x = AdminUpdateTenantConfigRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminUpdateAppRequest) String() string {
+func (x *AdminUpdateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminUpdateAppRequest) ProtoMessage() {}
+func (*AdminUpdateTenantConfigRequest) ProtoMessage() {}
 
-func (x *AdminUpdateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminUpdateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3834,60 +3833,60 @@ func (x *AdminUpdateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminUpdateAppRequest.ProtoReflect.Descriptor instead.
-func (*AdminUpdateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminUpdateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*AdminUpdateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{55}
 }
 
-func (x *AdminUpdateAppRequest) GetAppKey() string {
+func (x *AdminUpdateTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-func (x *AdminUpdateAppRequest) GetName() string {
+func (x *AdminUpdateTenantConfigRequest) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *AdminUpdateAppRequest) GetDisabled() bool {
+func (x *AdminUpdateTenantConfigRequest) GetDisabled() bool {
 	if x != nil && x.Disabled != nil {
 		return *x.Disabled
 	}
 	return false
 }
 
-func (x *AdminUpdateAppRequest) GetBucketId() int64 {
+func (x *AdminUpdateTenantConfigRequest) GetBucketId() int64 {
 	if x != nil && x.BucketId != nil {
 		return *x.BucketId
 	}
 	return 0
 }
 
-type AdminUpdateAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type AdminUpdateTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminUpdateAppResponse) Reset() {
-	*x = AdminUpdateAppResponse{}
+func (x *AdminUpdateTenantConfigResponse) Reset() {
+	*x = AdminUpdateTenantConfigResponse{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminUpdateAppResponse) String() string {
+func (x *AdminUpdateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminUpdateAppResponse) ProtoMessage() {}
+func (*AdminUpdateTenantConfigResponse) ProtoMessage() {}
 
-func (x *AdminUpdateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *AdminUpdateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3899,39 +3898,39 @@ func (x *AdminUpdateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminUpdateAppResponse.ProtoReflect.Descriptor instead.
-func (*AdminUpdateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminUpdateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*AdminUpdateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{56}
 }
 
-func (x *AdminUpdateAppResponse) GetApp() *StorageAppInfo {
+func (x *AdminUpdateTenantConfigResponse) GetConfig() *StorageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-type AdminRotateAppSecretRequest struct {
+type AdminRotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminRotateAppSecretRequest) Reset() {
-	*x = AdminRotateAppSecretRequest{}
+func (x *AdminRotateTenantConfigSecretRequest) Reset() {
+	*x = AdminRotateTenantConfigSecretRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminRotateAppSecretRequest) String() string {
+func (x *AdminRotateTenantConfigSecretRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminRotateAppSecretRequest) ProtoMessage() {}
+func (*AdminRotateTenantConfigSecretRequest) ProtoMessage() {}
 
-func (x *AdminRotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminRotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3943,41 +3942,42 @@ func (x *AdminRotateAppSecretRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminRotateAppSecretRequest.ProtoReflect.Descriptor instead.
-func (*AdminRotateAppSecretRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminRotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
+func (*AdminRotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *AdminRotateAppSecretRequest) GetAppKey() string {
+func (x *AdminRotateTenantConfigSecretRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type AdminRotateAppSecretResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *StorageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via AdminListApps/GetApp).
+type AdminRotateTenantConfigSecretResponse struct {
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret convenience echo (also visible via
+	// AdminListTenantConfigs/AdminGetTenantConfig).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminRotateAppSecretResponse) Reset() {
-	*x = AdminRotateAppSecretResponse{}
+func (x *AdminRotateTenantConfigSecretResponse) Reset() {
+	*x = AdminRotateTenantConfigSecretResponse{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminRotateAppSecretResponse) String() string {
+func (x *AdminRotateTenantConfigSecretResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminRotateAppSecretResponse) ProtoMessage() {}
+func (*AdminRotateTenantConfigSecretResponse) ProtoMessage() {}
 
-func (x *AdminRotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+func (x *AdminRotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3989,46 +3989,47 @@ func (x *AdminRotateAppSecretResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminRotateAppSecretResponse.ProtoReflect.Descriptor instead.
-func (*AdminRotateAppSecretResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminRotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
+func (*AdminRotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{58}
 }
 
-func (x *AdminRotateAppSecretResponse) GetApp() *StorageAppInfo {
+func (x *AdminRotateTenantConfigSecretResponse) GetConfig() *StorageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *AdminRotateAppSecretResponse) GetAppSecret() string {
+func (x *AdminRotateTenantConfigSecretResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-// AdminListAppsRequest — the app registry is low-cardinality; no paging.
-type AdminListAppsRequest struct {
+// AdminListTenantConfigsRequest — one row per tenant, low cardinality; no
+// paging.
+type AdminListTenantConfigsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminListAppsRequest) Reset() {
-	*x = AdminListAppsRequest{}
+func (x *AdminListTenantConfigsRequest) Reset() {
+	*x = AdminListTenantConfigsRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminListAppsRequest) String() string {
+func (x *AdminListTenantConfigsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminListAppsRequest) ProtoMessage() {}
+func (*AdminListTenantConfigsRequest) ProtoMessage() {}
 
-func (x *AdminListAppsRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4040,32 +4041,32 @@ func (x *AdminListAppsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminListAppsRequest.ProtoReflect.Descriptor instead.
-func (*AdminListAppsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminListTenantConfigsRequest.ProtoReflect.Descriptor instead.
+func (*AdminListTenantConfigsRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{59}
 }
 
-type AdminListAppsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*StorageAppInfo      `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+type AdminListTenantConfigsResponse struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Configs       []*StorageTenantConfigInfo `protobuf:"bytes,1,rep,name=configs,proto3" json:"configs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminListAppsResponse) Reset() {
-	*x = AdminListAppsResponse{}
+func (x *AdminListTenantConfigsResponse) Reset() {
+	*x = AdminListTenantConfigsResponse{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminListAppsResponse) String() string {
+func (x *AdminListTenantConfigsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminListAppsResponse) ProtoMessage() {}
+func (*AdminListTenantConfigsResponse) ProtoMessage() {}
 
-func (x *AdminListAppsResponse) ProtoReflect() protoreflect.Message {
+func (x *AdminListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4077,43 +4078,44 @@ func (x *AdminListAppsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminListAppsResponse.ProtoReflect.Descriptor instead.
-func (*AdminListAppsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminListTenantConfigsResponse.ProtoReflect.Descriptor instead.
+func (*AdminListTenantConfigsResponse) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{60}
 }
 
-func (x *AdminListAppsResponse) GetApps() []*StorageAppInfo {
+func (x *AdminListTenantConfigsResponse) GetConfigs() []*StorageTenantConfigInfo {
 	if x != nil {
-		return x.Apps
+		return x.Configs
 	}
 	return nil
 }
 
-// AdminDeleteAppRequest soft-deletes the app. Data-plane calls fail
-// immediately; existing objects/files stay readable (their keys are stored).
-// The app_key and key_prefix remain reserved (uniqueness is enforced over
-// live rows only, so re-creating a soft-deleted app reactivates its prefix).
-type AdminDeleteAppRequest struct {
+// AdminDeleteTenantConfigRequest soft-deletes the config. Data-plane calls
+// fail on the next registry refresh (immediate here); existing objects/
+// files stay readable — their keys are stored on the rows. The identity
+// and key_prefix remain reserved (uniqueness is enforced over live rows
+// only, so re-provisioning a soft-deleted tenant reactivates its prefix).
+type AdminDeleteTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AdminDeleteAppRequest) Reset() {
-	*x = AdminDeleteAppRequest{}
+func (x *AdminDeleteTenantConfigRequest) Reset() {
+	*x = AdminDeleteTenantConfigRequest{}
 	mi := &file_storage_v1_request_response_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminDeleteAppRequest) String() string {
+func (x *AdminDeleteTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminDeleteAppRequest) ProtoMessage() {}
+func (*AdminDeleteTenantConfigRequest) ProtoMessage() {}
 
-func (x *AdminDeleteAppRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminDeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_storage_v1_request_response_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4125,14 +4127,14 @@ func (x *AdminDeleteAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminDeleteAppRequest.ProtoReflect.Descriptor instead.
-func (*AdminDeleteAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminDeleteTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*AdminDeleteTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{61}
 }
 
-func (x *AdminDeleteAppRequest) GetAppKey() string {
+func (x *AdminDeleteTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5201,26 +5203,27 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x0f_default_bucketB\x10\n" +
 	"\x0e_public_bucket\"V\n" +
 	"\x1bAdminUpdateSettingsResponse\x127\n" +
-	"\bsettings\x18\x01 \x01(\v2\x1b.storage.v1.StorageSettingsR\bsettings\"\xfa\x01\n" +
-	"\x15AdminCreateAppRequest\x129\n" +
-	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\bsettings\x18\x01 \x01(\v2\x1b.storage.v1.StorageSettingsR\bsettings\"\xc8\x01\n" +
+	"\x1eAdminEnsureTenantConfigRequest\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12A\n" +
 	"\n" +
 	"key_prefix\x18\x03 \x01(\tB\"\xbaH\x1fr\x1d\x10\x02\x18@2\x17^[a-z][a-z0-9-]{1,62}/$R\tkeyPrefix\x12\x1b\n" +
 	"\tbucket_id\x18\x04 \x01(\x03R\bbucketId\x12&\n" +
 	"\n" +
-	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"e\n" +
-	"\x16AdminCreateAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\x12\x1d\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"}\n" +
+	"\x1fAdminEnsureTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"8\n" +
-	"\x12AdminGetAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"C\n" +
-	"\x13AdminGetAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\"\xc7\x01\n" +
-	"\x15AdminUpdateAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"G\n" +
+	"\x1bAdminGetTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"[\n" +
+	"\x1cAdminGetTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\"\xd6\x01\n" +
+	"\x1eAdminUpdateTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
 	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01\x12 \n" +
@@ -5228,20 +5231,22 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x05_nameB\v\n" +
 	"\t_disabledB\f\n" +
 	"\n" +
-	"_bucket_id\"F\n" +
-	"\x16AdminUpdateAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\"A\n" +
-	"\x1bAdminRotateAppSecretRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"k\n" +
-	"\x1cAdminRotateAppSecretResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\x12\x1d\n" +
+	"_bucket_id\"^\n" +
+	"\x1fAdminUpdateTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\"P\n" +
+	"$AdminRotateTenantConfigSecretRequest\x12(\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x16\n" +
-	"\x14AdminListAppsRequest\"G\n" +
-	"\x15AdminListAppsResponse\x12.\n" +
-	"\x04apps\x18\x01 \x03(\v2\x1a.storage.v1.StorageAppInfoR\x04apps\";\n" +
-	"\x15AdminDeleteAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"\xa5\x01\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"\x83\x01\n" +
+	"%AdminRotateTenantConfigSecretResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x1f\n" +
+	"\x1dAdminListTenantConfigsRequest\"_\n" +
+	"\x1eAdminListTenantConfigsResponse\x12=\n" +
+	"\aconfigs\x18\x01 \x03(\v2#.storage.v1.StorageTenantConfigInfoR\aconfigs\"J\n" +
+	"\x1eAdminDeleteTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"\xa5\x01\n" +
 	" AdminSoftDeleteOwnerFilesRequest\x12>\n" +
 	"\n" +
 	"owner_type\x18\x01 \x01(\x0e2\x15.storage.v1.OwnerTypeB\b\xbaH\x05\x82\x01\x02\x10\x01R\townerType\x12\"\n" +
@@ -5333,106 +5338,106 @@ func file_storage_v1_request_response_proto_rawDescGZIP() []byte {
 
 var file_storage_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 76)
 var file_storage_v1_request_response_proto_goTypes = []any{
-	(*GenerateUploadURLRequest)(nil),          // 0: storage.v1.GenerateUploadURLRequest
-	(*GenerateUploadURLResponse)(nil),         // 1: storage.v1.GenerateUploadURLResponse
-	(*GetSTSCredentialRequest)(nil),           // 2: storage.v1.GetSTSCredentialRequest
-	(*GetSTSCredentialResponse)(nil),          // 3: storage.v1.GetSTSCredentialResponse
-	(*BatchGetSTSCredentialRequest)(nil),      // 4: storage.v1.BatchGetSTSCredentialRequest
-	(*BatchGetSTSCredentialResponse)(nil),     // 5: storage.v1.BatchGetSTSCredentialResponse
-	(*ConfirmUploadRequest)(nil),              // 6: storage.v1.ConfirmUploadRequest
-	(*ConfirmUploadResponse)(nil),             // 7: storage.v1.ConfirmUploadResponse
-	(*CancelUploadRequest)(nil),               // 8: storage.v1.CancelUploadRequest
-	(*GenerateDownloadURLRequest)(nil),        // 9: storage.v1.GenerateDownloadURLRequest
-	(*GenerateDownloadURLResponse)(nil),       // 10: storage.v1.GenerateDownloadURLResponse
-	(*CreateFileLinkRequest)(nil),             // 11: storage.v1.CreateFileLinkRequest
-	(*CreateFileLinkResponse)(nil),            // 12: storage.v1.CreateFileLinkResponse
-	(*GetFileLinkDownloadRequest)(nil),        // 13: storage.v1.GetFileLinkDownloadRequest
-	(*GetFileLinkDownloadResponse)(nil),       // 14: storage.v1.GetFileLinkDownloadResponse
-	(*ListMyFilesRequest)(nil),                // 15: storage.v1.ListMyFilesRequest
-	(*ListMyFilesResponse)(nil),               // 16: storage.v1.ListMyFilesResponse
-	(*ListMyFilesPagedRequest)(nil),           // 17: storage.v1.ListMyFilesPagedRequest
-	(*ListMyFilesPagedResponse)(nil),          // 18: storage.v1.ListMyFilesPagedResponse
-	(*GetMyFileRequest)(nil),                  // 19: storage.v1.GetMyFileRequest
-	(*UpdateMyFileRequest)(nil),               // 20: storage.v1.UpdateMyFileRequest
-	(*DeleteMyFileRequest)(nil),               // 21: storage.v1.DeleteMyFileRequest
-	(*BatchDeleteMyFilesRequest)(nil),         // 22: storage.v1.BatchDeleteMyFilesRequest
-	(*BatchDeleteMyFilesResponse)(nil),        // 23: storage.v1.BatchDeleteMyFilesResponse
-	(*GenerateProcessURLRequest)(nil),         // 24: storage.v1.GenerateProcessURLRequest
-	(*GenerateProcessURLResponse)(nil),        // 25: storage.v1.GenerateProcessURLResponse
-	(*GenerateCDNURLRequest)(nil),             // 26: storage.v1.GenerateCDNURLRequest
-	(*GenerateCDNURLResponse)(nil),            // 27: storage.v1.GenerateCDNURLResponse
-	(*GetMyQuotaRequest)(nil),                 // 28: storage.v1.GetMyQuotaRequest
-	(*AdminListFilesRequest)(nil),             // 29: storage.v1.AdminListFilesRequest
-	(*AdminListFilesResponse)(nil),            // 30: storage.v1.AdminListFilesResponse
-	(*AdminGetFileRequest)(nil),               // 31: storage.v1.AdminGetFileRequest
-	(*AdminDeleteFileRequest)(nil),            // 32: storage.v1.AdminDeleteFileRequest
-	(*AdminGetQuotaRequest)(nil),              // 33: storage.v1.AdminGetQuotaRequest
-	(*AdminSetQuotaRequest)(nil),              // 34: storage.v1.AdminSetQuotaRequest
-	(*AdminGetStatsRequest)(nil),              // 35: storage.v1.AdminGetStatsRequest
-	(*AdminGetStatsResponse)(nil),             // 36: storage.v1.AdminGetStatsResponse
-	(*AdminListProvidersResponse)(nil),        // 37: storage.v1.AdminListProvidersResponse
-	(*AdminListBucketsResponse)(nil),          // 38: storage.v1.AdminListBucketsResponse
-	(*AdminCreateProviderRequest)(nil),        // 39: storage.v1.AdminCreateProviderRequest
-	(*AdminCreateProviderResponse)(nil),       // 40: storage.v1.AdminCreateProviderResponse
-	(*AdminUpdateProviderRequest)(nil),        // 41: storage.v1.AdminUpdateProviderRequest
-	(*AdminUpdateProviderResponse)(nil),       // 42: storage.v1.AdminUpdateProviderResponse
-	(*AdminDeleteProviderRequest)(nil),        // 43: storage.v1.AdminDeleteProviderRequest
-	(*AdminUpsertBucketRequest)(nil),          // 44: storage.v1.AdminUpsertBucketRequest
-	(*AdminUpsertBucketResponse)(nil),         // 45: storage.v1.AdminUpsertBucketResponse
-	(*AdminDeleteBucketRequest)(nil),          // 46: storage.v1.AdminDeleteBucketRequest
-	(*AdminGetSettingsRequest)(nil),           // 47: storage.v1.AdminGetSettingsRequest
-	(*AdminGetSettingsResponse)(nil),          // 48: storage.v1.AdminGetSettingsResponse
-	(*AdminUpdateSettingsRequest)(nil),        // 49: storage.v1.AdminUpdateSettingsRequest
-	(*AdminUpdateSettingsResponse)(nil),       // 50: storage.v1.AdminUpdateSettingsResponse
-	(*AdminCreateAppRequest)(nil),             // 51: storage.v1.AdminCreateAppRequest
-	(*AdminCreateAppResponse)(nil),            // 52: storage.v1.AdminCreateAppResponse
-	(*AdminGetAppRequest)(nil),                // 53: storage.v1.AdminGetAppRequest
-	(*AdminGetAppResponse)(nil),               // 54: storage.v1.AdminGetAppResponse
-	(*AdminUpdateAppRequest)(nil),             // 55: storage.v1.AdminUpdateAppRequest
-	(*AdminUpdateAppResponse)(nil),            // 56: storage.v1.AdminUpdateAppResponse
-	(*AdminRotateAppSecretRequest)(nil),       // 57: storage.v1.AdminRotateAppSecretRequest
-	(*AdminRotateAppSecretResponse)(nil),      // 58: storage.v1.AdminRotateAppSecretResponse
-	(*AdminListAppsRequest)(nil),              // 59: storage.v1.AdminListAppsRequest
-	(*AdminListAppsResponse)(nil),             // 60: storage.v1.AdminListAppsResponse
-	(*AdminDeleteAppRequest)(nil),             // 61: storage.v1.AdminDeleteAppRequest
-	(*AdminSoftDeleteOwnerFilesRequest)(nil),  // 62: storage.v1.AdminSoftDeleteOwnerFilesRequest
-	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 63: storage.v1.AdminSoftDeleteOwnerFilesResponse
-	(*AdminDeleteOwnerRequest)(nil),           // 64: storage.v1.AdminDeleteOwnerRequest
-	(*AdminDeleteOwnerResponse)(nil),          // 65: storage.v1.AdminDeleteOwnerResponse
-	(*ListMyAuditLogsRequest)(nil),            // 66: storage.v1.ListMyAuditLogsRequest
-	(*ListMyAuditLogsResponse)(nil),           // 67: storage.v1.ListMyAuditLogsResponse
-	(*AdminListAuditLogsRequest)(nil),         // 68: storage.v1.AdminListAuditLogsRequest
-	(*AdminListAuditLogsResponse)(nil),        // 69: storage.v1.AdminListAuditLogsResponse
-	(*SetOwnerQuotaRequest)(nil),              // 70: storage.v1.SetOwnerQuotaRequest
-	(*AddOwnerQuotaRequest)(nil),              // 71: storage.v1.AddOwnerQuotaRequest
-	nil,                                       // 72: storage.v1.GenerateUploadURLRequest.MetadataEntry
-	nil,                                       // 73: storage.v1.GenerateUploadURLResponse.HeadersEntry
-	nil,                                       // 74: storage.v1.GetSTSCredentialRequest.MetadataEntry
-	nil,                                       // 75: storage.v1.UpdateMyFileRequest.MetadataEntry
-	(Vendor)(0),                               // 76: storage.v1.Vendor
-	(Visibility)(0),                           // 77: storage.v1.Visibility
-	(*Owner)(nil),                             // 78: storage.v1.Owner
-	(*UserFileInfo)(nil),                      // 79: storage.v1.UserFileInfo
-	(*durationpb.Duration)(nil),               // 80: google.protobuf.Duration
-	(*UploadFileMeta)(nil),                    // 81: storage.v1.UploadFileMeta
-	(*UploadCredentialItem)(nil),              // 82: storage.v1.UploadCredentialItem
-	(SortField)(0),                            // 83: storage.v1.SortField
-	(*ImageProcessOp)(nil),                    // 84: storage.v1.ImageProcessOp
-	(OwnerType)(0),                            // 85: storage.v1.OwnerType
-	(*AdminFileInfo)(nil),                     // 86: storage.v1.AdminFileInfo
-	(*OwnerStats)(nil),                        // 87: storage.v1.OwnerStats
-	(*ProviderStats)(nil),                     // 88: storage.v1.ProviderStats
-	(*BucketStats)(nil),                       // 89: storage.v1.BucketStats
-	(*ProviderInfo)(nil),                      // 90: storage.v1.ProviderInfo
-	(*BucketInfo)(nil),                        // 91: storage.v1.BucketInfo
-	(BucketACL)(0),                            // 92: storage.v1.BucketACL
-	(*CDNConfig)(nil),                         // 93: storage.v1.CDNConfig
-	(*StorageSettings)(nil),                   // 94: storage.v1.StorageSettings
-	(*StorageAppInfo)(nil),                    // 95: storage.v1.StorageAppInfo
-	(AuditAction)(0),                          // 96: storage.v1.AuditAction
-	(AuditLogTargetType)(0),                   // 97: storage.v1.AuditLogTargetType
-	(*AuditLogEntry)(nil),                     // 98: storage.v1.AuditLogEntry
-	(AuditLogStatus)(0),                       // 99: storage.v1.AuditLogStatus
+	(*GenerateUploadURLRequest)(nil),              // 0: storage.v1.GenerateUploadURLRequest
+	(*GenerateUploadURLResponse)(nil),             // 1: storage.v1.GenerateUploadURLResponse
+	(*GetSTSCredentialRequest)(nil),               // 2: storage.v1.GetSTSCredentialRequest
+	(*GetSTSCredentialResponse)(nil),              // 3: storage.v1.GetSTSCredentialResponse
+	(*BatchGetSTSCredentialRequest)(nil),          // 4: storage.v1.BatchGetSTSCredentialRequest
+	(*BatchGetSTSCredentialResponse)(nil),         // 5: storage.v1.BatchGetSTSCredentialResponse
+	(*ConfirmUploadRequest)(nil),                  // 6: storage.v1.ConfirmUploadRequest
+	(*ConfirmUploadResponse)(nil),                 // 7: storage.v1.ConfirmUploadResponse
+	(*CancelUploadRequest)(nil),                   // 8: storage.v1.CancelUploadRequest
+	(*GenerateDownloadURLRequest)(nil),            // 9: storage.v1.GenerateDownloadURLRequest
+	(*GenerateDownloadURLResponse)(nil),           // 10: storage.v1.GenerateDownloadURLResponse
+	(*CreateFileLinkRequest)(nil),                 // 11: storage.v1.CreateFileLinkRequest
+	(*CreateFileLinkResponse)(nil),                // 12: storage.v1.CreateFileLinkResponse
+	(*GetFileLinkDownloadRequest)(nil),            // 13: storage.v1.GetFileLinkDownloadRequest
+	(*GetFileLinkDownloadResponse)(nil),           // 14: storage.v1.GetFileLinkDownloadResponse
+	(*ListMyFilesRequest)(nil),                    // 15: storage.v1.ListMyFilesRequest
+	(*ListMyFilesResponse)(nil),                   // 16: storage.v1.ListMyFilesResponse
+	(*ListMyFilesPagedRequest)(nil),               // 17: storage.v1.ListMyFilesPagedRequest
+	(*ListMyFilesPagedResponse)(nil),              // 18: storage.v1.ListMyFilesPagedResponse
+	(*GetMyFileRequest)(nil),                      // 19: storage.v1.GetMyFileRequest
+	(*UpdateMyFileRequest)(nil),                   // 20: storage.v1.UpdateMyFileRequest
+	(*DeleteMyFileRequest)(nil),                   // 21: storage.v1.DeleteMyFileRequest
+	(*BatchDeleteMyFilesRequest)(nil),             // 22: storage.v1.BatchDeleteMyFilesRequest
+	(*BatchDeleteMyFilesResponse)(nil),            // 23: storage.v1.BatchDeleteMyFilesResponse
+	(*GenerateProcessURLRequest)(nil),             // 24: storage.v1.GenerateProcessURLRequest
+	(*GenerateProcessURLResponse)(nil),            // 25: storage.v1.GenerateProcessURLResponse
+	(*GenerateCDNURLRequest)(nil),                 // 26: storage.v1.GenerateCDNURLRequest
+	(*GenerateCDNURLResponse)(nil),                // 27: storage.v1.GenerateCDNURLResponse
+	(*GetMyQuotaRequest)(nil),                     // 28: storage.v1.GetMyQuotaRequest
+	(*AdminListFilesRequest)(nil),                 // 29: storage.v1.AdminListFilesRequest
+	(*AdminListFilesResponse)(nil),                // 30: storage.v1.AdminListFilesResponse
+	(*AdminGetFileRequest)(nil),                   // 31: storage.v1.AdminGetFileRequest
+	(*AdminDeleteFileRequest)(nil),                // 32: storage.v1.AdminDeleteFileRequest
+	(*AdminGetQuotaRequest)(nil),                  // 33: storage.v1.AdminGetQuotaRequest
+	(*AdminSetQuotaRequest)(nil),                  // 34: storage.v1.AdminSetQuotaRequest
+	(*AdminGetStatsRequest)(nil),                  // 35: storage.v1.AdminGetStatsRequest
+	(*AdminGetStatsResponse)(nil),                 // 36: storage.v1.AdminGetStatsResponse
+	(*AdminListProvidersResponse)(nil),            // 37: storage.v1.AdminListProvidersResponse
+	(*AdminListBucketsResponse)(nil),              // 38: storage.v1.AdminListBucketsResponse
+	(*AdminCreateProviderRequest)(nil),            // 39: storage.v1.AdminCreateProviderRequest
+	(*AdminCreateProviderResponse)(nil),           // 40: storage.v1.AdminCreateProviderResponse
+	(*AdminUpdateProviderRequest)(nil),            // 41: storage.v1.AdminUpdateProviderRequest
+	(*AdminUpdateProviderResponse)(nil),           // 42: storage.v1.AdminUpdateProviderResponse
+	(*AdminDeleteProviderRequest)(nil),            // 43: storage.v1.AdminDeleteProviderRequest
+	(*AdminUpsertBucketRequest)(nil),              // 44: storage.v1.AdminUpsertBucketRequest
+	(*AdminUpsertBucketResponse)(nil),             // 45: storage.v1.AdminUpsertBucketResponse
+	(*AdminDeleteBucketRequest)(nil),              // 46: storage.v1.AdminDeleteBucketRequest
+	(*AdminGetSettingsRequest)(nil),               // 47: storage.v1.AdminGetSettingsRequest
+	(*AdminGetSettingsResponse)(nil),              // 48: storage.v1.AdminGetSettingsResponse
+	(*AdminUpdateSettingsRequest)(nil),            // 49: storage.v1.AdminUpdateSettingsRequest
+	(*AdminUpdateSettingsResponse)(nil),           // 50: storage.v1.AdminUpdateSettingsResponse
+	(*AdminEnsureTenantConfigRequest)(nil),        // 51: storage.v1.AdminEnsureTenantConfigRequest
+	(*AdminEnsureTenantConfigResponse)(nil),       // 52: storage.v1.AdminEnsureTenantConfigResponse
+	(*AdminGetTenantConfigRequest)(nil),           // 53: storage.v1.AdminGetTenantConfigRequest
+	(*AdminGetTenantConfigResponse)(nil),          // 54: storage.v1.AdminGetTenantConfigResponse
+	(*AdminUpdateTenantConfigRequest)(nil),        // 55: storage.v1.AdminUpdateTenantConfigRequest
+	(*AdminUpdateTenantConfigResponse)(nil),       // 56: storage.v1.AdminUpdateTenantConfigResponse
+	(*AdminRotateTenantConfigSecretRequest)(nil),  // 57: storage.v1.AdminRotateTenantConfigSecretRequest
+	(*AdminRotateTenantConfigSecretResponse)(nil), // 58: storage.v1.AdminRotateTenantConfigSecretResponse
+	(*AdminListTenantConfigsRequest)(nil),         // 59: storage.v1.AdminListTenantConfigsRequest
+	(*AdminListTenantConfigsResponse)(nil),        // 60: storage.v1.AdminListTenantConfigsResponse
+	(*AdminDeleteTenantConfigRequest)(nil),        // 61: storage.v1.AdminDeleteTenantConfigRequest
+	(*AdminSoftDeleteOwnerFilesRequest)(nil),      // 62: storage.v1.AdminSoftDeleteOwnerFilesRequest
+	(*AdminSoftDeleteOwnerFilesResponse)(nil),     // 63: storage.v1.AdminSoftDeleteOwnerFilesResponse
+	(*AdminDeleteOwnerRequest)(nil),               // 64: storage.v1.AdminDeleteOwnerRequest
+	(*AdminDeleteOwnerResponse)(nil),              // 65: storage.v1.AdminDeleteOwnerResponse
+	(*ListMyAuditLogsRequest)(nil),                // 66: storage.v1.ListMyAuditLogsRequest
+	(*ListMyAuditLogsResponse)(nil),               // 67: storage.v1.ListMyAuditLogsResponse
+	(*AdminListAuditLogsRequest)(nil),             // 68: storage.v1.AdminListAuditLogsRequest
+	(*AdminListAuditLogsResponse)(nil),            // 69: storage.v1.AdminListAuditLogsResponse
+	(*SetOwnerQuotaRequest)(nil),                  // 70: storage.v1.SetOwnerQuotaRequest
+	(*AddOwnerQuotaRequest)(nil),                  // 71: storage.v1.AddOwnerQuotaRequest
+	nil,                                           // 72: storage.v1.GenerateUploadURLRequest.MetadataEntry
+	nil,                                           // 73: storage.v1.GenerateUploadURLResponse.HeadersEntry
+	nil,                                           // 74: storage.v1.GetSTSCredentialRequest.MetadataEntry
+	nil,                                           // 75: storage.v1.UpdateMyFileRequest.MetadataEntry
+	(Vendor)(0),                                   // 76: storage.v1.Vendor
+	(Visibility)(0),                               // 77: storage.v1.Visibility
+	(*Owner)(nil),                                 // 78: storage.v1.Owner
+	(*UserFileInfo)(nil),                          // 79: storage.v1.UserFileInfo
+	(*durationpb.Duration)(nil),                   // 80: google.protobuf.Duration
+	(*UploadFileMeta)(nil),                        // 81: storage.v1.UploadFileMeta
+	(*UploadCredentialItem)(nil),                  // 82: storage.v1.UploadCredentialItem
+	(SortField)(0),                                // 83: storage.v1.SortField
+	(*ImageProcessOp)(nil),                        // 84: storage.v1.ImageProcessOp
+	(OwnerType)(0),                                // 85: storage.v1.OwnerType
+	(*AdminFileInfo)(nil),                         // 86: storage.v1.AdminFileInfo
+	(*OwnerStats)(nil),                            // 87: storage.v1.OwnerStats
+	(*ProviderStats)(nil),                         // 88: storage.v1.ProviderStats
+	(*BucketStats)(nil),                           // 89: storage.v1.BucketStats
+	(*ProviderInfo)(nil),                          // 90: storage.v1.ProviderInfo
+	(*BucketInfo)(nil),                            // 91: storage.v1.BucketInfo
+	(BucketACL)(0),                                // 92: storage.v1.BucketACL
+	(*CDNConfig)(nil),                             // 93: storage.v1.CDNConfig
+	(*StorageSettings)(nil),                       // 94: storage.v1.StorageSettings
+	(*StorageTenantConfigInfo)(nil),               // 95: storage.v1.StorageTenantConfigInfo
+	(AuditAction)(0),                              // 96: storage.v1.AuditAction
+	(AuditLogTargetType)(0),                       // 97: storage.v1.AuditLogTargetType
+	(*AuditLogEntry)(nil),                         // 98: storage.v1.AuditLogEntry
+	(AuditLogStatus)(0),                           // 99: storage.v1.AuditLogStatus
 }
 var file_storage_v1_request_response_proto_depIdxs = []int32{
 	72, // 0: storage.v1.GenerateUploadURLRequest.metadata:type_name -> storage.v1.GenerateUploadURLRequest.MetadataEntry
@@ -5493,11 +5498,11 @@ var file_storage_v1_request_response_proto_depIdxs = []int32{
 	91, // 55: storage.v1.AdminUpsertBucketResponse.bucket:type_name -> storage.v1.BucketInfo
 	94, // 56: storage.v1.AdminGetSettingsResponse.settings:type_name -> storage.v1.StorageSettings
 	94, // 57: storage.v1.AdminUpdateSettingsResponse.settings:type_name -> storage.v1.StorageSettings
-	95, // 58: storage.v1.AdminCreateAppResponse.app:type_name -> storage.v1.StorageAppInfo
-	95, // 59: storage.v1.AdminGetAppResponse.app:type_name -> storage.v1.StorageAppInfo
-	95, // 60: storage.v1.AdminUpdateAppResponse.app:type_name -> storage.v1.StorageAppInfo
-	95, // 61: storage.v1.AdminRotateAppSecretResponse.app:type_name -> storage.v1.StorageAppInfo
-	95, // 62: storage.v1.AdminListAppsResponse.apps:type_name -> storage.v1.StorageAppInfo
+	95, // 58: storage.v1.AdminEnsureTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	95, // 59: storage.v1.AdminGetTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	95, // 60: storage.v1.AdminUpdateTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	95, // 61: storage.v1.AdminRotateTenantConfigSecretResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	95, // 62: storage.v1.AdminListTenantConfigsResponse.configs:type_name -> storage.v1.StorageTenantConfigInfo
 	85, // 63: storage.v1.AdminSoftDeleteOwnerFilesRequest.owner_type:type_name -> storage.v1.OwnerType
 	85, // 64: storage.v1.AdminDeleteOwnerRequest.owner_type:type_name -> storage.v1.OwnerType
 	96, // 65: storage.v1.ListMyAuditLogsRequest.action:type_name -> storage.v1.AuditAction

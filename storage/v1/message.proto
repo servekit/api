@@ -159,20 +159,22 @@ message BucketInfo {
   string name = 1;
   string provider = 2;
   reserved 3;
-  reserved "key_prefix"; // moved to StorageAppInfo.key_prefix — prefixes belong to apps
+  reserved "key_prefix"; // moved to the tenant-config row (key_prefix) — prefixes belong to config rows
   BucketACL acl = 4;
   Vendor vendor = 5;
   // cdn is the bucket's CDN fronting config; null = CDN disabled.
   CDNConfig cdn = 6;
 }
 
-// StorageAppInfo is one calling application of the storage platform. Data
+// StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
+// StorageAppInfo). The row keeps its calling-application identity for the
+// data plane. Data
 // isolation is by key_prefix: every object an app writes lives under its
 // prefix (within the app's bucket, or the default bucket when bucket_id=0);
 // PUBLIC uploads land in the public bucket but keep the same prefix. The
 // prefix is the dedup domain — identical content under different prefixes is
 // stored (and deduplicated) independently.
-message StorageAppInfo {
+message StorageTenantConfigInfo {
   int64 id = 1;
   // app_key identifies the app on every data-plane call (x-app-key metadata);
   // immutable after creation.

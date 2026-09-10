@@ -29,7 +29,7 @@ var File_storage_v1_service_proto protoreflect.FileDescriptor
 const file_storage_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18storage/v1/service.proto\x12\n" +
-	"storage.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18storage/v1/message.proto\x1a!storage/v1/request_response.proto2\x8e\x1f\n" +
+	"storage.v1\x1a\x14common/v1/pong.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18storage/v1/message.proto\x1a!storage/v1/request_response.proto2\xa8 \n" +
 	"\x0eStorageService\x12/\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\x12`\n" +
 	"\x11GenerateUploadURL\x12$.storage.v1.GenerateUploadURLRequest\x1a%.storage.v1.GenerateUploadURLResponse\x12]\n" +
@@ -64,13 +64,13 @@ const file_storage_v1_service_proto_rawDesc = "" +
 	"\x11AdminUpsertBucket\x12$.storage.v1.AdminUpsertBucketRequest\x1a%.storage.v1.AdminUpsertBucketResponse\x12Q\n" +
 	"\x11AdminDeleteBucket\x12$.storage.v1.AdminDeleteBucketRequest\x1a\x16.google.protobuf.Empty\x12]\n" +
 	"\x10AdminGetSettings\x12#.storage.v1.AdminGetSettingsRequest\x1a$.storage.v1.AdminGetSettingsResponse\x12f\n" +
-	"\x13AdminUpdateSettings\x12&.storage.v1.AdminUpdateSettingsRequest\x1a'.storage.v1.AdminUpdateSettingsResponse\x12W\n" +
-	"\x0eAdminCreateApp\x12!.storage.v1.AdminCreateAppRequest\x1a\".storage.v1.AdminCreateAppResponse\x12N\n" +
-	"\vAdminGetApp\x12\x1e.storage.v1.AdminGetAppRequest\x1a\x1f.storage.v1.AdminGetAppResponse\x12W\n" +
-	"\x0eAdminUpdateApp\x12!.storage.v1.AdminUpdateAppRequest\x1a\".storage.v1.AdminUpdateAppResponse\x12i\n" +
-	"\x14AdminRotateAppSecret\x12'.storage.v1.AdminRotateAppSecretRequest\x1a(.storage.v1.AdminRotateAppSecretResponse\x12T\n" +
-	"\rAdminListApps\x12 .storage.v1.AdminListAppsRequest\x1a!.storage.v1.AdminListAppsResponse\x12K\n" +
-	"\x0eAdminDeleteApp\x12!.storage.v1.AdminDeleteAppRequest\x1a\x16.google.protobuf.Empty\x12x\n" +
+	"\x13AdminUpdateSettings\x12&.storage.v1.AdminUpdateSettingsRequest\x1a'.storage.v1.AdminUpdateSettingsResponse\x12r\n" +
+	"\x17AdminEnsureTenantConfig\x12*.storage.v1.AdminEnsureTenantConfigRequest\x1a+.storage.v1.AdminEnsureTenantConfigResponse\x12i\n" +
+	"\x14AdminGetTenantConfig\x12'.storage.v1.AdminGetTenantConfigRequest\x1a(.storage.v1.AdminGetTenantConfigResponse\x12r\n" +
+	"\x17AdminUpdateTenantConfig\x12*.storage.v1.AdminUpdateTenantConfigRequest\x1a+.storage.v1.AdminUpdateTenantConfigResponse\x12\x84\x01\n" +
+	"\x1dAdminRotateTenantConfigSecret\x120.storage.v1.AdminRotateTenantConfigSecretRequest\x1a1.storage.v1.AdminRotateTenantConfigSecretResponse\x12o\n" +
+	"\x16AdminListTenantConfigs\x12).storage.v1.AdminListTenantConfigsRequest\x1a*.storage.v1.AdminListTenantConfigsResponse\x12]\n" +
+	"\x17AdminDeleteTenantConfig\x12*.storage.v1.AdminDeleteTenantConfigRequest\x1a\x16.google.protobuf.Empty\x12x\n" +
 	"\x19AdminSoftDeleteOwnerFiles\x12,.storage.v1.AdminSoftDeleteOwnerFilesRequest\x1a-.storage.v1.AdminSoftDeleteOwnerFilesResponse\x12]\n" +
 	"\x10AdminDeleteOwner\x12#.storage.v1.AdminDeleteOwnerRequest\x1a$.storage.v1.AdminDeleteOwnerResponse\x12Z\n" +
 	"\x0fListMyAuditLogs\x12\".storage.v1.ListMyAuditLogsRequest\x1a#.storage.v1.ListMyAuditLogsResponse\x12c\n" +
@@ -82,83 +82,83 @@ const file_storage_v1_service_proto_rawDesc = "" +
 	"Storage\\V1\xe2\x02\x16Storage\\V1\\GPBMetadata\xea\x02\vStorage::V1b\x06proto3"
 
 var file_storage_v1_service_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),                     // 0: google.protobuf.Empty
-	(*GenerateUploadURLRequest)(nil),          // 1: storage.v1.GenerateUploadURLRequest
-	(*GetSTSCredentialRequest)(nil),           // 2: storage.v1.GetSTSCredentialRequest
-	(*BatchGetSTSCredentialRequest)(nil),      // 3: storage.v1.BatchGetSTSCredentialRequest
-	(*ConfirmUploadRequest)(nil),              // 4: storage.v1.ConfirmUploadRequest
-	(*CancelUploadRequest)(nil),               // 5: storage.v1.CancelUploadRequest
-	(*GenerateDownloadURLRequest)(nil),        // 6: storage.v1.GenerateDownloadURLRequest
-	(*CreateFileLinkRequest)(nil),             // 7: storage.v1.CreateFileLinkRequest
-	(*GetFileLinkDownloadRequest)(nil),        // 8: storage.v1.GetFileLinkDownloadRequest
-	(*ListMyFilesRequest)(nil),                // 9: storage.v1.ListMyFilesRequest
-	(*ListMyFilesPagedRequest)(nil),           // 10: storage.v1.ListMyFilesPagedRequest
-	(*GetMyFileRequest)(nil),                  // 11: storage.v1.GetMyFileRequest
-	(*UpdateMyFileRequest)(nil),               // 12: storage.v1.UpdateMyFileRequest
-	(*DeleteMyFileRequest)(nil),               // 13: storage.v1.DeleteMyFileRequest
-	(*BatchDeleteMyFilesRequest)(nil),         // 14: storage.v1.BatchDeleteMyFilesRequest
-	(*GenerateProcessURLRequest)(nil),         // 15: storage.v1.GenerateProcessURLRequest
-	(*GenerateCDNURLRequest)(nil),             // 16: storage.v1.GenerateCDNURLRequest
-	(*GetMyQuotaRequest)(nil),                 // 17: storage.v1.GetMyQuotaRequest
-	(*AdminListFilesRequest)(nil),             // 18: storage.v1.AdminListFilesRequest
-	(*AdminGetFileRequest)(nil),               // 19: storage.v1.AdminGetFileRequest
-	(*AdminDeleteFileRequest)(nil),            // 20: storage.v1.AdminDeleteFileRequest
-	(*AdminGetQuotaRequest)(nil),              // 21: storage.v1.AdminGetQuotaRequest
-	(*AdminSetQuotaRequest)(nil),              // 22: storage.v1.AdminSetQuotaRequest
-	(*AdminGetStatsRequest)(nil),              // 23: storage.v1.AdminGetStatsRequest
-	(*AdminCreateProviderRequest)(nil),        // 24: storage.v1.AdminCreateProviderRequest
-	(*AdminUpdateProviderRequest)(nil),        // 25: storage.v1.AdminUpdateProviderRequest
-	(*AdminDeleteProviderRequest)(nil),        // 26: storage.v1.AdminDeleteProviderRequest
-	(*AdminUpsertBucketRequest)(nil),          // 27: storage.v1.AdminUpsertBucketRequest
-	(*AdminDeleteBucketRequest)(nil),          // 28: storage.v1.AdminDeleteBucketRequest
-	(*AdminGetSettingsRequest)(nil),           // 29: storage.v1.AdminGetSettingsRequest
-	(*AdminUpdateSettingsRequest)(nil),        // 30: storage.v1.AdminUpdateSettingsRequest
-	(*AdminCreateAppRequest)(nil),             // 31: storage.v1.AdminCreateAppRequest
-	(*AdminGetAppRequest)(nil),                // 32: storage.v1.AdminGetAppRequest
-	(*AdminUpdateAppRequest)(nil),             // 33: storage.v1.AdminUpdateAppRequest
-	(*AdminRotateAppSecretRequest)(nil),       // 34: storage.v1.AdminRotateAppSecretRequest
-	(*AdminListAppsRequest)(nil),              // 35: storage.v1.AdminListAppsRequest
-	(*AdminDeleteAppRequest)(nil),             // 36: storage.v1.AdminDeleteAppRequest
-	(*AdminSoftDeleteOwnerFilesRequest)(nil),  // 37: storage.v1.AdminSoftDeleteOwnerFilesRequest
-	(*AdminDeleteOwnerRequest)(nil),           // 38: storage.v1.AdminDeleteOwnerRequest
-	(*ListMyAuditLogsRequest)(nil),            // 39: storage.v1.ListMyAuditLogsRequest
-	(*AdminListAuditLogsRequest)(nil),         // 40: storage.v1.AdminListAuditLogsRequest
-	(*SetOwnerQuotaRequest)(nil),              // 41: storage.v1.SetOwnerQuotaRequest
-	(*AddOwnerQuotaRequest)(nil),              // 42: storage.v1.AddOwnerQuotaRequest
-	(*v1.Pong)(nil),                           // 43: common.v1.Pong
-	(*GenerateUploadURLResponse)(nil),         // 44: storage.v1.GenerateUploadURLResponse
-	(*GetSTSCredentialResponse)(nil),          // 45: storage.v1.GetSTSCredentialResponse
-	(*BatchGetSTSCredentialResponse)(nil),     // 46: storage.v1.BatchGetSTSCredentialResponse
-	(*ConfirmUploadResponse)(nil),             // 47: storage.v1.ConfirmUploadResponse
-	(*GenerateDownloadURLResponse)(nil),       // 48: storage.v1.GenerateDownloadURLResponse
-	(*CreateFileLinkResponse)(nil),            // 49: storage.v1.CreateFileLinkResponse
-	(*GetFileLinkDownloadResponse)(nil),       // 50: storage.v1.GetFileLinkDownloadResponse
-	(*ListMyFilesResponse)(nil),               // 51: storage.v1.ListMyFilesResponse
-	(*ListMyFilesPagedResponse)(nil),          // 52: storage.v1.ListMyFilesPagedResponse
-	(*UserFileInfo)(nil),                      // 53: storage.v1.UserFileInfo
-	(*BatchDeleteMyFilesResponse)(nil),        // 54: storage.v1.BatchDeleteMyFilesResponse
-	(*GenerateProcessURLResponse)(nil),        // 55: storage.v1.GenerateProcessURLResponse
-	(*GenerateCDNURLResponse)(nil),            // 56: storage.v1.GenerateCDNURLResponse
-	(*QuotaInfo)(nil),                         // 57: storage.v1.QuotaInfo
-	(*AdminListFilesResponse)(nil),            // 58: storage.v1.AdminListFilesResponse
-	(*AdminFileInfo)(nil),                     // 59: storage.v1.AdminFileInfo
-	(*AdminGetStatsResponse)(nil),             // 60: storage.v1.AdminGetStatsResponse
-	(*AdminListProvidersResponse)(nil),        // 61: storage.v1.AdminListProvidersResponse
-	(*AdminListBucketsResponse)(nil),          // 62: storage.v1.AdminListBucketsResponse
-	(*AdminCreateProviderResponse)(nil),       // 63: storage.v1.AdminCreateProviderResponse
-	(*AdminUpdateProviderResponse)(nil),       // 64: storage.v1.AdminUpdateProviderResponse
-	(*AdminUpsertBucketResponse)(nil),         // 65: storage.v1.AdminUpsertBucketResponse
-	(*AdminGetSettingsResponse)(nil),          // 66: storage.v1.AdminGetSettingsResponse
-	(*AdminUpdateSettingsResponse)(nil),       // 67: storage.v1.AdminUpdateSettingsResponse
-	(*AdminCreateAppResponse)(nil),            // 68: storage.v1.AdminCreateAppResponse
-	(*AdminGetAppResponse)(nil),               // 69: storage.v1.AdminGetAppResponse
-	(*AdminUpdateAppResponse)(nil),            // 70: storage.v1.AdminUpdateAppResponse
-	(*AdminRotateAppSecretResponse)(nil),      // 71: storage.v1.AdminRotateAppSecretResponse
-	(*AdminListAppsResponse)(nil),             // 72: storage.v1.AdminListAppsResponse
-	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 73: storage.v1.AdminSoftDeleteOwnerFilesResponse
-	(*AdminDeleteOwnerResponse)(nil),          // 74: storage.v1.AdminDeleteOwnerResponse
-	(*ListMyAuditLogsResponse)(nil),           // 75: storage.v1.ListMyAuditLogsResponse
-	(*AdminListAuditLogsResponse)(nil),        // 76: storage.v1.AdminListAuditLogsResponse
+	(*emptypb.Empty)(nil),                         // 0: google.protobuf.Empty
+	(*GenerateUploadURLRequest)(nil),              // 1: storage.v1.GenerateUploadURLRequest
+	(*GetSTSCredentialRequest)(nil),               // 2: storage.v1.GetSTSCredentialRequest
+	(*BatchGetSTSCredentialRequest)(nil),          // 3: storage.v1.BatchGetSTSCredentialRequest
+	(*ConfirmUploadRequest)(nil),                  // 4: storage.v1.ConfirmUploadRequest
+	(*CancelUploadRequest)(nil),                   // 5: storage.v1.CancelUploadRequest
+	(*GenerateDownloadURLRequest)(nil),            // 6: storage.v1.GenerateDownloadURLRequest
+	(*CreateFileLinkRequest)(nil),                 // 7: storage.v1.CreateFileLinkRequest
+	(*GetFileLinkDownloadRequest)(nil),            // 8: storage.v1.GetFileLinkDownloadRequest
+	(*ListMyFilesRequest)(nil),                    // 9: storage.v1.ListMyFilesRequest
+	(*ListMyFilesPagedRequest)(nil),               // 10: storage.v1.ListMyFilesPagedRequest
+	(*GetMyFileRequest)(nil),                      // 11: storage.v1.GetMyFileRequest
+	(*UpdateMyFileRequest)(nil),                   // 12: storage.v1.UpdateMyFileRequest
+	(*DeleteMyFileRequest)(nil),                   // 13: storage.v1.DeleteMyFileRequest
+	(*BatchDeleteMyFilesRequest)(nil),             // 14: storage.v1.BatchDeleteMyFilesRequest
+	(*GenerateProcessURLRequest)(nil),             // 15: storage.v1.GenerateProcessURLRequest
+	(*GenerateCDNURLRequest)(nil),                 // 16: storage.v1.GenerateCDNURLRequest
+	(*GetMyQuotaRequest)(nil),                     // 17: storage.v1.GetMyQuotaRequest
+	(*AdminListFilesRequest)(nil),                 // 18: storage.v1.AdminListFilesRequest
+	(*AdminGetFileRequest)(nil),                   // 19: storage.v1.AdminGetFileRequest
+	(*AdminDeleteFileRequest)(nil),                // 20: storage.v1.AdminDeleteFileRequest
+	(*AdminGetQuotaRequest)(nil),                  // 21: storage.v1.AdminGetQuotaRequest
+	(*AdminSetQuotaRequest)(nil),                  // 22: storage.v1.AdminSetQuotaRequest
+	(*AdminGetStatsRequest)(nil),                  // 23: storage.v1.AdminGetStatsRequest
+	(*AdminCreateProviderRequest)(nil),            // 24: storage.v1.AdminCreateProviderRequest
+	(*AdminUpdateProviderRequest)(nil),            // 25: storage.v1.AdminUpdateProviderRequest
+	(*AdminDeleteProviderRequest)(nil),            // 26: storage.v1.AdminDeleteProviderRequest
+	(*AdminUpsertBucketRequest)(nil),              // 27: storage.v1.AdminUpsertBucketRequest
+	(*AdminDeleteBucketRequest)(nil),              // 28: storage.v1.AdminDeleteBucketRequest
+	(*AdminGetSettingsRequest)(nil),               // 29: storage.v1.AdminGetSettingsRequest
+	(*AdminUpdateSettingsRequest)(nil),            // 30: storage.v1.AdminUpdateSettingsRequest
+	(*AdminEnsureTenantConfigRequest)(nil),        // 31: storage.v1.AdminEnsureTenantConfigRequest
+	(*AdminGetTenantConfigRequest)(nil),           // 32: storage.v1.AdminGetTenantConfigRequest
+	(*AdminUpdateTenantConfigRequest)(nil),        // 33: storage.v1.AdminUpdateTenantConfigRequest
+	(*AdminRotateTenantConfigSecretRequest)(nil),  // 34: storage.v1.AdminRotateTenantConfigSecretRequest
+	(*AdminListTenantConfigsRequest)(nil),         // 35: storage.v1.AdminListTenantConfigsRequest
+	(*AdminDeleteTenantConfigRequest)(nil),        // 36: storage.v1.AdminDeleteTenantConfigRequest
+	(*AdminSoftDeleteOwnerFilesRequest)(nil),      // 37: storage.v1.AdminSoftDeleteOwnerFilesRequest
+	(*AdminDeleteOwnerRequest)(nil),               // 38: storage.v1.AdminDeleteOwnerRequest
+	(*ListMyAuditLogsRequest)(nil),                // 39: storage.v1.ListMyAuditLogsRequest
+	(*AdminListAuditLogsRequest)(nil),             // 40: storage.v1.AdminListAuditLogsRequest
+	(*SetOwnerQuotaRequest)(nil),                  // 41: storage.v1.SetOwnerQuotaRequest
+	(*AddOwnerQuotaRequest)(nil),                  // 42: storage.v1.AddOwnerQuotaRequest
+	(*v1.Pong)(nil),                               // 43: common.v1.Pong
+	(*GenerateUploadURLResponse)(nil),             // 44: storage.v1.GenerateUploadURLResponse
+	(*GetSTSCredentialResponse)(nil),              // 45: storage.v1.GetSTSCredentialResponse
+	(*BatchGetSTSCredentialResponse)(nil),         // 46: storage.v1.BatchGetSTSCredentialResponse
+	(*ConfirmUploadResponse)(nil),                 // 47: storage.v1.ConfirmUploadResponse
+	(*GenerateDownloadURLResponse)(nil),           // 48: storage.v1.GenerateDownloadURLResponse
+	(*CreateFileLinkResponse)(nil),                // 49: storage.v1.CreateFileLinkResponse
+	(*GetFileLinkDownloadResponse)(nil),           // 50: storage.v1.GetFileLinkDownloadResponse
+	(*ListMyFilesResponse)(nil),                   // 51: storage.v1.ListMyFilesResponse
+	(*ListMyFilesPagedResponse)(nil),              // 52: storage.v1.ListMyFilesPagedResponse
+	(*UserFileInfo)(nil),                          // 53: storage.v1.UserFileInfo
+	(*BatchDeleteMyFilesResponse)(nil),            // 54: storage.v1.BatchDeleteMyFilesResponse
+	(*GenerateProcessURLResponse)(nil),            // 55: storage.v1.GenerateProcessURLResponse
+	(*GenerateCDNURLResponse)(nil),                // 56: storage.v1.GenerateCDNURLResponse
+	(*QuotaInfo)(nil),                             // 57: storage.v1.QuotaInfo
+	(*AdminListFilesResponse)(nil),                // 58: storage.v1.AdminListFilesResponse
+	(*AdminFileInfo)(nil),                         // 59: storage.v1.AdminFileInfo
+	(*AdminGetStatsResponse)(nil),                 // 60: storage.v1.AdminGetStatsResponse
+	(*AdminListProvidersResponse)(nil),            // 61: storage.v1.AdminListProvidersResponse
+	(*AdminListBucketsResponse)(nil),              // 62: storage.v1.AdminListBucketsResponse
+	(*AdminCreateProviderResponse)(nil),           // 63: storage.v1.AdminCreateProviderResponse
+	(*AdminUpdateProviderResponse)(nil),           // 64: storage.v1.AdminUpdateProviderResponse
+	(*AdminUpsertBucketResponse)(nil),             // 65: storage.v1.AdminUpsertBucketResponse
+	(*AdminGetSettingsResponse)(nil),              // 66: storage.v1.AdminGetSettingsResponse
+	(*AdminUpdateSettingsResponse)(nil),           // 67: storage.v1.AdminUpdateSettingsResponse
+	(*AdminEnsureTenantConfigResponse)(nil),       // 68: storage.v1.AdminEnsureTenantConfigResponse
+	(*AdminGetTenantConfigResponse)(nil),          // 69: storage.v1.AdminGetTenantConfigResponse
+	(*AdminUpdateTenantConfigResponse)(nil),       // 70: storage.v1.AdminUpdateTenantConfigResponse
+	(*AdminRotateTenantConfigSecretResponse)(nil), // 71: storage.v1.AdminRotateTenantConfigSecretResponse
+	(*AdminListTenantConfigsResponse)(nil),        // 72: storage.v1.AdminListTenantConfigsResponse
+	(*AdminSoftDeleteOwnerFilesResponse)(nil),     // 73: storage.v1.AdminSoftDeleteOwnerFilesResponse
+	(*AdminDeleteOwnerResponse)(nil),              // 74: storage.v1.AdminDeleteOwnerResponse
+	(*ListMyAuditLogsResponse)(nil),               // 75: storage.v1.ListMyAuditLogsResponse
+	(*AdminListAuditLogsResponse)(nil),            // 76: storage.v1.AdminListAuditLogsResponse
 }
 var file_storage_v1_service_proto_depIdxs = []int32{
 	0,  // 0: storage.v1.StorageService.Ping:input_type -> google.protobuf.Empty
@@ -194,12 +194,12 @@ var file_storage_v1_service_proto_depIdxs = []int32{
 	28, // 30: storage.v1.StorageService.AdminDeleteBucket:input_type -> storage.v1.AdminDeleteBucketRequest
 	29, // 31: storage.v1.StorageService.AdminGetSettings:input_type -> storage.v1.AdminGetSettingsRequest
 	30, // 32: storage.v1.StorageService.AdminUpdateSettings:input_type -> storage.v1.AdminUpdateSettingsRequest
-	31, // 33: storage.v1.StorageService.AdminCreateApp:input_type -> storage.v1.AdminCreateAppRequest
-	32, // 34: storage.v1.StorageService.AdminGetApp:input_type -> storage.v1.AdminGetAppRequest
-	33, // 35: storage.v1.StorageService.AdminUpdateApp:input_type -> storage.v1.AdminUpdateAppRequest
-	34, // 36: storage.v1.StorageService.AdminRotateAppSecret:input_type -> storage.v1.AdminRotateAppSecretRequest
-	35, // 37: storage.v1.StorageService.AdminListApps:input_type -> storage.v1.AdminListAppsRequest
-	36, // 38: storage.v1.StorageService.AdminDeleteApp:input_type -> storage.v1.AdminDeleteAppRequest
+	31, // 33: storage.v1.StorageService.AdminEnsureTenantConfig:input_type -> storage.v1.AdminEnsureTenantConfigRequest
+	32, // 34: storage.v1.StorageService.AdminGetTenantConfig:input_type -> storage.v1.AdminGetTenantConfigRequest
+	33, // 35: storage.v1.StorageService.AdminUpdateTenantConfig:input_type -> storage.v1.AdminUpdateTenantConfigRequest
+	34, // 36: storage.v1.StorageService.AdminRotateTenantConfigSecret:input_type -> storage.v1.AdminRotateTenantConfigSecretRequest
+	35, // 37: storage.v1.StorageService.AdminListTenantConfigs:input_type -> storage.v1.AdminListTenantConfigsRequest
+	36, // 38: storage.v1.StorageService.AdminDeleteTenantConfig:input_type -> storage.v1.AdminDeleteTenantConfigRequest
 	37, // 39: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:input_type -> storage.v1.AdminSoftDeleteOwnerFilesRequest
 	38, // 40: storage.v1.StorageService.AdminDeleteOwner:input_type -> storage.v1.AdminDeleteOwnerRequest
 	39, // 41: storage.v1.StorageService.ListMyAuditLogs:input_type -> storage.v1.ListMyAuditLogsRequest
@@ -239,12 +239,12 @@ var file_storage_v1_service_proto_depIdxs = []int32{
 	0,  // 75: storage.v1.StorageService.AdminDeleteBucket:output_type -> google.protobuf.Empty
 	66, // 76: storage.v1.StorageService.AdminGetSettings:output_type -> storage.v1.AdminGetSettingsResponse
 	67, // 77: storage.v1.StorageService.AdminUpdateSettings:output_type -> storage.v1.AdminUpdateSettingsResponse
-	68, // 78: storage.v1.StorageService.AdminCreateApp:output_type -> storage.v1.AdminCreateAppResponse
-	69, // 79: storage.v1.StorageService.AdminGetApp:output_type -> storage.v1.AdminGetAppResponse
-	70, // 80: storage.v1.StorageService.AdminUpdateApp:output_type -> storage.v1.AdminUpdateAppResponse
-	71, // 81: storage.v1.StorageService.AdminRotateAppSecret:output_type -> storage.v1.AdminRotateAppSecretResponse
-	72, // 82: storage.v1.StorageService.AdminListApps:output_type -> storage.v1.AdminListAppsResponse
-	0,  // 83: storage.v1.StorageService.AdminDeleteApp:output_type -> google.protobuf.Empty
+	68, // 78: storage.v1.StorageService.AdminEnsureTenantConfig:output_type -> storage.v1.AdminEnsureTenantConfigResponse
+	69, // 79: storage.v1.StorageService.AdminGetTenantConfig:output_type -> storage.v1.AdminGetTenantConfigResponse
+	70, // 80: storage.v1.StorageService.AdminUpdateTenantConfig:output_type -> storage.v1.AdminUpdateTenantConfigResponse
+	71, // 81: storage.v1.StorageService.AdminRotateTenantConfigSecret:output_type -> storage.v1.AdminRotateTenantConfigSecretResponse
+	72, // 82: storage.v1.StorageService.AdminListTenantConfigs:output_type -> storage.v1.AdminListTenantConfigsResponse
+	0,  // 83: storage.v1.StorageService.AdminDeleteTenantConfig:output_type -> google.protobuf.Empty
 	73, // 84: storage.v1.StorageService.AdminSoftDeleteOwnerFiles:output_type -> storage.v1.AdminSoftDeleteOwnerFilesResponse
 	74, // 85: storage.v1.StorageService.AdminDeleteOwner:output_type -> storage.v1.AdminDeleteOwnerResponse
 	75, // 86: storage.v1.StorageService.ListMyAuditLogs:output_type -> storage.v1.ListMyAuditLogsResponse
