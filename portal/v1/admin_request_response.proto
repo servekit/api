@@ -1,0 +1,281 @@
+// Portal admin RPC request/response payloads.
+//
+// Authorization reminder (spec §7.2): the caller of every RPC below is the
+// verified actor (common.v1.RequestActor riding x-actor metadata) — requests
+// never carry caller identity. The service layer branches on
+// actor.user_type: Tenants/Members RPCs are PLATFORM-only; Api-key RPCs are
+// PLATFORM (any tenant) or TENANT_ADMIN (own tenant only, a foreign
+// tenant_key is rejected); WhoAmI/MyCapabilities are TENANT_ADMIN
+// self-service. Calls without an actor fail closed; human-facing RBAC
+// middleware arrives with the gateway (phase ④).
+//
+// Capability strings (the fixed vocabulary, stored as-is): USER / MESSAGE /
+// STORAGE / TELEMETRY / LICENSE.
+syntax = "proto3";
+
+package portal.v1;
+
+import "buf/validate/validate.proto";
+import "portal/v1/admin.proto";
+
+// ---- Tenants ----
+
+// BootstrapAdmin: two explicit mechanisms — bind an existing console account,
+// or create a new one. Never a generic "identifier" string (spec §6.1).
+message BootstrapAdmin {
+  oneof subject {
+    // mechanism 1: existing console account
+    int64 user_id = 1 [(buf.validate.field).int64.gt = 0];
+    // mechanism 2: create console account
+    NewAdminAccount new_account = 2;
+  }
+}
+
+// NewAdminAccount describes the console account to create for the bootstrap
+// admin; the server mints the initial password and returns it exactly once.
+message NewAdminAccount {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  oneof contact {
+    // email mechanism
+    string email = 2 [(buf.validate.field).string = {
+      email: true
+      max_len: 256
+    }];
+    // phone mechanism (E.164)
+    string phone = 3 [(buf.validate.field).string.pattern = "^\\+[1-9][0-9]{8,14}$"];
+  }
+
+  option (buf.validate.message).cel = {
+    id: "contact_exclusive"
+    message: "exactly one of email or phone must be set"
+    expression: "has(this.email) != has(this.phone)"
+  };
+}
+
+message CreateTenantRequest {
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  // capabilities is a subset of USER/MESSAGE/STORAGE/TELEMETRY/LICENSE; the
+  // empty set is allowed (enable later via SetCapability).
+  repeated string capabilities = 2 [(buf.validate.field).repeated = {
+    unique: true
+    items: {
+      string: {
+        in: [
+          "USER",
+          "MESSAGE",
+          "STORAGE",
+          "TELEMETRY",
+          "LICENSE"
+        ]
+      }
+    }
+  }];
+  // admin is optional — omit to bind the first console operator later.
+  BootstrapAdmin admin = 3;
+}
+
+message CreateTenantResponse {
+  string tenant_key = 1;
+  repeated string enabled_capabilities = 2;
+  // ak/sk always minted at creation; shown once
+  string access_key = 3;
+  // sk_…, shown once
+  string secret = 4;
+  // 0 when admin omitted or bound existing
+  int64 bootstrap_user_id = 5;
+  // shown once; only when a new account was created
+  string initial_password = 6;
+}
+
+message GetTenantRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message GetTenantResponse {
+  TenantInfo tenant = 1;
+}
+
+// ListTenantsRequest — the tenant registry is low-cardinality; no paging.
+message ListTenantsRequest {}
+
+message ListTenantsResponse {
+  repeated TenantInfo tenants = 1;
+}
+
+// UpdateTenantRequest edits name/remark only. tenant_key is immutable;
+// absent optional fields keep their current values.
+message UpdateTenantRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 200
+  }];
+  optional string remark = 3 [(buf.validate.field).string.max_len = 256];
+}
+
+message UpdateTenantResponse {
+  TenantInfo tenant = 1;
+}
+
+// SetCapabilityRequest flips one capability service of a tenant.
+message SetCapabilityRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // service is one of the five capability strings.
+  string service = 2 [(buf.validate.field).string = {
+    in: [
+      "USER",
+      "MESSAGE",
+      "STORAGE",
+      "TELEMETRY",
+      "LICENSE"
+    ]
+  }];
+  bool enabled = 3;
+}
+
+message SetCapabilityResponse {
+  TenantInfo tenant = 1;
+}
+
+// DisableTenantRequest toggles a tenant; reason is an audit label.
+message DisableTenantRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // false re-enables a disabled tenant.
+  bool disable = 2;
+  string reason = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+// ---- Api keys ----
+
+// CreateApiKeyRequest mints a credential pair for the tenant. The server
+// generates access_key ("ak_" + 12 base36) and secret; the plaintext secret
+// is returned exactly once and stored as a bcrypt hash.
+message CreateApiKeyRequest {
+  // TENANT_ADMIN callers may only target their own tenant (enforced
+  // server-side against the actor).
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message CreateApiKeyResponse {
+  ApiKeyInfo api_key = 1;
+  // new sk_…, shown once — never listed or echoed again.
+  string secret = 2;
+}
+
+message ListApiKeysRequest {
+  // TENANT_ADMIN callers may only list their own tenant (enforced
+  // server-side against the actor).
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+// ListApiKeysResponse NEVER carries a secret — see ApiKeyInfo.
+message ListApiKeysResponse {
+  repeated ApiKeyInfo api_keys = 1;
+}
+
+// RotateApiKeySecretRequest invalidates the key's current secret
+// immediately; the new plaintext is returned exactly once.
+message RotateApiKeySecretRequest {
+  string access_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message RotateApiKeySecretResponse {
+  ApiKeyInfo api_key = 1;
+  // new sk_…, shown once — never listed or echoed again.
+  string secret = 2;
+}
+
+// DisableApiKeyRequest toggles a key; reason is an audit label.
+message DisableApiKeyRequest {
+  string access_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // false re-enables a disabled key.
+  bool disable = 2;
+  string reason = 3 [(buf.validate.field).string.max_len = 512];
+}
+
+// ---- Members ----
+
+// AddTenantMemberRequest binds an existing console account to a tenant as a
+// console operator.
+message AddTenantMemberRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+// RemoveTenantMemberRequest unbinds a console operator. Idempotent —
+// removing an absent binding is a no-op.
+message RemoveTenantMemberRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  int64 user_id = 2 [(buf.validate.field).int64.gt = 0];
+}
+
+// ListTenantMembersRequest — operator lists are small; no paging.
+message ListTenantMembersRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 64
+  }];
+}
+
+message ListTenantMembersResponse {
+  repeated TenantMember members = 1;
+}
+
+// ---- Self-service (TENANT_ADMIN) ----
+
+// The caller is the verified actor (common.v1.RequestActor) carried in the
+// request context — no identity field on the wire.
+message WhoAmIResponse {
+  int64 user_id = 1;
+  repeated TenantMembership memberships = 2;
+}
+
+// TenantMembership is one console-operator binding of the caller.
+message TenantMembership {
+  string tenant_key = 1;
+  string tenant_name = 2;
+}
+
+message MyCapabilitiesResponse {
+  repeated string capabilities = 1;
+}

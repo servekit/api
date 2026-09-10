@@ -17,8 +17,9 @@ BUF ?= buf
 gen:
 	$(BUF) generate --template buf.gen.go.yaml
 	rm -rf gen/openapi/common gen/openapi/gid gen/openapi/license \
-		gen/openapi/messaging gen/openapi/storage gen/openapi/telemetry \
-		gen/openapi/user gen/openapi/testkit/v1/enums.swagger.json \
+		gen/openapi/messaging gen/openapi/portal gen/openapi/storage \
+		gen/openapi/telemetry gen/openapi/user \
+		gen/openapi/testkit/v1/enums.swagger.json \
 		gen/openapi/testkit/v1/message.swagger.json \
 		gen/openapi/testkit/v1/request_response.swagger.json
 	printf 'module github.com/servekit/api/gen/go\n\ngo 1.26.6\n' > gen/go/go.mod

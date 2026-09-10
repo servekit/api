@@ -1,0 +1,53 @@
+// Portal admin entities — the tenant resource model managed via
+// PortalAdminService (see service.proto). These are read-model rows produced
+// by the service; validation lives on the request payloads
+// (admin_request_response.proto). Human access is enforced at the gateway
+// (testkit, phase ④); the service layer branches on actor.user_type.
+syntax = "proto3";
+
+package portal.v1;
+
+// TenantInfo is one platform tenant. tenant_key is THE tenant identifier on
+// every surface (spec §3: "ten_" + 12 base36, minted server-side, unique and
+// immutable) — no other alias or internal row id ever leaves the service.
+// Credentials never appear here; api keys are listed via ListApiKeys.
+message TenantInfo {
+  string tenant_key = 1;
+  string name = 2;
+  string remark = 3;
+  // enabled_capabilities is a subset of the five service strings
+  // USER / MESSAGE / STORAGE / TELEMETRY / LICENSE. gid/reference/portal
+  // itself are platform plumbing and never appear here.
+  repeated string enabled_capabilities = 4;
+  // disabled tenants fail every tenant-scoped surface immediately.
+  bool disabled = 5;
+  // Unix seconds.
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+// ApiKeyInfo is one tenant credential row. access_key ("ak_" + 12 base36,
+// spec §3) identifies the credential; the secret is stored as a bcrypt hash
+// and NEVER appears here — only CreateApiKey / RotateApiKeySecret responses
+// carry the plaintext, exactly once.
+message ApiKeyInfo {
+  string access_key = 1;
+  string name = 2;
+  // disabled keys fail authentication immediately.
+  bool disabled = 3;
+  // Unix seconds; 0 = never used.
+  int64 last_used_at = 4;
+  // Unix seconds.
+  int64 created_at = 5;
+}
+
+// TenantMember is one console-operator binding: a directory user authorized
+// to operate the tenant's console (actor.user_type = TENANT_ADMIN pinned to
+// this tenant). Display fields are joined from the user directory at read
+// time.
+message TenantMember {
+  int64 user_id = 1;
+  string name = 2;
+  // Unix seconds; when the binding was created.
+  int64 created_at = 3;
+}

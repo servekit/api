@@ -1,0 +1,73 @@
+// Portal admin service definitions — RPC declarations only.
+syntax = "proto3";
+
+package portal.v1;
+
+import "google/protobuf/empty.proto";
+import "portal/v1/admin_request_response.proto";
+
+// PortalAdminService manages tenant facts: tenants, api keys, capabilities,
+// and console-operator bindings. Human authorization is the gateway's job
+// (testkit, phase ④); the service layer still requires a verified actor and
+// branches on user_type (spec §7.2).
+service PortalAdminService {
+  // Tenants (PLATFORM only)
+
+  // CreateTenant registers a tenant, mints its initial ak/sk (the secret is
+  // shown exactly once), and optionally bootstraps the first console admin —
+  // by binding an existing console account or creating a new one.
+  rpc CreateTenant(CreateTenantRequest) returns (CreateTenantResponse);
+
+  // GetTenant returns one tenant by tenant_key.
+  rpc GetTenant(GetTenantRequest) returns (GetTenantResponse);
+
+  // ListTenants returns all tenants (no pagination — low cardinality).
+  rpc ListTenants(ListTenantsRequest) returns (ListTenantsResponse);
+
+  // UpdateTenant edits name/remark only; absent optional fields keep their
+  // current values. Capabilities are owned by SetCapability.
+  rpc UpdateTenant(UpdateTenantRequest) returns (UpdateTenantResponse);
+
+  // SetCapability enables or disables one capability service for a tenant.
+  rpc SetCapability(SetCapabilityRequest) returns (SetCapabilityResponse);
+
+  // DisableTenant toggles a tenant between disabled and active. A disabled
+  // tenant fails every tenant-scoped surface immediately.
+  rpc DisableTenant(DisableTenantRequest) returns (google.protobuf.Empty);
+
+  // Api keys (PLATFORM any tenant; TENANT_ADMIN own tenant only)
+
+  // CreateApiKey mints a new credential pair for a tenant; the plaintext
+  // secret is returned exactly once.
+  rpc CreateApiKey(CreateApiKeyRequest) returns (CreateApiKeyResponse);
+
+  // ListApiKeys returns a tenant's credential rows — never the secret.
+  rpc ListApiKeys(ListApiKeysRequest) returns (ListApiKeysResponse);
+
+  // RotateApiKeySecret invalidates the current secret immediately and
+  // returns the new plaintext exactly once.
+  rpc RotateApiKeySecret(RotateApiKeySecretRequest) returns (RotateApiKeySecretResponse);
+
+  // DisableApiKey toggles a key between disabled and active. A disabled key
+  // fails authentication immediately.
+  rpc DisableApiKey(DisableApiKeyRequest) returns (google.protobuf.Empty);
+
+  // Members (PLATFORM only)
+
+  // AddTenantMember binds an existing console account to a tenant.
+  rpc AddTenantMember(AddTenantMemberRequest) returns (google.protobuf.Empty);
+
+  // RemoveTenantMember unbinds a console operator from a tenant.
+  rpc RemoveTenantMember(RemoveTenantMemberRequest) returns (google.protobuf.Empty);
+
+  // ListTenantMembers returns a tenant's console operators.
+  rpc ListTenantMembers(ListTenantMembersRequest) returns (ListTenantMembersResponse);
+
+  // Self-service (TENANT_ADMIN)
+
+  // WhoAmI echoes the verified actor and their tenant memberships.
+  rpc WhoAmI(google.protobuf.Empty) returns (WhoAmIResponse);
+
+  // MyCapabilities returns the enabled capabilities of the caller's tenant.
+  rpc MyCapabilities(google.protobuf.Empty) returns (MyCapabilitiesResponse);
+}
