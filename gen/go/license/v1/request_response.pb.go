@@ -1886,32 +1886,37 @@ func (x *ShowPubKeyResponse) GetKeys() []*SigningKeyInfo {
 	return nil
 }
 
-// CreateAppRequest registers a calling application. app_key empty = the
-// server mints one ("lic_" + 8 base36 chars, immutable).
-type CreateAppRequest struct {
+// CreateTenantConfigRequest registers a tenant's config row. The internal
+// app identity is minted server-side ("lic_" + 8 base36 chars, immutable);
+// the app_secret is echoed on every read of LicenseTenantConfigInfo
+// (internal-trust posture).
+type CreateTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key pattern: lowercase letter followed by lowercase alphanumerics
-	// and dashes. Optional; empty = server-generated.
-	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// tenant_key names the tenant this config row belongs to. A scoped
+	// caller is clamped to the injected key (the stamp follows the
+	// injection, never the body); the PLATFORM cross-view needs it for a
+	// provisioning create — when empty there the server-minted app key
+	// literal is the legacy→tenant fallback value. Unique across rows.
+	TenantKey     string `protobuf:"bytes,3,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppRequest) Reset() {
-	*x = CreateAppRequest{}
+func (x *CreateTenantConfigRequest) Reset() {
+	*x = CreateTenantConfigRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppRequest) String() string {
+func (x *CreateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppRequest) ProtoMessage() {}
+func (*CreateTenantConfigRequest) ProtoMessage() {}
 
-func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1923,48 +1928,49 @@ func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
-func (*CreateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{36}
 }
 
-func (x *CreateAppRequest) GetAppKey() string {
-	if x != nil {
-		return x.AppKey
-	}
-	return ""
-}
-
-func (x *CreateAppRequest) GetName() string {
+func (x *CreateTenantConfigRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type CreateAppResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+func (x *CreateTenantConfigRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
+type CreateTenantConfigResponse struct {
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret convenience echo (also visible via
+	// ListTenantConfigs/GetTenantConfig).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppResponse) Reset() {
-	*x = CreateAppResponse{}
+func (x *CreateTenantConfigResponse) Reset() {
+	*x = CreateTenantConfigResponse{}
 	mi := &file_license_v1_request_response_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppResponse) String() string {
+func (x *CreateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppResponse) ProtoMessage() {}
+func (*CreateTenantConfigResponse) ProtoMessage() {}
 
-func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1976,46 +1982,46 @@ func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
-func (*CreateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *CreateAppResponse) GetApp() *LicenseAppInfo {
+func (x *CreateTenantConfigResponse) GetConfig() *LicenseTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *CreateAppResponse) GetAppSecret() string {
+func (x *CreateTenantConfigResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-type GetAppRequest struct {
+type GetTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppRequest) Reset() {
-	*x = GetAppRequest{}
+func (x *GetTenantConfigRequest) Reset() {
+	*x = GetTenantConfigRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppRequest) String() string {
+func (x *GetTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppRequest) ProtoMessage() {}
+func (*GetTenantConfigRequest) ProtoMessage() {}
 
-func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2027,39 +2033,39 @@ func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
-func (*GetAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *GetAppRequest) GetAppKey() string {
+func (x *GetTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type GetAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type GetTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppResponse) Reset() {
-	*x = GetAppResponse{}
+func (x *GetTenantConfigResponse) Reset() {
+	*x = GetTenantConfigResponse{}
 	mi := &file_license_v1_request_response_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppResponse) String() string {
+func (x *GetTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppResponse) ProtoMessage() {}
+func (*GetTenantConfigResponse) ProtoMessage() {}
 
-func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2071,43 +2077,43 @@ func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
-func (*GetAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{39}
 }
 
-func (x *GetAppResponse) GetApp() *LicenseAppInfo {
+func (x *GetTenantConfigResponse) GetConfig() *LicenseTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
-// optional fields keep their current values.
-type UpdateAppRequest struct {
+// UpdateTenantConfigRequest edits mutable fields; the row's identity is
+// immutable. Absent optional fields keep their current values.
+type UpdateTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Disabled      *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateAppRequest) Reset() {
-	*x = UpdateAppRequest{}
+func (x *UpdateTenantConfigRequest) Reset() {
+	*x = UpdateTenantConfigRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppRequest) String() string {
+func (x *UpdateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppRequest) ProtoMessage() {}
+func (*UpdateTenantConfigRequest) ProtoMessage() {}
 
-func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2119,53 +2125,53 @@ func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
-func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{40}
 }
 
-func (x *UpdateAppRequest) GetAppKey() string {
+func (x *UpdateTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetName() string {
+func (x *UpdateTenantConfigRequest) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetDisabled() bool {
+func (x *UpdateTenantConfigRequest) GetDisabled() bool {
 	if x != nil && x.Disabled != nil {
 		return *x.Disabled
 	}
 	return false
 }
 
-type UpdateAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type UpdateTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateAppResponse) Reset() {
-	*x = UpdateAppResponse{}
+func (x *UpdateTenantConfigResponse) Reset() {
+	*x = UpdateTenantConfigResponse{}
 	mi := &file_license_v1_request_response_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppResponse) String() string {
+func (x *UpdateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppResponse) ProtoMessage() {}
+func (*UpdateTenantConfigResponse) ProtoMessage() {}
 
-func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2177,39 +2183,39 @@ func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
-func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{41}
 }
 
-func (x *UpdateAppResponse) GetApp() *LicenseAppInfo {
+func (x *UpdateTenantConfigResponse) GetConfig() *LicenseTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-type RotateAppSecretRequest struct {
+type RotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretRequest) Reset() {
-	*x = RotateAppSecretRequest{}
+func (x *RotateTenantConfigSecretRequest) Reset() {
+	*x = RotateTenantConfigSecretRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretRequest) String() string {
+func (x *RotateTenantConfigSecretRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretRequest) ProtoMessage() {}
+func (*RotateTenantConfigSecretRequest) ProtoMessage() {}
 
-func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2221,41 +2227,42 @@ func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{42}
 }
 
-func (x *RotateAppSecretRequest) GetAppKey() string {
+func (x *RotateTenantConfigSecretRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type RotateAppSecretResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *LicenseAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+type RotateTenantConfigSecretResponse struct {
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret convenience echo (also visible via
+	// ListTenantConfigs/GetTenantConfig).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretResponse) Reset() {
-	*x = RotateAppSecretResponse{}
+func (x *RotateTenantConfigSecretResponse) Reset() {
+	*x = RotateTenantConfigSecretResponse{}
 	mi := &file_license_v1_request_response_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretResponse) String() string {
+func (x *RotateTenantConfigSecretResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretResponse) ProtoMessage() {}
+func (*RotateTenantConfigSecretResponse) ProtoMessage() {}
 
-func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2267,46 +2274,47 @@ func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{43}
 }
 
-func (x *RotateAppSecretResponse) GetApp() *LicenseAppInfo {
+func (x *RotateTenantConfigSecretResponse) GetConfig() *LicenseTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *RotateAppSecretResponse) GetAppSecret() string {
+func (x *RotateTenantConfigSecretResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-// ListAppsRequest — the app registry is low-cardinality; no paging.
-type ListAppsRequest struct {
+// ListTenantConfigsRequest — one row per tenant, low cardinality; no
+// paging.
+type ListTenantConfigsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsRequest) Reset() {
-	*x = ListAppsRequest{}
+func (x *ListTenantConfigsRequest) Reset() {
+	*x = ListTenantConfigsRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsRequest) String() string {
+func (x *ListTenantConfigsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsRequest) ProtoMessage() {}
+func (*ListTenantConfigsRequest) ProtoMessage() {}
 
-func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2318,32 +2326,32 @@ func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
-func (*ListAppsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsRequest.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{44}
 }
 
-type ListAppsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*LicenseAppInfo      `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+type ListTenantConfigsResponse struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Configs       []*LicenseTenantConfigInfo `protobuf:"bytes,1,rep,name=configs,proto3" json:"configs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsResponse) Reset() {
-	*x = ListAppsResponse{}
+func (x *ListTenantConfigsResponse) Reset() {
+	*x = ListTenantConfigsResponse{}
 	mi := &file_license_v1_request_response_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsResponse) String() string {
+func (x *ListTenantConfigsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsResponse) ProtoMessage() {}
+func (*ListTenantConfigsResponse) ProtoMessage() {}
 
-func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2355,41 +2363,42 @@ func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
-func (*ListAppsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsResponse.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsResponse) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *ListAppsResponse) GetApps() []*LicenseAppInfo {
+func (x *ListTenantConfigsResponse) GetConfigs() []*LicenseTenantConfigInfo {
 	if x != nil {
-		return x.Apps
+		return x.Configs
 	}
 	return nil
 }
 
-// DeleteAppRequest removes the app row (hard delete). Existing licenses and
-// devices are untouched; the app_key becomes reusable.
-type DeleteAppRequest struct {
+// DeleteTenantConfigRequest removes the config row (hard delete —
+// licensing keeps no soft-delete rows). Existing licenses and devices are
+// untouched; the row's identity becomes reusable.
+type DeleteTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteAppRequest) Reset() {
-	*x = DeleteAppRequest{}
+func (x *DeleteTenantConfigRequest) Reset() {
+	*x = DeleteTenantConfigRequest{}
 	mi := &file_license_v1_request_response_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteAppRequest) String() string {
+func (x *DeleteTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteAppRequest) ProtoMessage() {}
+func (*DeleteTenantConfigRequest) ProtoMessage() {}
 
-func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_license_v1_request_response_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2401,14 +2410,14 @@ func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
-func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*DeleteTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_license_v1_request_response_proto_rawDescGZIP(), []int{46}
 }
 
-func (x *DeleteAppRequest) GetAppKey() string {
+func (x *DeleteTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2540,39 +2549,44 @@ const file_license_v1_request_response_proto_rawDesc = "" +
 	"\x11ShowPubKeyRequest\"\xac\x01\n" +
 	"\x12ShowPubKeyResponse\x12\"\n" +
 	"\ractive_key_id\x18\x04 \x01(\tR\vactiveKeyId\x12.\n" +
-	"\x04keys\x18\x05 \x03(\v2\x1a.license.v1.SigningKeyInfoR\x04keysJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0epublic_key_b64R\x06key_idR\x18secondary_public_key_b64\"m\n" +
-	"\x10CreateAppRequest\x129\n" +
-	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\x04keys\x18\x05 \x03(\v2\x1a.license.v1.SigningKeyInfoR\x04keysJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x0epublic_key_b64R\x06key_idR\x18secondary_public_key_b64\"c\n" +
+	"\x19CreateTenantConfigRequest\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\"`\n" +
-	"\x11CreateAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\x12\x1d\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12&\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"3\n" +
-	"\rGetAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\">\n" +
-	"\x0eGetAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\"\x92\x01\n" +
-	"\x10UpdateAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"tenant_key\x18\x03 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"x\n" +
+	"\x1aCreateTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.license.v1.LicenseTenantConfigInfoR\x06config\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"B\n" +
+	"\x16GetTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"V\n" +
+	"\x17GetTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.license.v1.LicenseTenantConfigInfoR\x06config\"\xa1\x01\n" +
+	"\x19UpdateTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
 	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01B\a\n" +
 	"\x05_nameB\v\n" +
-	"\t_disabled\"A\n" +
-	"\x11UpdateAppResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\"<\n" +
-	"\x16RotateAppSecretRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"f\n" +
-	"\x17RotateAppSecretResponse\x12,\n" +
-	"\x03app\x18\x01 \x01(\v2\x1a.license.v1.LicenseAppInfoR\x03app\x12\x1d\n" +
+	"\t_disabled\"Y\n" +
+	"\x1aUpdateTenantConfigResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.license.v1.LicenseTenantConfigInfoR\x06config\"K\n" +
+	"\x1fRotateTenantConfigSecretRequest\x12(\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x11\n" +
-	"\x0fListAppsRequest\"B\n" +
-	"\x10ListAppsResponse\x12.\n" +
-	"\x04apps\x18\x01 \x03(\v2\x1a.license.v1.LicenseAppInfoR\x04apps\"6\n" +
-	"\x10DeleteAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKeyB\xa4\x01\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"~\n" +
+	" RotateTenantConfigSecretResponse\x12;\n" +
+	"\x06config\x18\x01 \x01(\v2#.license.v1.LicenseTenantConfigInfoR\x06config\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x1a\n" +
+	"\x18ListTenantConfigsRequest\"Z\n" +
+	"\x19ListTenantConfigsResponse\x12=\n" +
+	"\aconfigs\x18\x01 \x03(\v2#.license.v1.LicenseTenantConfigInfoR\aconfigs\"E\n" +
+	"\x19DeleteTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKeyB\xa4\x01\n" +
 	"\x0ecom.license.v1B\x14RequestResponseProtoP\x01Z3github.com/servekit/api/gen/go/license/v1;licensev1\xa2\x02\x03LXX\xaa\x02\n" +
 	"License.V1\xca\x02\n" +
 	"License\\V1\xe2\x02\x16License\\V1\\GPBMetadata\xea\x02\vLicense::V1b\x06proto3"
@@ -2591,66 +2605,66 @@ func file_license_v1_request_response_proto_rawDescGZIP() []byte {
 
 var file_license_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
 var file_license_v1_request_response_proto_goTypes = []any{
-	(*ActivateRequest)(nil),         // 0: license.v1.ActivateRequest
-	(*ActivateResponse)(nil),        // 1: license.v1.ActivateResponse
-	(*DeactivateRequest)(nil),       // 2: license.v1.DeactivateRequest
-	(*DeactivateResponse)(nil),      // 3: license.v1.DeactivateResponse
-	(*TrialStartRequest)(nil),       // 4: license.v1.TrialStartRequest
-	(*TrialStartResponse)(nil),      // 5: license.v1.TrialStartResponse
-	(*HealthRequest)(nil),           // 6: license.v1.HealthRequest
-	(*HealthResponse)(nil),          // 7: license.v1.HealthResponse
-	(*CreateKeyRequest)(nil),        // 8: license.v1.CreateKeyRequest
-	(*CreateKeyResponse)(nil),       // 9: license.v1.CreateKeyResponse
-	(*ShowKeyRequest)(nil),          // 10: license.v1.ShowKeyRequest
-	(*ShowKeyResponse)(nil),         // 11: license.v1.ShowKeyResponse
-	(*ListKeysRequest)(nil),         // 12: license.v1.ListKeysRequest
-	(*ListKeysResponse)(nil),        // 13: license.v1.ListKeysResponse
-	(*UpdateKeyRequest)(nil),        // 14: license.v1.UpdateKeyRequest
-	(*UpdateKeyResponse)(nil),       // 15: license.v1.UpdateKeyResponse
-	(*RevokeKeyRequest)(nil),        // 16: license.v1.RevokeKeyRequest
-	(*RevokeKeyResponse)(nil),       // 17: license.v1.RevokeKeyResponse
-	(*UnrevokeKeyRequest)(nil),      // 18: license.v1.UnrevokeKeyRequest
-	(*UnrevokeKeyResponse)(nil),     // 19: license.v1.UnrevokeKeyResponse
-	(*DeleteKeyRequest)(nil),        // 20: license.v1.DeleteKeyRequest
-	(*DeleteKeyResponse)(nil),       // 21: license.v1.DeleteKeyResponse
-	(*GrantModuleRequest)(nil),      // 22: license.v1.GrantModuleRequest
-	(*GrantModuleResponse)(nil),     // 23: license.v1.GrantModuleResponse
-	(*RevokeModuleRequest)(nil),     // 24: license.v1.RevokeModuleRequest
-	(*RevokeModuleResponse)(nil),    // 25: license.v1.RevokeModuleResponse
-	(*ListKeyDevicesRequest)(nil),   // 26: license.v1.ListKeyDevicesRequest
-	(*ListKeyDevicesResponse)(nil),  // 27: license.v1.ListKeyDevicesResponse
-	(*KickDeviceRequest)(nil),       // 28: license.v1.KickDeviceRequest
-	(*KickDeviceResponse)(nil),      // 29: license.v1.KickDeviceResponse
-	(*ShowTrialRequest)(nil),        // 30: license.v1.ShowTrialRequest
-	(*ShowTrialResponse)(nil),       // 31: license.v1.ShowTrialResponse
-	(*ResetTrialRequest)(nil),       // 32: license.v1.ResetTrialRequest
-	(*ResetTrialResponse)(nil),      // 33: license.v1.ResetTrialResponse
-	(*ShowPubKeyRequest)(nil),       // 34: license.v1.ShowPubKeyRequest
-	(*ShowPubKeyResponse)(nil),      // 35: license.v1.ShowPubKeyResponse
-	(*CreateAppRequest)(nil),        // 36: license.v1.CreateAppRequest
-	(*CreateAppResponse)(nil),       // 37: license.v1.CreateAppResponse
-	(*GetAppRequest)(nil),           // 38: license.v1.GetAppRequest
-	(*GetAppResponse)(nil),          // 39: license.v1.GetAppResponse
-	(*UpdateAppRequest)(nil),        // 40: license.v1.UpdateAppRequest
-	(*UpdateAppResponse)(nil),       // 41: license.v1.UpdateAppResponse
-	(*RotateAppSecretRequest)(nil),  // 42: license.v1.RotateAppSecretRequest
-	(*RotateAppSecretResponse)(nil), // 43: license.v1.RotateAppSecretResponse
-	(*ListAppsRequest)(nil),         // 44: license.v1.ListAppsRequest
-	(*ListAppsResponse)(nil),        // 45: license.v1.ListAppsResponse
-	(*DeleteAppRequest)(nil),        // 46: license.v1.DeleteAppRequest
-	(*SlotSummary)(nil),             // 47: license.v1.SlotSummary
-	(*HealthChecks)(nil),            // 48: license.v1.HealthChecks
-	(*EntitlementInput)(nil),        // 49: license.v1.EntitlementInput
-	(*KeyInfo)(nil),                 // 50: license.v1.KeyInfo
-	(KeyStatus)(0),                  // 51: license.v1.KeyStatus
-	(Module)(0),                     // 52: license.v1.Module
-	(EntitlementKind)(0),            // 53: license.v1.EntitlementKind
-	(*timestamppb.Timestamp)(nil),   // 54: google.protobuf.Timestamp
-	(*EntitlementInfo)(nil),         // 55: license.v1.EntitlementInfo
-	(*DeviceSlotInfo)(nil),          // 56: license.v1.DeviceSlotInfo
-	(*TrialInfo)(nil),               // 57: license.v1.TrialInfo
-	(*SigningKeyInfo)(nil),          // 58: license.v1.SigningKeyInfo
-	(*LicenseAppInfo)(nil),          // 59: license.v1.LicenseAppInfo
+	(*ActivateRequest)(nil),                  // 0: license.v1.ActivateRequest
+	(*ActivateResponse)(nil),                 // 1: license.v1.ActivateResponse
+	(*DeactivateRequest)(nil),                // 2: license.v1.DeactivateRequest
+	(*DeactivateResponse)(nil),               // 3: license.v1.DeactivateResponse
+	(*TrialStartRequest)(nil),                // 4: license.v1.TrialStartRequest
+	(*TrialStartResponse)(nil),               // 5: license.v1.TrialStartResponse
+	(*HealthRequest)(nil),                    // 6: license.v1.HealthRequest
+	(*HealthResponse)(nil),                   // 7: license.v1.HealthResponse
+	(*CreateKeyRequest)(nil),                 // 8: license.v1.CreateKeyRequest
+	(*CreateKeyResponse)(nil),                // 9: license.v1.CreateKeyResponse
+	(*ShowKeyRequest)(nil),                   // 10: license.v1.ShowKeyRequest
+	(*ShowKeyResponse)(nil),                  // 11: license.v1.ShowKeyResponse
+	(*ListKeysRequest)(nil),                  // 12: license.v1.ListKeysRequest
+	(*ListKeysResponse)(nil),                 // 13: license.v1.ListKeysResponse
+	(*UpdateKeyRequest)(nil),                 // 14: license.v1.UpdateKeyRequest
+	(*UpdateKeyResponse)(nil),                // 15: license.v1.UpdateKeyResponse
+	(*RevokeKeyRequest)(nil),                 // 16: license.v1.RevokeKeyRequest
+	(*RevokeKeyResponse)(nil),                // 17: license.v1.RevokeKeyResponse
+	(*UnrevokeKeyRequest)(nil),               // 18: license.v1.UnrevokeKeyRequest
+	(*UnrevokeKeyResponse)(nil),              // 19: license.v1.UnrevokeKeyResponse
+	(*DeleteKeyRequest)(nil),                 // 20: license.v1.DeleteKeyRequest
+	(*DeleteKeyResponse)(nil),                // 21: license.v1.DeleteKeyResponse
+	(*GrantModuleRequest)(nil),               // 22: license.v1.GrantModuleRequest
+	(*GrantModuleResponse)(nil),              // 23: license.v1.GrantModuleResponse
+	(*RevokeModuleRequest)(nil),              // 24: license.v1.RevokeModuleRequest
+	(*RevokeModuleResponse)(nil),             // 25: license.v1.RevokeModuleResponse
+	(*ListKeyDevicesRequest)(nil),            // 26: license.v1.ListKeyDevicesRequest
+	(*ListKeyDevicesResponse)(nil),           // 27: license.v1.ListKeyDevicesResponse
+	(*KickDeviceRequest)(nil),                // 28: license.v1.KickDeviceRequest
+	(*KickDeviceResponse)(nil),               // 29: license.v1.KickDeviceResponse
+	(*ShowTrialRequest)(nil),                 // 30: license.v1.ShowTrialRequest
+	(*ShowTrialResponse)(nil),                // 31: license.v1.ShowTrialResponse
+	(*ResetTrialRequest)(nil),                // 32: license.v1.ResetTrialRequest
+	(*ResetTrialResponse)(nil),               // 33: license.v1.ResetTrialResponse
+	(*ShowPubKeyRequest)(nil),                // 34: license.v1.ShowPubKeyRequest
+	(*ShowPubKeyResponse)(nil),               // 35: license.v1.ShowPubKeyResponse
+	(*CreateTenantConfigRequest)(nil),        // 36: license.v1.CreateTenantConfigRequest
+	(*CreateTenantConfigResponse)(nil),       // 37: license.v1.CreateTenantConfigResponse
+	(*GetTenantConfigRequest)(nil),           // 38: license.v1.GetTenantConfigRequest
+	(*GetTenantConfigResponse)(nil),          // 39: license.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigRequest)(nil),        // 40: license.v1.UpdateTenantConfigRequest
+	(*UpdateTenantConfigResponse)(nil),       // 41: license.v1.UpdateTenantConfigResponse
+	(*RotateTenantConfigSecretRequest)(nil),  // 42: license.v1.RotateTenantConfigSecretRequest
+	(*RotateTenantConfigSecretResponse)(nil), // 43: license.v1.RotateTenantConfigSecretResponse
+	(*ListTenantConfigsRequest)(nil),         // 44: license.v1.ListTenantConfigsRequest
+	(*ListTenantConfigsResponse)(nil),        // 45: license.v1.ListTenantConfigsResponse
+	(*DeleteTenantConfigRequest)(nil),        // 46: license.v1.DeleteTenantConfigRequest
+	(*SlotSummary)(nil),                      // 47: license.v1.SlotSummary
+	(*HealthChecks)(nil),                     // 48: license.v1.HealthChecks
+	(*EntitlementInput)(nil),                 // 49: license.v1.EntitlementInput
+	(*KeyInfo)(nil),                          // 50: license.v1.KeyInfo
+	(KeyStatus)(0),                           // 51: license.v1.KeyStatus
+	(Module)(0),                              // 52: license.v1.Module
+	(EntitlementKind)(0),                     // 53: license.v1.EntitlementKind
+	(*timestamppb.Timestamp)(nil),            // 54: google.protobuf.Timestamp
+	(*EntitlementInfo)(nil),                  // 55: license.v1.EntitlementInfo
+	(*DeviceSlotInfo)(nil),                   // 56: license.v1.DeviceSlotInfo
+	(*TrialInfo)(nil),                        // 57: license.v1.TrialInfo
+	(*SigningKeyInfo)(nil),                   // 58: license.v1.SigningKeyInfo
+	(*LicenseTenantConfigInfo)(nil),          // 59: license.v1.LicenseTenantConfigInfo
 }
 var file_license_v1_request_response_proto_depIdxs = []int32{
 	47, // 0: license.v1.ActivateResponse.slots:type_name -> license.v1.SlotSummary
@@ -2673,11 +2687,11 @@ var file_license_v1_request_response_proto_depIdxs = []int32{
 	57, // 17: license.v1.ShowTrialResponse.trials:type_name -> license.v1.TrialInfo
 	52, // 18: license.v1.ResetTrialRequest.module:type_name -> license.v1.Module
 	58, // 19: license.v1.ShowPubKeyResponse.keys:type_name -> license.v1.SigningKeyInfo
-	59, // 20: license.v1.CreateAppResponse.app:type_name -> license.v1.LicenseAppInfo
-	59, // 21: license.v1.GetAppResponse.app:type_name -> license.v1.LicenseAppInfo
-	59, // 22: license.v1.UpdateAppResponse.app:type_name -> license.v1.LicenseAppInfo
-	59, // 23: license.v1.RotateAppSecretResponse.app:type_name -> license.v1.LicenseAppInfo
-	59, // 24: license.v1.ListAppsResponse.apps:type_name -> license.v1.LicenseAppInfo
+	59, // 20: license.v1.CreateTenantConfigResponse.config:type_name -> license.v1.LicenseTenantConfigInfo
+	59, // 21: license.v1.GetTenantConfigResponse.config:type_name -> license.v1.LicenseTenantConfigInfo
+	59, // 22: license.v1.UpdateTenantConfigResponse.config:type_name -> license.v1.LicenseTenantConfigInfo
+	59, // 23: license.v1.RotateTenantConfigSecretResponse.config:type_name -> license.v1.LicenseTenantConfigInfo
+	59, // 24: license.v1.ListTenantConfigsResponse.configs:type_name -> license.v1.LicenseTenantConfigInfo
 	25, // [25:25] is the sub-list for method output_type
 	25, // [25:25] is the sub-list for method input_type
 	25, // [25:25] is the sub-list for extension type_name

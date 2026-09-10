@@ -2392,192 +2392,6 @@
         ]
       }
     },
-    "/api/v1/license/admin/apps": {
-      "get": {
-        "operationId": "LicenseListApps",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1ListAppsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "post": {
-        "operationId": "LicenseCreateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1CreateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": "CreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"lic_\" + 8 base36 chars, immutable).",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/licenseV1CreateAppRequest"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/license/admin/apps/{appKey}": {
-      "get": {
-        "operationId": "LicenseGetApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1GetAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "delete": {
-        "operationId": "LicenseDeleteApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "put": {
-        "operationId": "LicenseUpdateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1UpdateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceLicenseUpdateAppBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/license/admin/apps/{appKey}:rotateSecret": {
-      "post": {
-        "operationId": "LicenseRotateAppSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1RotateAppSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "appKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceLicenseRotateAppSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/license/admin/keys": {
       "get": {
         "operationId": "ListKeys",
@@ -3010,6 +2824,192 @@
             }
           }
         },
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/license/admin/tenant-configs": {
+      "get": {
+        "operationId": "LicenseListTenantConfigs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1ListTenantConfigsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "LicenseCreateTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1CreateTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nthe app_secret is echoed on every read of LicenseTenantConfigInfo\n(internal-trust posture).",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/licenseV1CreateTenantConfigRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/license/admin/tenant-configs/{tenantKey}": {
+      "get": {
+        "operationId": "LicenseGetTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1GetTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "LicenseDeleteTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "LicenseUpdateTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1UpdateTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceLicenseUpdateTenantConfigBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/license/admin/tenant-configs/{tenantKey}:rotateSecret": {
+      "post": {
+        "operationId": "LicenseRotateTenantConfigSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/licenseV1RotateTenantConfigSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceLicenseRotateTenantConfigSecretBody"
+            }
+          }
+        ],
         "tags": [
           "TestkitService"
         ]
@@ -3760,7 +3760,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListTenantConfigsResponse"
+              "$ref": "#/definitions/messagingV1ListTenantConfigsResponse"
             }
           },
           "default": {
@@ -3780,7 +3780,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateTenantConfigResponse"
+              "$ref": "#/definitions/messagingV1CreateTenantConfigResponse"
             }
           },
           "default": {
@@ -3796,7 +3796,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateTenantConfigRequest"
+              "$ref": "#/definitions/messagingV1CreateTenantConfigRequest"
             }
           }
         ],
@@ -3812,7 +3812,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetTenantConfigResponse"
+              "$ref": "#/definitions/messagingV1GetTenantConfigResponse"
             }
           },
           "default": {
@@ -3871,7 +3871,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateTenantConfigResponse"
+              "$ref": "#/definitions/messagingV1UpdateTenantConfigResponse"
             }
           },
           "default": {
@@ -3910,7 +3910,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1RotateTenantConfigSecretResponse"
+              "$ref": "#/definitions/messagingV1RotateTenantConfigSecretResponse"
             }
           },
           "default": {
@@ -8361,10 +8361,10 @@
         }
       }
     },
-    "TestkitServiceLicenseRotateAppSecretBody": {
+    "TestkitServiceLicenseRotateTenantConfigSecretBody": {
       "type": "object"
     },
-    "TestkitServiceLicenseUpdateAppBody": {
+    "TestkitServiceLicenseUpdateTenantConfigBody": {
       "type": "object",
       "properties": {
         "name": {
@@ -8374,7 +8374,7 @@
           "type": "boolean"
         }
       },
-      "description": "UpdateAppRequest edits mutable fields; app_key is immutable. Absent\noptional fields keep their current values."
+      "description": "UpdateTenantConfigRequest edits mutable fields; the row's identity is\nimmutable. Absent optional fields keep their current values."
     },
     "TestkitServiceMessageRotateTenantConfigSecretBody": {
       "type": "object",
@@ -8751,68 +8751,140 @@
       },
       "description": "UpdateAppRequest edits mutable fields; tenant_key is immutable. Absent\noptional fields keep their current values."
     },
-    "licenseV1CreateAppRequest": {
+    "licenseV1CreateTenantConfigRequest": {
       "type": "object",
       "properties": {
-        "appKey": {
-          "type": "string",
-          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
-        },
         "name": {
           "type": "string"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key (the stamp follows the\ninjection, never the body); the PLATFORM cross-view needs it for a\nprovisioning create — when empty there the server-minted app key\nliteral is the legacy→tenant fallback value. Unique across rows."
         }
       },
-      "description": "CreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"lic_\" + 8 base36 chars, immutable)."
+      "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nthe app_secret is echoed on every read of LicenseTenantConfigInfo\n(internal-trust posture)."
     },
-    "licenseV1CreateAppResponse": {
+    "licenseV1CreateTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1LicenseAppInfo"
+        "config": {
+          "$ref": "#/definitions/v1LicenseTenantConfigInfo"
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
         }
       }
     },
-    "licenseV1GetAppResponse": {
+    "licenseV1GetTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1LicenseAppInfo"
+        "config": {
+          "$ref": "#/definitions/v1LicenseTenantConfigInfo"
         }
       }
     },
-    "licenseV1ListAppsResponse": {
+    "licenseV1ListTenantConfigsResponse": {
       "type": "object",
       "properties": {
-        "apps": {
+        "configs": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1LicenseAppInfo"
+            "$ref": "#/definitions/v1LicenseTenantConfigInfo"
           }
         }
       }
     },
-    "licenseV1RotateAppSecretResponse": {
+    "licenseV1RotateTenantConfigSecretResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1LicenseAppInfo"
+        "config": {
+          "$ref": "#/definitions/v1LicenseTenantConfigInfo"
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
         }
       }
     },
-    "licenseV1UpdateAppResponse": {
+    "licenseV1UpdateTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1LicenseAppInfo"
+        "config": {
+          "$ref": "#/definitions/v1LicenseTenantConfigInfo"
+        }
+      }
+    },
+    "messagingV1CreateTenantConfigRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name is the config row's display label."
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key (the stamp follows the\ninjection, never the body); the PLATFORM cross-view needs it for a\nprovisioning create. Unique across rows (one config row per tenant);\nwhen empty on the cross-view the server-minted app key literal is the\nlegacy→tenant fallback value."
+        }
+      }
+    },
+    "messagingV1CreateTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        },
+        "appSecret": {
+          "type": "string"
+        }
+      },
+      "description": "CreateTenantConfigResponse returns the created config row plus the\nplaintext app_secret exactly once — it is not recoverable later (rotate\nto re-issue)."
+    },
+    "messagingV1GetTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        }
+      }
+    },
+    "messagingV1ListTenantConfigsResponse": {
+      "type": "object",
+      "properties": {
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MessageTenantConfigInfo"
+          }
+        }
+      }
+    },
+    "messagingV1RotateTenantConfigSecretResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        },
+        "appSecret": {
+          "type": "string"
+        }
+      }
+    },
+    "messagingV1UpdateTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
         }
       }
     },
@@ -10495,39 +10567,6 @@
         }
       }
     },
-    "v1CreateTenantConfigRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "name is the config row's display label."
-        },
-        "smsDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "emailDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "tenantKey": {
-          "type": "string",
-          "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key (the stamp follows the\ninjection, never the body); the PLATFORM cross-view needs it for a\nprovisioning create. Unique across rows (one config row per tenant);\nwhen empty on the cross-view the server-minted app key literal is the\nlegacy→tenant fallback value."
-        }
-      }
-    },
-    "v1CreateTenantConfigResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1MessageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string"
-        }
-      },
-      "description": "CreateTenantConfigResponse returns the created config row plus the\nplaintext app_secret exactly once — it is not recoverable later (rotate\nto re-issue)."
-    },
     "v1CreateUserRequest": {
       "type": "object",
       "properties": {
@@ -11582,14 +11621,6 @@
         }
       }
     },
-    "v1GetTenantConfigResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1MessageTenantConfigInfo"
-        }
-      }
-    },
     "v1GrantModuleResponse": {
       "type": "object",
       "properties": {
@@ -11993,7 +12024,7 @@
       },
       "description": "Language is one selectable BCP 47 tag."
     },
-    "v1LicenseAppInfo": {
+    "v1LicenseTenantConfigInfo": {
       "type": "object",
       "properties": {
         "id": {
@@ -12022,9 +12053,13 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to (phase ③\ncolumn; empty = the app_key literal fallback during the window)."
         }
       },
-      "description": "LicenseAppInfo is one calling application of the licensing platform (a\nbusiness system identity, NOT an end-user license). Data-plane callers\npresent app_key/app_secret as x-app-key / x-app-secret metadata."
+      "description": "LicenseTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nLicenseAppInfo). The row keeps its calling-application identity (a\nbusiness system identity, NOT an end-user license). Data-plane callers\npresent app_key/app_secret as x-app-key / x-app-secret metadata."
     },
     "v1ListApiKeysResponse": {
       "type": "object",
@@ -12487,18 +12522,6 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1TemplateInfo"
-          }
-        }
-      }
-    },
-    "v1ListTenantConfigsResponse": {
-      "type": "object",
-      "properties": {
-        "configs": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1MessageTenantConfigInfo"
           }
         }
       }
@@ -13447,17 +13470,6 @@
         "secret": {
           "type": "string",
           "description": "new sk_…, shown once — never listed or echoed again."
-        }
-      }
-    },
-    "v1RotateTenantConfigSecretResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1MessageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string"
         }
       }
     },
@@ -14535,14 +14547,6 @@
       "properties": {
         "template": {
           "$ref": "#/definitions/v1TemplateInfo"
-        }
-      }
-    },
-    "v1UpdateTenantConfigResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1MessageTenantConfigInfo"
         }
       }
     },

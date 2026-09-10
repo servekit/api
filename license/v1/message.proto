@@ -112,10 +112,11 @@ message SigningKeyInfo {
   string public_key_b64 = 2;
 }
 
-// LicenseAppInfo is one calling application of the licensing platform (a
+// LicenseTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
+// LicenseAppInfo). The row keeps its calling-application identity (a
 // business system identity, NOT an end-user license). Data-plane callers
 // present app_key/app_secret as x-app-key / x-app-secret metadata.
-message LicenseAppInfo {
+message LicenseTenantConfigInfo {
   int64 id = 1;
   // app_key identifies the app on every data-plane call; unique, immutable.
   string app_key = 2;
@@ -128,4 +129,7 @@ message LicenseAppInfo {
   bool disabled = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
+  // tenant_key names the tenant this config row belongs to (phase ③
+  // column; empty = the app_key literal fallback during the window).
+  string tenant_key = 8;
 }

@@ -300,46 +300,50 @@ message ShowPubKeyResponse {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// App registry (LicenseAdminService) — calling-application credentials,
-// aligned with the messaging/storage platform app pattern.
+// Tenant configs (LicenseAdminService; phase ④ T6 rename of the app
+// registry) — one config row per tenant; the row keeps its internal
+// calling-app identity for the data plane.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// CreateAppRequest registers a calling application. app_key empty = the
-// server mints one ("lic_" + 8 base36 chars, immutable).
-message CreateAppRequest {
-  // app_key pattern: lowercase letter followed by lowercase alphanumerics
-  // and dashes. Optional; empty = server-generated.
-  string app_key = 1 [
-    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
-  ];
+// CreateTenantConfigRequest registers a tenant's config row. The internal
+// app identity is minted server-side ("lic_" + 8 base36 chars, immutable);
+// the app_secret is echoed on every read of LicenseTenantConfigInfo
+// (internal-trust posture).
+message CreateTenantConfigRequest {
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200
   }];
+  // tenant_key names the tenant this config row belongs to. A scoped
+  // caller is clamped to the injected key (the stamp follows the
+  // injection, never the body); the PLATFORM cross-view needs it for a
+  // provisioning create — when empty there the server-minted app key
+  // literal is the legacy→tenant fallback value. Unique across rows.
+  string tenant_key = 3 [(buf.validate.field).string.max_len = 16];
 }
 
-message CreateAppResponse {
-  LicenseAppInfo app = 1;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+message CreateTenantConfigResponse {
+  LicenseTenantConfigInfo config = 1;
+  // app_secret convenience echo (also visible via
+  // ListTenantConfigs/GetTenantConfig).
   string app_secret = 2;
 }
 
-message GetAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message GetTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
 }
 
-message GetAppResponse {
-  LicenseAppInfo app = 1;
+message GetTenantConfigResponse {
+  LicenseTenantConfigInfo config = 1;
 }
 
-// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
-// optional fields keep their current values.
-message UpdateAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+// UpdateTenantConfigRequest edits mutable fields; the row's identity is
+// immutable. Absent optional fields keep their current values.
+message UpdateTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -350,34 +354,37 @@ message UpdateAppRequest {
   optional bool disabled = 3;
 }
 
-message UpdateAppResponse {
-  LicenseAppInfo app = 1;
+message UpdateTenantConfigResponse {
+  LicenseTenantConfigInfo config = 1;
 }
 
-message RotateAppSecretRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message RotateTenantConfigSecretRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
 }
 
-message RotateAppSecretResponse {
-  LicenseAppInfo app = 1;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+message RotateTenantConfigSecretResponse {
+  LicenseTenantConfigInfo config = 1;
+  // app_secret convenience echo (also visible via
+  // ListTenantConfigs/GetTenantConfig).
   string app_secret = 2;
 }
 
-// ListAppsRequest — the app registry is low-cardinality; no paging.
-message ListAppsRequest {}
+// ListTenantConfigsRequest — one row per tenant, low cardinality; no
+// paging.
+message ListTenantConfigsRequest {}
 
-message ListAppsResponse {
-  repeated LicenseAppInfo apps = 1;
+message ListTenantConfigsResponse {
+  repeated LicenseTenantConfigInfo configs = 1;
 }
 
-// DeleteAppRequest removes the app row (hard delete). Existing licenses and
-// devices are untouched; the app_key becomes reusable.
-message DeleteAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+// DeleteTenantConfigRequest removes the config row (hard delete —
+// licensing keeps no soft-delete rows). Existing licenses and devices are
+// untouched; the row's identity becomes reusable.
+message DeleteTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];

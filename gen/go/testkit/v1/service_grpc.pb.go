@@ -186,12 +186,12 @@ const (
 	TestkitService_ShowTrial_FullMethodName                       = "/testkit.v1.TestkitService/ShowTrial"
 	TestkitService_ResetTrial_FullMethodName                      = "/testkit.v1.TestkitService/ResetTrial"
 	TestkitService_ShowPubKey_FullMethodName                      = "/testkit.v1.TestkitService/ShowPubKey"
-	TestkitService_LicenseListApps_FullMethodName                 = "/testkit.v1.TestkitService/LicenseListApps"
-	TestkitService_LicenseCreateApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseCreateApp"
-	TestkitService_LicenseGetApp_FullMethodName                   = "/testkit.v1.TestkitService/LicenseGetApp"
-	TestkitService_LicenseUpdateApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseUpdateApp"
-	TestkitService_LicenseRotateAppSecret_FullMethodName          = "/testkit.v1.TestkitService/LicenseRotateAppSecret"
-	TestkitService_LicenseDeleteApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseDeleteApp"
+	TestkitService_LicenseListTenantConfigs_FullMethodName        = "/testkit.v1.TestkitService/LicenseListTenantConfigs"
+	TestkitService_LicenseCreateTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/LicenseCreateTenantConfig"
+	TestkitService_LicenseGetTenantConfig_FullMethodName          = "/testkit.v1.TestkitService/LicenseGetTenantConfig"
+	TestkitService_LicenseUpdateTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/LicenseUpdateTenantConfig"
+	TestkitService_LicenseRotateTenantConfigSecret_FullMethodName = "/testkit.v1.TestkitService/LicenseRotateTenantConfigSecret"
+	TestkitService_LicenseDeleteTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/LicenseDeleteTenantConfig"
 	TestkitService_Ingest_FullMethodName                          = "/testkit.v1.TestkitService/Ingest"
 	TestkitService_CreateApp_FullMethodName                       = "/testkit.v1.TestkitService/CreateApp"
 	TestkitService_GetApp_FullMethodName                          = "/testkit.v1.TestkitService/GetApp"
@@ -427,12 +427,12 @@ type TestkitServiceClient interface {
 	ShowTrial(ctx context.Context, in *ShowTrialRequest, opts ...grpc.CallOption) (*ShowTrialResponse, error)
 	ResetTrial(ctx context.Context, in *ResetTrialRequest, opts ...grpc.CallOption) (*ResetTrialResponse, error)
 	ShowPubKey(ctx context.Context, in *ShowPubKeyRequest, opts ...grpc.CallOption) (*ShowPubKeyResponse, error)
-	LicenseListApps(ctx context.Context, in *v13.ListAppsRequest, opts ...grpc.CallOption) (*v13.ListAppsResponse, error)
-	LicenseCreateApp(ctx context.Context, in *v13.CreateAppRequest, opts ...grpc.CallOption) (*v13.CreateAppResponse, error)
-	LicenseGetApp(ctx context.Context, in *v13.GetAppRequest, opts ...grpc.CallOption) (*v13.GetAppResponse, error)
-	LicenseUpdateApp(ctx context.Context, in *v13.UpdateAppRequest, opts ...grpc.CallOption) (*v13.UpdateAppResponse, error)
-	LicenseRotateAppSecret(ctx context.Context, in *v13.RotateAppSecretRequest, opts ...grpc.CallOption) (*v13.RotateAppSecretResponse, error)
-	LicenseDeleteApp(ctx context.Context, in *v13.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	LicenseListTenantConfigs(ctx context.Context, in *v13.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v13.ListTenantConfigsResponse, error)
+	LicenseCreateTenantConfig(ctx context.Context, in *v13.CreateTenantConfigRequest, opts ...grpc.CallOption) (*v13.CreateTenantConfigResponse, error)
+	LicenseGetTenantConfig(ctx context.Context, in *v13.GetTenantConfigRequest, opts ...grpc.CallOption) (*v13.GetTenantConfigResponse, error)
+	LicenseUpdateTenantConfig(ctx context.Context, in *v13.UpdateTenantConfigRequest, opts ...grpc.CallOption) (*v13.UpdateTenantConfigResponse, error)
+	LicenseRotateTenantConfigSecret(ctx context.Context, in *v13.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v13.RotateTenantConfigSecretResponse, error)
+	LicenseDeleteTenantConfig(ctx context.Context, in *v13.DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Ingest(ctx context.Context, in *IngestRequest, opts ...grpc.CallOption) (*IngestResponse, error)
 	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
@@ -2054,60 +2054,60 @@ func (c *testkitServiceClient) ShowPubKey(ctx context.Context, in *ShowPubKeyReq
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseListApps(ctx context.Context, in *v13.ListAppsRequest, opts ...grpc.CallOption) (*v13.ListAppsResponse, error) {
+func (c *testkitServiceClient) LicenseListTenantConfigs(ctx context.Context, in *v13.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v13.ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v13.ListAppsResponse)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseListApps_FullMethodName, in, out, cOpts...)
+	out := new(v13.ListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseCreateApp(ctx context.Context, in *v13.CreateAppRequest, opts ...grpc.CallOption) (*v13.CreateAppResponse, error) {
+func (c *testkitServiceClient) LicenseCreateTenantConfig(ctx context.Context, in *v13.CreateTenantConfigRequest, opts ...grpc.CallOption) (*v13.CreateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v13.CreateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseCreateApp_FullMethodName, in, out, cOpts...)
+	out := new(v13.CreateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseCreateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseGetApp(ctx context.Context, in *v13.GetAppRequest, opts ...grpc.CallOption) (*v13.GetAppResponse, error) {
+func (c *testkitServiceClient) LicenseGetTenantConfig(ctx context.Context, in *v13.GetTenantConfigRequest, opts ...grpc.CallOption) (*v13.GetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v13.GetAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseGetApp_FullMethodName, in, out, cOpts...)
+	out := new(v13.GetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseGetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseUpdateApp(ctx context.Context, in *v13.UpdateAppRequest, opts ...grpc.CallOption) (*v13.UpdateAppResponse, error) {
+func (c *testkitServiceClient) LicenseUpdateTenantConfig(ctx context.Context, in *v13.UpdateTenantConfigRequest, opts ...grpc.CallOption) (*v13.UpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v13.UpdateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseUpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(v13.UpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseUpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseRotateAppSecret(ctx context.Context, in *v13.RotateAppSecretRequest, opts ...grpc.CallOption) (*v13.RotateAppSecretResponse, error) {
+func (c *testkitServiceClient) LicenseRotateTenantConfigSecret(ctx context.Context, in *v13.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v13.RotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v13.RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseRotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(v13.RotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseRotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) LicenseDeleteApp(ctx context.Context, in *v13.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *testkitServiceClient) LicenseDeleteTenantConfig(ctx context.Context, in *v13.DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TestkitService_LicenseDeleteApp_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, TestkitService_LicenseDeleteTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2734,12 +2734,12 @@ type TestkitServiceServer interface {
 	ShowTrial(context.Context, *ShowTrialRequest) (*ShowTrialResponse, error)
 	ResetTrial(context.Context, *ResetTrialRequest) (*ResetTrialResponse, error)
 	ShowPubKey(context.Context, *ShowPubKeyRequest) (*ShowPubKeyResponse, error)
-	LicenseListApps(context.Context, *v13.ListAppsRequest) (*v13.ListAppsResponse, error)
-	LicenseCreateApp(context.Context, *v13.CreateAppRequest) (*v13.CreateAppResponse, error)
-	LicenseGetApp(context.Context, *v13.GetAppRequest) (*v13.GetAppResponse, error)
-	LicenseUpdateApp(context.Context, *v13.UpdateAppRequest) (*v13.UpdateAppResponse, error)
-	LicenseRotateAppSecret(context.Context, *v13.RotateAppSecretRequest) (*v13.RotateAppSecretResponse, error)
-	LicenseDeleteApp(context.Context, *v13.DeleteAppRequest) (*emptypb.Empty, error)
+	LicenseListTenantConfigs(context.Context, *v13.ListTenantConfigsRequest) (*v13.ListTenantConfigsResponse, error)
+	LicenseCreateTenantConfig(context.Context, *v13.CreateTenantConfigRequest) (*v13.CreateTenantConfigResponse, error)
+	LicenseGetTenantConfig(context.Context, *v13.GetTenantConfigRequest) (*v13.GetTenantConfigResponse, error)
+	LicenseUpdateTenantConfig(context.Context, *v13.UpdateTenantConfigRequest) (*v13.UpdateTenantConfigResponse, error)
+	LicenseRotateTenantConfigSecret(context.Context, *v13.RotateTenantConfigSecretRequest) (*v13.RotateTenantConfigSecretResponse, error)
+	LicenseDeleteTenantConfig(context.Context, *v13.DeleteTenantConfigRequest) (*emptypb.Empty, error)
 	Ingest(context.Context, *IngestRequest) (*IngestResponse, error)
 	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
@@ -3269,23 +3269,23 @@ func (UnimplementedTestkitServiceServer) ResetTrial(context.Context, *ResetTrial
 func (UnimplementedTestkitServiceServer) ShowPubKey(context.Context, *ShowPubKeyRequest) (*ShowPubKeyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ShowPubKey not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseListApps(context.Context, *v13.ListAppsRequest) (*v13.ListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseListApps not implemented")
+func (UnimplementedTestkitServiceServer) LicenseListTenantConfigs(context.Context, *v13.ListTenantConfigsRequest) (*v13.ListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseListTenantConfigs not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseCreateApp(context.Context, *v13.CreateAppRequest) (*v13.CreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseCreateApp not implemented")
+func (UnimplementedTestkitServiceServer) LicenseCreateTenantConfig(context.Context, *v13.CreateTenantConfigRequest) (*v13.CreateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseCreateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseGetApp(context.Context, *v13.GetAppRequest) (*v13.GetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseGetApp not implemented")
+func (UnimplementedTestkitServiceServer) LicenseGetTenantConfig(context.Context, *v13.GetTenantConfigRequest) (*v13.GetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseGetTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseUpdateApp(context.Context, *v13.UpdateAppRequest) (*v13.UpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseUpdateApp not implemented")
+func (UnimplementedTestkitServiceServer) LicenseUpdateTenantConfig(context.Context, *v13.UpdateTenantConfigRequest) (*v13.UpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseUpdateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseRotateAppSecret(context.Context, *v13.RotateAppSecretRequest) (*v13.RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseRotateAppSecret not implemented")
+func (UnimplementedTestkitServiceServer) LicenseRotateTenantConfigSecret(context.Context, *v13.RotateTenantConfigSecretRequest) (*v13.RotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseRotateTenantConfigSecret not implemented")
 }
-func (UnimplementedTestkitServiceServer) LicenseDeleteApp(context.Context, *v13.DeleteAppRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method LicenseDeleteApp not implemented")
+func (UnimplementedTestkitServiceServer) LicenseDeleteTenantConfig(context.Context, *v13.DeleteTenantConfigRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method LicenseDeleteTenantConfig not implemented")
 }
 func (UnimplementedTestkitServiceServer) Ingest(context.Context, *IngestRequest) (*IngestResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ingest not implemented")
@@ -6245,110 +6245,110 @@ func _TestkitService_ShowPubKey_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.ListAppsRequest)
+func _TestkitService_LicenseListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseListApps(ctx, in)
+		return srv.(TestkitServiceServer).LicenseListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseListApps_FullMethodName,
+		FullMethod: TestkitService_LicenseListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseListApps(ctx, req.(*v13.ListAppsRequest))
+		return srv.(TestkitServiceServer).LicenseListTenantConfigs(ctx, req.(*v13.ListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.CreateAppRequest)
+func _TestkitService_LicenseCreateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.CreateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseCreateApp(ctx, in)
+		return srv.(TestkitServiceServer).LicenseCreateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseCreateApp_FullMethodName,
+		FullMethod: TestkitService_LicenseCreateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseCreateApp(ctx, req.(*v13.CreateAppRequest))
+		return srv.(TestkitServiceServer).LicenseCreateTenantConfig(ctx, req.(*v13.CreateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.GetAppRequest)
+func _TestkitService_LicenseGetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.GetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseGetApp(ctx, in)
+		return srv.(TestkitServiceServer).LicenseGetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseGetApp_FullMethodName,
+		FullMethod: TestkitService_LicenseGetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseGetApp(ctx, req.(*v13.GetAppRequest))
+		return srv.(TestkitServiceServer).LicenseGetTenantConfig(ctx, req.(*v13.GetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.UpdateAppRequest)
+func _TestkitService_LicenseUpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.UpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseUpdateApp(ctx, in)
+		return srv.(TestkitServiceServer).LicenseUpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseUpdateApp_FullMethodName,
+		FullMethod: TestkitService_LicenseUpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseUpdateApp(ctx, req.(*v13.UpdateAppRequest))
+		return srv.(TestkitServiceServer).LicenseUpdateTenantConfig(ctx, req.(*v13.UpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.RotateAppSecretRequest)
+func _TestkitService_LicenseRotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.RotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseRotateAppSecret(ctx, in)
+		return srv.(TestkitServiceServer).LicenseRotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseRotateAppSecret_FullMethodName,
+		FullMethod: TestkitService_LicenseRotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseRotateAppSecret(ctx, req.(*v13.RotateAppSecretRequest))
+		return srv.(TestkitServiceServer).LicenseRotateTenantConfigSecret(ctx, req.(*v13.RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_LicenseDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v13.DeleteAppRequest)
+func _TestkitService_LicenseDeleteTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v13.DeleteTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).LicenseDeleteApp(ctx, in)
+		return srv.(TestkitServiceServer).LicenseDeleteTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_LicenseDeleteApp_FullMethodName,
+		FullMethod: TestkitService_LicenseDeleteTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).LicenseDeleteApp(ctx, req.(*v13.DeleteAppRequest))
+		return srv.(TestkitServiceServer).LicenseDeleteTenantConfig(ctx, req.(*v13.DeleteTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7759,28 +7759,28 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_ShowPubKey_Handler,
 		},
 		{
-			MethodName: "LicenseListApps",
-			Handler:    _TestkitService_LicenseListApps_Handler,
+			MethodName: "LicenseListTenantConfigs",
+			Handler:    _TestkitService_LicenseListTenantConfigs_Handler,
 		},
 		{
-			MethodName: "LicenseCreateApp",
-			Handler:    _TestkitService_LicenseCreateApp_Handler,
+			MethodName: "LicenseCreateTenantConfig",
+			Handler:    _TestkitService_LicenseCreateTenantConfig_Handler,
 		},
 		{
-			MethodName: "LicenseGetApp",
-			Handler:    _TestkitService_LicenseGetApp_Handler,
+			MethodName: "LicenseGetTenantConfig",
+			Handler:    _TestkitService_LicenseGetTenantConfig_Handler,
 		},
 		{
-			MethodName: "LicenseUpdateApp",
-			Handler:    _TestkitService_LicenseUpdateApp_Handler,
+			MethodName: "LicenseUpdateTenantConfig",
+			Handler:    _TestkitService_LicenseUpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "LicenseRotateAppSecret",
-			Handler:    _TestkitService_LicenseRotateAppSecret_Handler,
+			MethodName: "LicenseRotateTenantConfigSecret",
+			Handler:    _TestkitService_LicenseRotateTenantConfigSecret_Handler,
 		},
 		{
-			MethodName: "LicenseDeleteApp",
-			Handler:    _TestkitService_LicenseDeleteApp_Handler,
+			MethodName: "LicenseDeleteTenantConfig",
+			Handler:    _TestkitService_LicenseDeleteTenantConfig_Handler,
 		},
 		{
 			MethodName: "Ingest",

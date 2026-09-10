@@ -37,7 +37,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\xe0\xce\x01\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\xc5\xd0\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -210,13 +210,13 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"ResetTrial\x12\x1d.testkit.v1.ResetTrialRequest\x1a\x1e.testkit.v1.ResetTrialResponse\"G\x82\xd3\xe4\x93\x02A:\x01*\"</api/v1/license/admin/trials/{fingerprint_id}/{module}/reset\x12y\n" +
 	"\n" +
-	"ShowPubKey\x12\x1d.testkit.v1.ShowPubKeyRequest\x1a\x1e.testkit.v1.ShowPubKeyResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/license/admin/signing/pubkey\x12p\n" +
-	"\x0fLicenseListApps\x12\x1b.license.v1.ListAppsRequest\x1a\x1c.license.v1.ListAppsResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1/license/admin/apps\x12v\n" +
-	"\x10LicenseCreateApp\x12\x1c.license.v1.CreateAppRequest\x1a\x1d.license.v1.CreateAppResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/license/admin/apps\x12t\n" +
-	"\rLicenseGetApp\x12\x19.license.v1.GetAppRequest\x1a\x1a.license.v1.GetAppResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/license/admin/apps/{app_key}\x12\x80\x01\n" +
-	"\x10LicenseUpdateApp\x12\x1c.license.v1.UpdateAppRequest\x1a\x1d.license.v1.UpdateAppResponse\"/\x82\xd3\xe4\x93\x02):\x01*\x1a$/api/v1/license/admin/apps/{app_key}\x12\x9f\x01\n" +
-	"\x16LicenseRotateAppSecret\x12\".license.v1.RotateAppSecretRequest\x1a#.license.v1.RotateAppSecretResponse\"<\x82\xd3\xe4\x93\x026:\x01*\"1/api/v1/license/admin/apps/{app_key}:rotateSecret\x12v\n" +
-	"\x10LicenseDeleteApp\x12\x1c.license.v1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\",\x82\xd3\xe4\x93\x02&*$/api/v1/license/admin/apps/{app_key}\x12d\n" +
+	"ShowPubKey\x12\x1d.testkit.v1.ShowPubKeyRequest\x1a\x1e.testkit.v1.ShowPubKeyResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/license/admin/signing/pubkey\x12\x95\x01\n" +
+	"\x18LicenseListTenantConfigs\x12$.license.v1.ListTenantConfigsRequest\x1a%.license.v1.ListTenantConfigsResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/license/admin/tenant-configs\x12\x9b\x01\n" +
+	"\x19LicenseCreateTenantConfig\x12%.license.v1.CreateTenantConfigRequest\x1a&.license.v1.CreateTenantConfigResponse\"/\x82\xd3\xe4\x93\x02):\x01*\"$/api/v1/license/admin/tenant-configs\x12\x9c\x01\n" +
+	"\x16LicenseGetTenantConfig\x12\".license.v1.GetTenantConfigRequest\x1a#.license.v1.GetTenantConfigResponse\"9\x82\xd3\xe4\x93\x023\x121/api/v1/license/admin/tenant-configs/{tenant_key}\x12\xa8\x01\n" +
+	"\x19LicenseUpdateTenantConfig\x12%.license.v1.UpdateTenantConfigRequest\x1a&.license.v1.UpdateTenantConfigResponse\"<\x82\xd3\xe4\x93\x026:\x01*\x1a1/api/v1/license/admin/tenant-configs/{tenant_key}\x12\xc7\x01\n" +
+	"\x1fLicenseRotateTenantConfigSecret\x12+.license.v1.RotateTenantConfigSecretRequest\x1a,.license.v1.RotateTenantConfigSecretResponse\"I\x82\xd3\xe4\x93\x02C:\x01*\">/api/v1/license/admin/tenant-configs/{tenant_key}:rotateSecret\x12\x95\x01\n" +
+	"\x19LicenseDeleteTenantConfig\x12%.license.v1.DeleteTenantConfigRequest\x1a\x16.google.protobuf.Empty\"9\x82\xd3\xe4\x93\x023*1/api/v1/license/admin/tenant-configs/{tenant_key}\x12d\n" +
 	"\x06Ingest\x12\x19.testkit.v1.IngestRequest\x1a\x1a.testkit.v1.IngestResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/telemetry/ingest\x12q\n" +
 	"\tCreateApp\x12\x1c.testkit.v1.CreateAppRequest\x1a\x1d.testkit.v1.CreateAppResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/telemetry/admin/apps\x12o\n" +
 	"\x06GetApp\x12\x19.testkit.v1.GetAppRequest\x1a\x1a.testkit.v1.GetAppResponse\".\x82\xd3\xe4\x93\x02(\x12&/api/v1/telemetry/admin/apps/{app_key}\x12{\n" +
@@ -419,12 +419,12 @@ var file_testkit_v1_service_proto_goTypes = []any{
 	(*ShowTrialRequest)(nil),                         // 149: testkit.v1.ShowTrialRequest
 	(*ResetTrialRequest)(nil),                        // 150: testkit.v1.ResetTrialRequest
 	(*ShowPubKeyRequest)(nil),                        // 151: testkit.v1.ShowPubKeyRequest
-	(*v12.ListAppsRequest)(nil),                      // 152: license.v1.ListAppsRequest
-	(*v12.CreateAppRequest)(nil),                     // 153: license.v1.CreateAppRequest
-	(*v12.GetAppRequest)(nil),                        // 154: license.v1.GetAppRequest
-	(*v12.UpdateAppRequest)(nil),                     // 155: license.v1.UpdateAppRequest
-	(*v12.RotateAppSecretRequest)(nil),               // 156: license.v1.RotateAppSecretRequest
-	(*v12.DeleteAppRequest)(nil),                     // 157: license.v1.DeleteAppRequest
+	(*v12.ListTenantConfigsRequest)(nil),             // 152: license.v1.ListTenantConfigsRequest
+	(*v12.CreateTenantConfigRequest)(nil),            // 153: license.v1.CreateTenantConfigRequest
+	(*v12.GetTenantConfigRequest)(nil),               // 154: license.v1.GetTenantConfigRequest
+	(*v12.UpdateTenantConfigRequest)(nil),            // 155: license.v1.UpdateTenantConfigRequest
+	(*v12.RotateTenantConfigSecretRequest)(nil),      // 156: license.v1.RotateTenantConfigSecretRequest
+	(*v12.DeleteTenantConfigRequest)(nil),            // 157: license.v1.DeleteTenantConfigRequest
 	(*IngestRequest)(nil),                            // 158: testkit.v1.IngestRequest
 	(*CreateAppRequest)(nil),                         // 159: testkit.v1.CreateAppRequest
 	(*GetAppRequest)(nil),                            // 160: testkit.v1.GetAppRequest
@@ -577,11 +577,11 @@ var file_testkit_v1_service_proto_goTypes = []any{
 	(*ShowTrialResponse)(nil),                        // 307: testkit.v1.ShowTrialResponse
 	(*ResetTrialResponse)(nil),                       // 308: testkit.v1.ResetTrialResponse
 	(*ShowPubKeyResponse)(nil),                       // 309: testkit.v1.ShowPubKeyResponse
-	(*v12.ListAppsResponse)(nil),                     // 310: license.v1.ListAppsResponse
-	(*v12.CreateAppResponse)(nil),                    // 311: license.v1.CreateAppResponse
-	(*v12.GetAppResponse)(nil),                       // 312: license.v1.GetAppResponse
-	(*v12.UpdateAppResponse)(nil),                    // 313: license.v1.UpdateAppResponse
-	(*v12.RotateAppSecretResponse)(nil),              // 314: license.v1.RotateAppSecretResponse
+	(*v12.ListTenantConfigsResponse)(nil),            // 310: license.v1.ListTenantConfigsResponse
+	(*v12.CreateTenantConfigResponse)(nil),           // 311: license.v1.CreateTenantConfigResponse
+	(*v12.GetTenantConfigResponse)(nil),              // 312: license.v1.GetTenantConfigResponse
+	(*v12.UpdateTenantConfigResponse)(nil),           // 313: license.v1.UpdateTenantConfigResponse
+	(*v12.RotateTenantConfigSecretResponse)(nil),     // 314: license.v1.RotateTenantConfigSecretResponse
 	(*IngestResponse)(nil),                           // 315: testkit.v1.IngestResponse
 	(*CreateAppResponse)(nil),                        // 316: testkit.v1.CreateAppResponse
 	(*GetAppResponse)(nil),                           // 317: testkit.v1.GetAppResponse
@@ -778,12 +778,12 @@ var file_testkit_v1_service_proto_depIdxs = []int32{
 	149, // 153: testkit.v1.TestkitService.ShowTrial:input_type -> testkit.v1.ShowTrialRequest
 	150, // 154: testkit.v1.TestkitService.ResetTrial:input_type -> testkit.v1.ResetTrialRequest
 	151, // 155: testkit.v1.TestkitService.ShowPubKey:input_type -> testkit.v1.ShowPubKeyRequest
-	152, // 156: testkit.v1.TestkitService.LicenseListApps:input_type -> license.v1.ListAppsRequest
-	153, // 157: testkit.v1.TestkitService.LicenseCreateApp:input_type -> license.v1.CreateAppRequest
-	154, // 158: testkit.v1.TestkitService.LicenseGetApp:input_type -> license.v1.GetAppRequest
-	155, // 159: testkit.v1.TestkitService.LicenseUpdateApp:input_type -> license.v1.UpdateAppRequest
-	156, // 160: testkit.v1.TestkitService.LicenseRotateAppSecret:input_type -> license.v1.RotateAppSecretRequest
-	157, // 161: testkit.v1.TestkitService.LicenseDeleteApp:input_type -> license.v1.DeleteAppRequest
+	152, // 156: testkit.v1.TestkitService.LicenseListTenantConfigs:input_type -> license.v1.ListTenantConfigsRequest
+	153, // 157: testkit.v1.TestkitService.LicenseCreateTenantConfig:input_type -> license.v1.CreateTenantConfigRequest
+	154, // 158: testkit.v1.TestkitService.LicenseGetTenantConfig:input_type -> license.v1.GetTenantConfigRequest
+	155, // 159: testkit.v1.TestkitService.LicenseUpdateTenantConfig:input_type -> license.v1.UpdateTenantConfigRequest
+	156, // 160: testkit.v1.TestkitService.LicenseRotateTenantConfigSecret:input_type -> license.v1.RotateTenantConfigSecretRequest
+	157, // 161: testkit.v1.TestkitService.LicenseDeleteTenantConfig:input_type -> license.v1.DeleteTenantConfigRequest
 	158, // 162: testkit.v1.TestkitService.Ingest:input_type -> testkit.v1.IngestRequest
 	159, // 163: testkit.v1.TestkitService.CreateApp:input_type -> testkit.v1.CreateAppRequest
 	160, // 164: testkit.v1.TestkitService.GetApp:input_type -> testkit.v1.GetAppRequest
@@ -983,12 +983,12 @@ var file_testkit_v1_service_proto_depIdxs = []int32{
 	307, // 358: testkit.v1.TestkitService.ShowTrial:output_type -> testkit.v1.ShowTrialResponse
 	308, // 359: testkit.v1.TestkitService.ResetTrial:output_type -> testkit.v1.ResetTrialResponse
 	309, // 360: testkit.v1.TestkitService.ShowPubKey:output_type -> testkit.v1.ShowPubKeyResponse
-	310, // 361: testkit.v1.TestkitService.LicenseListApps:output_type -> license.v1.ListAppsResponse
-	311, // 362: testkit.v1.TestkitService.LicenseCreateApp:output_type -> license.v1.CreateAppResponse
-	312, // 363: testkit.v1.TestkitService.LicenseGetApp:output_type -> license.v1.GetAppResponse
-	313, // 364: testkit.v1.TestkitService.LicenseUpdateApp:output_type -> license.v1.UpdateAppResponse
-	314, // 365: testkit.v1.TestkitService.LicenseRotateAppSecret:output_type -> license.v1.RotateAppSecretResponse
-	0,   // 366: testkit.v1.TestkitService.LicenseDeleteApp:output_type -> google.protobuf.Empty
+	310, // 361: testkit.v1.TestkitService.LicenseListTenantConfigs:output_type -> license.v1.ListTenantConfigsResponse
+	311, // 362: testkit.v1.TestkitService.LicenseCreateTenantConfig:output_type -> license.v1.CreateTenantConfigResponse
+	312, // 363: testkit.v1.TestkitService.LicenseGetTenantConfig:output_type -> license.v1.GetTenantConfigResponse
+	313, // 364: testkit.v1.TestkitService.LicenseUpdateTenantConfig:output_type -> license.v1.UpdateTenantConfigResponse
+	314, // 365: testkit.v1.TestkitService.LicenseRotateTenantConfigSecret:output_type -> license.v1.RotateTenantConfigSecretResponse
+	0,   // 366: testkit.v1.TestkitService.LicenseDeleteTenantConfig:output_type -> google.protobuf.Empty
 	315, // 367: testkit.v1.TestkitService.Ingest:output_type -> testkit.v1.IngestResponse
 	316, // 368: testkit.v1.TestkitService.CreateApp:output_type -> testkit.v1.CreateAppResponse
 	317, // 369: testkit.v1.TestkitService.GetApp:output_type -> testkit.v1.GetAppResponse

@@ -810,41 +810,42 @@ service TestkitService {
     option (google.api.http) = {get: "/api/v1/license/admin/signing/pubkey"};
   }
 
-  // ---- License app management (calling applications of the licensing
-  // platform; 1:1 forwards to license-service admin RPCs, types imported
-  // across domains like the storage/message app forwards) ----
+  // ---- License tenant-config management (one config row per tenant of
+  // the licensing platform; 1:1 forwards to license-service admin RPCs,
+  // types imported across domains — phase ④ T6 rename of the app
+  // forwards) ----
 
-  rpc LicenseListApps(license.v1.ListAppsRequest) returns (license.v1.ListAppsResponse) {
-    option (google.api.http) = {get: "/api/v1/license/admin/apps"};
+  rpc LicenseListTenantConfigs(license.v1.ListTenantConfigsRequest) returns (license.v1.ListTenantConfigsResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/tenant-configs"};
   }
 
-  rpc LicenseCreateApp(license.v1.CreateAppRequest) returns (license.v1.CreateAppResponse) {
+  rpc LicenseCreateTenantConfig(license.v1.CreateTenantConfigRequest) returns (license.v1.CreateTenantConfigResponse) {
     option (google.api.http) = {
-      post: "/api/v1/license/admin/apps"
+      post: "/api/v1/license/admin/tenant-configs"
       body: "*"
     };
   }
 
-  rpc LicenseGetApp(license.v1.GetAppRequest) returns (license.v1.GetAppResponse) {
-    option (google.api.http) = {get: "/api/v1/license/admin/apps/{app_key}"};
+  rpc LicenseGetTenantConfig(license.v1.GetTenantConfigRequest) returns (license.v1.GetTenantConfigResponse) {
+    option (google.api.http) = {get: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
   }
 
-  rpc LicenseUpdateApp(license.v1.UpdateAppRequest) returns (license.v1.UpdateAppResponse) {
+  rpc LicenseUpdateTenantConfig(license.v1.UpdateTenantConfigRequest) returns (license.v1.UpdateTenantConfigResponse) {
     option (google.api.http) = {
-      put: "/api/v1/license/admin/apps/{app_key}"
+      put: "/api/v1/license/admin/tenant-configs/{tenant_key}"
       body: "*"
     };
   }
 
-  rpc LicenseRotateAppSecret(license.v1.RotateAppSecretRequest) returns (license.v1.RotateAppSecretResponse) {
+  rpc LicenseRotateTenantConfigSecret(license.v1.RotateTenantConfigSecretRequest) returns (license.v1.RotateTenantConfigSecretResponse) {
     option (google.api.http) = {
-      post: "/api/v1/license/admin/apps/{app_key}:rotateSecret"
+      post: "/api/v1/license/admin/tenant-configs/{tenant_key}:rotateSecret"
       body: "*"
     };
   }
 
-  rpc LicenseDeleteApp(license.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/license/admin/apps/{app_key}"};
+  rpc LicenseDeleteTenantConfig(license.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
   }
 
   rpc Ingest(IngestRequest) returns (IngestResponse) {
