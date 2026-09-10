@@ -1872,12 +1872,7 @@ message ValidateBatchResponse {
   repeated ValidateEventResult events = 7;
 }
 
-message CreateAppRequest {
-  // app_key optional; empty = server-generated.
-  string app_key = 1 [
-    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
-  ];
+message CreateTenantConfigRequest {
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200
@@ -1886,34 +1881,38 @@ message CreateAppRequest {
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.email = true
   ];
+  // tenant_key names the tenant (phase ④ T6: the wire names only the
+  // tenant; the internal app identity is minted server-side).
+  string tenant_key = 4 [(buf.validate.field).string.max_len = 16];
 }
 
-message CreateAppResponse {
-  App app = 1;
+message CreateTenantConfigResponse {
+  TenantConfig config = 1;
 
   string token = 2;
 
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+  // app_secret convenience echo (also visible via
+  // ListTenantConfigs/GetTenantConfig).
   string app_secret = 3;
 }
 
-message GetAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message GetTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
 }
 
-message GetAppResponse {
-  App app = 1;
+message GetTenantConfigResponse {
+  TenantConfig config = 1;
   repeated IngestTokenInfo tokens = 2;
   repeated TelemetrySigningKeyInfo signing_keys = 3;
   repeated EventRule rules = 4;
   repeated VersionInfo versions = 5;
 }
 
-message UpdateAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message UpdateTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1953,12 +1952,12 @@ message UpdateAppRequest {
   optional bool disabled = 12;
 }
 
-message UpdateAppResponse {
-  App app = 1;
+message UpdateTenantConfigResponse {
+  TenantConfig config = 1;
 }
 
 message RotateTokenRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1969,7 +1968,7 @@ message RotateTokenResponse {
 }
 
 message RevokeTokenRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1983,7 +1982,7 @@ message RevokeTokenRequest {
 message RevokeTokenResponse {}
 
 message CreateSigningKeyRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1998,7 +1997,7 @@ message CreateSigningKeyResponse {
 }
 
 message RevokeSigningKeyRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -2008,7 +2007,7 @@ message RevokeSigningKeyRequest {
 message RevokeSigningKeyResponse {}
 
 message ReplaceEventRulesRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -2028,7 +2027,7 @@ message ReplaceEventRulesResponse {
 }
 
 message SetVersionBlockedRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -2041,8 +2040,8 @@ message SetVersionBlockedRequest {
 
 message SetVersionBlockedResponse {}
 
-message GetAppStatsRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message GetTenantConfigStatsRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -2052,7 +2051,7 @@ message GetAppStatsRequest {
   }];
 }
 
-message GetAppStatsResponse {
+message GetTenantConfigStatsResponse {
   repeated DailyStat days = 1;
   map<string, int64> drops = 2;
   map<string, int64> sig_fails = 3;

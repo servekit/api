@@ -193,18 +193,18 @@ const (
 	TestkitService_LicenseRotateTenantConfigSecret_FullMethodName = "/testkit.v1.TestkitService/LicenseRotateTenantConfigSecret"
 	TestkitService_LicenseDeleteTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/LicenseDeleteTenantConfig"
 	TestkitService_Ingest_FullMethodName                          = "/testkit.v1.TestkitService/Ingest"
-	TestkitService_CreateApp_FullMethodName                       = "/testkit.v1.TestkitService/CreateApp"
-	TestkitService_GetApp_FullMethodName                          = "/testkit.v1.TestkitService/GetApp"
-	TestkitService_UpdateApp_FullMethodName                       = "/testkit.v1.TestkitService/UpdateApp"
-	TestkitService_ListApps_FullMethodName                        = "/testkit.v1.TestkitService/ListApps"
-	TestkitService_RotateAppSecret_FullMethodName                 = "/testkit.v1.TestkitService/RotateAppSecret"
+	TestkitService_CreateTenantConfig_FullMethodName              = "/testkit.v1.TestkitService/CreateTenantConfig"
+	TestkitService_GetTenantConfig_FullMethodName                 = "/testkit.v1.TestkitService/GetTenantConfig"
+	TestkitService_UpdateTenantConfig_FullMethodName              = "/testkit.v1.TestkitService/UpdateTenantConfig"
+	TestkitService_ListTenantConfigs_FullMethodName               = "/testkit.v1.TestkitService/ListTenantConfigs"
+	TestkitService_RotateTenantConfigSecret_FullMethodName        = "/testkit.v1.TestkitService/RotateTenantConfigSecret"
 	TestkitService_RotateToken_FullMethodName                     = "/testkit.v1.TestkitService/RotateToken"
 	TestkitService_RevokeToken_FullMethodName                     = "/testkit.v1.TestkitService/RevokeToken"
 	TestkitService_CreateSigningKey_FullMethodName                = "/testkit.v1.TestkitService/CreateSigningKey"
 	TestkitService_RevokeSigningKey_FullMethodName                = "/testkit.v1.TestkitService/RevokeSigningKey"
 	TestkitService_ReplaceEventRules_FullMethodName               = "/testkit.v1.TestkitService/ReplaceEventRules"
 	TestkitService_SetVersionBlocked_FullMethodName               = "/testkit.v1.TestkitService/SetVersionBlocked"
-	TestkitService_GetAppStats_FullMethodName                     = "/testkit.v1.TestkitService/GetAppStats"
+	TestkitService_GetTenantConfigStats_FullMethodName            = "/testkit.v1.TestkitService/GetTenantConfigStats"
 	TestkitService_ListCountries_FullMethodName                   = "/testkit.v1.TestkitService/ListCountries"
 	TestkitService_GetCountries_FullMethodName                    = "/testkit.v1.TestkitService/GetCountries"
 	TestkitService_ListTimezones_FullMethodName                   = "/testkit.v1.TestkitService/ListTimezones"
@@ -434,18 +434,18 @@ type TestkitServiceClient interface {
 	LicenseRotateTenantConfigSecret(ctx context.Context, in *v13.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v13.RotateTenantConfigSecretResponse, error)
 	LicenseDeleteTenantConfig(ctx context.Context, in *v13.DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Ingest(ctx context.Context, in *IngestRequest, opts ...grpc.CallOption) (*IngestResponse, error)
-	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
-	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
-	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
-	ListApps(ctx context.Context, in *v14.ListAppsRequest, opts ...grpc.CallOption) (*v14.ListAppsResponse, error)
-	RotateAppSecret(ctx context.Context, in *v14.RotateAppSecretRequest, opts ...grpc.CallOption) (*v14.RotateAppSecretResponse, error)
+	CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error)
+	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error)
+	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
+	ListTenantConfigs(ctx context.Context, in *v14.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v14.ListTenantConfigsResponse, error)
+	RotateTenantConfigSecret(ctx context.Context, in *v14.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v14.RotateTenantConfigSecretResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(ctx context.Context, in *RevokeSigningKeyRequest, opts ...grpc.CallOption) (*RevokeSigningKeyResponse, error)
 	ReplaceEventRules(ctx context.Context, in *ReplaceEventRulesRequest, opts ...grpc.CallOption) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(ctx context.Context, in *SetVersionBlockedRequest, opts ...grpc.CallOption) (*SetVersionBlockedResponse, error)
-	GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error)
+	GetTenantConfigStats(ctx context.Context, in *GetTenantConfigStatsRequest, opts ...grpc.CallOption) (*GetTenantConfigStatsResponse, error)
 	ListCountries(ctx context.Context, in *v15.ListCountriesRequest, opts ...grpc.CallOption) (*v15.ListCountriesResponse, error)
 	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
 	// also accepted by the gateway).
@@ -2124,50 +2124,50 @@ func (c *testkitServiceClient) Ingest(ctx context.Context, in *IngestRequest, op
 	return out, nil
 }
 
-func (c *testkitServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+func (c *testkitServiceClient) CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_CreateApp_FullMethodName, in, out, cOpts...)
+	out := new(CreateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_CreateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+func (c *testkitServiceClient) GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_GetApp_FullMethodName, in, out, cOpts...)
+	out := new(GetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+func (c *testkitServiceClient) UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_UpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(UpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_UpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) ListApps(ctx context.Context, in *v14.ListAppsRequest, opts ...grpc.CallOption) (*v14.ListAppsResponse, error) {
+func (c *testkitServiceClient) ListTenantConfigs(ctx context.Context, in *v14.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v14.ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v14.ListAppsResponse)
-	err := c.cc.Invoke(ctx, TestkitService_ListApps_FullMethodName, in, out, cOpts...)
+	out := new(v14.ListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_ListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) RotateAppSecret(ctx context.Context, in *v14.RotateAppSecretRequest, opts ...grpc.CallOption) (*v14.RotateAppSecretResponse, error) {
+func (c *testkitServiceClient) RotateTenantConfigSecret(ctx context.Context, in *v14.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v14.RotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v14.RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, TestkitService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(v14.RotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2234,10 +2234,10 @@ func (c *testkitServiceClient) SetVersionBlocked(ctx context.Context, in *SetVer
 	return out, nil
 }
 
-func (c *testkitServiceClient) GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error) {
+func (c *testkitServiceClient) GetTenantConfigStats(ctx context.Context, in *GetTenantConfigStatsRequest, opts ...grpc.CallOption) (*GetTenantConfigStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAppStatsResponse)
-	err := c.cc.Invoke(ctx, TestkitService_GetAppStats_FullMethodName, in, out, cOpts...)
+	out := new(GetTenantConfigStatsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_GetTenantConfigStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2741,18 +2741,18 @@ type TestkitServiceServer interface {
 	LicenseRotateTenantConfigSecret(context.Context, *v13.RotateTenantConfigSecretRequest) (*v13.RotateTenantConfigSecretResponse, error)
 	LicenseDeleteTenantConfig(context.Context, *v13.DeleteTenantConfigRequest) (*emptypb.Empty, error)
 	Ingest(context.Context, *IngestRequest) (*IngestResponse, error)
-	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
-	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
-	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
-	ListApps(context.Context, *v14.ListAppsRequest) (*v14.ListAppsResponse, error)
-	RotateAppSecret(context.Context, *v14.RotateAppSecretRequest) (*v14.RotateAppSecretResponse, error)
+	CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error)
+	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error)
+	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
+	ListTenantConfigs(context.Context, *v14.ListTenantConfigsRequest) (*v14.ListTenantConfigsResponse, error)
+	RotateTenantConfigSecret(context.Context, *v14.RotateTenantConfigSecretRequest) (*v14.RotateTenantConfigSecretResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(context.Context, *RevokeSigningKeyRequest) (*RevokeSigningKeyResponse, error)
 	ReplaceEventRules(context.Context, *ReplaceEventRulesRequest) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error)
-	GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error)
+	GetTenantConfigStats(context.Context, *GetTenantConfigStatsRequest) (*GetTenantConfigStatsResponse, error)
 	ListCountries(context.Context, *v15.ListCountriesRequest) (*v15.ListCountriesResponse, error)
 	// Batch subset lookup: ?countryCodes=AC&countryCodes=CN (comma-separated
 	// also accepted by the gateway).
@@ -3290,20 +3290,20 @@ func (UnimplementedTestkitServiceServer) LicenseDeleteTenantConfig(context.Conte
 func (UnimplementedTestkitServiceServer) Ingest(context.Context, *IngestRequest) (*IngestResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ingest not implemented")
 }
-func (UnimplementedTestkitServiceServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+func (UnimplementedTestkitServiceServer) CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+func (UnimplementedTestkitServiceServer) GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+func (UnimplementedTestkitServiceServer) UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) ListApps(context.Context, *v14.ListAppsRequest) (*v14.ListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+func (UnimplementedTestkitServiceServer) ListTenantConfigs(context.Context, *v14.ListTenantConfigsRequest) (*v14.ListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTenantConfigs not implemented")
 }
-func (UnimplementedTestkitServiceServer) RotateAppSecret(context.Context, *v14.RotateAppSecretRequest) (*v14.RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
+func (UnimplementedTestkitServiceServer) RotateTenantConfigSecret(context.Context, *v14.RotateTenantConfigSecretRequest) (*v14.RotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
 func (UnimplementedTestkitServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
@@ -3323,8 +3323,8 @@ func (UnimplementedTestkitServiceServer) ReplaceEventRules(context.Context, *Rep
 func (UnimplementedTestkitServiceServer) SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetVersionBlocked not implemented")
 }
-func (UnimplementedTestkitServiceServer) GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAppStats not implemented")
+func (UnimplementedTestkitServiceServer) GetTenantConfigStats(context.Context, *GetTenantConfigStatsRequest) (*GetTenantConfigStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantConfigStats not implemented")
 }
 func (UnimplementedTestkitServiceServer) ListCountries(context.Context, *v15.ListCountriesRequest) (*v15.ListCountriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCountries not implemented")
@@ -6371,92 +6371,92 @@ func _TestkitService_Ingest_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppRequest)
+func _TestkitService_CreateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).CreateApp(ctx, in)
+		return srv.(TestkitServiceServer).CreateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_CreateApp_FullMethodName,
+		FullMethod: TestkitService_CreateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+		return srv.(TestkitServiceServer).CreateTenantConfig(ctx, req.(*CreateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppRequest)
+func _TestkitService_GetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).GetApp(ctx, in)
+		return srv.(TestkitServiceServer).GetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_GetApp_FullMethodName,
+		FullMethod: TestkitService_GetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetApp(ctx, req.(*GetAppRequest))
+		return srv.(TestkitServiceServer).GetTenantConfig(ctx, req.(*GetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAppRequest)
+func _TestkitService_UpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).UpdateApp(ctx, in)
+		return srv.(TestkitServiceServer).UpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_UpdateApp_FullMethodName,
+		FullMethod: TestkitService_UpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+		return srv.(TestkitServiceServer).UpdateTenantConfig(ctx, req.(*UpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v14.ListAppsRequest)
+func _TestkitService_ListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v14.ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).ListApps(ctx, in)
+		return srv.(TestkitServiceServer).ListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_ListApps_FullMethodName,
+		FullMethod: TestkitService_ListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).ListApps(ctx, req.(*v14.ListAppsRequest))
+		return srv.(TestkitServiceServer).ListTenantConfigs(ctx, req.(*v14.ListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v14.RotateAppSecretRequest)
+func _TestkitService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v14.RotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).RotateAppSecret(ctx, in)
+		return srv.(TestkitServiceServer).RotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_RotateAppSecret_FullMethodName,
+		FullMethod: TestkitService_RotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).RotateAppSecret(ctx, req.(*v14.RotateAppSecretRequest))
+		return srv.(TestkitServiceServer).RotateTenantConfigSecret(ctx, req.(*v14.RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6569,20 +6569,20 @@ func _TestkitService_SetVersionBlocked_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_GetAppStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppStatsRequest)
+func _TestkitService_GetTenantConfigStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantConfigStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).GetAppStats(ctx, in)
+		return srv.(TestkitServiceServer).GetTenantConfigStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_GetAppStats_FullMethodName,
+		FullMethod: TestkitService_GetTenantConfigStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).GetAppStats(ctx, req.(*GetAppStatsRequest))
+		return srv.(TestkitServiceServer).GetTenantConfigStats(ctx, req.(*GetTenantConfigStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7787,24 +7787,24 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_Ingest_Handler,
 		},
 		{
-			MethodName: "CreateApp",
-			Handler:    _TestkitService_CreateApp_Handler,
+			MethodName: "CreateTenantConfig",
+			Handler:    _TestkitService_CreateTenantConfig_Handler,
 		},
 		{
-			MethodName: "GetApp",
-			Handler:    _TestkitService_GetApp_Handler,
+			MethodName: "GetTenantConfig",
+			Handler:    _TestkitService_GetTenantConfig_Handler,
 		},
 		{
-			MethodName: "UpdateApp",
-			Handler:    _TestkitService_UpdateApp_Handler,
+			MethodName: "UpdateTenantConfig",
+			Handler:    _TestkitService_UpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "ListApps",
-			Handler:    _TestkitService_ListApps_Handler,
+			MethodName: "ListTenantConfigs",
+			Handler:    _TestkitService_ListTenantConfigs_Handler,
 		},
 		{
-			MethodName: "RotateAppSecret",
-			Handler:    _TestkitService_RotateAppSecret_Handler,
+			MethodName: "RotateTenantConfigSecret",
+			Handler:    _TestkitService_RotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "RotateToken",
@@ -7831,8 +7831,8 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_SetVersionBlocked_Handler,
 		},
 		{
-			MethodName: "GetAppStats",
-			Handler:    _TestkitService_GetAppStats_Handler,
+			MethodName: "GetTenantConfigStats",
+			Handler:    _TestkitService_GetTenantConfigStats_Handler,
 		},
 		{
 			MethodName: "ListCountries",

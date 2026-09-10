@@ -37,7 +37,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\xc5\xd0\x01\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\x81\xd3\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -217,19 +217,19 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\x19LicenseUpdateTenantConfig\x12%.license.v1.UpdateTenantConfigRequest\x1a&.license.v1.UpdateTenantConfigResponse\"<\x82\xd3\xe4\x93\x026:\x01*\x1a1/api/v1/license/admin/tenant-configs/{tenant_key}\x12\xc7\x01\n" +
 	"\x1fLicenseRotateTenantConfigSecret\x12+.license.v1.RotateTenantConfigSecretRequest\x1a,.license.v1.RotateTenantConfigSecretResponse\"I\x82\xd3\xe4\x93\x02C:\x01*\">/api/v1/license/admin/tenant-configs/{tenant_key}:rotateSecret\x12\x95\x01\n" +
 	"\x19LicenseDeleteTenantConfig\x12%.license.v1.DeleteTenantConfigRequest\x1a\x16.google.protobuf.Empty\"9\x82\xd3\xe4\x93\x023*1/api/v1/license/admin/tenant-configs/{tenant_key}\x12d\n" +
-	"\x06Ingest\x12\x19.testkit.v1.IngestRequest\x1a\x1a.testkit.v1.IngestResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/telemetry/ingest\x12q\n" +
-	"\tCreateApp\x12\x1c.testkit.v1.CreateAppRequest\x1a\x1d.testkit.v1.CreateAppResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/telemetry/admin/apps\x12o\n" +
-	"\x06GetApp\x12\x19.testkit.v1.GetAppRequest\x1a\x1a.testkit.v1.GetAppResponse\".\x82\xd3\xe4\x93\x02(\x12&/api/v1/telemetry/admin/apps/{app_key}\x12{\n" +
-	"\tUpdateApp\x12\x1c.testkit.v1.UpdateAppRequest\x1a\x1d.testkit.v1.UpdateAppResponse\"1\x82\xd3\xe4\x93\x02+:\x01*\x1a&/api/v1/telemetry/admin/apps/{app_key}\x12o\n" +
-	"\bListApps\x12\x1d.telemetry.v1.ListAppsRequest\x1a\x1e.telemetry.v1.ListAppsResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/v1/telemetry/admin/apps\x12\x9e\x01\n" +
-	"\x0fRotateAppSecret\x12$.telemetry.v1.RotateAppSecretRequest\x1a%.telemetry.v1.RotateAppSecretResponse\">\x82\xd3\xe4\x93\x028:\x01*\"3/api/v1/telemetry/admin/apps/{app_key}:rotateSecret\x12\x88\x01\n" +
-	"\vRotateToken\x12\x1e.testkit.v1.RotateTokenRequest\x1a\x1f.testkit.v1.RotateTokenResponse\"8\x82\xd3\xe4\x93\x022:\x01*\"-/api/v1/telemetry/admin/apps/{app_key}/tokens\x12\x8e\x01\n" +
-	"\vRevokeToken\x12\x1e.testkit.v1.RevokeTokenRequest\x1a\x1f.testkit.v1.RevokeTokenResponse\">\x82\xd3\xe4\x93\x028*6/api/v1/telemetry/admin/apps/{app_key}/tokens/{prefix}\x12\x9d\x01\n" +
-	"\x10CreateSigningKey\x12#.testkit.v1.CreateSigningKeyRequest\x1a$.testkit.v1.CreateSigningKeyResponse\">\x82\xd3\xe4\x93\x028:\x01*\"3/api/v1/telemetry/admin/apps/{app_key}/signing-keys\x12\xa3\x01\n" +
-	"\x10RevokeSigningKey\x12#.testkit.v1.RevokeSigningKeyRequest\x1a$.testkit.v1.RevokeSigningKeyResponse\"D\x82\xd3\xe4\x93\x02>*</api/v1/telemetry/admin/apps/{app_key}/signing-keys/{key_id}\x12\x9a\x01\n" +
-	"\x11ReplaceEventRules\x12$.testkit.v1.ReplaceEventRulesRequest\x1a%.testkit.v1.ReplaceEventRulesResponse\"8\x82\xd3\xe4\x93\x022:\x01*\x1a-/api/v1/telemetry/admin/apps/{app_key}/events\x12\xa6\x01\n" +
-	"\x11SetVersionBlocked\x12$.testkit.v1.SetVersionBlockedRequest\x1a%.testkit.v1.SetVersionBlockedResponse\"D\x82\xd3\xe4\x93\x02>:\x01*\x1a9/api/v1/telemetry/admin/apps/{app_key}/versions/{version}\x12\x84\x01\n" +
-	"\vGetAppStats\x12\x1e.testkit.v1.GetAppStatsRequest\x1a\x1f.testkit.v1.GetAppStatsResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/telemetry/admin/apps/{app_key}/stats\x12}\n" +
+	"\x06Ingest\x12\x19.testkit.v1.IngestRequest\x1a\x1a.testkit.v1.IngestResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/telemetry/ingest\x12\x96\x01\n" +
+	"\x12CreateTenantConfig\x12%.testkit.v1.CreateTenantConfigRequest\x1a&.testkit.v1.CreateTenantConfigResponse\"1\x82\xd3\xe4\x93\x02+:\x01*\"&/api/v1/telemetry/admin/tenant-configs\x12\x97\x01\n" +
+	"\x0fGetTenantConfig\x12\".testkit.v1.GetTenantConfigRequest\x1a#.testkit.v1.GetTenantConfigResponse\";\x82\xd3\xe4\x93\x025\x123/api/v1/telemetry/admin/tenant-configs/{tenant_key}\x12\xa3\x01\n" +
+	"\x12UpdateTenantConfig\x12%.testkit.v1.UpdateTenantConfigRequest\x1a&.testkit.v1.UpdateTenantConfigResponse\">\x82\xd3\xe4\x93\x028:\x01*\x1a3/api/v1/telemetry/admin/tenant-configs/{tenant_key}\x12\x94\x01\n" +
+	"\x11ListTenantConfigs\x12&.telemetry.v1.ListTenantConfigsRequest\x1a'.telemetry.v1.ListTenantConfigsResponse\".\x82\xd3\xe4\x93\x02(\x12&/api/v1/telemetry/admin/tenant-configs\x12\xc6\x01\n" +
+	"\x18RotateTenantConfigSecret\x12-.telemetry.v1.RotateTenantConfigSecretRequest\x1a..telemetry.v1.RotateTenantConfigSecretResponse\"K\x82\xd3\xe4\x93\x02E:\x01*\"@/api/v1/telemetry/admin/tenant-configs/{tenant_key}:rotateSecret\x12\x95\x01\n" +
+	"\vRotateToken\x12\x1e.testkit.v1.RotateTokenRequest\x1a\x1f.testkit.v1.RotateTokenResponse\"E\x82\xd3\xe4\x93\x02?:\x01*\":/api/v1/telemetry/admin/tenant-configs/{tenant_key}/tokens\x12\x9b\x01\n" +
+	"\vRevokeToken\x12\x1e.testkit.v1.RevokeTokenRequest\x1a\x1f.testkit.v1.RevokeTokenResponse\"K\x82\xd3\xe4\x93\x02E*C/api/v1/telemetry/admin/tenant-configs/{tenant_key}/tokens/{prefix}\x12\xaa\x01\n" +
+	"\x10CreateSigningKey\x12#.testkit.v1.CreateSigningKeyRequest\x1a$.testkit.v1.CreateSigningKeyResponse\"K\x82\xd3\xe4\x93\x02E:\x01*\"@/api/v1/telemetry/admin/tenant-configs/{tenant_key}/signing-keys\x12\xb0\x01\n" +
+	"\x10RevokeSigningKey\x12#.testkit.v1.RevokeSigningKeyRequest\x1a$.testkit.v1.RevokeSigningKeyResponse\"Q\x82\xd3\xe4\x93\x02K*I/api/v1/telemetry/admin/tenant-configs/{tenant_key}/signing-keys/{key_id}\x12\xa7\x01\n" +
+	"\x11ReplaceEventRules\x12$.testkit.v1.ReplaceEventRulesRequest\x1a%.testkit.v1.ReplaceEventRulesResponse\"E\x82\xd3\xe4\x93\x02?:\x01*\x1a:/api/v1/telemetry/admin/tenant-configs/{tenant_key}/events\x12\xb3\x01\n" +
+	"\x11SetVersionBlocked\x12$.testkit.v1.SetVersionBlockedRequest\x1a%.testkit.v1.SetVersionBlockedResponse\"Q\x82\xd3\xe4\x93\x02K:\x01*\x1aF/api/v1/telemetry/admin/tenant-configs/{tenant_key}/versions/{version}\x12\xac\x01\n" +
+	"\x14GetTenantConfigStats\x12'.testkit.v1.GetTenantConfigStatsRequest\x1a(.testkit.v1.GetTenantConfigStatsResponse\"A\x82\xd3\xe4\x93\x02;\x129/api/v1/telemetry/admin/tenant-configs/{tenant_key}/stats\x12}\n" +
 	"\rListCountries\x12\".reference.v1.ListCountriesRequest\x1a#.reference.v1.ListCountriesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/countries\x12\x80\x01\n" +
 	"\fGetCountries\x12!.reference.v1.GetCountriesRequest\x1a\".reference.v1.GetCountriesResponse\")\x82\xd3\xe4\x93\x02#\x12!/api/v1/reference/countries:batch\x12}\n" +
 	"\rListTimezones\x12\".reference.v1.ListTimezonesRequest\x1a#.reference.v1.ListTimezonesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/timezones\x12}\n" +
@@ -426,18 +426,18 @@ var file_testkit_v1_service_proto_goTypes = []any{
 	(*v12.RotateTenantConfigSecretRequest)(nil),      // 156: license.v1.RotateTenantConfigSecretRequest
 	(*v12.DeleteTenantConfigRequest)(nil),            // 157: license.v1.DeleteTenantConfigRequest
 	(*IngestRequest)(nil),                            // 158: testkit.v1.IngestRequest
-	(*CreateAppRequest)(nil),                         // 159: testkit.v1.CreateAppRequest
-	(*GetAppRequest)(nil),                            // 160: testkit.v1.GetAppRequest
-	(*UpdateAppRequest)(nil),                         // 161: testkit.v1.UpdateAppRequest
-	(*v13.ListAppsRequest)(nil),                      // 162: telemetry.v1.ListAppsRequest
-	(*v13.RotateAppSecretRequest)(nil),               // 163: telemetry.v1.RotateAppSecretRequest
+	(*CreateTenantConfigRequest)(nil),                // 159: testkit.v1.CreateTenantConfigRequest
+	(*GetTenantConfigRequest)(nil),                   // 160: testkit.v1.GetTenantConfigRequest
+	(*UpdateTenantConfigRequest)(nil),                // 161: testkit.v1.UpdateTenantConfigRequest
+	(*v13.ListTenantConfigsRequest)(nil),             // 162: telemetry.v1.ListTenantConfigsRequest
+	(*v13.RotateTenantConfigSecretRequest)(nil),      // 163: telemetry.v1.RotateTenantConfigSecretRequest
 	(*RotateTokenRequest)(nil),                       // 164: testkit.v1.RotateTokenRequest
 	(*RevokeTokenRequest)(nil),                       // 165: testkit.v1.RevokeTokenRequest
 	(*CreateSigningKeyRequest)(nil),                  // 166: testkit.v1.CreateSigningKeyRequest
 	(*RevokeSigningKeyRequest)(nil),                  // 167: testkit.v1.RevokeSigningKeyRequest
 	(*ReplaceEventRulesRequest)(nil),                 // 168: testkit.v1.ReplaceEventRulesRequest
 	(*SetVersionBlockedRequest)(nil),                 // 169: testkit.v1.SetVersionBlockedRequest
-	(*GetAppStatsRequest)(nil),                       // 170: testkit.v1.GetAppStatsRequest
+	(*GetTenantConfigStatsRequest)(nil),              // 170: testkit.v1.GetTenantConfigStatsRequest
 	(*v14.ListCountriesRequest)(nil),                 // 171: reference.v1.ListCountriesRequest
 	(*v14.GetCountriesRequest)(nil),                  // 172: reference.v1.GetCountriesRequest
 	(*v14.ListTimezonesRequest)(nil),                 // 173: reference.v1.ListTimezonesRequest
@@ -583,18 +583,18 @@ var file_testkit_v1_service_proto_goTypes = []any{
 	(*v12.UpdateTenantConfigResponse)(nil),           // 313: license.v1.UpdateTenantConfigResponse
 	(*v12.RotateTenantConfigSecretResponse)(nil),     // 314: license.v1.RotateTenantConfigSecretResponse
 	(*IngestResponse)(nil),                           // 315: testkit.v1.IngestResponse
-	(*CreateAppResponse)(nil),                        // 316: testkit.v1.CreateAppResponse
-	(*GetAppResponse)(nil),                           // 317: testkit.v1.GetAppResponse
-	(*UpdateAppResponse)(nil),                        // 318: testkit.v1.UpdateAppResponse
-	(*v13.ListAppsResponse)(nil),                     // 319: telemetry.v1.ListAppsResponse
-	(*v13.RotateAppSecretResponse)(nil),              // 320: telemetry.v1.RotateAppSecretResponse
+	(*CreateTenantConfigResponse)(nil),               // 316: testkit.v1.CreateTenantConfigResponse
+	(*GetTenantConfigResponse)(nil),                  // 317: testkit.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigResponse)(nil),               // 318: testkit.v1.UpdateTenantConfigResponse
+	(*v13.ListTenantConfigsResponse)(nil),            // 319: telemetry.v1.ListTenantConfigsResponse
+	(*v13.RotateTenantConfigSecretResponse)(nil),     // 320: telemetry.v1.RotateTenantConfigSecretResponse
 	(*RotateTokenResponse)(nil),                      // 321: testkit.v1.RotateTokenResponse
 	(*RevokeTokenResponse)(nil),                      // 322: testkit.v1.RevokeTokenResponse
 	(*CreateSigningKeyResponse)(nil),                 // 323: testkit.v1.CreateSigningKeyResponse
 	(*RevokeSigningKeyResponse)(nil),                 // 324: testkit.v1.RevokeSigningKeyResponse
 	(*ReplaceEventRulesResponse)(nil),                // 325: testkit.v1.ReplaceEventRulesResponse
 	(*SetVersionBlockedResponse)(nil),                // 326: testkit.v1.SetVersionBlockedResponse
-	(*GetAppStatsResponse)(nil),                      // 327: testkit.v1.GetAppStatsResponse
+	(*GetTenantConfigStatsResponse)(nil),             // 327: testkit.v1.GetTenantConfigStatsResponse
 	(*v14.ListCountriesResponse)(nil),                // 328: reference.v1.ListCountriesResponse
 	(*v14.GetCountriesResponse)(nil),                 // 329: reference.v1.GetCountriesResponse
 	(*v14.ListTimezonesResponse)(nil),                // 330: reference.v1.ListTimezonesResponse
@@ -785,18 +785,18 @@ var file_testkit_v1_service_proto_depIdxs = []int32{
 	156, // 160: testkit.v1.TestkitService.LicenseRotateTenantConfigSecret:input_type -> license.v1.RotateTenantConfigSecretRequest
 	157, // 161: testkit.v1.TestkitService.LicenseDeleteTenantConfig:input_type -> license.v1.DeleteTenantConfigRequest
 	158, // 162: testkit.v1.TestkitService.Ingest:input_type -> testkit.v1.IngestRequest
-	159, // 163: testkit.v1.TestkitService.CreateApp:input_type -> testkit.v1.CreateAppRequest
-	160, // 164: testkit.v1.TestkitService.GetApp:input_type -> testkit.v1.GetAppRequest
-	161, // 165: testkit.v1.TestkitService.UpdateApp:input_type -> testkit.v1.UpdateAppRequest
-	162, // 166: testkit.v1.TestkitService.ListApps:input_type -> telemetry.v1.ListAppsRequest
-	163, // 167: testkit.v1.TestkitService.RotateAppSecret:input_type -> telemetry.v1.RotateAppSecretRequest
+	159, // 163: testkit.v1.TestkitService.CreateTenantConfig:input_type -> testkit.v1.CreateTenantConfigRequest
+	160, // 164: testkit.v1.TestkitService.GetTenantConfig:input_type -> testkit.v1.GetTenantConfigRequest
+	161, // 165: testkit.v1.TestkitService.UpdateTenantConfig:input_type -> testkit.v1.UpdateTenantConfigRequest
+	162, // 166: testkit.v1.TestkitService.ListTenantConfigs:input_type -> telemetry.v1.ListTenantConfigsRequest
+	163, // 167: testkit.v1.TestkitService.RotateTenantConfigSecret:input_type -> telemetry.v1.RotateTenantConfigSecretRequest
 	164, // 168: testkit.v1.TestkitService.RotateToken:input_type -> testkit.v1.RotateTokenRequest
 	165, // 169: testkit.v1.TestkitService.RevokeToken:input_type -> testkit.v1.RevokeTokenRequest
 	166, // 170: testkit.v1.TestkitService.CreateSigningKey:input_type -> testkit.v1.CreateSigningKeyRequest
 	167, // 171: testkit.v1.TestkitService.RevokeSigningKey:input_type -> testkit.v1.RevokeSigningKeyRequest
 	168, // 172: testkit.v1.TestkitService.ReplaceEventRules:input_type -> testkit.v1.ReplaceEventRulesRequest
 	169, // 173: testkit.v1.TestkitService.SetVersionBlocked:input_type -> testkit.v1.SetVersionBlockedRequest
-	170, // 174: testkit.v1.TestkitService.GetAppStats:input_type -> testkit.v1.GetAppStatsRequest
+	170, // 174: testkit.v1.TestkitService.GetTenantConfigStats:input_type -> testkit.v1.GetTenantConfigStatsRequest
 	171, // 175: testkit.v1.TestkitService.ListCountries:input_type -> reference.v1.ListCountriesRequest
 	172, // 176: testkit.v1.TestkitService.GetCountries:input_type -> reference.v1.GetCountriesRequest
 	173, // 177: testkit.v1.TestkitService.ListTimezones:input_type -> reference.v1.ListTimezonesRequest
@@ -990,18 +990,18 @@ var file_testkit_v1_service_proto_depIdxs = []int32{
 	314, // 365: testkit.v1.TestkitService.LicenseRotateTenantConfigSecret:output_type -> license.v1.RotateTenantConfigSecretResponse
 	0,   // 366: testkit.v1.TestkitService.LicenseDeleteTenantConfig:output_type -> google.protobuf.Empty
 	315, // 367: testkit.v1.TestkitService.Ingest:output_type -> testkit.v1.IngestResponse
-	316, // 368: testkit.v1.TestkitService.CreateApp:output_type -> testkit.v1.CreateAppResponse
-	317, // 369: testkit.v1.TestkitService.GetApp:output_type -> testkit.v1.GetAppResponse
-	318, // 370: testkit.v1.TestkitService.UpdateApp:output_type -> testkit.v1.UpdateAppResponse
-	319, // 371: testkit.v1.TestkitService.ListApps:output_type -> telemetry.v1.ListAppsResponse
-	320, // 372: testkit.v1.TestkitService.RotateAppSecret:output_type -> telemetry.v1.RotateAppSecretResponse
+	316, // 368: testkit.v1.TestkitService.CreateTenantConfig:output_type -> testkit.v1.CreateTenantConfigResponse
+	317, // 369: testkit.v1.TestkitService.GetTenantConfig:output_type -> testkit.v1.GetTenantConfigResponse
+	318, // 370: testkit.v1.TestkitService.UpdateTenantConfig:output_type -> testkit.v1.UpdateTenantConfigResponse
+	319, // 371: testkit.v1.TestkitService.ListTenantConfigs:output_type -> telemetry.v1.ListTenantConfigsResponse
+	320, // 372: testkit.v1.TestkitService.RotateTenantConfigSecret:output_type -> telemetry.v1.RotateTenantConfigSecretResponse
 	321, // 373: testkit.v1.TestkitService.RotateToken:output_type -> testkit.v1.RotateTokenResponse
 	322, // 374: testkit.v1.TestkitService.RevokeToken:output_type -> testkit.v1.RevokeTokenResponse
 	323, // 375: testkit.v1.TestkitService.CreateSigningKey:output_type -> testkit.v1.CreateSigningKeyResponse
 	324, // 376: testkit.v1.TestkitService.RevokeSigningKey:output_type -> testkit.v1.RevokeSigningKeyResponse
 	325, // 377: testkit.v1.TestkitService.ReplaceEventRules:output_type -> testkit.v1.ReplaceEventRulesResponse
 	326, // 378: testkit.v1.TestkitService.SetVersionBlocked:output_type -> testkit.v1.SetVersionBlockedResponse
-	327, // 379: testkit.v1.TestkitService.GetAppStats:output_type -> testkit.v1.GetAppStatsResponse
+	327, // 379: testkit.v1.TestkitService.GetTenantConfigStats:output_type -> testkit.v1.GetTenantConfigStatsResponse
 	328, // 380: testkit.v1.TestkitService.ListCountries:output_type -> reference.v1.ListCountriesResponse
 	329, // 381: testkit.v1.TestkitService.GetCountries:output_type -> reference.v1.GetCountriesResponse
 	330, // 382: testkit.v1.TestkitService.ListTimezones:output_type -> reference.v1.ListTimezonesResponse

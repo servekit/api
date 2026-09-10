@@ -249,18 +249,18 @@ var TelemetryService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TelemetryAdminService_CreateApp_FullMethodName         = "/telemetry.v1.TelemetryAdminService/CreateApp"
-	TelemetryAdminService_GetApp_FullMethodName            = "/telemetry.v1.TelemetryAdminService/GetApp"
-	TelemetryAdminService_UpdateApp_FullMethodName         = "/telemetry.v1.TelemetryAdminService/UpdateApp"
-	TelemetryAdminService_ListApps_FullMethodName          = "/telemetry.v1.TelemetryAdminService/ListApps"
-	TelemetryAdminService_RotateToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RotateToken"
-	TelemetryAdminService_RotateAppSecret_FullMethodName   = "/telemetry.v1.TelemetryAdminService/RotateAppSecret"
-	TelemetryAdminService_RevokeToken_FullMethodName       = "/telemetry.v1.TelemetryAdminService/RevokeToken"
-	TelemetryAdminService_CreateSigningKey_FullMethodName  = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
-	TelemetryAdminService_RevokeSigningKey_FullMethodName  = "/telemetry.v1.TelemetryAdminService/RevokeSigningKey"
-	TelemetryAdminService_ReplaceEventRules_FullMethodName = "/telemetry.v1.TelemetryAdminService/ReplaceEventRules"
-	TelemetryAdminService_SetVersionBlocked_FullMethodName = "/telemetry.v1.TelemetryAdminService/SetVersionBlocked"
-	TelemetryAdminService_GetAppStats_FullMethodName       = "/telemetry.v1.TelemetryAdminService/GetAppStats"
+	TelemetryAdminService_CreateTenantConfig_FullMethodName       = "/telemetry.v1.TelemetryAdminService/CreateTenantConfig"
+	TelemetryAdminService_GetTenantConfig_FullMethodName          = "/telemetry.v1.TelemetryAdminService/GetTenantConfig"
+	TelemetryAdminService_UpdateTenantConfig_FullMethodName       = "/telemetry.v1.TelemetryAdminService/UpdateTenantConfig"
+	TelemetryAdminService_ListTenantConfigs_FullMethodName        = "/telemetry.v1.TelemetryAdminService/ListTenantConfigs"
+	TelemetryAdminService_RotateToken_FullMethodName              = "/telemetry.v1.TelemetryAdminService/RotateToken"
+	TelemetryAdminService_RotateTenantConfigSecret_FullMethodName = "/telemetry.v1.TelemetryAdminService/RotateTenantConfigSecret"
+	TelemetryAdminService_RevokeToken_FullMethodName              = "/telemetry.v1.TelemetryAdminService/RevokeToken"
+	TelemetryAdminService_CreateSigningKey_FullMethodName         = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
+	TelemetryAdminService_RevokeSigningKey_FullMethodName         = "/telemetry.v1.TelemetryAdminService/RevokeSigningKey"
+	TelemetryAdminService_ReplaceEventRules_FullMethodName        = "/telemetry.v1.TelemetryAdminService/ReplaceEventRules"
+	TelemetryAdminService_SetVersionBlocked_FullMethodName        = "/telemetry.v1.TelemetryAdminService/SetVersionBlocked"
+	TelemetryAdminService_GetTenantConfigStats_FullMethodName     = "/telemetry.v1.TelemetryAdminService/GetTenantConfigStats"
 )
 
 // TelemetryAdminServiceClient is the client API for TelemetryAdminService service.
@@ -272,21 +272,21 @@ const (
 // interceptor); registry changes take effect within 60 seconds, or
 // immediately for this process on success.
 type TelemetryAdminServiceClient interface {
-	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
-	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
-	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
-	// ListApps — the app registry is low-cardinality; no paging.
-	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
+	CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error)
+	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error)
+	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
+	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
+	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
-	// RotateAppSecret mints a new business-identity credential (platform
-	// ak/sk pair; see App.app_secret).
-	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
+	// RotateTenantConfigSecret mints a new business-identity credential
+	// (platform ak/sk pair; see TenantConfig.app_secret).
+	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(ctx context.Context, in *RevokeSigningKeyRequest, opts ...grpc.CallOption) (*RevokeSigningKeyResponse, error)
 	ReplaceEventRules(ctx context.Context, in *ReplaceEventRulesRequest, opts ...grpc.CallOption) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(ctx context.Context, in *SetVersionBlockedRequest, opts ...grpc.CallOption) (*SetVersionBlockedResponse, error)
-	GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error)
+	GetTenantConfigStats(ctx context.Context, in *GetTenantConfigStatsRequest, opts ...grpc.CallOption) (*GetTenantConfigStatsResponse, error)
 }
 
 type telemetryAdminServiceClient struct {
@@ -297,40 +297,40 @@ func NewTelemetryAdminServiceClient(cc grpc.ClientConnInterface) TelemetryAdminS
 	return &telemetryAdminServiceClient{cc}
 }
 
-func (c *telemetryAdminServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+func (c *telemetryAdminServiceClient) CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateAppResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_CreateApp_FullMethodName, in, out, cOpts...)
+	out := new(CreateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_CreateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *telemetryAdminServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+func (c *telemetryAdminServiceClient) GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAppResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_GetApp_FullMethodName, in, out, cOpts...)
+	out := new(GetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_GetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *telemetryAdminServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+func (c *telemetryAdminServiceClient) UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateAppResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_UpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(UpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_UpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *telemetryAdminServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+func (c *telemetryAdminServiceClient) ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAppsResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_ListApps_FullMethodName, in, out, cOpts...)
+	out := new(ListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_ListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -347,10 +347,10 @@ func (c *telemetryAdminServiceClient) RotateToken(ctx context.Context, in *Rotat
 	return out, nil
 }
 
-func (c *telemetryAdminServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
+func (c *telemetryAdminServiceClient) RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(RotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -407,10 +407,10 @@ func (c *telemetryAdminServiceClient) SetVersionBlocked(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *telemetryAdminServiceClient) GetAppStats(ctx context.Context, in *GetAppStatsRequest, opts ...grpc.CallOption) (*GetAppStatsResponse, error) {
+func (c *telemetryAdminServiceClient) GetTenantConfigStats(ctx context.Context, in *GetTenantConfigStatsRequest, opts ...grpc.CallOption) (*GetTenantConfigStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAppStatsResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_GetAppStats_FullMethodName, in, out, cOpts...)
+	out := new(GetTenantConfigStatsResponse)
+	err := c.cc.Invoke(ctx, TelemetryAdminService_GetTenantConfigStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -426,21 +426,21 @@ func (c *telemetryAdminServiceClient) GetAppStats(ctx context.Context, in *GetAp
 // interceptor); registry changes take effect within 60 seconds, or
 // immediately for this process on success.
 type TelemetryAdminServiceServer interface {
-	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
-	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
-	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
-	// ListApps — the app registry is low-cardinality; no paging.
-	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
+	CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error)
+	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error)
+	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
+	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
+	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
-	// RotateAppSecret mints a new business-identity credential (platform
-	// ak/sk pair; see App.app_secret).
-	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
+	// RotateTenantConfigSecret mints a new business-identity credential
+	// (platform ak/sk pair; see TenantConfig.app_secret).
+	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(context.Context, *RevokeSigningKeyRequest) (*RevokeSigningKeyResponse, error)
 	ReplaceEventRules(context.Context, *ReplaceEventRulesRequest) (*ReplaceEventRulesResponse, error)
 	SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error)
-	GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error)
+	GetTenantConfigStats(context.Context, *GetTenantConfigStatsRequest) (*GetTenantConfigStatsResponse, error)
 	mustEmbedUnimplementedTelemetryAdminServiceServer()
 }
 
@@ -451,23 +451,23 @@ type TelemetryAdminServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTelemetryAdminServiceServer struct{}
 
-func (UnimplementedTelemetryAdminServiceServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+func (UnimplementedTelemetryAdminServiceServer) CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTenantConfig not implemented")
 }
-func (UnimplementedTelemetryAdminServiceServer) GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+func (UnimplementedTelemetryAdminServiceServer) GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantConfig not implemented")
 }
-func (UnimplementedTelemetryAdminServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+func (UnimplementedTelemetryAdminServiceServer) UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
 }
-func (UnimplementedTelemetryAdminServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+func (UnimplementedTelemetryAdminServiceServer) ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTenantConfigs not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
 }
-func (UnimplementedTelemetryAdminServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
+func (UnimplementedTelemetryAdminServiceServer) RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeToken not implemented")
@@ -484,8 +484,8 @@ func (UnimplementedTelemetryAdminServiceServer) ReplaceEventRules(context.Contex
 func (UnimplementedTelemetryAdminServiceServer) SetVersionBlocked(context.Context, *SetVersionBlockedRequest) (*SetVersionBlockedResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetVersionBlocked not implemented")
 }
-func (UnimplementedTelemetryAdminServiceServer) GetAppStats(context.Context, *GetAppStatsRequest) (*GetAppStatsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAppStats not implemented")
+func (UnimplementedTelemetryAdminServiceServer) GetTenantConfigStats(context.Context, *GetTenantConfigStatsRequest) (*GetTenantConfigStatsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantConfigStats not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) mustEmbedUnimplementedTelemetryAdminServiceServer() {}
 func (UnimplementedTelemetryAdminServiceServer) testEmbeddedByValue()                               {}
@@ -508,74 +508,74 @@ func RegisterTelemetryAdminServiceServer(s grpc.ServiceRegistrar, srv TelemetryA
 	s.RegisterService(&TelemetryAdminService_ServiceDesc, srv)
 }
 
-func _TelemetryAdminService_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppRequest)
+func _TelemetryAdminService_CreateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).CreateApp(ctx, in)
+		return srv.(TelemetryAdminServiceServer).CreateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_CreateApp_FullMethodName,
+		FullMethod: TelemetryAdminService_CreateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+		return srv.(TelemetryAdminServiceServer).CreateTenantConfig(ctx, req.(*CreateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TelemetryAdminService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppRequest)
+func _TelemetryAdminService_GetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).GetApp(ctx, in)
+		return srv.(TelemetryAdminServiceServer).GetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_GetApp_FullMethodName,
+		FullMethod: TelemetryAdminService_GetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).GetApp(ctx, req.(*GetAppRequest))
+		return srv.(TelemetryAdminServiceServer).GetTenantConfig(ctx, req.(*GetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TelemetryAdminService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAppRequest)
+func _TelemetryAdminService_UpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).UpdateApp(ctx, in)
+		return srv.(TelemetryAdminServiceServer).UpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_UpdateApp_FullMethodName,
+		FullMethod: TelemetryAdminService_UpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+		return srv.(TelemetryAdminServiceServer).UpdateTenantConfig(ctx, req.(*UpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TelemetryAdminService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAppsRequest)
+func _TelemetryAdminService_ListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).ListApps(ctx, in)
+		return srv.(TelemetryAdminServiceServer).ListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_ListApps_FullMethodName,
+		FullMethod: TelemetryAdminService_ListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).ListApps(ctx, req.(*ListAppsRequest))
+		return srv.(TelemetryAdminServiceServer).ListTenantConfigs(ctx, req.(*ListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -598,20 +598,20 @@ func _TelemetryAdminService_RotateToken_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TelemetryAdminService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateAppSecretRequest)
+func _TelemetryAdminService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).RotateAppSecret(ctx, in)
+		return srv.(TelemetryAdminServiceServer).RotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_RotateAppSecret_FullMethodName,
+		FullMethod: TelemetryAdminService_RotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
+		return srv.(TelemetryAdminServiceServer).RotateTenantConfigSecret(ctx, req.(*RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -706,20 +706,20 @@ func _TelemetryAdminService_SetVersionBlocked_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TelemetryAdminService_GetAppStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppStatsRequest)
+func _TelemetryAdminService_GetTenantConfigStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantConfigStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).GetAppStats(ctx, in)
+		return srv.(TelemetryAdminServiceServer).GetTenantConfigStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TelemetryAdminService_GetAppStats_FullMethodName,
+		FullMethod: TelemetryAdminService_GetTenantConfigStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).GetAppStats(ctx, req.(*GetAppStatsRequest))
+		return srv.(TelemetryAdminServiceServer).GetTenantConfigStats(ctx, req.(*GetTenantConfigStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -732,28 +732,28 @@ var TelemetryAdminService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TelemetryAdminServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateApp",
-			Handler:    _TelemetryAdminService_CreateApp_Handler,
+			MethodName: "CreateTenantConfig",
+			Handler:    _TelemetryAdminService_CreateTenantConfig_Handler,
 		},
 		{
-			MethodName: "GetApp",
-			Handler:    _TelemetryAdminService_GetApp_Handler,
+			MethodName: "GetTenantConfig",
+			Handler:    _TelemetryAdminService_GetTenantConfig_Handler,
 		},
 		{
-			MethodName: "UpdateApp",
-			Handler:    _TelemetryAdminService_UpdateApp_Handler,
+			MethodName: "UpdateTenantConfig",
+			Handler:    _TelemetryAdminService_UpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "ListApps",
-			Handler:    _TelemetryAdminService_ListApps_Handler,
+			MethodName: "ListTenantConfigs",
+			Handler:    _TelemetryAdminService_ListTenantConfigs_Handler,
 		},
 		{
 			MethodName: "RotateToken",
 			Handler:    _TelemetryAdminService_RotateToken_Handler,
 		},
 		{
-			MethodName: "RotateAppSecret",
-			Handler:    _TelemetryAdminService_RotateAppSecret_Handler,
+			MethodName: "RotateTenantConfigSecret",
+			Handler:    _TelemetryAdminService_RotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "RevokeToken",
@@ -776,8 +776,8 @@ var TelemetryAdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TelemetryAdminService_SetVersionBlocked_Handler,
 		},
 		{
-			MethodName: "GetAppStats",
-			Handler:    _TelemetryAdminService_GetAppStats_Handler,
+			MethodName: "GetTenantConfigStats",
+			Handler:    _TelemetryAdminService_GetTenantConfigStats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

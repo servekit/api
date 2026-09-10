@@ -6806,14 +6806,14 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps": {
+    "/api/v1/telemetry/admin/tenant-configs": {
       "get": {
-        "operationId": "ListApps",
+        "operationId": "ListTenantConfigs",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/telemetryV1ListAppsResponse"
+              "$ref": "#/definitions/telemetryV1ListTenantConfigsResponse"
             }
           },
           "default": {
@@ -6828,12 +6828,12 @@
         ]
       },
       "post": {
-        "operationId": "CreateApp",
+        "operationId": "CreateTenantConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/testkitV1CreateAppResponse"
+              "$ref": "#/definitions/testkitV1CreateTenantConfigResponse"
             }
           },
           "default": {
@@ -6849,7 +6849,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/testkitV1CreateAppRequest"
+              "$ref": "#/definitions/testkitV1CreateTenantConfigRequest"
             }
           }
         ],
@@ -6858,14 +6858,14 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}": {
       "get": {
-        "operationId": "GetApp",
+        "operationId": "GetTenantConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/testkitV1GetAppResponse"
+              "$ref": "#/definitions/testkitV1GetTenantConfigResponse"
             }
           },
           "default": {
@@ -6877,7 +6877,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6888,12 +6888,12 @@
         ]
       },
       "put": {
-        "operationId": "UpdateApp",
+        "operationId": "UpdateTenantConfig",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/testkitV1UpdateAppResponse"
+              "$ref": "#/definitions/testkitV1UpdateTenantConfigResponse"
             }
           },
           "default": {
@@ -6905,7 +6905,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6915,7 +6915,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TestkitServiceUpdateAppBody"
+              "$ref": "#/definitions/TestkitServiceUpdateTenantConfigBody"
             }
           }
         ],
@@ -6924,7 +6924,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/events": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/events": {
       "put": {
         "operationId": "ReplaceEventRules",
         "responses": {
@@ -6943,7 +6943,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -6962,7 +6962,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/signing-keys": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/signing-keys": {
       "post": {
         "operationId": "CreateSigningKey",
         "responses": {
@@ -6981,7 +6981,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7000,7 +7000,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/signing-keys/{keyId}": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/signing-keys/{keyId}": {
       "delete": {
         "operationId": "RevokeSigningKey",
         "responses": {
@@ -7019,7 +7019,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7036,14 +7036,14 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/stats": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/stats": {
       "get": {
-        "operationId": "GetAppStats",
+        "operationId": "GetTenantConfigStats",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetAppStatsResponse"
+              "$ref": "#/definitions/v1GetTenantConfigStatsResponse"
             }
           },
           "default": {
@@ -7055,7 +7055,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7073,7 +7073,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/tokens": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/tokens": {
       "post": {
         "operationId": "RotateToken",
         "responses": {
@@ -7092,7 +7092,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7111,7 +7111,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/tokens/{prefix}": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/tokens/{prefix}": {
       "delete": {
         "operationId": "RevokeToken",
         "responses": {
@@ -7130,7 +7130,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7147,7 +7147,7 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}/versions/{version}": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}/versions/{version}": {
       "put": {
         "operationId": "SetVersionBlocked",
         "responses": {
@@ -7166,7 +7166,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7191,14 +7191,14 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/apps/{appKey}:rotateSecret": {
+    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}:rotateSecret": {
       "post": {
-        "operationId": "RotateAppSecret",
+        "operationId": "RotateTenantConfigSecret",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/telemetryV1RotateAppSecretResponse"
+              "$ref": "#/definitions/telemetryV1RotateTenantConfigSecretResponse"
             }
           },
           "default": {
@@ -7210,7 +7210,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7220,7 +7220,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TestkitServiceRotateAppSecretBody"
+              "$ref": "#/definitions/TestkitServiceRotateTenantConfigSecretBody"
             }
           }
         ],
@@ -7268,7 +7268,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/userV1ListAppsResponse"
+              "$ref": "#/definitions/v1ListAppsResponse"
             }
           },
           "default": {
@@ -7288,7 +7288,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/userV1CreateAppResponse"
+              "$ref": "#/definitions/v1CreateAppResponse"
             }
           },
           "default": {
@@ -7305,7 +7305,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/userV1CreateAppRequest"
+              "$ref": "#/definitions/v1CreateAppRequest"
             }
           }
         ],
@@ -7321,7 +7321,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/userV1GetAppResponse"
+              "$ref": "#/definitions/v1GetAppResponse"
             }
           },
           "default": {
@@ -7378,7 +7378,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/userV1UpdateAppResponse"
+              "$ref": "#/definitions/v1UpdateAppResponse"
             }
           },
           "default": {
@@ -7416,7 +7416,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/userV1RotateAppSecretResponse"
+              "$ref": "#/definitions/v1RotateAppSecretResponse"
             }
           },
           "default": {
@@ -8559,9 +8559,9 @@
         }
       }
     },
-    "TestkitServiceRotateAppSecretBody": {
+    "TestkitServiceRotateTenantConfigSecretBody": {
       "type": "object",
-      "description": "RotateAppSecretRequest mints a new business-identity credential (the sk\nhalf of the platform ak/sk pair). The old one stops working on the next\nregistry refresh (immediate in-process)."
+      "description": "RotateTenantConfigSecretRequest mints a new business-identity credential\n(the sk half of the platform ak/sk pair). The old one stops working on\nthe next registry refresh (immediate in-process)."
     },
     "TestkitServiceRotateTokenBody": {
       "type": "object"
@@ -8585,49 +8585,6 @@
     },
     "TestkitServiceUnrevokeKeyBody": {
       "type": "object"
-    },
-    "TestkitServiceUpdateAppBody": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "strictVersions": {
-          "type": "boolean"
-        },
-        "authMode": {
-          "$ref": "#/definitions/v1AuthMode"
-        },
-        "authGraceUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "clearAuthGrace": {
-          "type": "boolean"
-        },
-        "ratePerMinute": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "ratePerDay": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "rawRetentionDays": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "dailyEventBudget": {
-          "type": "string",
-          "format": "int64"
-        },
-        "disabled": {
-          "type": "boolean"
-        }
-      }
     },
     "TestkitServiceUpdateGroupBody": {
       "type": "object",
@@ -8733,6 +8690,49 @@
             "type": "string",
             "format": "int64"
           }
+        }
+      }
+    },
+    "TestkitServiceUpdateTenantConfigBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "strictVersions": {
+          "type": "boolean"
+        },
+        "authMode": {
+          "$ref": "#/definitions/v1AuthMode"
+        },
+        "authGraceUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "clearAuthGrace": {
+          "type": "boolean"
+        },
+        "ratePerMinute": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ratePerDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rawRetentionDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dailyEventBudget": {
+          "type": "string",
+          "format": "int64"
+        },
+        "disabled": {
+          "type": "boolean"
         }
       }
     },
@@ -8975,7 +8975,31 @@
         }
       }
     },
-    "telemetryV1App": {
+    "telemetryV1ListTenantConfigsResponse": {
+      "type": "object",
+      "properties": {
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/telemetryV1TenantConfig"
+          }
+        }
+      }
+    },
+    "telemetryV1RotateTenantConfigSecretResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/telemetryV1TenantConfig"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
+        }
+      }
+    },
+    "telemetryV1TenantConfig": {
       "type": "object",
       "properties": {
         "id": {
@@ -8984,7 +9008,7 @@
         },
         "appKey": {
           "type": "string",
-          "description": "app_key is the machine identity and the \"ak\" half of the platform-wide\nak/sk pair: minted server-side on creation (\"tel_\" + 8 base36 chars,\ncollision-checked; a caller-chosen key is accepted when non-empty),\nunique, immutable. The admin surface keys every per-app route by it."
+          "description": "app_key is the row's machine identity and the \"ak\" half of the\nplatform-wide\nak/sk pair: minted server-side on creation (\"tel_\" + 8 base36 chars,\ncollision-checked; a caller-chosen key is accepted when non-empty),\nunique, immutable. The admin surface keys every per-app route by it."
         },
         "name": {
           "type": "string"
@@ -9048,87 +9072,6 @@
       },
       "description": "App is one registered publisher (spec §3.2)."
     },
-    "telemetryV1ListAppsResponse": {
-      "type": "object",
-      "properties": {
-        "apps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/telemetryV1App"
-          }
-        }
-      }
-    },
-    "telemetryV1RotateAppSecretResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/telemetryV1App"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
-        }
-      }
-    },
-    "testkitV1App": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "appKey": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "strictVersions": {
-          "type": "boolean"
-        },
-        "authMode": {
-          "$ref": "#/definitions/v1AuthMode"
-        },
-        "authGraceUntil": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "ratePerMinute": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "ratePerDay": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "rawRetentionDays": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "dailyEventBudget": {
-          "type": "string",
-          "format": "int64"
-        },
-        "disabled": {
-          "type": "boolean"
-        },
-        "appSecret": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "testkitV1BucketInfo": {
       "type": "object",
       "properties": {
@@ -9150,41 +9093,41 @@
         }
       }
     },
-    "testkitV1CreateAppRequest": {
+    "testkitV1CreateTenantConfigRequest": {
       "type": "object",
       "properties": {
-        "appKey": {
-          "type": "string",
-          "description": "app_key optional; empty = server-generated."
-        },
         "name": {
           "type": "string"
         },
         "email": {
           "type": "string"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant (phase ④ T6: the wire names only the\ntenant; the internal app identity is minted server-side)."
         }
       }
     },
-    "testkitV1CreateAppResponse": {
+    "testkitV1CreateTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/testkitV1App"
+        "config": {
+          "$ref": "#/definitions/testkitV1TenantConfig"
         },
         "token": {
           "type": "string"
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
         }
       }
     },
-    "testkitV1GetAppResponse": {
+    "testkitV1GetTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/testkitV1App"
+        "config": {
+          "$ref": "#/definitions/testkitV1TenantConfig"
         },
         "tokens": {
           "type": "array",
@@ -9244,76 +9187,72 @@
       },
       "description": "ProviderInfo / BucketInfo are admin catalog entities (live registry view)."
     },
-    "testkitV1UpdateAppResponse": {
+    "testkitV1TenantConfig": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/testkitV1App"
-        }
-      }
-    },
-    "userV1CreateAppRequest": {
-      "type": "object",
-      "properties": {
-        "tenantKey": {
-          "type": "string",
-          "description": "tenant_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+        "id": {
+          "type": "string"
+        },
+        "appKey": {
+          "type": "string"
         },
         "name": {
           "type": "string"
-        }
-      },
-      "description": "CreateAppRequest registers a tenant. tenant_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable; stored as the registry's\napp_key column)."
-    },
-    "userV1CreateAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1UserAppInfo"
+        },
+        "email": {
+          "type": "string"
+        },
+        "strictVersions": {
+          "type": "boolean"
+        },
+        "authMode": {
+          "$ref": "#/definitions/v1AuthMode"
+        },
+        "authGraceUntil": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ratePerMinute": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ratePerDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rawRetentionDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dailyEventBudget": {
+          "type": "string",
+          "format": "int64"
+        },
+        "disabled": {
+          "type": "boolean"
         },
         "appSecret": {
-          "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
-        }
-      }
-    },
-    "userV1GetAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1UserAppInfo"
-        }
-      }
-    },
-    "userV1ListAppsResponse": {
-      "type": "object",
-      "properties": {
-        "apps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1UserAppInfo"
-          }
-        }
-      }
-    },
-    "userV1RotateAppSecretResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1UserAppInfo"
+          "type": "string"
         },
-        "appSecret": {
+        "createdAt": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to (phase ④ T6)."
         }
       }
     },
-    "userV1UpdateAppResponse": {
+    "testkitV1UpdateTenantConfigResponse": {
       "type": "object",
       "properties": {
-        "app": {
-          "$ref": "#/definitions/v1UserAppInfo"
+        "config": {
+          "$ref": "#/definitions/testkitV1TenantConfig"
         }
       }
     },
@@ -10318,6 +10257,31 @@
         }
       }
     },
+    "v1CreateAppRequest": {
+      "type": "object",
+      "properties": {
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "description": "CreateAppRequest registers a tenant. tenant_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable; stored as the registry's\napp_key column)."
+    },
+    "v1CreateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
     "v1CreateChannelAccountRequest": {
       "type": "object",
       "properties": {
@@ -11270,29 +11234,11 @@
         }
       }
     },
-    "v1GetAppStatsResponse": {
+    "v1GetAppResponse": {
       "type": "object",
       "properties": {
-        "days": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1DailyStat"
-          }
-        },
-        "drops": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "format": "int64"
-          }
-        },
-        "sigFails": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "format": "int64"
-          }
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
         }
       }
     },
@@ -11618,6 +11564,32 @@
         "tenantKey": {
           "type": "string",
           "description": "Tenant the session lives in (user_apps.app_key)."
+        }
+      }
+    },
+    "v1GetTenantConfigStatsResponse": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1DailyStat"
+          }
+        },
+        "drops": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "int64"
+          }
+        },
+        "sigFails": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "int64"
+          }
         }
       }
     },
@@ -12073,6 +12045,18 @@
         }
       },
       "description": "ListApiKeysResponse NEVER carries a secret — see ApiKeyInfo."
+    },
+    "v1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1UserAppInfo"
+          }
+        }
+      }
     },
     "v1ListChannelAccountsResponse": {
       "type": "object",
@@ -13473,6 +13457,18 @@
         }
       }
     },
+    "v1RotateAppSecretResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+        }
+      }
+    },
     "v1RotateTokenResponse": {
       "type": "object",
       "properties": {
@@ -14467,6 +14463,14 @@
       "properties": {
         "key": {
           "$ref": "#/definitions/v1KeyInfo"
+        }
+      }
+    },
+    "v1UpdateAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1UserAppInfo"
         }
       }
     },

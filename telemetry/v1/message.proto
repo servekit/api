@@ -17,9 +17,10 @@ message ValidateEventResult {
 }
 
 // App is one registered publisher (spec §3.2).
-message App {
+message TenantConfig {
   string id = 1; // uuid
-  // app_key is the machine identity and the "ak" half of the platform-wide
+  // app_key is the row's machine identity and the "ak" half of the
+  // platform-wide
   // ak/sk pair: minted server-side on creation ("tel_" + 8 base36 chars,
   // collision-checked; a caller-chosen key is accepted when non-empty),
   // unique, immutable. The admin surface keys every per-app route by it.

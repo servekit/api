@@ -609,7 +609,7 @@ message ValidateEventResult {
   string drop_reason = 5;
 }
 
-message App {
+message TenantConfig {
   string id = 1;
   string app_key = 2;
   string name = 3;
@@ -632,6 +632,8 @@ message App {
   string app_secret = 15;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
+  // tenant_key names the tenant this config row belongs to (phase ④ T6).
+  string tenant_key = 16;
 }
 
 message EventRule {

@@ -288,35 +288,35 @@ func (x *ValidateBatchResponse) GetEvents() []*ValidateEventResult {
 	return nil
 }
 
-type CreateAppRequest struct {
+type CreateTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key pattern: lowercase letter followed by lowercase alphanumerics
-	// and dashes. Optional; empty = server-generated ("tel_" + 8 base36).
-	AppKey string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	Name   string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Email  string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	// tenant_key optionally maps the new app to a tenant (phase ③). Empty =
-	// the app_key literal (the legacy→tenant fallback value). Unique across
-	// apps — one config row per tenant.
+	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	// tenant_key names the tenant this config row belongs to (phase ④ T6:
+	// the wire names only the tenant now — the internal app identity is
+	// minted server-side, "tel_" + 8 base36). A scoped caller is clamped to
+	// the injected key; the PLATFORM cross-view needs it explicit — when
+	// empty there the minted app key literal is the legacy→tenant fallback.
+	// Unique across rows — one config row per tenant.
 	TenantKey     string `protobuf:"bytes,4,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppRequest) Reset() {
-	*x = CreateAppRequest{}
+func (x *CreateTenantConfigRequest) Reset() {
+	*x = CreateTenantConfigRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppRequest) String() string {
+func (x *CreateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppRequest) ProtoMessage() {}
+func (*CreateTenantConfigRequest) ProtoMessage() {}
 
-func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -328,64 +328,58 @@ func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
-func (*CreateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateAppRequest) GetAppKey() string {
-	if x != nil {
-		return x.AppKey
-	}
-	return ""
-}
-
-func (x *CreateAppRequest) GetName() string {
+func (x *CreateTenantConfigRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateAppRequest) GetEmail() string {
+func (x *CreateTenantConfigRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *CreateAppRequest) GetTenantKey() string {
+func (x *CreateTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
 	return ""
 }
 
-type CreateAppResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *App                   `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type CreateTenantConfigResponse struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	// Full plaintext ingest token — returned exactly once, never stored.
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+	// app_secret convenience echo (also visible via
+	// ListTenantConfigs/GetTenantConfig).
 	AppSecret     string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppResponse) Reset() {
-	*x = CreateAppResponse{}
+func (x *CreateTenantConfigResponse) Reset() {
+	*x = CreateTenantConfigResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppResponse) String() string {
+func (x *CreateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppResponse) ProtoMessage() {}
+func (*CreateTenantConfigResponse) ProtoMessage() {}
 
-func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -397,53 +391,53 @@ func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
-func (*CreateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateAppResponse) GetApp() *App {
+func (x *CreateTenantConfigResponse) GetConfig() *TenantConfig {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *CreateAppResponse) GetToken() string {
+func (x *CreateTenantConfigResponse) GetToken() string {
 	if x != nil {
 		return x.Token
 	}
 	return ""
 }
 
-func (x *CreateAppResponse) GetAppSecret() string {
+func (x *CreateTenantConfigResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-type GetAppRequest struct {
+type GetTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppRequest) Reset() {
-	*x = GetAppRequest{}
+func (x *GetTenantConfigRequest) Reset() {
+	*x = GetTenantConfigRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppRequest) String() string {
+func (x *GetTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppRequest) ProtoMessage() {}
+func (*GetTenantConfigRequest) ProtoMessage() {}
 
-func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -455,21 +449,21 @@ func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
-func (*GetAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetAppRequest) GetAppKey() string {
+func (x *GetTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type GetAppResponse struct {
+type GetTenantConfigResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *App                   `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	Config        *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	Tokens        []*IngestTokenInfo     `protobuf:"bytes,2,rep,name=tokens,proto3" json:"tokens,omitempty"`
 	SigningKeys   []*SigningKeyInfo      `protobuf:"bytes,3,rep,name=signing_keys,json=signingKeys,proto3" json:"signing_keys,omitempty"`
 	Rules         []*EventRule           `protobuf:"bytes,4,rep,name=rules,proto3" json:"rules,omitempty"`
@@ -478,20 +472,20 @@ type GetAppResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppResponse) Reset() {
-	*x = GetAppResponse{}
+func (x *GetTenantConfigResponse) Reset() {
+	*x = GetTenantConfigResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppResponse) String() string {
+func (x *GetTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppResponse) ProtoMessage() {}
+func (*GetTenantConfigResponse) ProtoMessage() {}
 
-func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -503,49 +497,49 @@ func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
-func (*GetAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetAppResponse) GetApp() *App {
+func (x *GetTenantConfigResponse) GetConfig() *TenantConfig {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *GetAppResponse) GetTokens() []*IngestTokenInfo {
+func (x *GetTenantConfigResponse) GetTokens() []*IngestTokenInfo {
 	if x != nil {
 		return x.Tokens
 	}
 	return nil
 }
 
-func (x *GetAppResponse) GetSigningKeys() []*SigningKeyInfo {
+func (x *GetTenantConfigResponse) GetSigningKeys() []*SigningKeyInfo {
 	if x != nil {
 		return x.SigningKeys
 	}
 	return nil
 }
 
-func (x *GetAppResponse) GetRules() []*EventRule {
+func (x *GetTenantConfigResponse) GetRules() []*EventRule {
 	if x != nil {
 		return x.Rules
 	}
 	return nil
 }
 
-func (x *GetAppResponse) GetVersions() []*VersionInfo {
+func (x *GetTenantConfigResponse) GetVersions() []*VersionInfo {
 	if x != nil {
 		return x.Versions
 	}
 	return nil
 }
 
-type UpdateAppRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+type UpdateTenantConfigRequest struct {
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	TenantKey string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// All other fields are optional; only present fields are applied.
 	Name           *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Email          *string                `protobuf:"bytes,3,opt,name=email,proto3,oneof" json:"email,omitempty"`
@@ -569,20 +563,20 @@ type UpdateAppRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateAppRequest) Reset() {
-	*x = UpdateAppRequest{}
+func (x *UpdateTenantConfigRequest) Reset() {
+	*x = UpdateTenantConfigRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppRequest) String() string {
+func (x *UpdateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppRequest) ProtoMessage() {}
+func (*UpdateTenantConfigRequest) ProtoMessage() {}
 
-func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -594,117 +588,118 @@ func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
-func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateAppRequest) GetAppKey() string {
+func (x *UpdateTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetName() string {
+func (x *UpdateTenantConfigRequest) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetEmail() string {
+func (x *UpdateTenantConfigRequest) GetEmail() string {
 	if x != nil && x.Email != nil {
 		return *x.Email
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetStrictVersions() bool {
+func (x *UpdateTenantConfigRequest) GetStrictVersions() bool {
 	if x != nil && x.StrictVersions != nil {
 		return *x.StrictVersions
 	}
 	return false
 }
 
-func (x *UpdateAppRequest) GetAuthMode() AuthMode {
+func (x *UpdateTenantConfigRequest) GetAuthMode() AuthMode {
 	if x != nil && x.AuthMode != nil {
 		return *x.AuthMode
 	}
 	return AuthMode_AUTH_MODE_UNSPECIFIED
 }
 
-func (x *UpdateAppRequest) GetAuthGraceUntil() *timestamppb.Timestamp {
+func (x *UpdateTenantConfigRequest) GetAuthGraceUntil() *timestamppb.Timestamp {
 	if x != nil {
 		return x.AuthGraceUntil
 	}
 	return nil
 }
 
-func (x *UpdateAppRequest) GetClearAuthGrace() bool {
+func (x *UpdateTenantConfigRequest) GetClearAuthGrace() bool {
 	if x != nil {
 		return x.ClearAuthGrace
 	}
 	return false
 }
 
-func (x *UpdateAppRequest) GetRatePerMinute() int32 {
+func (x *UpdateTenantConfigRequest) GetRatePerMinute() int32 {
 	if x != nil && x.RatePerMinute != nil {
 		return *x.RatePerMinute
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetRatePerDay() int32 {
+func (x *UpdateTenantConfigRequest) GetRatePerDay() int32 {
 	if x != nil && x.RatePerDay != nil {
 		return *x.RatePerDay
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetRawRetentionDays() int32 {
+func (x *UpdateTenantConfigRequest) GetRawRetentionDays() int32 {
 	if x != nil && x.RawRetentionDays != nil {
 		return *x.RawRetentionDays
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetDailyEventBudget() int64 {
+func (x *UpdateTenantConfigRequest) GetDailyEventBudget() int64 {
 	if x != nil && x.DailyEventBudget != nil {
 		return *x.DailyEventBudget
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetDisabled() bool {
+func (x *UpdateTenantConfigRequest) GetDisabled() bool {
 	if x != nil && x.Disabled != nil {
 		return *x.Disabled
 	}
 	return false
 }
 
-// ListAppsRequest — the app registry is low-cardinality; no paging. Served
-// from the registry snapshot (converges within 60s cross-process).
-type ListAppsRequest struct {
+// ListTenantConfigsRequest — one row per tenant, low cardinality; no
+// paging. Served from the registry snapshot (converges within 60s
+// cross-process).
+type ListTenantConfigsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsRequest) Reset() {
-	*x = ListAppsRequest{}
+func (x *ListTenantConfigsRequest) Reset() {
+	*x = ListTenantConfigsRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsRequest) String() string {
+func (x *ListTenantConfigsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsRequest) ProtoMessage() {}
+func (*ListTenantConfigsRequest) ProtoMessage() {}
 
-func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -716,32 +711,32 @@ func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
-func (*ListAppsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsRequest.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{8}
 }
 
-type ListAppsResponse struct {
+type ListTenantConfigsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*App                 `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+	Configs       []*TenantConfig        `protobuf:"bytes,1,rep,name=configs,proto3" json:"configs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsResponse) Reset() {
-	*x = ListAppsResponse{}
+func (x *ListTenantConfigsResponse) Reset() {
+	*x = ListTenantConfigsResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsResponse) String() string {
+func (x *ListTenantConfigsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsResponse) ProtoMessage() {}
+func (*ListTenantConfigsResponse) ProtoMessage() {}
 
-func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -753,39 +748,39 @@ func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
-func (*ListAppsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsResponse.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListAppsResponse) GetApps() []*App {
+func (x *ListTenantConfigsResponse) GetConfigs() []*TenantConfig {
 	if x != nil {
-		return x.Apps
+		return x.Configs
 	}
 	return nil
 }
 
-type UpdateAppResponse struct {
+type UpdateTenantConfigResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *App                   `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	Config        *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateAppResponse) Reset() {
-	*x = UpdateAppResponse{}
+func (x *UpdateTenantConfigResponse) Reset() {
+	*x = UpdateTenantConfigResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppResponse) String() string {
+func (x *UpdateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppResponse) ProtoMessage() {}
+func (*UpdateTenantConfigResponse) ProtoMessage() {}
 
-func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -797,21 +792,21 @@ func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
-func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UpdateAppResponse) GetApp() *App {
+func (x *UpdateTenantConfigResponse) GetConfig() *TenantConfig {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
 type RotateTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -846,9 +841,9 @@ func (*RotateTokenRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *RotateTokenRequest) GetAppKey() string {
+func (x *RotateTokenRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -899,30 +894,30 @@ func (x *RotateTokenResponse) GetToken() string {
 	return ""
 }
 
-// RotateAppSecretRequest mints a new business-identity credential (the sk
-// half of the platform ak/sk pair). The old one stops working on the next
-// registry refresh (immediate in-process).
-type RotateAppSecretRequest struct {
+// RotateTenantConfigSecretRequest mints a new business-identity credential
+// (the sk half of the platform ak/sk pair). The old one stops working on
+// the next registry refresh (immediate in-process).
+type RotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretRequest) Reset() {
-	*x = RotateAppSecretRequest{}
+func (x *RotateTenantConfigSecretRequest) Reset() {
+	*x = RotateTenantConfigSecretRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretRequest) String() string {
+func (x *RotateTenantConfigSecretRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretRequest) ProtoMessage() {}
+func (*RotateTenantConfigSecretRequest) ProtoMessage() {}
 
-func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -934,41 +929,42 @@ func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *RotateAppSecretRequest) GetAppKey() string {
+func (x *RotateTenantConfigSecretRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-type RotateAppSecretResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	App   *App                   `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+type RotateTenantConfigSecretResponse struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret convenience echo (also visible via
+	// ListTenantConfigs/GetTenantConfig).
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretResponse) Reset() {
-	*x = RotateAppSecretResponse{}
+func (x *RotateTenantConfigSecretResponse) Reset() {
+	*x = RotateTenantConfigSecretResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretResponse) String() string {
+func (x *RotateTenantConfigSecretResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretResponse) ProtoMessage() {}
+func (*RotateTenantConfigSecretResponse) ProtoMessage() {}
 
-func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -980,19 +976,19 @@ func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *RotateAppSecretResponse) GetApp() *App {
+func (x *RotateTenantConfigSecretResponse) GetConfig() *TenantConfig {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *RotateAppSecretResponse) GetAppSecret() string {
+func (x *RotateTenantConfigSecretResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
@@ -1001,7 +997,7 @@ func (x *RotateAppSecretResponse) GetAppSecret() string {
 
 type RevokeTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Prefix        string                 `protobuf:"bytes,2,opt,name=prefix,proto3" json:"prefix,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1037,9 +1033,9 @@ func (*RevokeTokenRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *RevokeTokenRequest) GetAppKey() string {
+func (x *RevokeTokenRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1088,8 +1084,8 @@ func (*RevokeTokenResponse) Descriptor() ([]byte, []int) {
 }
 
 type CreateSigningKeyRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	TenantKey string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// Caller-chosen key id (e.g. "k202609"); one key per client version band.
 	KeyId         string `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1126,9 +1122,9 @@ func (*CreateSigningKeyRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *CreateSigningKeyRequest) GetAppKey() string {
+func (x *CreateSigningKeyRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1196,7 +1192,7 @@ func (x *CreateSigningKeyResponse) GetSecret() string {
 
 type RevokeSigningKeyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	KeyId         string                 `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1232,9 +1228,9 @@ func (*RevokeSigningKeyRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *RevokeSigningKeyRequest) GetAppKey() string {
+func (x *RevokeSigningKeyRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1283,8 +1279,8 @@ func (*RevokeSigningKeyResponse) Descriptor() ([]byte, []int) {
 }
 
 type ReplaceEventRulesRequest struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	AppKey string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	TenantKey string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// Full replacement: an empty list clears the allowlist (the app then
 	// accepts no events at all). Event names must be unique.
 	Rules         []*EventRule `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
@@ -1322,9 +1318,9 @@ func (*ReplaceEventRulesRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *ReplaceEventRulesRequest) GetAppKey() string {
+func (x *ReplaceEventRulesRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1382,7 +1378,7 @@ func (x *ReplaceEventRulesResponse) GetRules() []*EventRule {
 
 type SetVersionBlockedRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
 	Blocked       bool                   `protobuf:"varint,3,opt,name=blocked,proto3" json:"blocked,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1419,9 +1415,9 @@ func (*SetVersionBlockedRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *SetVersionBlockedRequest) GetAppKey() string {
+func (x *SetVersionBlockedRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1476,28 +1472,28 @@ func (*SetVersionBlockedResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{24}
 }
 
-type GetAppStatsRequest struct {
+type GetTenantConfigStatsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Days          int32                  `protobuf:"varint,2,opt,name=days,proto3" json:"days,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppStatsRequest) Reset() {
-	*x = GetAppStatsRequest{}
+func (x *GetTenantConfigStatsRequest) Reset() {
+	*x = GetTenantConfigStatsRequest{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppStatsRequest) String() string {
+func (x *GetTenantConfigStatsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppStatsRequest) ProtoMessage() {}
+func (*GetTenantConfigStatsRequest) ProtoMessage() {}
 
-func (x *GetAppStatsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigStatsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1509,26 +1505,26 @@ func (x *GetAppStatsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppStatsRequest.ProtoReflect.Descriptor instead.
-func (*GetAppStatsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigStatsRequest.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigStatsRequest) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *GetAppStatsRequest) GetAppKey() string {
+func (x *GetTenantConfigStatsRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
 
-func (x *GetAppStatsRequest) GetDays() int32 {
+func (x *GetTenantConfigStatsRequest) GetDays() int32 {
 	if x != nil {
 		return x.Days
 	}
 	return 0
 }
 
-type GetAppStatsResponse struct {
+type GetTenantConfigStatsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Days          []*DailyStat           `protobuf:"bytes,1,rep,name=days,proto3" json:"days,omitempty"`                                                                                                    // newest first
 	Drops         map[string]int64       `protobuf:"bytes,2,rep,name=drops,proto3" json:"drops,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                       // per-reason event drops (since process start)
@@ -1537,20 +1533,20 @@ type GetAppStatsResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppStatsResponse) Reset() {
-	*x = GetAppStatsResponse{}
+func (x *GetTenantConfigStatsResponse) Reset() {
+	*x = GetTenantConfigStatsResponse{}
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppStatsResponse) String() string {
+func (x *GetTenantConfigStatsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppStatsResponse) ProtoMessage() {}
+func (*GetTenantConfigStatsResponse) ProtoMessage() {}
 
-func (x *GetAppStatsResponse) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigStatsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_request_response_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1562,26 +1558,26 @@ func (x *GetAppStatsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppStatsResponse.ProtoReflect.Descriptor instead.
-func (*GetAppStatsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigStatsResponse.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigStatsResponse) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_request_response_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *GetAppStatsResponse) GetDays() []*DailyStat {
+func (x *GetTenantConfigStatsResponse) GetDays() []*DailyStat {
 	if x != nil {
 		return x.Days
 	}
 	return nil
 }
 
-func (x *GetAppStatsResponse) GetDrops() map[string]int64 {
+func (x *GetTenantConfigStatsResponse) GetDrops() map[string]int64 {
 	if x != nil {
 		return x.Drops
 	}
 	return nil
 }
 
-func (x *GetAppStatsResponse) GetSigFails() map[string]int64 {
+func (x *GetTenantConfigStatsResponse) GetSigFails() map[string]int64 {
 	if x != nil {
 		return x.SigFails
 	}
@@ -1618,30 +1614,31 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\x0fsignature_valid\x18\x04 \x01(\bR\x0esignatureValid\x12'\n" +
 	"\x0fsignature_error\x18\x05 \x01(\tR\x0esignatureError\x12%\n" +
 	"\x0eenvelope_error\x18\x06 \x01(\tR\renvelopeError\x129\n" +
-	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\xd0\x01\n" +
-	"\x10CreateAppRequest\x129\n" +
-	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\x06events\x18\a \x03(\v2!.telemetry.v1.ValidateEventResultR\x06events\"\x9e\x01\n" +
+	"\x19CreateTenantConfigRequest\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12 \n" +
 	"\x05email\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xd8\x01\x01r\x02`\x01R\x05email\x12?\n" +
 	"\n" +
-	"tenant_key\x18\x04 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9_]{0,15}$R\ttenantKey\"m\n" +
-	"\x11CreateAppResponse\x12#\n" +
-	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x12\x14\n" +
+	"tenant_key\x18\x04 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9_]{0,15}$R\ttenantKey\"\x85\x01\n" +
+	"\x1aCreateTenantConfigResponse\x122\n" +
+	"\x06config\x18\x01 \x01(\v2\x1a.telemetry.v1.TenantConfigR\x06config\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x03 \x01(\tR\tappSecret\"3\n" +
-	"\rGetAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"\x93\x02\n" +
-	"\x0eGetAppResponse\x12#\n" +
-	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x125\n" +
+	"app_secret\x18\x03 \x01(\tR\tappSecret\"B\n" +
+	"\x16GetTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"\xab\x02\n" +
+	"\x17GetTenantConfigResponse\x122\n" +
+	"\x06config\x18\x01 \x01(\v2\x1a.telemetry.v1.TenantConfigR\x06config\x125\n" +
 	"\x06tokens\x18\x02 \x03(\v2\x1d.telemetry.v1.IngestTokenInfoR\x06tokens\x12?\n" +
 	"\fsigning_keys\x18\x03 \x03(\v2\x1c.telemetry.v1.SigningKeyInfoR\vsigningKeys\x12-\n" +
 	"\x05rules\x18\x04 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\x125\n" +
-	"\bversions\x18\x05 \x03(\v2\x19.telemetry.v1.VersionInfoR\bversions\"\x9e\x06\n" +
-	"\x10UpdateAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\bversions\x18\x05 \x03(\v2\x19.telemetry.v1.VersionInfoR\bversions\"\xad\x06\n" +
+	"\x19UpdateTenantConfigRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\"\n" +
 	"\x05email\x18\x03 \x01(\tB\a\xbaH\x04r\x02`\x01H\x01R\x05email\x88\x01\x01\x12,\n" +
@@ -1669,54 +1666,62 @@ const file_telemetry_v1_request_response_proto_rawDesc = "" +
 	"\r_rate_per_dayB\x15\n" +
 	"\x13_raw_retention_daysB\x15\n" +
 	"\x13_daily_event_budgetB\v\n" +
-	"\t_disabled\"\x11\n" +
-	"\x0fListAppsRequest\"9\n" +
-	"\x10ListAppsResponse\x12%\n" +
-	"\x04apps\x18\x01 \x03(\v2\x11.telemetry.v1.AppR\x04apps\"8\n" +
-	"\x11UpdateAppResponse\x12#\n" +
-	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\"8\n" +
-	"\x12RotateTokenRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"+\n" +
-	"\x13RotateTokenResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"<\n" +
-	"\x16RotateAppSecretRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"]\n" +
-	"\x17RotateAppSecretResponse\x12#\n" +
-	"\x03app\x18\x01 \x01(\v2\x11.telemetry.v1.AppR\x03app\x12\x1d\n" +
+	"\t_disabled\"\x1a\n" +
+	"\x18ListTenantConfigsRequest\"Q\n" +
+	"\x19ListTenantConfigsResponse\x124\n" +
+	"\aconfigs\x18\x01 \x03(\v2\x1a.telemetry.v1.TenantConfigR\aconfigs\"P\n" +
+	"\x1aUpdateTenantConfigResponse\x122\n" +
+	"\x06config\x18\x01 \x01(\v2\x1a.telemetry.v1.TenantConfigR\x06config\">\n" +
+	"\x12RotateTokenRequest\x12(\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"u\n" +
-	"\x12RevokeTokenRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12;\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"+\n" +
+	"\x13RotateTokenResponse\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"K\n" +
+	"\x1fRotateTenantConfigSecretRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"u\n" +
+	" RotateTenantConfigSecretResponse\x122\n" +
+	"\x06config\x18\x01 \x01(\v2\x1a.telemetry.v1.TenantConfigR\x06config\x12\x1d\n" +
+	"\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"{\n" +
+	"\x12RevokeTokenRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12;\n" +
 	"\x06prefix\x18\x02 \x01(\tB#\xbaH r\x1e\x10\x06\x18\x102\x18^tm_live_[A-Za-z0-9_-]+$R\x06prefix\"\x15\n" +
-	"\x13RevokeTokenResponse\"r\n" +
-	"\x17CreateSigningKeyRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x123\n" +
+	"\x13RevokeTokenResponse\"x\n" +
+	"\x17CreateSigningKeyRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x123\n" +
 	"\x06key_id\x18\x02 \x01(\tB\x1c\xbaH\x19r\x172\x15^[a-zA-Z0-9_-]{1,32}$R\x05keyId\"I\n" +
 	"\x18CreateSigningKeyResponse\x12\x15\n" +
 	"\x06key_id\x18\x01 \x01(\tR\x05keyId\x12\x16\n" +
-	"\x06secret\x18\x02 \x01(\tR\x06secret\"r\n" +
-	"\x17RevokeSigningKeyRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x123\n" +
+	"\x06secret\x18\x02 \x01(\tR\x06secret\"x\n" +
+	"\x17RevokeSigningKeyRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x123\n" +
 	"\x06key_id\x18\x02 \x01(\tB\x1c\xbaH\x19r\x172\x15^[a-zA-Z0-9_-]{1,32}$R\x05keyId\"\x1a\n" +
-	"\x18RevokeSigningKeyResponse\"\xd6\x01\n" +
-	"\x18ReplaceEventRulesRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12\x95\x01\n" +
+	"\x18RevokeSigningKeyResponse\"\xdc\x01\n" +
+	"\x18ReplaceEventRulesRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12\x95\x01\n" +
 	"\x05rules\x18\x02 \x03(\v2\x17.telemetry.v1.EventRuleBf\xbaHc\xba\x01Z\n" +
 	"\x18rules.unique_event_names\x12\x1aevent names must be unique\x1a\"this.map(r, r.event_name).unique()\x92\x01\x03\x10\xf4\x03R\x05rules\"J\n" +
 	"\x19ReplaceEventRulesResponse\x12-\n" +
-	"\x05rules\x18\x01 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\"}\n" +
-	"\x18SetVersionBlockedRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\x05rules\x18\x01 \x03(\v2\x17.telemetry.v1.EventRuleR\x05rules\"\x83\x01\n" +
+	"\x18SetVersionBlockedRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12#\n" +
 	"\aversion\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\aversion\x12\x18\n" +
 	"\ablocked\x18\x03 \x01(\bR\ablocked\"\x1b\n" +
-	"\x19SetVersionBlockedResponse\"W\n" +
-	"\x12GetAppStatsRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12\x1d\n" +
-	"\x04days\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18Z(\x01R\x04days\"\xcb\x02\n" +
-	"\x13GetAppStatsResponse\x12+\n" +
-	"\x04days\x18\x01 \x03(\v2\x17.telemetry.v1.DailyStatR\x04days\x12B\n" +
-	"\x05drops\x18\x02 \x03(\v2,.telemetry.v1.GetAppStatsResponse.DropsEntryR\x05drops\x12L\n" +
-	"\tsig_fails\x18\x03 \x03(\v2/.telemetry.v1.GetAppStatsResponse.SigFailsEntryR\bsigFails\x1a8\n" +
+	"\x19SetVersionBlockedResponse\"f\n" +
+	"\x1bGetTenantConfigStatsRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12\x1d\n" +
+	"\x04days\x18\x02 \x01(\x05B\t\xbaH\x06\x1a\x04\x18Z(\x01R\x04days\"\xe6\x02\n" +
+	"\x1cGetTenantConfigStatsResponse\x12+\n" +
+	"\x04days\x18\x01 \x03(\v2\x17.telemetry.v1.DailyStatR\x04days\x12K\n" +
+	"\x05drops\x18\x02 \x03(\v25.telemetry.v1.GetTenantConfigStatsResponse.DropsEntryR\x05drops\x12U\n" +
+	"\tsig_fails\x18\x03 \x03(\v28.telemetry.v1.GetTenantConfigStatsResponse.SigFailsEntryR\bsigFails\x1a8\n" +
 	"\n" +
 	"DropsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
@@ -1740,65 +1745,65 @@ func file_telemetry_v1_request_response_proto_rawDescGZIP() []byte {
 
 var file_telemetry_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_telemetry_v1_request_response_proto_goTypes = []any{
-	(*IngestRequest)(nil),             // 0: telemetry.v1.IngestRequest
-	(*IngestResponse)(nil),            // 1: telemetry.v1.IngestResponse
-	(*ValidateBatchResponse)(nil),     // 2: telemetry.v1.ValidateBatchResponse
-	(*CreateAppRequest)(nil),          // 3: telemetry.v1.CreateAppRequest
-	(*CreateAppResponse)(nil),         // 4: telemetry.v1.CreateAppResponse
-	(*GetAppRequest)(nil),             // 5: telemetry.v1.GetAppRequest
-	(*GetAppResponse)(nil),            // 6: telemetry.v1.GetAppResponse
-	(*UpdateAppRequest)(nil),          // 7: telemetry.v1.UpdateAppRequest
-	(*ListAppsRequest)(nil),           // 8: telemetry.v1.ListAppsRequest
-	(*ListAppsResponse)(nil),          // 9: telemetry.v1.ListAppsResponse
-	(*UpdateAppResponse)(nil),         // 10: telemetry.v1.UpdateAppResponse
-	(*RotateTokenRequest)(nil),        // 11: telemetry.v1.RotateTokenRequest
-	(*RotateTokenResponse)(nil),       // 12: telemetry.v1.RotateTokenResponse
-	(*RotateAppSecretRequest)(nil),    // 13: telemetry.v1.RotateAppSecretRequest
-	(*RotateAppSecretResponse)(nil),   // 14: telemetry.v1.RotateAppSecretResponse
-	(*RevokeTokenRequest)(nil),        // 15: telemetry.v1.RevokeTokenRequest
-	(*RevokeTokenResponse)(nil),       // 16: telemetry.v1.RevokeTokenResponse
-	(*CreateSigningKeyRequest)(nil),   // 17: telemetry.v1.CreateSigningKeyRequest
-	(*CreateSigningKeyResponse)(nil),  // 18: telemetry.v1.CreateSigningKeyResponse
-	(*RevokeSigningKeyRequest)(nil),   // 19: telemetry.v1.RevokeSigningKeyRequest
-	(*RevokeSigningKeyResponse)(nil),  // 20: telemetry.v1.RevokeSigningKeyResponse
-	(*ReplaceEventRulesRequest)(nil),  // 21: telemetry.v1.ReplaceEventRulesRequest
-	(*ReplaceEventRulesResponse)(nil), // 22: telemetry.v1.ReplaceEventRulesResponse
-	(*SetVersionBlockedRequest)(nil),  // 23: telemetry.v1.SetVersionBlockedRequest
-	(*SetVersionBlockedResponse)(nil), // 24: telemetry.v1.SetVersionBlockedResponse
-	(*GetAppStatsRequest)(nil),        // 25: telemetry.v1.GetAppStatsRequest
-	(*GetAppStatsResponse)(nil),       // 26: telemetry.v1.GetAppStatsResponse
-	nil,                               // 27: telemetry.v1.IngestResponse.DropsEntry
-	nil,                               // 28: telemetry.v1.GetAppStatsResponse.DropsEntry
-	nil,                               // 29: telemetry.v1.GetAppStatsResponse.SigFailsEntry
-	(*ValidateEventResult)(nil),       // 30: telemetry.v1.ValidateEventResult
-	(*App)(nil),                       // 31: telemetry.v1.App
-	(*IngestTokenInfo)(nil),           // 32: telemetry.v1.IngestTokenInfo
-	(*SigningKeyInfo)(nil),            // 33: telemetry.v1.SigningKeyInfo
-	(*EventRule)(nil),                 // 34: telemetry.v1.EventRule
-	(*VersionInfo)(nil),               // 35: telemetry.v1.VersionInfo
-	(AuthMode)(0),                     // 36: telemetry.v1.AuthMode
-	(*timestamppb.Timestamp)(nil),     // 37: google.protobuf.Timestamp
-	(*DailyStat)(nil),                 // 38: telemetry.v1.DailyStat
+	(*IngestRequest)(nil),                    // 0: telemetry.v1.IngestRequest
+	(*IngestResponse)(nil),                   // 1: telemetry.v1.IngestResponse
+	(*ValidateBatchResponse)(nil),            // 2: telemetry.v1.ValidateBatchResponse
+	(*CreateTenantConfigRequest)(nil),        // 3: telemetry.v1.CreateTenantConfigRequest
+	(*CreateTenantConfigResponse)(nil),       // 4: telemetry.v1.CreateTenantConfigResponse
+	(*GetTenantConfigRequest)(nil),           // 5: telemetry.v1.GetTenantConfigRequest
+	(*GetTenantConfigResponse)(nil),          // 6: telemetry.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigRequest)(nil),        // 7: telemetry.v1.UpdateTenantConfigRequest
+	(*ListTenantConfigsRequest)(nil),         // 8: telemetry.v1.ListTenantConfigsRequest
+	(*ListTenantConfigsResponse)(nil),        // 9: telemetry.v1.ListTenantConfigsResponse
+	(*UpdateTenantConfigResponse)(nil),       // 10: telemetry.v1.UpdateTenantConfigResponse
+	(*RotateTokenRequest)(nil),               // 11: telemetry.v1.RotateTokenRequest
+	(*RotateTokenResponse)(nil),              // 12: telemetry.v1.RotateTokenResponse
+	(*RotateTenantConfigSecretRequest)(nil),  // 13: telemetry.v1.RotateTenantConfigSecretRequest
+	(*RotateTenantConfigSecretResponse)(nil), // 14: telemetry.v1.RotateTenantConfigSecretResponse
+	(*RevokeTokenRequest)(nil),               // 15: telemetry.v1.RevokeTokenRequest
+	(*RevokeTokenResponse)(nil),              // 16: telemetry.v1.RevokeTokenResponse
+	(*CreateSigningKeyRequest)(nil),          // 17: telemetry.v1.CreateSigningKeyRequest
+	(*CreateSigningKeyResponse)(nil),         // 18: telemetry.v1.CreateSigningKeyResponse
+	(*RevokeSigningKeyRequest)(nil),          // 19: telemetry.v1.RevokeSigningKeyRequest
+	(*RevokeSigningKeyResponse)(nil),         // 20: telemetry.v1.RevokeSigningKeyResponse
+	(*ReplaceEventRulesRequest)(nil),         // 21: telemetry.v1.ReplaceEventRulesRequest
+	(*ReplaceEventRulesResponse)(nil),        // 22: telemetry.v1.ReplaceEventRulesResponse
+	(*SetVersionBlockedRequest)(nil),         // 23: telemetry.v1.SetVersionBlockedRequest
+	(*SetVersionBlockedResponse)(nil),        // 24: telemetry.v1.SetVersionBlockedResponse
+	(*GetTenantConfigStatsRequest)(nil),      // 25: telemetry.v1.GetTenantConfigStatsRequest
+	(*GetTenantConfigStatsResponse)(nil),     // 26: telemetry.v1.GetTenantConfigStatsResponse
+	nil,                                      // 27: telemetry.v1.IngestResponse.DropsEntry
+	nil,                                      // 28: telemetry.v1.GetTenantConfigStatsResponse.DropsEntry
+	nil,                                      // 29: telemetry.v1.GetTenantConfigStatsResponse.SigFailsEntry
+	(*ValidateEventResult)(nil),              // 30: telemetry.v1.ValidateEventResult
+	(*TenantConfig)(nil),                     // 31: telemetry.v1.TenantConfig
+	(*IngestTokenInfo)(nil),                  // 32: telemetry.v1.IngestTokenInfo
+	(*SigningKeyInfo)(nil),                   // 33: telemetry.v1.SigningKeyInfo
+	(*EventRule)(nil),                        // 34: telemetry.v1.EventRule
+	(*VersionInfo)(nil),                      // 35: telemetry.v1.VersionInfo
+	(AuthMode)(0),                            // 36: telemetry.v1.AuthMode
+	(*timestamppb.Timestamp)(nil),            // 37: google.protobuf.Timestamp
+	(*DailyStat)(nil),                        // 38: telemetry.v1.DailyStat
 }
 var file_telemetry_v1_request_response_proto_depIdxs = []int32{
 	27, // 0: telemetry.v1.IngestResponse.drops:type_name -> telemetry.v1.IngestResponse.DropsEntry
 	30, // 1: telemetry.v1.ValidateBatchResponse.events:type_name -> telemetry.v1.ValidateEventResult
-	31, // 2: telemetry.v1.CreateAppResponse.app:type_name -> telemetry.v1.App
-	31, // 3: telemetry.v1.GetAppResponse.app:type_name -> telemetry.v1.App
-	32, // 4: telemetry.v1.GetAppResponse.tokens:type_name -> telemetry.v1.IngestTokenInfo
-	33, // 5: telemetry.v1.GetAppResponse.signing_keys:type_name -> telemetry.v1.SigningKeyInfo
-	34, // 6: telemetry.v1.GetAppResponse.rules:type_name -> telemetry.v1.EventRule
-	35, // 7: telemetry.v1.GetAppResponse.versions:type_name -> telemetry.v1.VersionInfo
-	36, // 8: telemetry.v1.UpdateAppRequest.auth_mode:type_name -> telemetry.v1.AuthMode
-	37, // 9: telemetry.v1.UpdateAppRequest.auth_grace_until:type_name -> google.protobuf.Timestamp
-	31, // 10: telemetry.v1.ListAppsResponse.apps:type_name -> telemetry.v1.App
-	31, // 11: telemetry.v1.UpdateAppResponse.app:type_name -> telemetry.v1.App
-	31, // 12: telemetry.v1.RotateAppSecretResponse.app:type_name -> telemetry.v1.App
+	31, // 2: telemetry.v1.CreateTenantConfigResponse.config:type_name -> telemetry.v1.TenantConfig
+	31, // 3: telemetry.v1.GetTenantConfigResponse.config:type_name -> telemetry.v1.TenantConfig
+	32, // 4: telemetry.v1.GetTenantConfigResponse.tokens:type_name -> telemetry.v1.IngestTokenInfo
+	33, // 5: telemetry.v1.GetTenantConfigResponse.signing_keys:type_name -> telemetry.v1.SigningKeyInfo
+	34, // 6: telemetry.v1.GetTenantConfigResponse.rules:type_name -> telemetry.v1.EventRule
+	35, // 7: telemetry.v1.GetTenantConfigResponse.versions:type_name -> telemetry.v1.VersionInfo
+	36, // 8: telemetry.v1.UpdateTenantConfigRequest.auth_mode:type_name -> telemetry.v1.AuthMode
+	37, // 9: telemetry.v1.UpdateTenantConfigRequest.auth_grace_until:type_name -> google.protobuf.Timestamp
+	31, // 10: telemetry.v1.ListTenantConfigsResponse.configs:type_name -> telemetry.v1.TenantConfig
+	31, // 11: telemetry.v1.UpdateTenantConfigResponse.config:type_name -> telemetry.v1.TenantConfig
+	31, // 12: telemetry.v1.RotateTenantConfigSecretResponse.config:type_name -> telemetry.v1.TenantConfig
 	34, // 13: telemetry.v1.ReplaceEventRulesRequest.rules:type_name -> telemetry.v1.EventRule
 	34, // 14: telemetry.v1.ReplaceEventRulesResponse.rules:type_name -> telemetry.v1.EventRule
-	38, // 15: telemetry.v1.GetAppStatsResponse.days:type_name -> telemetry.v1.DailyStat
-	28, // 16: telemetry.v1.GetAppStatsResponse.drops:type_name -> telemetry.v1.GetAppStatsResponse.DropsEntry
-	29, // 17: telemetry.v1.GetAppStatsResponse.sig_fails:type_name -> telemetry.v1.GetAppStatsResponse.SigFailsEntry
+	38, // 15: telemetry.v1.GetTenantConfigStatsResponse.days:type_name -> telemetry.v1.DailyStat
+	28, // 16: telemetry.v1.GetTenantConfigStatsResponse.drops:type_name -> telemetry.v1.GetTenantConfigStatsResponse.DropsEntry
+	29, // 17: telemetry.v1.GetTenantConfigStatsResponse.sig_fails:type_name -> telemetry.v1.GetTenantConfigStatsResponse.SigFailsEntry
 	18, // [18:18] is the sub-list for method output_type
 	18, // [18:18] is the sub-list for method input_type
 	18, // [18:18] is the sub-list for extension type_name

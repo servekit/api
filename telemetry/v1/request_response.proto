@@ -66,13 +66,7 @@ message ValidateBatchResponse {
   repeated ValidateEventResult events = 7;
 }
 
-message CreateAppRequest {
-  // app_key pattern: lowercase letter followed by lowercase alphanumerics
-  // and dashes. Optional; empty = server-generated ("tel_" + 8 base36).
-  string app_key = 1 [
-    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
-  ];
+message CreateTenantConfigRequest {
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200
@@ -81,9 +75,12 @@ message CreateAppRequest {
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.email = true
   ];
-  // tenant_key optionally maps the new app to a tenant (phase ③). Empty =
-  // the app_key literal (the legacy→tenant fallback value). Unique across
-  // apps — one config row per tenant.
+  // tenant_key names the tenant this config row belongs to (phase ④ T6:
+  // the wire names only the tenant now — the internal app identity is
+  // minted server-side, "tel_" + 8 base36). A scoped caller is clamped to
+  // the injected key; the PLATFORM cross-view needs it explicit — when
+  // empty there the minted app key literal is the legacy→tenant fallback.
+  // Unique across rows — one config row per tenant.
   string tenant_key = 4 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string = {
@@ -92,31 +89,32 @@ message CreateAppRequest {
   ];
 }
 
-message CreateAppResponse {
-  App app = 1;
+message CreateTenantConfigResponse {
+  TenantConfig config = 1;
   // Full plaintext ingest token — returned exactly once, never stored.
   string token = 2;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+  // app_secret convenience echo (also visible via
+  // ListTenantConfigs/GetTenantConfig).
   string app_secret = 3;
 }
 
-message GetAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message GetTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
 }
 
-message GetAppResponse {
-  App app = 1;
+message GetTenantConfigResponse {
+  TenantConfig config = 1;
   repeated IngestTokenInfo tokens = 2;
   repeated SigningKeyInfo signing_keys = 3;
   repeated EventRule rules = 4;
   repeated VersionInfo versions = 5;
 }
 
-message UpdateAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message UpdateTenantConfigRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -159,20 +157,21 @@ message UpdateAppRequest {
   optional bool disabled = 12;
 }
 
-// ListAppsRequest — the app registry is low-cardinality; no paging. Served
-// from the registry snapshot (converges within 60s cross-process).
-message ListAppsRequest {}
+// ListTenantConfigsRequest — one row per tenant, low cardinality; no
+// paging. Served from the registry snapshot (converges within 60s
+// cross-process).
+message ListTenantConfigsRequest {}
 
-message ListAppsResponse {
-  repeated App apps = 1;
+message ListTenantConfigsResponse {
+  repeated TenantConfig configs = 1;
 }
 
-message UpdateAppResponse {
-  App app = 1;
+message UpdateTenantConfigResponse {
+  TenantConfig config = 1;
 }
 
 message RotateTokenRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -184,24 +183,25 @@ message RotateTokenResponse {
   string token = 1;
 }
 
-// RotateAppSecretRequest mints a new business-identity credential (the sk
-// half of the platform ak/sk pair). The old one stops working on the next
-// registry refresh (immediate in-process).
-message RotateAppSecretRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+// RotateTenantConfigSecretRequest mints a new business-identity credential
+// (the sk half of the platform ak/sk pair). The old one stops working on
+// the next registry refresh (immediate in-process).
+message RotateTenantConfigSecretRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
 }
 
-message RotateAppSecretResponse {
-  App app = 1;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+message RotateTenantConfigSecretResponse {
+  TenantConfig config = 1;
+  // app_secret convenience echo (also visible via
+  // ListTenantConfigs/GetTenantConfig).
   string app_secret = 2;
 }
 
 message RevokeTokenRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -215,7 +215,7 @@ message RevokeTokenRequest {
 message RevokeTokenResponse {}
 
 message CreateSigningKeyRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -231,7 +231,7 @@ message CreateSigningKeyResponse {
 }
 
 message RevokeSigningKeyRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -241,7 +241,7 @@ message RevokeSigningKeyRequest {
 message RevokeSigningKeyResponse {}
 
 message ReplaceEventRulesRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -262,7 +262,7 @@ message ReplaceEventRulesResponse {
 }
 
 message SetVersionBlockedRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -275,8 +275,8 @@ message SetVersionBlockedRequest {
 
 message SetVersionBlockedResponse {}
 
-message GetAppStatsRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+message GetTenantConfigStatsRequest {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -286,7 +286,7 @@ message GetAppStatsRequest {
   }];
 }
 
-message GetAppStatsResponse {
+message GetTenantConfigStatsResponse {
   repeated DailyStat days = 1; // newest first
   map<string, int64> drops = 2; // per-reason event drops (since process start)
   map<string, int64> sig_fails = 3; // per-reason signature failures (since process start)

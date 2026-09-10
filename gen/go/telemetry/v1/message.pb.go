@@ -103,10 +103,11 @@ func (x *ValidateEventResult) GetDropReason() string {
 }
 
 // App is one registered publisher (spec §3.2).
-type App struct {
+type TenantConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // uuid
-	// app_key is the machine identity and the "ak" half of the platform-wide
+	// app_key is the row's machine identity and the "ak" half of the
+	// platform-wide
 	// ak/sk pair: minted server-side on creation ("tel_" + 8 base36 chars,
 	// collision-checked; a caller-chosen key is accepted when non-empty),
 	// unique, immutable. The admin surface keys every per-app route by it.
@@ -146,20 +147,20 @@ type App struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *App) Reset() {
-	*x = App{}
+func (x *TenantConfig) Reset() {
+	*x = TenantConfig{}
 	mi := &file_telemetry_v1_message_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *App) String() string {
+func (x *TenantConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*App) ProtoMessage() {}
+func (*TenantConfig) ProtoMessage() {}
 
-func (x *App) ProtoReflect() protoreflect.Message {
+func (x *TenantConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_telemetry_v1_message_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -171,117 +172,117 @@ func (x *App) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use App.ProtoReflect.Descriptor instead.
-func (*App) Descriptor() ([]byte, []int) {
+// Deprecated: Use TenantConfig.ProtoReflect.Descriptor instead.
+func (*TenantConfig) Descriptor() ([]byte, []int) {
 	return file_telemetry_v1_message_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *App) GetId() string {
+func (x *TenantConfig) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *App) GetAppKey() string {
+func (x *TenantConfig) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
 	}
 	return ""
 }
 
-func (x *App) GetName() string {
+func (x *TenantConfig) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *App) GetEmail() string {
+func (x *TenantConfig) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *App) GetStrictVersions() bool {
+func (x *TenantConfig) GetStrictVersions() bool {
 	if x != nil {
 		return x.StrictVersions
 	}
 	return false
 }
 
-func (x *App) GetAuthMode() AuthMode {
+func (x *TenantConfig) GetAuthMode() AuthMode {
 	if x != nil {
 		return x.AuthMode
 	}
 	return AuthMode_AUTH_MODE_UNSPECIFIED
 }
 
-func (x *App) GetAuthGraceUntil() *timestamppb.Timestamp {
+func (x *TenantConfig) GetAuthGraceUntil() *timestamppb.Timestamp {
 	if x != nil {
 		return x.AuthGraceUntil
 	}
 	return nil
 }
 
-func (x *App) GetRatePerMinute() int32 {
+func (x *TenantConfig) GetRatePerMinute() int32 {
 	if x != nil {
 		return x.RatePerMinute
 	}
 	return 0
 }
 
-func (x *App) GetRatePerDay() int32 {
+func (x *TenantConfig) GetRatePerDay() int32 {
 	if x != nil {
 		return x.RatePerDay
 	}
 	return 0
 }
 
-func (x *App) GetRawRetentionDays() int32 {
+func (x *TenantConfig) GetRawRetentionDays() int32 {
 	if x != nil {
 		return x.RawRetentionDays
 	}
 	return 0
 }
 
-func (x *App) GetDailyEventBudget() int64 {
+func (x *TenantConfig) GetDailyEventBudget() int64 {
 	if x != nil {
 		return x.DailyEventBudget
 	}
 	return 0
 }
 
-func (x *App) GetDisabled() bool {
+func (x *TenantConfig) GetDisabled() bool {
 	if x != nil {
 		return x.Disabled
 	}
 	return false
 }
 
-func (x *App) GetAppSecret() string {
+func (x *TenantConfig) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-func (x *App) GetTenantKey() string {
+func (x *TenantConfig) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
 	return ""
 }
 
-func (x *App) GetCreatedAt() *timestamppb.Timestamp {
+func (x *TenantConfig) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return nil
 }
 
-func (x *App) GetUpdatedAt() *timestamppb.Timestamp {
+func (x *TenantConfig) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
 	}
@@ -633,8 +634,8 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\x81\x05\n" +
-	"\x03App\x12\x0e\n" +
+	"dropReason\"\x8a\x05\n" +
+	"\fTenantConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
@@ -707,7 +708,7 @@ func file_telemetry_v1_message_proto_rawDescGZIP() []byte {
 var file_telemetry_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_telemetry_v1_message_proto_goTypes = []any{
 	(*ValidateEventResult)(nil),   // 0: telemetry.v1.ValidateEventResult
-	(*App)(nil),                   // 1: telemetry.v1.App
+	(*TenantConfig)(nil),          // 1: telemetry.v1.TenantConfig
 	(*EventRule)(nil),             // 2: telemetry.v1.EventRule
 	(*IngestTokenInfo)(nil),       // 3: telemetry.v1.IngestTokenInfo
 	(*SigningKeyInfo)(nil),        // 4: telemetry.v1.SigningKeyInfo
@@ -717,10 +718,10 @@ var file_telemetry_v1_message_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_telemetry_v1_message_proto_depIdxs = []int32{
-	7, // 0: telemetry.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
-	8, // 1: telemetry.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
-	8, // 2: telemetry.v1.App.created_at:type_name -> google.protobuf.Timestamp
-	8, // 3: telemetry.v1.App.updated_at:type_name -> google.protobuf.Timestamp
+	7, // 0: telemetry.v1.TenantConfig.auth_mode:type_name -> telemetry.v1.AuthMode
+	8, // 1: telemetry.v1.TenantConfig.auth_grace_until:type_name -> google.protobuf.Timestamp
+	8, // 2: telemetry.v1.TenantConfig.created_at:type_name -> google.protobuf.Timestamp
+	8, // 3: telemetry.v1.TenantConfig.updated_at:type_name -> google.protobuf.Timestamp
 	8, // 4: telemetry.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
 	8, // 5: telemetry.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
 	8, // 6: telemetry.v1.SigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp

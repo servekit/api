@@ -4157,7 +4157,7 @@ func (x *ValidateEventResult) GetDropReason() string {
 	return ""
 }
 
-type App struct {
+type TenantConfig struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	AppKey           string                 `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
@@ -4174,24 +4174,26 @@ type App struct {
 	AppSecret        string                 `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	CreatedAt        *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt        *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// tenant_key names the tenant this config row belongs to (phase ④ T6).
+	TenantKey     string `protobuf:"bytes,16,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *App) Reset() {
-	*x = App{}
+func (x *TenantConfig) Reset() {
+	*x = TenantConfig{}
 	mi := &file_testkit_v1_message_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *App) String() string {
+func (x *TenantConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*App) ProtoMessage() {}
+func (*TenantConfig) ProtoMessage() {}
 
-func (x *App) ProtoReflect() protoreflect.Message {
+func (x *TenantConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_testkit_v1_message_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4203,114 +4205,121 @@ func (x *App) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use App.ProtoReflect.Descriptor instead.
-func (*App) Descriptor() ([]byte, []int) {
+// Deprecated: Use TenantConfig.ProtoReflect.Descriptor instead.
+func (*TenantConfig) Descriptor() ([]byte, []int) {
 	return file_testkit_v1_message_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *App) GetId() string {
+func (x *TenantConfig) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *App) GetAppKey() string {
+func (x *TenantConfig) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
 	}
 	return ""
 }
 
-func (x *App) GetName() string {
+func (x *TenantConfig) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *App) GetEmail() string {
+func (x *TenantConfig) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *App) GetStrictVersions() bool {
+func (x *TenantConfig) GetStrictVersions() bool {
 	if x != nil {
 		return x.StrictVersions
 	}
 	return false
 }
 
-func (x *App) GetAuthMode() v14.AuthMode {
+func (x *TenantConfig) GetAuthMode() v14.AuthMode {
 	if x != nil {
 		return x.AuthMode
 	}
 	return v14.AuthMode(0)
 }
 
-func (x *App) GetAuthGraceUntil() *timestamppb.Timestamp {
+func (x *TenantConfig) GetAuthGraceUntil() *timestamppb.Timestamp {
 	if x != nil {
 		return x.AuthGraceUntil
 	}
 	return nil
 }
 
-func (x *App) GetRatePerMinute() int32 {
+func (x *TenantConfig) GetRatePerMinute() int32 {
 	if x != nil {
 		return x.RatePerMinute
 	}
 	return 0
 }
 
-func (x *App) GetRatePerDay() int32 {
+func (x *TenantConfig) GetRatePerDay() int32 {
 	if x != nil {
 		return x.RatePerDay
 	}
 	return 0
 }
 
-func (x *App) GetRawRetentionDays() int32 {
+func (x *TenantConfig) GetRawRetentionDays() int32 {
 	if x != nil {
 		return x.RawRetentionDays
 	}
 	return 0
 }
 
-func (x *App) GetDailyEventBudget() int64 {
+func (x *TenantConfig) GetDailyEventBudget() int64 {
 	if x != nil {
 		return x.DailyEventBudget
 	}
 	return 0
 }
 
-func (x *App) GetDisabled() bool {
+func (x *TenantConfig) GetDisabled() bool {
 	if x != nil {
 		return x.Disabled
 	}
 	return false
 }
 
-func (x *App) GetAppSecret() string {
+func (x *TenantConfig) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-func (x *App) GetCreatedAt() *timestamppb.Timestamp {
+func (x *TenantConfig) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return nil
 }
 
-func (x *App) GetUpdatedAt() *timestamppb.Timestamp {
+func (x *TenantConfig) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *TenantConfig) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 type EventRule struct {
@@ -5098,8 +5107,8 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\xe2\x04\n" +
-	"\x03App\x12\x0e\n" +
+	"dropReason\"\x8a\x05\n" +
+	"\fTenantConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
@@ -5120,7 +5129,9 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xdc\x01\n" +
+	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x10 \x01(\tR\ttenantKey\"\xdc\x01\n" +
 	"\tEventRule\x12<\n" +
 	"\n" +
 	"event_name\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x182\x16^[a-z][a-z0-9_]{0,63}$R\teventName\x12E\n" +
@@ -5216,7 +5227,7 @@ var file_testkit_v1_message_proto_goTypes = []any{
 	(*TrialInfo)(nil),               // 42: testkit.v1.TrialInfo
 	(*SigningKeyInfo)(nil),          // 43: testkit.v1.SigningKeyInfo
 	(*ValidateEventResult)(nil),     // 44: testkit.v1.ValidateEventResult
-	(*App)(nil),                     // 45: testkit.v1.App
+	(*TenantConfig)(nil),            // 45: testkit.v1.TenantConfig
 	(*EventRule)(nil),               // 46: testkit.v1.EventRule
 	(*IngestTokenInfo)(nil),         // 47: testkit.v1.IngestTokenInfo
 	(*TelemetrySigningKeyInfo)(nil), // 48: testkit.v1.TelemetrySigningKeyInfo
@@ -5346,10 +5357,10 @@ var file_testkit_v1_message_proto_depIdxs = []int32{
 	82, // 84: testkit.v1.TrialInfo.module:type_name -> license.v1.Module
 	60, // 85: testkit.v1.TrialInfo.started_at:type_name -> google.protobuf.Timestamp
 	60, // 86: testkit.v1.TrialInfo.expires_at:type_name -> google.protobuf.Timestamp
-	85, // 87: testkit.v1.App.auth_mode:type_name -> telemetry.v1.AuthMode
-	60, // 88: testkit.v1.App.auth_grace_until:type_name -> google.protobuf.Timestamp
-	60, // 89: testkit.v1.App.created_at:type_name -> google.protobuf.Timestamp
-	60, // 90: testkit.v1.App.updated_at:type_name -> google.protobuf.Timestamp
+	85, // 87: testkit.v1.TenantConfig.auth_mode:type_name -> telemetry.v1.AuthMode
+	60, // 88: testkit.v1.TenantConfig.auth_grace_until:type_name -> google.protobuf.Timestamp
+	60, // 89: testkit.v1.TenantConfig.created_at:type_name -> google.protobuf.Timestamp
+	60, // 90: testkit.v1.TenantConfig.updated_at:type_name -> google.protobuf.Timestamp
 	60, // 91: testkit.v1.IngestTokenInfo.created_at:type_name -> google.protobuf.Timestamp
 	60, // 92: testkit.v1.IngestTokenInfo.last_used_at:type_name -> google.protobuf.Timestamp
 	60, // 93: testkit.v1.TelemetrySigningKeyInfo.created_at:type_name -> google.protobuf.Timestamp

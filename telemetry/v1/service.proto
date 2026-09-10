@@ -43,20 +43,25 @@ service TelemetryService {
 // interceptor); registry changes take effect within 60 seconds, or
 // immediately for this process on success.
 service TelemetryAdminService {
-  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
+  // Phase ④ T6 rename: the config-row CRUD speaks tenant (one row per
+  // tenant; the row keeps its internal app identity — see TenantConfig).
+  // The token/signing-key/rule/version surfaces keep their names; their
+  // selector field is re-keyed to tenant_key.
 
-  rpc GetApp(GetAppRequest) returns (GetAppResponse);
+  rpc CreateTenantConfig(CreateTenantConfigRequest) returns (CreateTenantConfigResponse);
 
-  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
+  rpc GetTenantConfig(GetTenantConfigRequest) returns (GetTenantConfigResponse);
 
-  // ListApps — the app registry is low-cardinality; no paging.
-  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
+  rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
+
+  // ListTenantConfigs — one row per tenant, low cardinality; no paging.
+  rpc ListTenantConfigs(ListTenantConfigsRequest) returns (ListTenantConfigsResponse);
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
 
-  // RotateAppSecret mints a new business-identity credential (platform
-  // ak/sk pair; see App.app_secret).
-  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
+  // RotateTenantConfigSecret mints a new business-identity credential
+  // (platform ak/sk pair; see TenantConfig.app_secret).
+  rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
 
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
 
@@ -68,5 +73,5 @@ service TelemetryAdminService {
 
   rpc SetVersionBlocked(SetVersionBlockedRequest) returns (SetVersionBlockedResponse);
 
-  rpc GetAppStats(GetAppStatsRequest) returns (GetAppStatsResponse);
+  rpc GetTenantConfigStats(GetTenantConfigStatsRequest) returns (GetTenantConfigStatsResponse);
 }
