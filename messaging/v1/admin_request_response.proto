@@ -12,45 +12,45 @@ import "messaging/v1/enums.proto";
 // templates, policies) are FULL REPLACES — the admin UI always submits the
 // complete object it loaded.
 
-// ---- Apps ----
+// ---- Tenant configs (phase ④ T6 rename; the row keeps its internal
+// app identity — see MessageTenantConfigInfo) ----
 
-message CreateAppRequest {
-  // app_key optionally carries a caller-chosen slug (e.g. "testkit").
-  // Empty = the server generates one ("app_" + 8 random chars). Unique and
-  // immutable after creation either way.
-  string app_key = 1 [
-    (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
-    (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
-  ];
+message CreateTenantConfigRequest {
+  // name is the config row's display label.
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
     max_len: 200
   }];
   int64 sms_daily_limit = 3;
   int64 email_daily_limit = 4;
-  // tenant_key optionally maps the app to a tenant (phase ③). Empty = the
-  // app_key literal (the legacy→tenant fallback value). Unique across apps.
+  // tenant_key names the tenant this config row belongs to. A scoped
+  // caller is clamped to the injected key (the stamp follows the
+  // injection, never the body); the PLATFORM cross-view needs it for a
+  // provisioning create. Unique across rows (one config row per tenant);
+  // when empty on the cross-view the server-minted app key literal is the
+  // legacy→tenant fallback value.
   string tenant_key = 5 [(buf.validate.field).string.max_len = 16];
 }
 
-// CreateAppResponse returns the created app plus the plaintext app_secret
-// exactly once — it is not recoverable later (rotate to re-issue).
-message CreateAppResponse {
-  MessageAppInfo app = 1;
+// CreateTenantConfigResponse returns the created config row plus the
+// plaintext app_secret exactly once — it is not recoverable later (rotate
+// to re-issue).
+message CreateTenantConfigResponse {
+  MessageTenantConfigInfo config = 1;
   string app_secret = 2;
 }
 
-message GetAppRequest {
+message GetTenantConfigRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
 }
 
-message GetAppResponse {
-  MessageAppInfo app = 1;
+message GetTenantConfigResponse {
+  MessageTenantConfigInfo config = 1;
 }
 
-// UpdateAppRequest tweaks app metadata. app_key is immutable; absent
-// optional fields keep their current values.
-message UpdateAppRequest {
+// UpdateTenantConfigRequest tweaks config metadata. The row's identity is
+// immutable; absent optional fields keep their current values.
+message UpdateTenantConfigRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
   optional string name = 2 [(buf.validate.field).string = {
     min_len: 1
@@ -61,30 +61,30 @@ message UpdateAppRequest {
   optional int64 email_daily_limit = 5;
 }
 
-message UpdateAppResponse {
-  MessageAppInfo app = 1;
+message UpdateTenantConfigResponse {
+  MessageTenantConfigInfo config = 1;
 }
 
-// RotateAppSecret mints a new app_secret. The old secret becomes invalid
-// immediately; the new plaintext is returned exactly once.
-message RotateAppSecretRequest {
+// RotateTenantConfigSecret mints a new app_secret. The old secret becomes
+// invalid immediately; the new plaintext is returned exactly once.
+message RotateTenantConfigSecretRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
 }
 
-message RotateAppSecretResponse {
-  MessageAppInfo app = 1;
+message RotateTenantConfigSecretResponse {
+  MessageTenantConfigInfo config = 1;
   string app_secret = 2;
 }
 
-message ListAppsRequest {}
+message ListTenantConfigsRequest {}
 
-message ListAppsResponse {
-  repeated MessageAppInfo apps = 1;
+message ListTenantConfigsResponse {
+  repeated MessageTenantConfigInfo configs = 1;
 }
 
-// DeleteAppRequest soft-deletes the app. Sends fail immediately; policies
-// are kept (restore re-activates them).
-message DeleteAppRequest {
+// DeleteTenantConfigRequest soft-deletes the tenant config. Sends fail
+// immediately; policies are kept (restore re-activates them).
+message DeleteTenantConfigRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
 }
 

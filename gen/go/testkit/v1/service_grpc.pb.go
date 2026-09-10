@@ -30,211 +30,211 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TestkitService_Ping_FullMethodName                        = "/testkit.v1.TestkitService/Ping"
-	TestkitService_Login_FullMethodName                       = "/testkit.v1.TestkitService/Login"
-	TestkitService_Register_FullMethodName                    = "/testkit.v1.TestkitService/Register"
-	TestkitService_SendVerificationCode_FullMethodName        = "/testkit.v1.TestkitService/SendVerificationCode"
-	TestkitService_Logout_FullMethodName                      = "/testkit.v1.TestkitService/Logout"
-	TestkitService_GetProfile_FullMethodName                  = "/testkit.v1.TestkitService/GetProfile"
-	TestkitService_UpdateProfile_FullMethodName               = "/testkit.v1.TestkitService/UpdateProfile"
-	TestkitService_ChangePassword_FullMethodName              = "/testkit.v1.TestkitService/ChangePassword"
-	TestkitService_ResetPassword_FullMethodName               = "/testkit.v1.TestkitService/ResetPassword"
-	TestkitService_ListIdentities_FullMethodName              = "/testkit.v1.TestkitService/ListIdentities"
-	TestkitService_BindIdentity_FullMethodName                = "/testkit.v1.TestkitService/BindIdentity"
-	TestkitService_BindOAuthIdentity_FullMethodName           = "/testkit.v1.TestkitService/BindOAuthIdentity"
-	TestkitService_UnbindIdentity_FullMethodName              = "/testkit.v1.TestkitService/UnbindIdentity"
-	TestkitService_ListSessions_FullMethodName                = "/testkit.v1.TestkitService/ListSessions"
-	TestkitService_RevokeSession_FullMethodName               = "/testkit.v1.TestkitService/RevokeSession"
-	TestkitService_RevokeAllSessions_FullMethodName           = "/testkit.v1.TestkitService/RevokeAllSessions"
-	TestkitService_GetSession_FullMethodName                  = "/testkit.v1.TestkitService/GetSession"
-	TestkitService_IssueSessionCode_FullMethodName            = "/testkit.v1.TestkitService/IssueSessionCode"
-	TestkitService_ExchangeSessionCode_FullMethodName         = "/testkit.v1.TestkitService/ExchangeSessionCode"
-	TestkitService_GetOAuthURL_FullMethodName                 = "/testkit.v1.TestkitService/GetOAuthURL"
-	TestkitService_SocialLogin_FullMethodName                 = "/testkit.v1.TestkitService/SocialLogin"
-	TestkitService_MiniProgramLogin_FullMethodName            = "/testkit.v1.TestkitService/MiniProgramLogin"
-	TestkitService_MiniProgramPhoneLogin_FullMethodName       = "/testkit.v1.TestkitService/MiniProgramPhoneLogin"
-	TestkitService_CreateUser_FullMethodName                  = "/testkit.v1.TestkitService/CreateUser"
-	TestkitService_GetUser_FullMethodName                     = "/testkit.v1.TestkitService/GetUser"
-	TestkitService_ListUsers_FullMethodName                   = "/testkit.v1.TestkitService/ListUsers"
-	TestkitService_ListUsersPaged_FullMethodName              = "/testkit.v1.TestkitService/ListUsersPaged"
-	TestkitService_DisableUser_FullMethodName                 = "/testkit.v1.TestkitService/DisableUser"
-	TestkitService_GetLoginLogs_FullMethodName                = "/testkit.v1.TestkitService/GetLoginLogs"
-	TestkitService_CreateGroup_FullMethodName                 = "/testkit.v1.TestkitService/CreateGroup"
-	TestkitService_GetGroup_FullMethodName                    = "/testkit.v1.TestkitService/GetGroup"
-	TestkitService_UpdateGroup_FullMethodName                 = "/testkit.v1.TestkitService/UpdateGroup"
-	TestkitService_ListGroups_FullMethodName                  = "/testkit.v1.TestkitService/ListGroups"
-	TestkitService_DeleteGroup_FullMethodName                 = "/testkit.v1.TestkitService/DeleteGroup"
-	TestkitService_AddGroupMember_FullMethodName              = "/testkit.v1.TestkitService/AddGroupMember"
-	TestkitService_RemoveGroupMember_FullMethodName           = "/testkit.v1.TestkitService/RemoveGroupMember"
-	TestkitService_ListGroupMembers_FullMethodName            = "/testkit.v1.TestkitService/ListGroupMembers"
-	TestkitService_AddGroupRole_FullMethodName                = "/testkit.v1.TestkitService/AddGroupRole"
-	TestkitService_RemoveGroupRole_FullMethodName             = "/testkit.v1.TestkitService/RemoveGroupRole"
-	TestkitService_ListGroupRoles_FullMethodName              = "/testkit.v1.TestkitService/ListGroupRoles"
-	TestkitService_CreateRole_FullMethodName                  = "/testkit.v1.TestkitService/CreateRole"
-	TestkitService_GetRole_FullMethodName                     = "/testkit.v1.TestkitService/GetRole"
-	TestkitService_UpdateRole_FullMethodName                  = "/testkit.v1.TestkitService/UpdateRole"
-	TestkitService_DeleteRole_FullMethodName                  = "/testkit.v1.TestkitService/DeleteRole"
-	TestkitService_ListRoles_FullMethodName                   = "/testkit.v1.TestkitService/ListRoles"
-	TestkitService_AssignRole_FullMethodName                  = "/testkit.v1.TestkitService/AssignRole"
-	TestkitService_RevokeRole_FullMethodName                  = "/testkit.v1.TestkitService/RevokeRole"
-	TestkitService_ListUserRoles_FullMethodName               = "/testkit.v1.TestkitService/ListUserRoles"
-	TestkitService_ListPermissions_FullMethodName             = "/testkit.v1.TestkitService/ListPermissions"
-	TestkitService_CreatePermission_FullMethodName            = "/testkit.v1.TestkitService/CreatePermission"
-	TestkitService_GetPermission_FullMethodName               = "/testkit.v1.TestkitService/GetPermission"
-	TestkitService_UpdatePermission_FullMethodName            = "/testkit.v1.TestkitService/UpdatePermission"
-	TestkitService_DeletePermission_FullMethodName            = "/testkit.v1.TestkitService/DeletePermission"
-	TestkitService_CreatePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/CreatePermissionGroup"
-	TestkitService_GetPermissionGroup_FullMethodName          = "/testkit.v1.TestkitService/GetPermissionGroup"
-	TestkitService_UpdatePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/UpdatePermissionGroup"
-	TestkitService_DeletePermissionGroup_FullMethodName       = "/testkit.v1.TestkitService/DeletePermissionGroup"
-	TestkitService_ListPermissionGroups_FullMethodName        = "/testkit.v1.TestkitService/ListPermissionGroups"
-	TestkitService_GenerateUploadURL_FullMethodName           = "/testkit.v1.TestkitService/GenerateUploadURL"
-	TestkitService_GetSTSCredential_FullMethodName            = "/testkit.v1.TestkitService/GetSTSCredential"
-	TestkitService_BatchGetSTSCredential_FullMethodName       = "/testkit.v1.TestkitService/BatchGetSTSCredential"
-	TestkitService_ConfirmUpload_FullMethodName               = "/testkit.v1.TestkitService/ConfirmUpload"
-	TestkitService_CancelUpload_FullMethodName                = "/testkit.v1.TestkitService/CancelUpload"
-	TestkitService_GenerateDownloadURL_FullMethodName         = "/testkit.v1.TestkitService/GenerateDownloadURL"
-	TestkitService_GenerateProcessURL_FullMethodName          = "/testkit.v1.TestkitService/GenerateProcessURL"
-	TestkitService_GenerateCDNURL_FullMethodName              = "/testkit.v1.TestkitService/GenerateCDNURL"
-	TestkitService_CreateFileLink_FullMethodName              = "/testkit.v1.TestkitService/CreateFileLink"
-	TestkitService_GetFileLinkDownload_FullMethodName         = "/testkit.v1.TestkitService/GetFileLinkDownload"
-	TestkitService_ListMyFiles_FullMethodName                 = "/testkit.v1.TestkitService/ListMyFiles"
-	TestkitService_ListMyFilesPaged_FullMethodName            = "/testkit.v1.TestkitService/ListMyFilesPaged"
-	TestkitService_GetMyFile_FullMethodName                   = "/testkit.v1.TestkitService/GetMyFile"
-	TestkitService_UpdateMyFile_FullMethodName                = "/testkit.v1.TestkitService/UpdateMyFile"
-	TestkitService_DeleteMyFile_FullMethodName                = "/testkit.v1.TestkitService/DeleteMyFile"
-	TestkitService_BatchDeleteMyFiles_FullMethodName          = "/testkit.v1.TestkitService/BatchDeleteMyFiles"
-	TestkitService_GetMyQuota_FullMethodName                  = "/testkit.v1.TestkitService/GetMyQuota"
-	TestkitService_ListMyAuditLogs_FullMethodName             = "/testkit.v1.TestkitService/ListMyAuditLogs"
-	TestkitService_AdminListFiles_FullMethodName              = "/testkit.v1.TestkitService/AdminListFiles"
-	TestkitService_AdminGetFile_FullMethodName                = "/testkit.v1.TestkitService/AdminGetFile"
-	TestkitService_AdminDeleteFile_FullMethodName             = "/testkit.v1.TestkitService/AdminDeleteFile"
-	TestkitService_AdminGetQuota_FullMethodName               = "/testkit.v1.TestkitService/AdminGetQuota"
-	TestkitService_AdminSetQuota_FullMethodName               = "/testkit.v1.TestkitService/AdminSetQuota"
-	TestkitService_AdminGetStats_FullMethodName               = "/testkit.v1.TestkitService/AdminGetStats"
-	TestkitService_AdminListProviders_FullMethodName          = "/testkit.v1.TestkitService/AdminListProviders"
-	TestkitService_AdminListBuckets_FullMethodName            = "/testkit.v1.TestkitService/AdminListBuckets"
-	TestkitService_AdminCreateProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminCreateProvider"
-	TestkitService_AdminUpdateProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminUpdateProvider"
-	TestkitService_AdminDeleteProvider_FullMethodName         = "/testkit.v1.TestkitService/AdminDeleteProvider"
-	TestkitService_AdminUpsertBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminUpsertBucket"
-	TestkitService_AdminDeleteBucket_FullMethodName           = "/testkit.v1.TestkitService/AdminDeleteBucket"
-	TestkitService_AdminGetSettings_FullMethodName            = "/testkit.v1.TestkitService/AdminGetSettings"
-	TestkitService_AdminListApps_FullMethodName               = "/testkit.v1.TestkitService/AdminListApps"
-	TestkitService_AdminCreateApp_FullMethodName              = "/testkit.v1.TestkitService/AdminCreateApp"
-	TestkitService_AdminGetApp_FullMethodName                 = "/testkit.v1.TestkitService/AdminGetApp"
-	TestkitService_AdminUpdateApp_FullMethodName              = "/testkit.v1.TestkitService/AdminUpdateApp"
-	TestkitService_AdminRotateAppSecret_FullMethodName        = "/testkit.v1.TestkitService/AdminRotateAppSecret"
-	TestkitService_AdminDeleteApp_FullMethodName              = "/testkit.v1.TestkitService/AdminDeleteApp"
-	TestkitService_AdminUpdateSettings_FullMethodName         = "/testkit.v1.TestkitService/AdminUpdateSettings"
-	TestkitService_AdminSoftDeleteOwnerFiles_FullMethodName   = "/testkit.v1.TestkitService/AdminSoftDeleteOwnerFiles"
-	TestkitService_AdminDeleteOwner_FullMethodName            = "/testkit.v1.TestkitService/AdminDeleteOwner"
-	TestkitService_AdminListAuditLogs_FullMethodName          = "/testkit.v1.TestkitService/AdminListAuditLogs"
-	TestkitService_SendEmail_FullMethodName                   = "/testkit.v1.TestkitService/SendEmail"
-	TestkitService_SendSMS_FullMethodName                     = "/testkit.v1.TestkitService/SendSMS"
-	TestkitService_GetEmail_FullMethodName                    = "/testkit.v1.TestkitService/GetEmail"
-	TestkitService_ListEmails_FullMethodName                  = "/testkit.v1.TestkitService/ListEmails"
-	TestkitService_ListEmailsByCursor_FullMethodName          = "/testkit.v1.TestkitService/ListEmailsByCursor"
-	TestkitService_GetEmailStats_FullMethodName               = "/testkit.v1.TestkitService/GetEmailStats"
-	TestkitService_GetSMS_FullMethodName                      = "/testkit.v1.TestkitService/GetSMS"
-	TestkitService_ListSMS_FullMethodName                     = "/testkit.v1.TestkitService/ListSMS"
-	TestkitService_ListSMSByCursor_FullMethodName             = "/testkit.v1.TestkitService/ListSMSByCursor"
-	TestkitService_GetSMSStats_FullMethodName                 = "/testkit.v1.TestkitService/GetSMSStats"
-	TestkitService_ListSMSRegions_FullMethodName              = "/testkit.v1.TestkitService/ListSMSRegions"
-	TestkitService_ListRegionCodes_FullMethodName             = "/testkit.v1.TestkitService/ListRegionCodes"
-	TestkitService_MessageCreateApp_FullMethodName            = "/testkit.v1.TestkitService/MessageCreateApp"
-	TestkitService_MessageGetApp_FullMethodName               = "/testkit.v1.TestkitService/MessageGetApp"
-	TestkitService_MessageUpdateApp_FullMethodName            = "/testkit.v1.TestkitService/MessageUpdateApp"
-	TestkitService_MessageRotateAppSecret_FullMethodName      = "/testkit.v1.TestkitService/MessageRotateAppSecret"
-	TestkitService_MessageListApps_FullMethodName             = "/testkit.v1.TestkitService/MessageListApps"
-	TestkitService_MessageDeleteApp_FullMethodName            = "/testkit.v1.TestkitService/MessageDeleteApp"
-	TestkitService_MessageCreateChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageCreateChannelAccount"
-	TestkitService_MessageUpdateChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageUpdateChannelAccount"
-	TestkitService_MessageDeleteChannelAccount_FullMethodName = "/testkit.v1.TestkitService/MessageDeleteChannelAccount"
-	TestkitService_MessageListChannelAccounts_FullMethodName  = "/testkit.v1.TestkitService/MessageListChannelAccounts"
-	TestkitService_MessageCreateSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageCreateSignature"
-	TestkitService_MessageUpdateSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageUpdateSignature"
-	TestkitService_MessageDeleteSignature_FullMethodName      = "/testkit.v1.TestkitService/MessageDeleteSignature"
-	TestkitService_MessageListSignatures_FullMethodName       = "/testkit.v1.TestkitService/MessageListSignatures"
-	TestkitService_MessageCreateTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageCreateTemplate"
-	TestkitService_MessageUpdateTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageUpdateTemplate"
-	TestkitService_MessageDeleteTemplate_FullMethodName       = "/testkit.v1.TestkitService/MessageDeleteTemplate"
-	TestkitService_MessageListTemplates_FullMethodName        = "/testkit.v1.TestkitService/MessageListTemplates"
-	TestkitService_MessageCreatePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageCreatePolicy"
-	TestkitService_MessageUpdatePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageUpdatePolicy"
-	TestkitService_MessageDeletePolicy_FullMethodName         = "/testkit.v1.TestkitService/MessageDeletePolicy"
-	TestkitService_ListPolicies_FullMethodName                = "/testkit.v1.TestkitService/ListPolicies"
-	TestkitService_NextID_FullMethodName                      = "/testkit.v1.TestkitService/NextID"
-	TestkitService_BatchNextID_FullMethodName                 = "/testkit.v1.TestkitService/BatchNextID"
-	TestkitService_Decompose_FullMethodName                   = "/testkit.v1.TestkitService/Decompose"
-	TestkitService_GetDashboard_FullMethodName                = "/testkit.v1.TestkitService/GetDashboard"
-	TestkitService_Activate_FullMethodName                    = "/testkit.v1.TestkitService/Activate"
-	TestkitService_Deactivate_FullMethodName                  = "/testkit.v1.TestkitService/Deactivate"
-	TestkitService_TrialStart_FullMethodName                  = "/testkit.v1.TestkitService/TrialStart"
-	TestkitService_Health_FullMethodName                      = "/testkit.v1.TestkitService/Health"
-	TestkitService_CreateKey_FullMethodName                   = "/testkit.v1.TestkitService/CreateKey"
-	TestkitService_ShowKey_FullMethodName                     = "/testkit.v1.TestkitService/ShowKey"
-	TestkitService_ListKeys_FullMethodName                    = "/testkit.v1.TestkitService/ListKeys"
-	TestkitService_UpdateKey_FullMethodName                   = "/testkit.v1.TestkitService/UpdateKey"
-	TestkitService_RevokeKey_FullMethodName                   = "/testkit.v1.TestkitService/RevokeKey"
-	TestkitService_UnrevokeKey_FullMethodName                 = "/testkit.v1.TestkitService/UnrevokeKey"
-	TestkitService_DeleteKey_FullMethodName                   = "/testkit.v1.TestkitService/DeleteKey"
-	TestkitService_GrantModule_FullMethodName                 = "/testkit.v1.TestkitService/GrantModule"
-	TestkitService_RevokeModule_FullMethodName                = "/testkit.v1.TestkitService/RevokeModule"
-	TestkitService_ListKeyDevices_FullMethodName              = "/testkit.v1.TestkitService/ListKeyDevices"
-	TestkitService_KickDevice_FullMethodName                  = "/testkit.v1.TestkitService/KickDevice"
-	TestkitService_ShowTrial_FullMethodName                   = "/testkit.v1.TestkitService/ShowTrial"
-	TestkitService_ResetTrial_FullMethodName                  = "/testkit.v1.TestkitService/ResetTrial"
-	TestkitService_ShowPubKey_FullMethodName                  = "/testkit.v1.TestkitService/ShowPubKey"
-	TestkitService_LicenseListApps_FullMethodName             = "/testkit.v1.TestkitService/LicenseListApps"
-	TestkitService_LicenseCreateApp_FullMethodName            = "/testkit.v1.TestkitService/LicenseCreateApp"
-	TestkitService_LicenseGetApp_FullMethodName               = "/testkit.v1.TestkitService/LicenseGetApp"
-	TestkitService_LicenseUpdateApp_FullMethodName            = "/testkit.v1.TestkitService/LicenseUpdateApp"
-	TestkitService_LicenseRotateAppSecret_FullMethodName      = "/testkit.v1.TestkitService/LicenseRotateAppSecret"
-	TestkitService_LicenseDeleteApp_FullMethodName            = "/testkit.v1.TestkitService/LicenseDeleteApp"
-	TestkitService_Ingest_FullMethodName                      = "/testkit.v1.TestkitService/Ingest"
-	TestkitService_CreateApp_FullMethodName                   = "/testkit.v1.TestkitService/CreateApp"
-	TestkitService_GetApp_FullMethodName                      = "/testkit.v1.TestkitService/GetApp"
-	TestkitService_UpdateApp_FullMethodName                   = "/testkit.v1.TestkitService/UpdateApp"
-	TestkitService_ListApps_FullMethodName                    = "/testkit.v1.TestkitService/ListApps"
-	TestkitService_RotateAppSecret_FullMethodName             = "/testkit.v1.TestkitService/RotateAppSecret"
-	TestkitService_RotateToken_FullMethodName                 = "/testkit.v1.TestkitService/RotateToken"
-	TestkitService_RevokeToken_FullMethodName                 = "/testkit.v1.TestkitService/RevokeToken"
-	TestkitService_CreateSigningKey_FullMethodName            = "/testkit.v1.TestkitService/CreateSigningKey"
-	TestkitService_RevokeSigningKey_FullMethodName            = "/testkit.v1.TestkitService/RevokeSigningKey"
-	TestkitService_ReplaceEventRules_FullMethodName           = "/testkit.v1.TestkitService/ReplaceEventRules"
-	TestkitService_SetVersionBlocked_FullMethodName           = "/testkit.v1.TestkitService/SetVersionBlocked"
-	TestkitService_GetAppStats_FullMethodName                 = "/testkit.v1.TestkitService/GetAppStats"
-	TestkitService_ListCountries_FullMethodName               = "/testkit.v1.TestkitService/ListCountries"
-	TestkitService_GetCountries_FullMethodName                = "/testkit.v1.TestkitService/GetCountries"
-	TestkitService_ListTimezones_FullMethodName               = "/testkit.v1.TestkitService/ListTimezones"
-	TestkitService_ListLanguages_FullMethodName               = "/testkit.v1.TestkitService/ListLanguages"
-	TestkitService_ListCurrencies_FullMethodName              = "/testkit.v1.TestkitService/ListCurrencies"
-	TestkitService_ListRegionGroups_FullMethodName            = "/testkit.v1.TestkitService/ListRegionGroups"
-	TestkitService_ParsePhone_FullMethodName                  = "/testkit.v1.TestkitService/ParsePhone"
-	TestkitService_ResolveCodes_FullMethodName                = "/testkit.v1.TestkitService/ResolveCodes"
-	TestkitService_GetCountryProfile_FullMethodName           = "/testkit.v1.TestkitService/GetCountryProfile"
-	TestkitService_ListCountriesByRegion_FullMethodName       = "/testkit.v1.TestkitService/ListCountriesByRegion"
-	TestkitService_GetCountryDefaults_FullMethodName          = "/testkit.v1.TestkitService/GetCountryDefaults"
-	TestkitService_GetDataInfo_FullMethodName                 = "/testkit.v1.TestkitService/GetDataInfo"
-	TestkitService_UserListApps_FullMethodName                = "/testkit.v1.TestkitService/UserListApps"
-	TestkitService_UserCreateApp_FullMethodName               = "/testkit.v1.TestkitService/UserCreateApp"
-	TestkitService_UserGetApp_FullMethodName                  = "/testkit.v1.TestkitService/UserGetApp"
-	TestkitService_UserUpdateApp_FullMethodName               = "/testkit.v1.TestkitService/UserUpdateApp"
-	TestkitService_UserRotateAppSecret_FullMethodName         = "/testkit.v1.TestkitService/UserRotateAppSecret"
-	TestkitService_UserDeleteApp_FullMethodName               = "/testkit.v1.TestkitService/UserDeleteApp"
-	TestkitService_PortalWhoAmI_FullMethodName                = "/testkit.v1.TestkitService/PortalWhoAmI"
-	TestkitService_PortalMyCapabilities_FullMethodName        = "/testkit.v1.TestkitService/PortalMyCapabilities"
-	TestkitService_PortalListApiKeys_FullMethodName           = "/testkit.v1.TestkitService/PortalListApiKeys"
-	TestkitService_PortalCreateApiKey_FullMethodName          = "/testkit.v1.TestkitService/PortalCreateApiKey"
-	TestkitService_PortalRotateApiKeySecret_FullMethodName    = "/testkit.v1.TestkitService/PortalRotateApiKeySecret"
-	TestkitService_PortalDisableApiKey_FullMethodName         = "/testkit.v1.TestkitService/PortalDisableApiKey"
-	TestkitService_PortalListTenants_FullMethodName           = "/testkit.v1.TestkitService/PortalListTenants"
-	TestkitService_PortalSetCapability_FullMethodName         = "/testkit.v1.TestkitService/PortalSetCapability"
-	TestkitService_PortalDisableTenant_FullMethodName         = "/testkit.v1.TestkitService/PortalDisableTenant"
-	TestkitService_PortalListTenantMembers_FullMethodName     = "/testkit.v1.TestkitService/PortalListTenantMembers"
-	TestkitService_PortalAddTenantMember_FullMethodName       = "/testkit.v1.TestkitService/PortalAddTenantMember"
-	TestkitService_PortalRemoveTenantMember_FullMethodName    = "/testkit.v1.TestkitService/PortalRemoveTenantMember"
+	TestkitService_Ping_FullMethodName                            = "/testkit.v1.TestkitService/Ping"
+	TestkitService_Login_FullMethodName                           = "/testkit.v1.TestkitService/Login"
+	TestkitService_Register_FullMethodName                        = "/testkit.v1.TestkitService/Register"
+	TestkitService_SendVerificationCode_FullMethodName            = "/testkit.v1.TestkitService/SendVerificationCode"
+	TestkitService_Logout_FullMethodName                          = "/testkit.v1.TestkitService/Logout"
+	TestkitService_GetProfile_FullMethodName                      = "/testkit.v1.TestkitService/GetProfile"
+	TestkitService_UpdateProfile_FullMethodName                   = "/testkit.v1.TestkitService/UpdateProfile"
+	TestkitService_ChangePassword_FullMethodName                  = "/testkit.v1.TestkitService/ChangePassword"
+	TestkitService_ResetPassword_FullMethodName                   = "/testkit.v1.TestkitService/ResetPassword"
+	TestkitService_ListIdentities_FullMethodName                  = "/testkit.v1.TestkitService/ListIdentities"
+	TestkitService_BindIdentity_FullMethodName                    = "/testkit.v1.TestkitService/BindIdentity"
+	TestkitService_BindOAuthIdentity_FullMethodName               = "/testkit.v1.TestkitService/BindOAuthIdentity"
+	TestkitService_UnbindIdentity_FullMethodName                  = "/testkit.v1.TestkitService/UnbindIdentity"
+	TestkitService_ListSessions_FullMethodName                    = "/testkit.v1.TestkitService/ListSessions"
+	TestkitService_RevokeSession_FullMethodName                   = "/testkit.v1.TestkitService/RevokeSession"
+	TestkitService_RevokeAllSessions_FullMethodName               = "/testkit.v1.TestkitService/RevokeAllSessions"
+	TestkitService_GetSession_FullMethodName                      = "/testkit.v1.TestkitService/GetSession"
+	TestkitService_IssueSessionCode_FullMethodName                = "/testkit.v1.TestkitService/IssueSessionCode"
+	TestkitService_ExchangeSessionCode_FullMethodName             = "/testkit.v1.TestkitService/ExchangeSessionCode"
+	TestkitService_GetOAuthURL_FullMethodName                     = "/testkit.v1.TestkitService/GetOAuthURL"
+	TestkitService_SocialLogin_FullMethodName                     = "/testkit.v1.TestkitService/SocialLogin"
+	TestkitService_MiniProgramLogin_FullMethodName                = "/testkit.v1.TestkitService/MiniProgramLogin"
+	TestkitService_MiniProgramPhoneLogin_FullMethodName           = "/testkit.v1.TestkitService/MiniProgramPhoneLogin"
+	TestkitService_CreateUser_FullMethodName                      = "/testkit.v1.TestkitService/CreateUser"
+	TestkitService_GetUser_FullMethodName                         = "/testkit.v1.TestkitService/GetUser"
+	TestkitService_ListUsers_FullMethodName                       = "/testkit.v1.TestkitService/ListUsers"
+	TestkitService_ListUsersPaged_FullMethodName                  = "/testkit.v1.TestkitService/ListUsersPaged"
+	TestkitService_DisableUser_FullMethodName                     = "/testkit.v1.TestkitService/DisableUser"
+	TestkitService_GetLoginLogs_FullMethodName                    = "/testkit.v1.TestkitService/GetLoginLogs"
+	TestkitService_CreateGroup_FullMethodName                     = "/testkit.v1.TestkitService/CreateGroup"
+	TestkitService_GetGroup_FullMethodName                        = "/testkit.v1.TestkitService/GetGroup"
+	TestkitService_UpdateGroup_FullMethodName                     = "/testkit.v1.TestkitService/UpdateGroup"
+	TestkitService_ListGroups_FullMethodName                      = "/testkit.v1.TestkitService/ListGroups"
+	TestkitService_DeleteGroup_FullMethodName                     = "/testkit.v1.TestkitService/DeleteGroup"
+	TestkitService_AddGroupMember_FullMethodName                  = "/testkit.v1.TestkitService/AddGroupMember"
+	TestkitService_RemoveGroupMember_FullMethodName               = "/testkit.v1.TestkitService/RemoveGroupMember"
+	TestkitService_ListGroupMembers_FullMethodName                = "/testkit.v1.TestkitService/ListGroupMembers"
+	TestkitService_AddGroupRole_FullMethodName                    = "/testkit.v1.TestkitService/AddGroupRole"
+	TestkitService_RemoveGroupRole_FullMethodName                 = "/testkit.v1.TestkitService/RemoveGroupRole"
+	TestkitService_ListGroupRoles_FullMethodName                  = "/testkit.v1.TestkitService/ListGroupRoles"
+	TestkitService_CreateRole_FullMethodName                      = "/testkit.v1.TestkitService/CreateRole"
+	TestkitService_GetRole_FullMethodName                         = "/testkit.v1.TestkitService/GetRole"
+	TestkitService_UpdateRole_FullMethodName                      = "/testkit.v1.TestkitService/UpdateRole"
+	TestkitService_DeleteRole_FullMethodName                      = "/testkit.v1.TestkitService/DeleteRole"
+	TestkitService_ListRoles_FullMethodName                       = "/testkit.v1.TestkitService/ListRoles"
+	TestkitService_AssignRole_FullMethodName                      = "/testkit.v1.TestkitService/AssignRole"
+	TestkitService_RevokeRole_FullMethodName                      = "/testkit.v1.TestkitService/RevokeRole"
+	TestkitService_ListUserRoles_FullMethodName                   = "/testkit.v1.TestkitService/ListUserRoles"
+	TestkitService_ListPermissions_FullMethodName                 = "/testkit.v1.TestkitService/ListPermissions"
+	TestkitService_CreatePermission_FullMethodName                = "/testkit.v1.TestkitService/CreatePermission"
+	TestkitService_GetPermission_FullMethodName                   = "/testkit.v1.TestkitService/GetPermission"
+	TestkitService_UpdatePermission_FullMethodName                = "/testkit.v1.TestkitService/UpdatePermission"
+	TestkitService_DeletePermission_FullMethodName                = "/testkit.v1.TestkitService/DeletePermission"
+	TestkitService_CreatePermissionGroup_FullMethodName           = "/testkit.v1.TestkitService/CreatePermissionGroup"
+	TestkitService_GetPermissionGroup_FullMethodName              = "/testkit.v1.TestkitService/GetPermissionGroup"
+	TestkitService_UpdatePermissionGroup_FullMethodName           = "/testkit.v1.TestkitService/UpdatePermissionGroup"
+	TestkitService_DeletePermissionGroup_FullMethodName           = "/testkit.v1.TestkitService/DeletePermissionGroup"
+	TestkitService_ListPermissionGroups_FullMethodName            = "/testkit.v1.TestkitService/ListPermissionGroups"
+	TestkitService_GenerateUploadURL_FullMethodName               = "/testkit.v1.TestkitService/GenerateUploadURL"
+	TestkitService_GetSTSCredential_FullMethodName                = "/testkit.v1.TestkitService/GetSTSCredential"
+	TestkitService_BatchGetSTSCredential_FullMethodName           = "/testkit.v1.TestkitService/BatchGetSTSCredential"
+	TestkitService_ConfirmUpload_FullMethodName                   = "/testkit.v1.TestkitService/ConfirmUpload"
+	TestkitService_CancelUpload_FullMethodName                    = "/testkit.v1.TestkitService/CancelUpload"
+	TestkitService_GenerateDownloadURL_FullMethodName             = "/testkit.v1.TestkitService/GenerateDownloadURL"
+	TestkitService_GenerateProcessURL_FullMethodName              = "/testkit.v1.TestkitService/GenerateProcessURL"
+	TestkitService_GenerateCDNURL_FullMethodName                  = "/testkit.v1.TestkitService/GenerateCDNURL"
+	TestkitService_CreateFileLink_FullMethodName                  = "/testkit.v1.TestkitService/CreateFileLink"
+	TestkitService_GetFileLinkDownload_FullMethodName             = "/testkit.v1.TestkitService/GetFileLinkDownload"
+	TestkitService_ListMyFiles_FullMethodName                     = "/testkit.v1.TestkitService/ListMyFiles"
+	TestkitService_ListMyFilesPaged_FullMethodName                = "/testkit.v1.TestkitService/ListMyFilesPaged"
+	TestkitService_GetMyFile_FullMethodName                       = "/testkit.v1.TestkitService/GetMyFile"
+	TestkitService_UpdateMyFile_FullMethodName                    = "/testkit.v1.TestkitService/UpdateMyFile"
+	TestkitService_DeleteMyFile_FullMethodName                    = "/testkit.v1.TestkitService/DeleteMyFile"
+	TestkitService_BatchDeleteMyFiles_FullMethodName              = "/testkit.v1.TestkitService/BatchDeleteMyFiles"
+	TestkitService_GetMyQuota_FullMethodName                      = "/testkit.v1.TestkitService/GetMyQuota"
+	TestkitService_ListMyAuditLogs_FullMethodName                 = "/testkit.v1.TestkitService/ListMyAuditLogs"
+	TestkitService_AdminListFiles_FullMethodName                  = "/testkit.v1.TestkitService/AdminListFiles"
+	TestkitService_AdminGetFile_FullMethodName                    = "/testkit.v1.TestkitService/AdminGetFile"
+	TestkitService_AdminDeleteFile_FullMethodName                 = "/testkit.v1.TestkitService/AdminDeleteFile"
+	TestkitService_AdminGetQuota_FullMethodName                   = "/testkit.v1.TestkitService/AdminGetQuota"
+	TestkitService_AdminSetQuota_FullMethodName                   = "/testkit.v1.TestkitService/AdminSetQuota"
+	TestkitService_AdminGetStats_FullMethodName                   = "/testkit.v1.TestkitService/AdminGetStats"
+	TestkitService_AdminListProviders_FullMethodName              = "/testkit.v1.TestkitService/AdminListProviders"
+	TestkitService_AdminListBuckets_FullMethodName                = "/testkit.v1.TestkitService/AdminListBuckets"
+	TestkitService_AdminCreateProvider_FullMethodName             = "/testkit.v1.TestkitService/AdminCreateProvider"
+	TestkitService_AdminUpdateProvider_FullMethodName             = "/testkit.v1.TestkitService/AdminUpdateProvider"
+	TestkitService_AdminDeleteProvider_FullMethodName             = "/testkit.v1.TestkitService/AdminDeleteProvider"
+	TestkitService_AdminUpsertBucket_FullMethodName               = "/testkit.v1.TestkitService/AdminUpsertBucket"
+	TestkitService_AdminDeleteBucket_FullMethodName               = "/testkit.v1.TestkitService/AdminDeleteBucket"
+	TestkitService_AdminGetSettings_FullMethodName                = "/testkit.v1.TestkitService/AdminGetSettings"
+	TestkitService_AdminListApps_FullMethodName                   = "/testkit.v1.TestkitService/AdminListApps"
+	TestkitService_AdminCreateApp_FullMethodName                  = "/testkit.v1.TestkitService/AdminCreateApp"
+	TestkitService_AdminGetApp_FullMethodName                     = "/testkit.v1.TestkitService/AdminGetApp"
+	TestkitService_AdminUpdateApp_FullMethodName                  = "/testkit.v1.TestkitService/AdminUpdateApp"
+	TestkitService_AdminRotateAppSecret_FullMethodName            = "/testkit.v1.TestkitService/AdminRotateAppSecret"
+	TestkitService_AdminDeleteApp_FullMethodName                  = "/testkit.v1.TestkitService/AdminDeleteApp"
+	TestkitService_AdminUpdateSettings_FullMethodName             = "/testkit.v1.TestkitService/AdminUpdateSettings"
+	TestkitService_AdminSoftDeleteOwnerFiles_FullMethodName       = "/testkit.v1.TestkitService/AdminSoftDeleteOwnerFiles"
+	TestkitService_AdminDeleteOwner_FullMethodName                = "/testkit.v1.TestkitService/AdminDeleteOwner"
+	TestkitService_AdminListAuditLogs_FullMethodName              = "/testkit.v1.TestkitService/AdminListAuditLogs"
+	TestkitService_SendEmail_FullMethodName                       = "/testkit.v1.TestkitService/SendEmail"
+	TestkitService_SendSMS_FullMethodName                         = "/testkit.v1.TestkitService/SendSMS"
+	TestkitService_GetEmail_FullMethodName                        = "/testkit.v1.TestkitService/GetEmail"
+	TestkitService_ListEmails_FullMethodName                      = "/testkit.v1.TestkitService/ListEmails"
+	TestkitService_ListEmailsByCursor_FullMethodName              = "/testkit.v1.TestkitService/ListEmailsByCursor"
+	TestkitService_GetEmailStats_FullMethodName                   = "/testkit.v1.TestkitService/GetEmailStats"
+	TestkitService_GetSMS_FullMethodName                          = "/testkit.v1.TestkitService/GetSMS"
+	TestkitService_ListSMS_FullMethodName                         = "/testkit.v1.TestkitService/ListSMS"
+	TestkitService_ListSMSByCursor_FullMethodName                 = "/testkit.v1.TestkitService/ListSMSByCursor"
+	TestkitService_GetSMSStats_FullMethodName                     = "/testkit.v1.TestkitService/GetSMSStats"
+	TestkitService_ListSMSRegions_FullMethodName                  = "/testkit.v1.TestkitService/ListSMSRegions"
+	TestkitService_ListRegionCodes_FullMethodName                 = "/testkit.v1.TestkitService/ListRegionCodes"
+	TestkitService_MessageCreateTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/MessageCreateTenantConfig"
+	TestkitService_MessageGetTenantConfig_FullMethodName          = "/testkit.v1.TestkitService/MessageGetTenantConfig"
+	TestkitService_MessageUpdateTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/MessageUpdateTenantConfig"
+	TestkitService_MessageRotateTenantConfigSecret_FullMethodName = "/testkit.v1.TestkitService/MessageRotateTenantConfigSecret"
+	TestkitService_MessageListTenantConfigs_FullMethodName        = "/testkit.v1.TestkitService/MessageListTenantConfigs"
+	TestkitService_MessageDeleteTenantConfig_FullMethodName       = "/testkit.v1.TestkitService/MessageDeleteTenantConfig"
+	TestkitService_MessageCreateChannelAccount_FullMethodName     = "/testkit.v1.TestkitService/MessageCreateChannelAccount"
+	TestkitService_MessageUpdateChannelAccount_FullMethodName     = "/testkit.v1.TestkitService/MessageUpdateChannelAccount"
+	TestkitService_MessageDeleteChannelAccount_FullMethodName     = "/testkit.v1.TestkitService/MessageDeleteChannelAccount"
+	TestkitService_MessageListChannelAccounts_FullMethodName      = "/testkit.v1.TestkitService/MessageListChannelAccounts"
+	TestkitService_MessageCreateSignature_FullMethodName          = "/testkit.v1.TestkitService/MessageCreateSignature"
+	TestkitService_MessageUpdateSignature_FullMethodName          = "/testkit.v1.TestkitService/MessageUpdateSignature"
+	TestkitService_MessageDeleteSignature_FullMethodName          = "/testkit.v1.TestkitService/MessageDeleteSignature"
+	TestkitService_MessageListSignatures_FullMethodName           = "/testkit.v1.TestkitService/MessageListSignatures"
+	TestkitService_MessageCreateTemplate_FullMethodName           = "/testkit.v1.TestkitService/MessageCreateTemplate"
+	TestkitService_MessageUpdateTemplate_FullMethodName           = "/testkit.v1.TestkitService/MessageUpdateTemplate"
+	TestkitService_MessageDeleteTemplate_FullMethodName           = "/testkit.v1.TestkitService/MessageDeleteTemplate"
+	TestkitService_MessageListTemplates_FullMethodName            = "/testkit.v1.TestkitService/MessageListTemplates"
+	TestkitService_MessageCreatePolicy_FullMethodName             = "/testkit.v1.TestkitService/MessageCreatePolicy"
+	TestkitService_MessageUpdatePolicy_FullMethodName             = "/testkit.v1.TestkitService/MessageUpdatePolicy"
+	TestkitService_MessageDeletePolicy_FullMethodName             = "/testkit.v1.TestkitService/MessageDeletePolicy"
+	TestkitService_ListPolicies_FullMethodName                    = "/testkit.v1.TestkitService/ListPolicies"
+	TestkitService_NextID_FullMethodName                          = "/testkit.v1.TestkitService/NextID"
+	TestkitService_BatchNextID_FullMethodName                     = "/testkit.v1.TestkitService/BatchNextID"
+	TestkitService_Decompose_FullMethodName                       = "/testkit.v1.TestkitService/Decompose"
+	TestkitService_GetDashboard_FullMethodName                    = "/testkit.v1.TestkitService/GetDashboard"
+	TestkitService_Activate_FullMethodName                        = "/testkit.v1.TestkitService/Activate"
+	TestkitService_Deactivate_FullMethodName                      = "/testkit.v1.TestkitService/Deactivate"
+	TestkitService_TrialStart_FullMethodName                      = "/testkit.v1.TestkitService/TrialStart"
+	TestkitService_Health_FullMethodName                          = "/testkit.v1.TestkitService/Health"
+	TestkitService_CreateKey_FullMethodName                       = "/testkit.v1.TestkitService/CreateKey"
+	TestkitService_ShowKey_FullMethodName                         = "/testkit.v1.TestkitService/ShowKey"
+	TestkitService_ListKeys_FullMethodName                        = "/testkit.v1.TestkitService/ListKeys"
+	TestkitService_UpdateKey_FullMethodName                       = "/testkit.v1.TestkitService/UpdateKey"
+	TestkitService_RevokeKey_FullMethodName                       = "/testkit.v1.TestkitService/RevokeKey"
+	TestkitService_UnrevokeKey_FullMethodName                     = "/testkit.v1.TestkitService/UnrevokeKey"
+	TestkitService_DeleteKey_FullMethodName                       = "/testkit.v1.TestkitService/DeleteKey"
+	TestkitService_GrantModule_FullMethodName                     = "/testkit.v1.TestkitService/GrantModule"
+	TestkitService_RevokeModule_FullMethodName                    = "/testkit.v1.TestkitService/RevokeModule"
+	TestkitService_ListKeyDevices_FullMethodName                  = "/testkit.v1.TestkitService/ListKeyDevices"
+	TestkitService_KickDevice_FullMethodName                      = "/testkit.v1.TestkitService/KickDevice"
+	TestkitService_ShowTrial_FullMethodName                       = "/testkit.v1.TestkitService/ShowTrial"
+	TestkitService_ResetTrial_FullMethodName                      = "/testkit.v1.TestkitService/ResetTrial"
+	TestkitService_ShowPubKey_FullMethodName                      = "/testkit.v1.TestkitService/ShowPubKey"
+	TestkitService_LicenseListApps_FullMethodName                 = "/testkit.v1.TestkitService/LicenseListApps"
+	TestkitService_LicenseCreateApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseCreateApp"
+	TestkitService_LicenseGetApp_FullMethodName                   = "/testkit.v1.TestkitService/LicenseGetApp"
+	TestkitService_LicenseUpdateApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseUpdateApp"
+	TestkitService_LicenseRotateAppSecret_FullMethodName          = "/testkit.v1.TestkitService/LicenseRotateAppSecret"
+	TestkitService_LicenseDeleteApp_FullMethodName                = "/testkit.v1.TestkitService/LicenseDeleteApp"
+	TestkitService_Ingest_FullMethodName                          = "/testkit.v1.TestkitService/Ingest"
+	TestkitService_CreateApp_FullMethodName                       = "/testkit.v1.TestkitService/CreateApp"
+	TestkitService_GetApp_FullMethodName                          = "/testkit.v1.TestkitService/GetApp"
+	TestkitService_UpdateApp_FullMethodName                       = "/testkit.v1.TestkitService/UpdateApp"
+	TestkitService_ListApps_FullMethodName                        = "/testkit.v1.TestkitService/ListApps"
+	TestkitService_RotateAppSecret_FullMethodName                 = "/testkit.v1.TestkitService/RotateAppSecret"
+	TestkitService_RotateToken_FullMethodName                     = "/testkit.v1.TestkitService/RotateToken"
+	TestkitService_RevokeToken_FullMethodName                     = "/testkit.v1.TestkitService/RevokeToken"
+	TestkitService_CreateSigningKey_FullMethodName                = "/testkit.v1.TestkitService/CreateSigningKey"
+	TestkitService_RevokeSigningKey_FullMethodName                = "/testkit.v1.TestkitService/RevokeSigningKey"
+	TestkitService_ReplaceEventRules_FullMethodName               = "/testkit.v1.TestkitService/ReplaceEventRules"
+	TestkitService_SetVersionBlocked_FullMethodName               = "/testkit.v1.TestkitService/SetVersionBlocked"
+	TestkitService_GetAppStats_FullMethodName                     = "/testkit.v1.TestkitService/GetAppStats"
+	TestkitService_ListCountries_FullMethodName                   = "/testkit.v1.TestkitService/ListCountries"
+	TestkitService_GetCountries_FullMethodName                    = "/testkit.v1.TestkitService/GetCountries"
+	TestkitService_ListTimezones_FullMethodName                   = "/testkit.v1.TestkitService/ListTimezones"
+	TestkitService_ListLanguages_FullMethodName                   = "/testkit.v1.TestkitService/ListLanguages"
+	TestkitService_ListCurrencies_FullMethodName                  = "/testkit.v1.TestkitService/ListCurrencies"
+	TestkitService_ListRegionGroups_FullMethodName                = "/testkit.v1.TestkitService/ListRegionGroups"
+	TestkitService_ParsePhone_FullMethodName                      = "/testkit.v1.TestkitService/ParsePhone"
+	TestkitService_ResolveCodes_FullMethodName                    = "/testkit.v1.TestkitService/ResolveCodes"
+	TestkitService_GetCountryProfile_FullMethodName               = "/testkit.v1.TestkitService/GetCountryProfile"
+	TestkitService_ListCountriesByRegion_FullMethodName           = "/testkit.v1.TestkitService/ListCountriesByRegion"
+	TestkitService_GetCountryDefaults_FullMethodName              = "/testkit.v1.TestkitService/GetCountryDefaults"
+	TestkitService_GetDataInfo_FullMethodName                     = "/testkit.v1.TestkitService/GetDataInfo"
+	TestkitService_UserListApps_FullMethodName                    = "/testkit.v1.TestkitService/UserListApps"
+	TestkitService_UserCreateApp_FullMethodName                   = "/testkit.v1.TestkitService/UserCreateApp"
+	TestkitService_UserGetApp_FullMethodName                      = "/testkit.v1.TestkitService/UserGetApp"
+	TestkitService_UserUpdateApp_FullMethodName                   = "/testkit.v1.TestkitService/UserUpdateApp"
+	TestkitService_UserRotateAppSecret_FullMethodName             = "/testkit.v1.TestkitService/UserRotateAppSecret"
+	TestkitService_UserDeleteApp_FullMethodName                   = "/testkit.v1.TestkitService/UserDeleteApp"
+	TestkitService_PortalWhoAmI_FullMethodName                    = "/testkit.v1.TestkitService/PortalWhoAmI"
+	TestkitService_PortalMyCapabilities_FullMethodName            = "/testkit.v1.TestkitService/PortalMyCapabilities"
+	TestkitService_PortalListApiKeys_FullMethodName               = "/testkit.v1.TestkitService/PortalListApiKeys"
+	TestkitService_PortalCreateApiKey_FullMethodName              = "/testkit.v1.TestkitService/PortalCreateApiKey"
+	TestkitService_PortalRotateApiKeySecret_FullMethodName        = "/testkit.v1.TestkitService/PortalRotateApiKeySecret"
+	TestkitService_PortalDisableApiKey_FullMethodName             = "/testkit.v1.TestkitService/PortalDisableApiKey"
+	TestkitService_PortalListTenants_FullMethodName               = "/testkit.v1.TestkitService/PortalListTenants"
+	TestkitService_PortalSetCapability_FullMethodName             = "/testkit.v1.TestkitService/PortalSetCapability"
+	TestkitService_PortalDisableTenant_FullMethodName             = "/testkit.v1.TestkitService/PortalDisableTenant"
+	TestkitService_PortalListTenantMembers_FullMethodName         = "/testkit.v1.TestkitService/PortalListTenantMembers"
+	TestkitService_PortalAddTenantMember_FullMethodName           = "/testkit.v1.TestkitService/PortalAddTenantMember"
+	TestkitService_PortalRemoveTenantMember_FullMethodName        = "/testkit.v1.TestkitService/PortalRemoveTenantMember"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -380,12 +380,12 @@ type TestkitServiceClient interface {
 	GetSMSStats(ctx context.Context, in *GetSMSStatsRequest, opts ...grpc.CallOption) (*SMSStatsResponse, error)
 	ListSMSRegions(ctx context.Context, in *ListSMSRegionsRequest, opts ...grpc.CallOption) (*ListSMSRegionsResponse, error)
 	ListRegionCodes(ctx context.Context, in *ListRegionCodesRequest, opts ...grpc.CallOption) (*ListRegionCodesResponse, error)
-	MessageCreateApp(ctx context.Context, in *v12.CreateAppRequest, opts ...grpc.CallOption) (*v12.CreateAppResponse, error)
-	MessageGetApp(ctx context.Context, in *v12.GetAppRequest, opts ...grpc.CallOption) (*v12.GetAppResponse, error)
-	MessageUpdateApp(ctx context.Context, in *v12.UpdateAppRequest, opts ...grpc.CallOption) (*v12.UpdateAppResponse, error)
-	MessageRotateAppSecret(ctx context.Context, in *v12.RotateAppSecretRequest, opts ...grpc.CallOption) (*v12.RotateAppSecretResponse, error)
-	MessageListApps(ctx context.Context, in *v12.ListAppsRequest, opts ...grpc.CallOption) (*v12.ListAppsResponse, error)
-	MessageDeleteApp(ctx context.Context, in *v12.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MessageCreateTenantConfig(ctx context.Context, in *v12.CreateTenantConfigRequest, opts ...grpc.CallOption) (*v12.CreateTenantConfigResponse, error)
+	MessageGetTenantConfig(ctx context.Context, in *v12.GetTenantConfigRequest, opts ...grpc.CallOption) (*v12.GetTenantConfigResponse, error)
+	MessageUpdateTenantConfig(ctx context.Context, in *v12.UpdateTenantConfigRequest, opts ...grpc.CallOption) (*v12.UpdateTenantConfigResponse, error)
+	MessageRotateTenantConfigSecret(ctx context.Context, in *v12.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v12.RotateTenantConfigSecretResponse, error)
+	MessageListTenantConfigs(ctx context.Context, in *v12.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v12.ListTenantConfigsResponse, error)
+	MessageDeleteTenantConfig(ctx context.Context, in *v12.DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	MessageCreateChannelAccount(ctx context.Context, in *v12.CreateChannelAccountRequest, opts ...grpc.CallOption) (*v12.CreateChannelAccountResponse, error)
 	MessageUpdateChannelAccount(ctx context.Context, in *v12.UpdateChannelAccountRequest, opts ...grpc.CallOption) (*v12.UpdateChannelAccountResponse, error)
 	MessageDeleteChannelAccount(ctx context.Context, in *v12.DeleteChannelAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -1613,60 +1613,60 @@ func (c *testkitServiceClient) ListRegionCodes(ctx context.Context, in *ListRegi
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageCreateApp(ctx context.Context, in *v12.CreateAppRequest, opts ...grpc.CallOption) (*v12.CreateAppResponse, error) {
+func (c *testkitServiceClient) MessageCreateTenantConfig(ctx context.Context, in *v12.CreateTenantConfigRequest, opts ...grpc.CallOption) (*v12.CreateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v12.CreateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_MessageCreateApp_FullMethodName, in, out, cOpts...)
+	out := new(v12.CreateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageCreateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageGetApp(ctx context.Context, in *v12.GetAppRequest, opts ...grpc.CallOption) (*v12.GetAppResponse, error) {
+func (c *testkitServiceClient) MessageGetTenantConfig(ctx context.Context, in *v12.GetTenantConfigRequest, opts ...grpc.CallOption) (*v12.GetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v12.GetAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_MessageGetApp_FullMethodName, in, out, cOpts...)
+	out := new(v12.GetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageGetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageUpdateApp(ctx context.Context, in *v12.UpdateAppRequest, opts ...grpc.CallOption) (*v12.UpdateAppResponse, error) {
+func (c *testkitServiceClient) MessageUpdateTenantConfig(ctx context.Context, in *v12.UpdateTenantConfigRequest, opts ...grpc.CallOption) (*v12.UpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v12.UpdateAppResponse)
-	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(v12.UpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageUpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageRotateAppSecret(ctx context.Context, in *v12.RotateAppSecretRequest, opts ...grpc.CallOption) (*v12.RotateAppSecretResponse, error) {
+func (c *testkitServiceClient) MessageRotateTenantConfigSecret(ctx context.Context, in *v12.RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*v12.RotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v12.RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, TestkitService_MessageRotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(v12.RotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageRotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageListApps(ctx context.Context, in *v12.ListAppsRequest, opts ...grpc.CallOption) (*v12.ListAppsResponse, error) {
+func (c *testkitServiceClient) MessageListTenantConfigs(ctx context.Context, in *v12.ListTenantConfigsRequest, opts ...grpc.CallOption) (*v12.ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v12.ListAppsResponse)
-	err := c.cc.Invoke(ctx, TestkitService_MessageListApps_FullMethodName, in, out, cOpts...)
+	out := new(v12.ListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_MessageListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *testkitServiceClient) MessageDeleteApp(ctx context.Context, in *v12.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *testkitServiceClient) MessageDeleteTenantConfig(ctx context.Context, in *v12.DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteApp_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, TestkitService_MessageDeleteTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2686,12 +2686,12 @@ type TestkitServiceServer interface {
 	GetSMSStats(context.Context, *GetSMSStatsRequest) (*SMSStatsResponse, error)
 	ListSMSRegions(context.Context, *ListSMSRegionsRequest) (*ListSMSRegionsResponse, error)
 	ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error)
-	MessageCreateApp(context.Context, *v12.CreateAppRequest) (*v12.CreateAppResponse, error)
-	MessageGetApp(context.Context, *v12.GetAppRequest) (*v12.GetAppResponse, error)
-	MessageUpdateApp(context.Context, *v12.UpdateAppRequest) (*v12.UpdateAppResponse, error)
-	MessageRotateAppSecret(context.Context, *v12.RotateAppSecretRequest) (*v12.RotateAppSecretResponse, error)
-	MessageListApps(context.Context, *v12.ListAppsRequest) (*v12.ListAppsResponse, error)
-	MessageDeleteApp(context.Context, *v12.DeleteAppRequest) (*emptypb.Empty, error)
+	MessageCreateTenantConfig(context.Context, *v12.CreateTenantConfigRequest) (*v12.CreateTenantConfigResponse, error)
+	MessageGetTenantConfig(context.Context, *v12.GetTenantConfigRequest) (*v12.GetTenantConfigResponse, error)
+	MessageUpdateTenantConfig(context.Context, *v12.UpdateTenantConfigRequest) (*v12.UpdateTenantConfigResponse, error)
+	MessageRotateTenantConfigSecret(context.Context, *v12.RotateTenantConfigSecretRequest) (*v12.RotateTenantConfigSecretResponse, error)
+	MessageListTenantConfigs(context.Context, *v12.ListTenantConfigsRequest) (*v12.ListTenantConfigsResponse, error)
+	MessageDeleteTenantConfig(context.Context, *v12.DeleteTenantConfigRequest) (*emptypb.Empty, error)
 	MessageCreateChannelAccount(context.Context, *v12.CreateChannelAccountRequest) (*v12.CreateChannelAccountResponse, error)
 	MessageUpdateChannelAccount(context.Context, *v12.UpdateChannelAccountRequest) (*v12.UpdateChannelAccountResponse, error)
 	MessageDeleteChannelAccount(context.Context, *v12.DeleteChannelAccountRequest) (*emptypb.Empty, error)
@@ -3135,23 +3135,23 @@ func (UnimplementedTestkitServiceServer) ListSMSRegions(context.Context, *ListSM
 func (UnimplementedTestkitServiceServer) ListRegionCodes(context.Context, *ListRegionCodesRequest) (*ListRegionCodesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListRegionCodes not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageCreateApp(context.Context, *v12.CreateAppRequest) (*v12.CreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageCreateApp not implemented")
+func (UnimplementedTestkitServiceServer) MessageCreateTenantConfig(context.Context, *v12.CreateTenantConfigRequest) (*v12.CreateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageCreateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageGetApp(context.Context, *v12.GetAppRequest) (*v12.GetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageGetApp not implemented")
+func (UnimplementedTestkitServiceServer) MessageGetTenantConfig(context.Context, *v12.GetTenantConfigRequest) (*v12.GetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageGetTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageUpdateApp(context.Context, *v12.UpdateAppRequest) (*v12.UpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageUpdateApp not implemented")
+func (UnimplementedTestkitServiceServer) MessageUpdateTenantConfig(context.Context, *v12.UpdateTenantConfigRequest) (*v12.UpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageUpdateTenantConfig not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageRotateAppSecret(context.Context, *v12.RotateAppSecretRequest) (*v12.RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageRotateAppSecret not implemented")
+func (UnimplementedTestkitServiceServer) MessageRotateTenantConfigSecret(context.Context, *v12.RotateTenantConfigSecretRequest) (*v12.RotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageRotateTenantConfigSecret not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageListApps(context.Context, *v12.ListAppsRequest) (*v12.ListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageListApps not implemented")
+func (UnimplementedTestkitServiceServer) MessageListTenantConfigs(context.Context, *v12.ListTenantConfigsRequest) (*v12.ListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageListTenantConfigs not implemented")
 }
-func (UnimplementedTestkitServiceServer) MessageDeleteApp(context.Context, *v12.DeleteAppRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method MessageDeleteApp not implemented")
+func (UnimplementedTestkitServiceServer) MessageDeleteTenantConfig(context.Context, *v12.DeleteTenantConfigRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method MessageDeleteTenantConfig not implemented")
 }
 func (UnimplementedTestkitServiceServer) MessageCreateChannelAccount(context.Context, *v12.CreateChannelAccountRequest) (*v12.CreateChannelAccountResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MessageCreateChannelAccount not implemented")
@@ -5451,110 +5451,110 @@ func _TestkitService_ListRegionCodes_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageCreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.CreateAppRequest)
+func _TestkitService_MessageCreateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.CreateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageCreateApp(ctx, in)
+		return srv.(TestkitServiceServer).MessageCreateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageCreateApp_FullMethodName,
+		FullMethod: TestkitService_MessageCreateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageCreateApp(ctx, req.(*v12.CreateAppRequest))
+		return srv.(TestkitServiceServer).MessageCreateTenantConfig(ctx, req.(*v12.CreateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageGetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.GetAppRequest)
+func _TestkitService_MessageGetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.GetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageGetApp(ctx, in)
+		return srv.(TestkitServiceServer).MessageGetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageGetApp_FullMethodName,
+		FullMethod: TestkitService_MessageGetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageGetApp(ctx, req.(*v12.GetAppRequest))
+		return srv.(TestkitServiceServer).MessageGetTenantConfig(ctx, req.(*v12.GetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageUpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.UpdateAppRequest)
+func _TestkitService_MessageUpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.UpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageUpdateApp(ctx, in)
+		return srv.(TestkitServiceServer).MessageUpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageUpdateApp_FullMethodName,
+		FullMethod: TestkitService_MessageUpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageUpdateApp(ctx, req.(*v12.UpdateAppRequest))
+		return srv.(TestkitServiceServer).MessageUpdateTenantConfig(ctx, req.(*v12.UpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageRotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.RotateAppSecretRequest)
+func _TestkitService_MessageRotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.RotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageRotateAppSecret(ctx, in)
+		return srv.(TestkitServiceServer).MessageRotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageRotateAppSecret_FullMethodName,
+		FullMethod: TestkitService_MessageRotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageRotateAppSecret(ctx, req.(*v12.RotateAppSecretRequest))
+		return srv.(TestkitServiceServer).MessageRotateTenantConfigSecret(ctx, req.(*v12.RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.ListAppsRequest)
+func _TestkitService_MessageListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageListApps(ctx, in)
+		return srv.(TestkitServiceServer).MessageListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageListApps_FullMethodName,
+		FullMethod: TestkitService_MessageListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageListApps(ctx, req.(*v12.ListAppsRequest))
+		return srv.(TestkitServiceServer).MessageListTenantConfigs(ctx, req.(*v12.ListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TestkitService_MessageDeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v12.DeleteAppRequest)
+func _TestkitService_MessageDeleteTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v12.DeleteTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TestkitServiceServer).MessageDeleteApp(ctx, in)
+		return srv.(TestkitServiceServer).MessageDeleteTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TestkitService_MessageDeleteApp_FullMethodName,
+		FullMethod: TestkitService_MessageDeleteTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TestkitServiceServer).MessageDeleteApp(ctx, req.(*v12.DeleteAppRequest))
+		return srv.(TestkitServiceServer).MessageDeleteTenantConfig(ctx, req.(*v12.DeleteTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -7581,28 +7581,28 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TestkitService_ListRegionCodes_Handler,
 		},
 		{
-			MethodName: "MessageCreateApp",
-			Handler:    _TestkitService_MessageCreateApp_Handler,
+			MethodName: "MessageCreateTenantConfig",
+			Handler:    _TestkitService_MessageCreateTenantConfig_Handler,
 		},
 		{
-			MethodName: "MessageGetApp",
-			Handler:    _TestkitService_MessageGetApp_Handler,
+			MethodName: "MessageGetTenantConfig",
+			Handler:    _TestkitService_MessageGetTenantConfig_Handler,
 		},
 		{
-			MethodName: "MessageUpdateApp",
-			Handler:    _TestkitService_MessageUpdateApp_Handler,
+			MethodName: "MessageUpdateTenantConfig",
+			Handler:    _TestkitService_MessageUpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "MessageRotateAppSecret",
-			Handler:    _TestkitService_MessageRotateAppSecret_Handler,
+			MethodName: "MessageRotateTenantConfigSecret",
+			Handler:    _TestkitService_MessageRotateTenantConfigSecret_Handler,
 		},
 		{
-			MethodName: "MessageListApps",
-			Handler:    _TestkitService_MessageListApps_Handler,
+			MethodName: "MessageListTenantConfigs",
+			Handler:    _TestkitService_MessageListTenantConfigs_Handler,
 		},
 		{
-			MethodName: "MessageDeleteApp",
-			Handler:    _TestkitService_MessageDeleteApp_Handler,
+			MethodName: "MessageDeleteTenantConfig",
+			Handler:    _TestkitService_MessageDeleteTenantConfig_Handler,
 		},
 		{
 			MethodName: "MessageCreateChannelAccount",

@@ -1,8 +1,9 @@
 // Messaging admin service definitions — RPC declarations only.
 //
-// MessageAdminService manages the platform resource model: apps (caller
-// identities), the channel-account pool (vendor credentials), SMS
-// signatures, templates, and per-(app, channel, scene) send policies.
+// MessageAdminService manages the platform resource model: tenant configs
+// (one calling-app row per tenant — the ak/sk registry behind the data
+// plane), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(app, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //
@@ -32,48 +33,51 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MessageAdminService_CreateApp_FullMethodName            = "/messaging.v1.MessageAdminService/CreateApp"
-	MessageAdminService_GetApp_FullMethodName               = "/messaging.v1.MessageAdminService/GetApp"
-	MessageAdminService_UpdateApp_FullMethodName            = "/messaging.v1.MessageAdminService/UpdateApp"
-	MessageAdminService_RotateAppSecret_FullMethodName      = "/messaging.v1.MessageAdminService/RotateAppSecret"
-	MessageAdminService_ListApps_FullMethodName             = "/messaging.v1.MessageAdminService/ListApps"
-	MessageAdminService_DeleteApp_FullMethodName            = "/messaging.v1.MessageAdminService/DeleteApp"
-	MessageAdminService_CreateChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/CreateChannelAccount"
-	MessageAdminService_UpdateChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/UpdateChannelAccount"
-	MessageAdminService_DeleteChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/DeleteChannelAccount"
-	MessageAdminService_ListChannelAccounts_FullMethodName  = "/messaging.v1.MessageAdminService/ListChannelAccounts"
-	MessageAdminService_CreateSignature_FullMethodName      = "/messaging.v1.MessageAdminService/CreateSignature"
-	MessageAdminService_UpdateSignature_FullMethodName      = "/messaging.v1.MessageAdminService/UpdateSignature"
-	MessageAdminService_DeleteSignature_FullMethodName      = "/messaging.v1.MessageAdminService/DeleteSignature"
-	MessageAdminService_ListSignatures_FullMethodName       = "/messaging.v1.MessageAdminService/ListSignatures"
-	MessageAdminService_CreateTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/CreateTemplate"
-	MessageAdminService_UpdateTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/UpdateTemplate"
-	MessageAdminService_DeleteTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/DeleteTemplate"
-	MessageAdminService_ListTemplates_FullMethodName        = "/messaging.v1.MessageAdminService/ListTemplates"
-	MessageAdminService_CreatePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/CreatePolicy"
-	MessageAdminService_UpdatePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/UpdatePolicy"
-	MessageAdminService_DeletePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/DeletePolicy"
-	MessageAdminService_ListPolicies_FullMethodName         = "/messaging.v1.MessageAdminService/ListPolicies"
+	MessageAdminService_CreateTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/CreateTenantConfig"
+	MessageAdminService_GetTenantConfig_FullMethodName          = "/messaging.v1.MessageAdminService/GetTenantConfig"
+	MessageAdminService_UpdateTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/UpdateTenantConfig"
+	MessageAdminService_RotateTenantConfigSecret_FullMethodName = "/messaging.v1.MessageAdminService/RotateTenantConfigSecret"
+	MessageAdminService_ListTenantConfigs_FullMethodName        = "/messaging.v1.MessageAdminService/ListTenantConfigs"
+	MessageAdminService_DeleteTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/DeleteTenantConfig"
+	MessageAdminService_CreateChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/CreateChannelAccount"
+	MessageAdminService_UpdateChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/UpdateChannelAccount"
+	MessageAdminService_DeleteChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/DeleteChannelAccount"
+	MessageAdminService_ListChannelAccounts_FullMethodName      = "/messaging.v1.MessageAdminService/ListChannelAccounts"
+	MessageAdminService_CreateSignature_FullMethodName          = "/messaging.v1.MessageAdminService/CreateSignature"
+	MessageAdminService_UpdateSignature_FullMethodName          = "/messaging.v1.MessageAdminService/UpdateSignature"
+	MessageAdminService_DeleteSignature_FullMethodName          = "/messaging.v1.MessageAdminService/DeleteSignature"
+	MessageAdminService_ListSignatures_FullMethodName           = "/messaging.v1.MessageAdminService/ListSignatures"
+	MessageAdminService_CreateTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/CreateTemplate"
+	MessageAdminService_UpdateTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/UpdateTemplate"
+	MessageAdminService_DeleteTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/DeleteTemplate"
+	MessageAdminService_ListTemplates_FullMethodName            = "/messaging.v1.MessageAdminService/ListTemplates"
+	MessageAdminService_CreatePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/CreatePolicy"
+	MessageAdminService_UpdatePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/UpdatePolicy"
+	MessageAdminService_DeletePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/DeletePolicy"
+	MessageAdminService_ListPolicies_FullMethodName             = "/messaging.v1.MessageAdminService/ListPolicies"
 )
 
 // MessageAdminServiceClient is the client API for MessageAdminService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageAdminServiceClient interface {
-	// CreateApp registers a calling app and returns the plaintext
-	// app_secret exactly once.
-	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
-	// GetApp returns one app by id.
-	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
-	// UpdateApp tweaks app metadata (name / disabled / daily limits).
-	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
-	// RotateAppSecret invalidates the current secret and returns a new
-	// plaintext exactly once.
-	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
-	// ListApps returns all apps (no pagination — low cardinality).
-	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
-	// DeleteApp soft-deletes an app; its sends fail immediately.
-	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// CreateTenantConfig registers a tenant's config row and returns the
+	// plaintext app_secret exactly once.
+	CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error)
+	// GetTenantConfig returns one tenant config by row id.
+	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error)
+	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
+	// limits).
+	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
+	// RotateTenantConfigSecret invalidates the current secret and returns a
+	// new plaintext exactly once.
+	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
+	// ListTenantConfigs returns the tenant configs in the caller's scope (no
+	// pagination — low cardinality).
+	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
+	// DeleteTenantConfig soft-deletes a tenant config; its sends fail
+	// immediately.
+	DeleteTenantConfig(ctx context.Context, in *DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// CreateChannelAccount adds a vendor account to the platform pool.
 	CreateChannelAccount(ctx context.Context, in *CreateChannelAccountRequest, opts ...grpc.CallOption) (*CreateChannelAccountResponse, error)
 	// UpdateChannelAccount edits remark/disabled or replaces credentials.
@@ -116,60 +120,60 @@ func NewMessageAdminServiceClient(cc grpc.ClientConnInterface) MessageAdminServi
 	return &messageAdminServiceClient{cc}
 }
 
-func (c *messageAdminServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
+func (c *messageAdminServiceClient) CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateAppResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_CreateApp_FullMethodName, in, out, cOpts...)
+	out := new(CreateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, MessageAdminService_CreateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageAdminServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error) {
+func (c *messageAdminServiceClient) GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAppResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_GetApp_FullMethodName, in, out, cOpts...)
+	out := new(GetTenantConfigResponse)
+	err := c.cc.Invoke(ctx, MessageAdminService_GetTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageAdminServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error) {
+func (c *messageAdminServiceClient) UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateAppResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_UpdateApp_FullMethodName, in, out, cOpts...)
+	out := new(UpdateTenantConfigResponse)
+	err := c.cc.Invoke(ctx, MessageAdminService_UpdateTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageAdminServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
+func (c *messageAdminServiceClient) RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_RotateAppSecret_FullMethodName, in, out, cOpts...)
+	out := new(RotateTenantConfigSecretResponse)
+	err := c.cc.Invoke(ctx, MessageAdminService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageAdminServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
+func (c *messageAdminServiceClient) ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAppsResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_ListApps_FullMethodName, in, out, cOpts...)
+	out := new(ListTenantConfigsResponse)
+	err := c.cc.Invoke(ctx, MessageAdminService_ListTenantConfigs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageAdminServiceClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *messageAdminServiceClient) DeleteTenantConfig(ctx context.Context, in *DeleteTenantConfigRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, MessageAdminService_DeleteApp_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MessageAdminService_DeleteTenantConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -340,20 +344,23 @@ func (c *messageAdminServiceClient) ListPolicies(ctx context.Context, in *ListPo
 // All implementations must embed UnimplementedMessageAdminServiceServer
 // for forward compatibility.
 type MessageAdminServiceServer interface {
-	// CreateApp registers a calling app and returns the plaintext
-	// app_secret exactly once.
-	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
-	// GetApp returns one app by id.
-	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
-	// UpdateApp tweaks app metadata (name / disabled / daily limits).
-	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
-	// RotateAppSecret invalidates the current secret and returns a new
-	// plaintext exactly once.
-	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
-	// ListApps returns all apps (no pagination — low cardinality).
-	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
-	// DeleteApp soft-deletes an app; its sends fail immediately.
-	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
+	// CreateTenantConfig registers a tenant's config row and returns the
+	// plaintext app_secret exactly once.
+	CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error)
+	// GetTenantConfig returns one tenant config by row id.
+	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error)
+	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
+	// limits).
+	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
+	// RotateTenantConfigSecret invalidates the current secret and returns a
+	// new plaintext exactly once.
+	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
+	// ListTenantConfigs returns the tenant configs in the caller's scope (no
+	// pagination — low cardinality).
+	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
+	// DeleteTenantConfig soft-deletes a tenant config; its sends fail
+	// immediately.
+	DeleteTenantConfig(context.Context, *DeleteTenantConfigRequest) (*emptypb.Empty, error)
 	// CreateChannelAccount adds a vendor account to the platform pool.
 	CreateChannelAccount(context.Context, *CreateChannelAccountRequest) (*CreateChannelAccountResponse, error)
 	// UpdateChannelAccount edits remark/disabled or replaces credentials.
@@ -396,23 +403,23 @@ type MessageAdminServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMessageAdminServiceServer struct{}
 
-func (UnimplementedMessageAdminServiceServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateApp not implemented")
+func (UnimplementedMessageAdminServiceServer) CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTenantConfig not implemented")
 }
-func (UnimplementedMessageAdminServiceServer) GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetApp not implemented")
+func (UnimplementedMessageAdminServiceServer) GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTenantConfig not implemented")
 }
-func (UnimplementedMessageAdminServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
+func (UnimplementedMessageAdminServiceServer) UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
 }
-func (UnimplementedMessageAdminServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
+func (UnimplementedMessageAdminServiceServer) RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
-func (UnimplementedMessageAdminServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
+func (UnimplementedMessageAdminServiceServer) ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListTenantConfigs not implemented")
 }
-func (UnimplementedMessageAdminServiceServer) DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteApp not implemented")
+func (UnimplementedMessageAdminServiceServer) DeleteTenantConfig(context.Context, *DeleteTenantConfigRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTenantConfig not implemented")
 }
 func (UnimplementedMessageAdminServiceServer) CreateChannelAccount(context.Context, *CreateChannelAccountRequest) (*CreateChannelAccountResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateChannelAccount not implemented")
@@ -483,110 +490,110 @@ func RegisterMessageAdminServiceServer(s grpc.ServiceRegistrar, srv MessageAdmin
 	s.RegisterService(&MessageAdminService_ServiceDesc, srv)
 }
 
-func _MessageAdminService_CreateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppRequest)
+func _MessageAdminService_CreateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).CreateApp(ctx, in)
+		return srv.(MessageAdminServiceServer).CreateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_CreateApp_FullMethodName,
+		FullMethod: MessageAdminService_CreateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+		return srv.(MessageAdminServiceServer).CreateTenantConfig(ctx, req.(*CreateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageAdminService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAppRequest)
+func _MessageAdminService_GetTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).GetApp(ctx, in)
+		return srv.(MessageAdminServiceServer).GetTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_GetApp_FullMethodName,
+		FullMethod: MessageAdminService_GetTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).GetApp(ctx, req.(*GetAppRequest))
+		return srv.(MessageAdminServiceServer).GetTenantConfig(ctx, req.(*GetTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageAdminService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAppRequest)
+func _MessageAdminService_UpdateTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).UpdateApp(ctx, in)
+		return srv.(MessageAdminServiceServer).UpdateTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_UpdateApp_FullMethodName,
+		FullMethod: MessageAdminService_UpdateTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
+		return srv.(MessageAdminServiceServer).UpdateTenantConfig(ctx, req.(*UpdateTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageAdminService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateAppSecretRequest)
+func _MessageAdminService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RotateTenantConfigSecretRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).RotateAppSecret(ctx, in)
+		return srv.(MessageAdminServiceServer).RotateTenantConfigSecret(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_RotateAppSecret_FullMethodName,
+		FullMethod: MessageAdminService_RotateTenantConfigSecret_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
+		return srv.(MessageAdminServiceServer).RotateTenantConfigSecret(ctx, req.(*RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageAdminService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAppsRequest)
+func _MessageAdminService_ListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).ListApps(ctx, in)
+		return srv.(MessageAdminServiceServer).ListTenantConfigs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_ListApps_FullMethodName,
+		FullMethod: MessageAdminService_ListTenantConfigs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).ListApps(ctx, req.(*ListAppsRequest))
+		return srv.(MessageAdminServiceServer).ListTenantConfigs(ctx, req.(*ListTenantConfigsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageAdminService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAppRequest)
+func _MessageAdminService_DeleteTenantConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTenantConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).DeleteApp(ctx, in)
+		return srv.(MessageAdminServiceServer).DeleteTenantConfig(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageAdminService_DeleteApp_FullMethodName,
+		FullMethod: MessageAdminService_DeleteTenantConfig_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).DeleteApp(ctx, req.(*DeleteAppRequest))
+		return srv.(MessageAdminServiceServer).DeleteTenantConfig(ctx, req.(*DeleteTenantConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -887,28 +894,28 @@ var MessageAdminService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MessageAdminServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateApp",
-			Handler:    _MessageAdminService_CreateApp_Handler,
+			MethodName: "CreateTenantConfig",
+			Handler:    _MessageAdminService_CreateTenantConfig_Handler,
 		},
 		{
-			MethodName: "GetApp",
-			Handler:    _MessageAdminService_GetApp_Handler,
+			MethodName: "GetTenantConfig",
+			Handler:    _MessageAdminService_GetTenantConfig_Handler,
 		},
 		{
-			MethodName: "UpdateApp",
-			Handler:    _MessageAdminService_UpdateApp_Handler,
+			MethodName: "UpdateTenantConfig",
+			Handler:    _MessageAdminService_UpdateTenantConfig_Handler,
 		},
 		{
-			MethodName: "RotateAppSecret",
-			Handler:    _MessageAdminService_RotateAppSecret_Handler,
+			MethodName: "RotateTenantConfigSecret",
+			Handler:    _MessageAdminService_RotateTenantConfigSecret_Handler,
 		},
 		{
-			MethodName: "ListApps",
-			Handler:    _MessageAdminService_ListApps_Handler,
+			MethodName: "ListTenantConfigs",
+			Handler:    _MessageAdminService_ListTenantConfigs_Handler,
 		},
 		{
-			MethodName: "DeleteApp",
-			Handler:    _MessageAdminService_DeleteApp_Handler,
+			MethodName: "DeleteTenantConfig",
+			Handler:    _MessageAdminService_DeleteTenantConfig_Handler,
 		},
 		{
 			MethodName: "CreateChannelAccount",

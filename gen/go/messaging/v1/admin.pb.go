@@ -27,10 +27,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// MessageAppInfo is a registered calling application (the x-app-key
-// identity). Apps own policies; quotas and idempotency namespaces hang off
-// the app_key.
-type MessageAppInfo struct {
+// MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
+// MessageAppInfo). The row keeps its calling-application identity: app_key
+// is the x-app-key credential, apps own policies, and quotas and
+// idempotency namespaces hang off the app_key.
+type MessageTenantConfigInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// app_key is the public credential identifier passed in x-app-key
@@ -58,20 +59,20 @@ type MessageAppInfo struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MessageAppInfo) Reset() {
-	*x = MessageAppInfo{}
+func (x *MessageTenantConfigInfo) Reset() {
+	*x = MessageTenantConfigInfo{}
 	mi := &file_messaging_v1_admin_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MessageAppInfo) String() string {
+func (x *MessageTenantConfigInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MessageAppInfo) ProtoMessage() {}
+func (*MessageTenantConfigInfo) ProtoMessage() {}
 
-func (x *MessageAppInfo) ProtoReflect() protoreflect.Message {
+func (x *MessageTenantConfigInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -83,75 +84,75 @@ func (x *MessageAppInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MessageAppInfo.ProtoReflect.Descriptor instead.
-func (*MessageAppInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use MessageTenantConfigInfo.ProtoReflect.Descriptor instead.
+func (*MessageTenantConfigInfo) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MessageAppInfo) GetId() int64 {
+func (x *MessageTenantConfigInfo) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *MessageAppInfo) GetAppKey() string {
+func (x *MessageTenantConfigInfo) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
 	}
 	return ""
 }
 
-func (x *MessageAppInfo) GetAppSecret() string {
+func (x *MessageTenantConfigInfo) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-func (x *MessageAppInfo) GetName() string {
+func (x *MessageTenantConfigInfo) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *MessageAppInfo) GetDisabled() bool {
+func (x *MessageTenantConfigInfo) GetDisabled() bool {
 	if x != nil {
 		return x.Disabled
 	}
 	return false
 }
 
-func (x *MessageAppInfo) GetSmsDailyLimit() int64 {
+func (x *MessageTenantConfigInfo) GetSmsDailyLimit() int64 {
 	if x != nil {
 		return x.SmsDailyLimit
 	}
 	return 0
 }
 
-func (x *MessageAppInfo) GetEmailDailyLimit() int64 {
+func (x *MessageTenantConfigInfo) GetEmailDailyLimit() int64 {
 	if x != nil {
 		return x.EmailDailyLimit
 	}
 	return 0
 }
 
-func (x *MessageAppInfo) GetCreatedAt() int64 {
+func (x *MessageTenantConfigInfo) GetCreatedAt() int64 {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return 0
 }
 
-func (x *MessageAppInfo) GetUpdatedAt() int64 {
+func (x *MessageTenantConfigInfo) GetUpdatedAt() int64 {
 	if x != nil {
 		return x.UpdatedAt
 	}
 	return 0
 }
 
-func (x *MessageAppInfo) GetTenantKey() string {
+func (x *MessageTenantConfigInfo) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
@@ -1687,8 +1688,8 @@ var File_messaging_v1_admin_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\xb9\x02\n" +
-	"\x0eMessageAppInfo\x12\x0e\n" +
+	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\xc2\x02\n" +
+	"\x17MessageTenantConfigInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
 	"\n" +
@@ -1871,7 +1872,7 @@ func file_messaging_v1_admin_proto_rawDescGZIP() []byte {
 
 var file_messaging_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_messaging_v1_admin_proto_goTypes = []any{
-	(*MessageAppInfo)(nil),            // 0: messaging.v1.MessageAppInfo
+	(*MessageTenantConfigInfo)(nil),   // 0: messaging.v1.MessageTenantConfigInfo
 	(*AliyunSmsCredentials)(nil),      // 1: messaging.v1.AliyunSmsCredentials
 	(*TencentSmsCredentials)(nil),     // 2: messaging.v1.TencentSmsCredentials
 	(*VolcengineSmsCredentials)(nil),  // 3: messaging.v1.VolcengineSmsCredentials

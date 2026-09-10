@@ -1,8 +1,9 @@
 // Messaging admin service definitions — RPC declarations only.
 //
-// MessageAdminService manages the platform resource model: apps (caller
-// identities), the channel-account pool (vendor credentials), SMS
-// signatures, templates, and per-(app, channel, scene) send policies.
+// MessageAdminService manages the platform resource model: tenant configs
+// (one calling-app row per tenant — the ak/sk registry behind the data
+// plane), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(app, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //
@@ -18,22 +19,26 @@ import "messaging/v1/admin.proto";
 import "messaging/v1/admin_request_response.proto";
 
 service MessageAdminService {
-  // Apps
+  // Tenant configs (phase ④ T6 rename: the admin surface speaks tenant —
+  // one config row per tenant; the row keeps its internal app identity)
 
-  // CreateApp registers a calling app and returns the plaintext
-  // app_secret exactly once.
-  rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
-  // GetApp returns one app by id.
-  rpc GetApp(GetAppRequest) returns (GetAppResponse);
-  // UpdateApp tweaks app metadata (name / disabled / daily limits).
-  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
-  // RotateAppSecret invalidates the current secret and returns a new
-  // plaintext exactly once.
-  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
-  // ListApps returns all apps (no pagination — low cardinality).
-  rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
-  // DeleteApp soft-deletes an app; its sends fail immediately.
-  rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty);
+  // CreateTenantConfig registers a tenant's config row and returns the
+  // plaintext app_secret exactly once.
+  rpc CreateTenantConfig(CreateTenantConfigRequest) returns (CreateTenantConfigResponse);
+  // GetTenantConfig returns one tenant config by row id.
+  rpc GetTenantConfig(GetTenantConfigRequest) returns (GetTenantConfigResponse);
+  // UpdateTenantConfig tweaks config metadata (name / disabled / daily
+  // limits).
+  rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
+  // RotateTenantConfigSecret invalidates the current secret and returns a
+  // new plaintext exactly once.
+  rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
+  // ListTenantConfigs returns the tenant configs in the caller's scope (no
+  // pagination — low cardinality).
+  rpc ListTenantConfigs(ListTenantConfigsRequest) returns (ListTenantConfigsResponse);
+  // DeleteTenantConfig soft-deletes a tenant config; its sends fail
+  // immediately.
+  rpc DeleteTenantConfig(DeleteTenantConfigRequest) returns (google.protobuf.Empty);
 
   // Channel accounts
 

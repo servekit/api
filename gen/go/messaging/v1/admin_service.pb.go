@@ -1,8 +1,9 @@
 // Messaging admin service definitions — RPC declarations only.
 //
-// MessageAdminService manages the platform resource model: apps (caller
-// identities), the channel-account pool (vendor credentials), SMS
-// signatures, templates, and per-(app, channel, scene) send policies.
+// MessageAdminService manages the platform resource model: tenant configs
+// (one calling-app row per tenant — the ak/sk registry behind the data
+// plane), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(app, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //
@@ -37,14 +38,14 @@ var File_messaging_v1_admin_service_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_service_proto_rawDesc = "" +
 	"\n" +
-	" messaging/v1/admin_service.proto\x12\fmessaging.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto2\xac\x0f\n" +
-	"\x13MessageAdminService\x12L\n" +
-	"\tCreateApp\x12\x1e.messaging.v1.CreateAppRequest\x1a\x1f.messaging.v1.CreateAppResponse\x12C\n" +
-	"\x06GetApp\x12\x1b.messaging.v1.GetAppRequest\x1a\x1c.messaging.v1.GetAppResponse\x12L\n" +
-	"\tUpdateApp\x12\x1e.messaging.v1.UpdateAppRequest\x1a\x1f.messaging.v1.UpdateAppResponse\x12^\n" +
-	"\x0fRotateAppSecret\x12$.messaging.v1.RotateAppSecretRequest\x1a%.messaging.v1.RotateAppSecretResponse\x12I\n" +
-	"\bListApps\x12\x1d.messaging.v1.ListAppsRequest\x1a\x1e.messaging.v1.ListAppsResponse\x12C\n" +
-	"\tDeleteApp\x12\x1e.messaging.v1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\x12m\n" +
+	" messaging/v1/admin_service.proto\x12\fmessaging.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto2\xc5\x10\n" +
+	"\x13MessageAdminService\x12g\n" +
+	"\x12CreateTenantConfig\x12'.messaging.v1.CreateTenantConfigRequest\x1a(.messaging.v1.CreateTenantConfigResponse\x12^\n" +
+	"\x0fGetTenantConfig\x12$.messaging.v1.GetTenantConfigRequest\x1a%.messaging.v1.GetTenantConfigResponse\x12g\n" +
+	"\x12UpdateTenantConfig\x12'.messaging.v1.UpdateTenantConfigRequest\x1a(.messaging.v1.UpdateTenantConfigResponse\x12y\n" +
+	"\x18RotateTenantConfigSecret\x12-.messaging.v1.RotateTenantConfigSecretRequest\x1a..messaging.v1.RotateTenantConfigSecretResponse\x12d\n" +
+	"\x11ListTenantConfigs\x12&.messaging.v1.ListTenantConfigsRequest\x1a'.messaging.v1.ListTenantConfigsResponse\x12U\n" +
+	"\x12DeleteTenantConfig\x12'.messaging.v1.DeleteTenantConfigRequest\x1a\x16.google.protobuf.Empty\x12m\n" +
 	"\x14CreateChannelAccount\x12).messaging.v1.CreateChannelAccountRequest\x1a*.messaging.v1.CreateChannelAccountResponse\x12m\n" +
 	"\x14UpdateChannelAccount\x12).messaging.v1.UpdateChannelAccountRequest\x1a*.messaging.v1.UpdateChannelAccountResponse\x12Y\n" +
 	"\x14DeleteChannelAccount\x12).messaging.v1.DeleteChannelAccountRequest\x1a\x16.google.protobuf.Empty\x12j\n" +
@@ -64,54 +65,54 @@ const file_messaging_v1_admin_service_proto_rawDesc = "" +
 	"\x10com.messaging.v1B\x11AdminServiceProtoP\x01Z7github.com/servekit/api/gen/go/messaging/v1;messagingv1\xa2\x02\x03MXX\xaa\x02\fMessaging.V1\xca\x02\fMessaging\\V1\xe2\x02\x18Messaging\\V1\\GPBMetadata\xea\x02\rMessaging::V1b\x06proto3"
 
 var file_messaging_v1_admin_service_proto_goTypes = []any{
-	(*CreateAppRequest)(nil),             // 0: messaging.v1.CreateAppRequest
-	(*GetAppRequest)(nil),                // 1: messaging.v1.GetAppRequest
-	(*UpdateAppRequest)(nil),             // 2: messaging.v1.UpdateAppRequest
-	(*RotateAppSecretRequest)(nil),       // 3: messaging.v1.RotateAppSecretRequest
-	(*ListAppsRequest)(nil),              // 4: messaging.v1.ListAppsRequest
-	(*DeleteAppRequest)(nil),             // 5: messaging.v1.DeleteAppRequest
-	(*CreateChannelAccountRequest)(nil),  // 6: messaging.v1.CreateChannelAccountRequest
-	(*UpdateChannelAccountRequest)(nil),  // 7: messaging.v1.UpdateChannelAccountRequest
-	(*DeleteChannelAccountRequest)(nil),  // 8: messaging.v1.DeleteChannelAccountRequest
-	(*ListChannelAccountsRequest)(nil),   // 9: messaging.v1.ListChannelAccountsRequest
-	(*CreateSignatureRequest)(nil),       // 10: messaging.v1.CreateSignatureRequest
-	(*UpdateSignatureRequest)(nil),       // 11: messaging.v1.UpdateSignatureRequest
-	(*DeleteSignatureRequest)(nil),       // 12: messaging.v1.DeleteSignatureRequest
-	(*ListSignaturesRequest)(nil),        // 13: messaging.v1.ListSignaturesRequest
-	(*CreateTemplateRequest)(nil),        // 14: messaging.v1.CreateTemplateRequest
-	(*UpdateTemplateRequest)(nil),        // 15: messaging.v1.UpdateTemplateRequest
-	(*DeleteTemplateRequest)(nil),        // 16: messaging.v1.DeleteTemplateRequest
-	(*ListTemplatesRequest)(nil),         // 17: messaging.v1.ListTemplatesRequest
-	(*CreatePolicyRequest)(nil),          // 18: messaging.v1.CreatePolicyRequest
-	(*UpdatePolicyRequest)(nil),          // 19: messaging.v1.UpdatePolicyRequest
-	(*DeletePolicyRequest)(nil),          // 20: messaging.v1.DeletePolicyRequest
-	(*ListPoliciesRequest)(nil),          // 21: messaging.v1.ListPoliciesRequest
-	(*CreateAppResponse)(nil),            // 22: messaging.v1.CreateAppResponse
-	(*GetAppResponse)(nil),               // 23: messaging.v1.GetAppResponse
-	(*UpdateAppResponse)(nil),            // 24: messaging.v1.UpdateAppResponse
-	(*RotateAppSecretResponse)(nil),      // 25: messaging.v1.RotateAppSecretResponse
-	(*ListAppsResponse)(nil),             // 26: messaging.v1.ListAppsResponse
-	(*emptypb.Empty)(nil),                // 27: google.protobuf.Empty
-	(*CreateChannelAccountResponse)(nil), // 28: messaging.v1.CreateChannelAccountResponse
-	(*UpdateChannelAccountResponse)(nil), // 29: messaging.v1.UpdateChannelAccountResponse
-	(*ListChannelAccountsResponse)(nil),  // 30: messaging.v1.ListChannelAccountsResponse
-	(*CreateSignatureResponse)(nil),      // 31: messaging.v1.CreateSignatureResponse
-	(*UpdateSignatureResponse)(nil),      // 32: messaging.v1.UpdateSignatureResponse
-	(*ListSignaturesResponse)(nil),       // 33: messaging.v1.ListSignaturesResponse
-	(*CreateTemplateResponse)(nil),       // 34: messaging.v1.CreateTemplateResponse
-	(*UpdateTemplateResponse)(nil),       // 35: messaging.v1.UpdateTemplateResponse
-	(*ListTemplatesResponse)(nil),        // 36: messaging.v1.ListTemplatesResponse
-	(*CreatePolicyResponse)(nil),         // 37: messaging.v1.CreatePolicyResponse
-	(*UpdatePolicyResponse)(nil),         // 38: messaging.v1.UpdatePolicyResponse
-	(*ListPoliciesResponse)(nil),         // 39: messaging.v1.ListPoliciesResponse
+	(*CreateTenantConfigRequest)(nil),        // 0: messaging.v1.CreateTenantConfigRequest
+	(*GetTenantConfigRequest)(nil),           // 1: messaging.v1.GetTenantConfigRequest
+	(*UpdateTenantConfigRequest)(nil),        // 2: messaging.v1.UpdateTenantConfigRequest
+	(*RotateTenantConfigSecretRequest)(nil),  // 3: messaging.v1.RotateTenantConfigSecretRequest
+	(*ListTenantConfigsRequest)(nil),         // 4: messaging.v1.ListTenantConfigsRequest
+	(*DeleteTenantConfigRequest)(nil),        // 5: messaging.v1.DeleteTenantConfigRequest
+	(*CreateChannelAccountRequest)(nil),      // 6: messaging.v1.CreateChannelAccountRequest
+	(*UpdateChannelAccountRequest)(nil),      // 7: messaging.v1.UpdateChannelAccountRequest
+	(*DeleteChannelAccountRequest)(nil),      // 8: messaging.v1.DeleteChannelAccountRequest
+	(*ListChannelAccountsRequest)(nil),       // 9: messaging.v1.ListChannelAccountsRequest
+	(*CreateSignatureRequest)(nil),           // 10: messaging.v1.CreateSignatureRequest
+	(*UpdateSignatureRequest)(nil),           // 11: messaging.v1.UpdateSignatureRequest
+	(*DeleteSignatureRequest)(nil),           // 12: messaging.v1.DeleteSignatureRequest
+	(*ListSignaturesRequest)(nil),            // 13: messaging.v1.ListSignaturesRequest
+	(*CreateTemplateRequest)(nil),            // 14: messaging.v1.CreateTemplateRequest
+	(*UpdateTemplateRequest)(nil),            // 15: messaging.v1.UpdateTemplateRequest
+	(*DeleteTemplateRequest)(nil),            // 16: messaging.v1.DeleteTemplateRequest
+	(*ListTemplatesRequest)(nil),             // 17: messaging.v1.ListTemplatesRequest
+	(*CreatePolicyRequest)(nil),              // 18: messaging.v1.CreatePolicyRequest
+	(*UpdatePolicyRequest)(nil),              // 19: messaging.v1.UpdatePolicyRequest
+	(*DeletePolicyRequest)(nil),              // 20: messaging.v1.DeletePolicyRequest
+	(*ListPoliciesRequest)(nil),              // 21: messaging.v1.ListPoliciesRequest
+	(*CreateTenantConfigResponse)(nil),       // 22: messaging.v1.CreateTenantConfigResponse
+	(*GetTenantConfigResponse)(nil),          // 23: messaging.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigResponse)(nil),       // 24: messaging.v1.UpdateTenantConfigResponse
+	(*RotateTenantConfigSecretResponse)(nil), // 25: messaging.v1.RotateTenantConfigSecretResponse
+	(*ListTenantConfigsResponse)(nil),        // 26: messaging.v1.ListTenantConfigsResponse
+	(*emptypb.Empty)(nil),                    // 27: google.protobuf.Empty
+	(*CreateChannelAccountResponse)(nil),     // 28: messaging.v1.CreateChannelAccountResponse
+	(*UpdateChannelAccountResponse)(nil),     // 29: messaging.v1.UpdateChannelAccountResponse
+	(*ListChannelAccountsResponse)(nil),      // 30: messaging.v1.ListChannelAccountsResponse
+	(*CreateSignatureResponse)(nil),          // 31: messaging.v1.CreateSignatureResponse
+	(*UpdateSignatureResponse)(nil),          // 32: messaging.v1.UpdateSignatureResponse
+	(*ListSignaturesResponse)(nil),           // 33: messaging.v1.ListSignaturesResponse
+	(*CreateTemplateResponse)(nil),           // 34: messaging.v1.CreateTemplateResponse
+	(*UpdateTemplateResponse)(nil),           // 35: messaging.v1.UpdateTemplateResponse
+	(*ListTemplatesResponse)(nil),            // 36: messaging.v1.ListTemplatesResponse
+	(*CreatePolicyResponse)(nil),             // 37: messaging.v1.CreatePolicyResponse
+	(*UpdatePolicyResponse)(nil),             // 38: messaging.v1.UpdatePolicyResponse
+	(*ListPoliciesResponse)(nil),             // 39: messaging.v1.ListPoliciesResponse
 }
 var file_messaging_v1_admin_service_proto_depIdxs = []int32{
-	0,  // 0: messaging.v1.MessageAdminService.CreateApp:input_type -> messaging.v1.CreateAppRequest
-	1,  // 1: messaging.v1.MessageAdminService.GetApp:input_type -> messaging.v1.GetAppRequest
-	2,  // 2: messaging.v1.MessageAdminService.UpdateApp:input_type -> messaging.v1.UpdateAppRequest
-	3,  // 3: messaging.v1.MessageAdminService.RotateAppSecret:input_type -> messaging.v1.RotateAppSecretRequest
-	4,  // 4: messaging.v1.MessageAdminService.ListApps:input_type -> messaging.v1.ListAppsRequest
-	5,  // 5: messaging.v1.MessageAdminService.DeleteApp:input_type -> messaging.v1.DeleteAppRequest
+	0,  // 0: messaging.v1.MessageAdminService.CreateTenantConfig:input_type -> messaging.v1.CreateTenantConfigRequest
+	1,  // 1: messaging.v1.MessageAdminService.GetTenantConfig:input_type -> messaging.v1.GetTenantConfigRequest
+	2,  // 2: messaging.v1.MessageAdminService.UpdateTenantConfig:input_type -> messaging.v1.UpdateTenantConfigRequest
+	3,  // 3: messaging.v1.MessageAdminService.RotateTenantConfigSecret:input_type -> messaging.v1.RotateTenantConfigSecretRequest
+	4,  // 4: messaging.v1.MessageAdminService.ListTenantConfigs:input_type -> messaging.v1.ListTenantConfigsRequest
+	5,  // 5: messaging.v1.MessageAdminService.DeleteTenantConfig:input_type -> messaging.v1.DeleteTenantConfigRequest
 	6,  // 6: messaging.v1.MessageAdminService.CreateChannelAccount:input_type -> messaging.v1.CreateChannelAccountRequest
 	7,  // 7: messaging.v1.MessageAdminService.UpdateChannelAccount:input_type -> messaging.v1.UpdateChannelAccountRequest
 	8,  // 8: messaging.v1.MessageAdminService.DeleteChannelAccount:input_type -> messaging.v1.DeleteChannelAccountRequest
@@ -128,12 +129,12 @@ var file_messaging_v1_admin_service_proto_depIdxs = []int32{
 	19, // 19: messaging.v1.MessageAdminService.UpdatePolicy:input_type -> messaging.v1.UpdatePolicyRequest
 	20, // 20: messaging.v1.MessageAdminService.DeletePolicy:input_type -> messaging.v1.DeletePolicyRequest
 	21, // 21: messaging.v1.MessageAdminService.ListPolicies:input_type -> messaging.v1.ListPoliciesRequest
-	22, // 22: messaging.v1.MessageAdminService.CreateApp:output_type -> messaging.v1.CreateAppResponse
-	23, // 23: messaging.v1.MessageAdminService.GetApp:output_type -> messaging.v1.GetAppResponse
-	24, // 24: messaging.v1.MessageAdminService.UpdateApp:output_type -> messaging.v1.UpdateAppResponse
-	25, // 25: messaging.v1.MessageAdminService.RotateAppSecret:output_type -> messaging.v1.RotateAppSecretResponse
-	26, // 26: messaging.v1.MessageAdminService.ListApps:output_type -> messaging.v1.ListAppsResponse
-	27, // 27: messaging.v1.MessageAdminService.DeleteApp:output_type -> google.protobuf.Empty
+	22, // 22: messaging.v1.MessageAdminService.CreateTenantConfig:output_type -> messaging.v1.CreateTenantConfigResponse
+	23, // 23: messaging.v1.MessageAdminService.GetTenantConfig:output_type -> messaging.v1.GetTenantConfigResponse
+	24, // 24: messaging.v1.MessageAdminService.UpdateTenantConfig:output_type -> messaging.v1.UpdateTenantConfigResponse
+	25, // 25: messaging.v1.MessageAdminService.RotateTenantConfigSecret:output_type -> messaging.v1.RotateTenantConfigSecretResponse
+	26, // 26: messaging.v1.MessageAdminService.ListTenantConfigs:output_type -> messaging.v1.ListTenantConfigsResponse
+	27, // 27: messaging.v1.MessageAdminService.DeleteTenantConfig:output_type -> google.protobuf.Empty
 	28, // 28: messaging.v1.MessageAdminService.CreateChannelAccount:output_type -> messaging.v1.CreateChannelAccountResponse
 	29, // 29: messaging.v1.MessageAdminService.UpdateChannelAccount:output_type -> messaging.v1.UpdateChannelAccountResponse
 	27, // 30: messaging.v1.MessageAdminService.DeleteChannelAccount:output_type -> google.protobuf.Empty

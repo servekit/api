@@ -3342,195 +3342,6 @@
         ]
       }
     },
-    "/api/v1/message/admin/apps": {
-      "get": {
-        "operationId": "MessageListApps",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1ListAppsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "post": {
-        "operationId": "MessageCreateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1CreateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/messagingV1CreateAppRequest"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/message/admin/apps/{id}": {
-      "get": {
-        "operationId": "MessageGetApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1GetAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "delete": {
-        "operationId": "MessageDeleteApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      },
-      "put": {
-        "operationId": "MessageUpdateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1UpdateAppResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceMessageUpdateAppBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/message/admin/apps/{id}/secret:rotate": {
-      "post": {
-        "operationId": "MessageRotateAppSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1RotateAppSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceMessageRotateAppSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/message/admin/policies": {
       "get": {
         "operationId": "ListPolicies",
@@ -3932,6 +3743,195 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestkitServiceMessageUpdateTemplateBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/tenant-configs": {
+      "get": {
+        "operationId": "MessageListTenantConfigs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTenantConfigsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "MessageCreateTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateTenantConfigRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/tenant-configs/{id}": {
+      "get": {
+        "operationId": "MessageGetTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "delete": {
+        "operationId": "MessageDeleteTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "put": {
+        "operationId": "MessageUpdateTenantConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateTenantConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageUpdateTenantConfigBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/message/admin/tenant-configs/{id}/secret:rotate": {
+      "post": {
+        "operationId": "MessageRotateTenantConfigSecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RotateTenantConfigSecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServiceMessageRotateTenantConfigSecretBody"
             }
           }
         ],
@@ -8374,29 +8374,9 @@
       },
       "description": "UpdateAppRequest edits mutable fields; app_key is immutable. Absent\noptional fields keep their current values."
     },
-    "TestkitServiceMessageRotateAppSecretBody": {
+    "TestkitServiceMessageRotateTenantConfigSecretBody": {
       "type": "object",
-      "description": "RotateAppSecret mints a new app_secret. The old secret becomes invalid\nimmediately; the new plaintext is returned exactly once."
-    },
-    "TestkitServiceMessageUpdateAppBody": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "disabled": {
-          "type": "boolean"
-        },
-        "smsDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "emailDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        }
-      },
-      "description": "UpdateAppRequest tweaks app metadata. app_key is immutable; absent\noptional fields keep their current values."
+      "description": "RotateTenantConfigSecret mints a new app_secret. The old secret becomes\ninvalid immediately; the new plaintext is returned exactly once."
     },
     "TestkitServiceMessageUpdateChannelAccountBody": {
       "type": "object",
@@ -8466,6 +8446,26 @@
         }
       },
       "description": "UpdateTemplateRequest fully replaces the template definition (name,\nparams, content; channel/kind must stay compatible with existing\npolicies — changing them requires delete + recreate). template.id is\noverridden by the top-level id; template.app_id is ignored."
+    },
+    "TestkitServiceMessageUpdateTenantConfigBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "UpdateTenantConfigRequest tweaks config metadata. The row's identity is\nimmutable; absent optional fields keep their current values."
     },
     "TestkitServicePortalAddTenantMemberBody": {
       "type": "object",
@@ -8811,81 +8811,6 @@
       "properties": {
         "app": {
           "$ref": "#/definitions/v1LicenseAppInfo"
-        }
-      }
-    },
-    "messagingV1CreateAppRequest": {
-      "type": "object",
-      "properties": {
-        "appKey": {
-          "type": "string",
-          "description": "app_key optionally carries a caller-chosen slug (e.g. \"testkit\").\nEmpty = the server generates one (\"app_\" + 8 random chars). Unique and\nimmutable after creation either way."
-        },
-        "name": {
-          "type": "string"
-        },
-        "smsDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "emailDailyLimit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "tenantKey": {
-          "type": "string",
-          "description": "tenant_key optionally maps the app to a tenant (phase ③). Empty = the\napp_key literal (the legacy→tenant fallback value). Unique across apps."
-        }
-      }
-    },
-    "messagingV1CreateAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1MessageAppInfo"
-        },
-        "appSecret": {
-          "type": "string"
-        }
-      },
-      "description": "CreateAppResponse returns the created app plus the plaintext app_secret\nexactly once — it is not recoverable later (rotate to re-issue)."
-    },
-    "messagingV1GetAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1MessageAppInfo"
-        }
-      }
-    },
-    "messagingV1ListAppsResponse": {
-      "type": "object",
-      "properties": {
-        "apps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1MessageAppInfo"
-          }
-        }
-      }
-    },
-    "messagingV1RotateAppSecretResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1MessageAppInfo"
-        },
-        "appSecret": {
-          "type": "string"
-        }
-      }
-    },
-    "messagingV1UpdateAppResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1MessageAppInfo"
         }
       }
     },
@@ -10572,6 +10497,39 @@
         }
       }
     },
+    "v1CreateTenantConfigRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "name is the config row's display label."
+        },
+        "smsDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "emailDailyLimit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key (the stamp follows the\ninjection, never the body); the PLATFORM cross-view needs it for a\nprovisioning create. Unique across rows (one config row per tenant);\nwhen empty on the cross-view the server-minted app key literal is the\nlegacy→tenant fallback value."
+        }
+      }
+    },
+    "v1CreateTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        },
+        "appSecret": {
+          "type": "string"
+        }
+      },
+      "description": "CreateTenantConfigResponse returns the created config row plus the\nplaintext app_secret exactly once — it is not recoverable later (rotate\nto re-issue)."
+    },
     "v1CreateUserRequest": {
       "type": "object",
       "properties": {
@@ -11626,6 +11584,14 @@
         }
       }
     },
+    "v1GetTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        }
+      }
+    },
     "v1GrantModuleResponse": {
       "type": "object",
       "properties": {
@@ -12527,6 +12493,18 @@
         }
       }
     },
+    "v1ListTenantConfigsResponse": {
+      "type": "object",
+      "properties": {
+        "configs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MessageTenantConfigInfo"
+          }
+        }
+      }
+    },
     "v1ListTenantMembersResponse": {
       "type": "object",
       "properties": {
@@ -12746,7 +12724,18 @@
       },
       "description": "LoginRequest is the curated frontend DTO for login. Field names line up 1:1\nwith user-service LoginRequest; the auth mapping layer int-casts the enums."
     },
-    "v1MessageAppInfo": {
+    "v1MessageStatus": {
+      "type": "string",
+      "enum": [
+        "MESSAGE_STATUS_UNSPECIFIED",
+        "MESSAGE_STATUS_PENDING",
+        "MESSAGE_STATUS_SENT",
+        "MESSAGE_STATUS_FAILED"
+      ],
+      "default": "MESSAGE_STATUS_UNSPECIFIED",
+      "description": "MessageStatus represents the delivery status of a message.\n\n - MESSAGE_STATUS_UNSPECIFIED: UNSPECIFIED — never persisted.\n - MESSAGE_STATUS_PENDING: PENDING — send in progress. Reserved for future async-send flow;\nthe sync flow does NOT write PENDING (currently unused).\n - MESSAGE_STATUS_SENT: SENT — the vendor synchronously accepted the send request.\nFor SMS: vendor API returned OK; does NOT mean handset received\n         (async delivery is not tracked yet).\nFor email: SMTP server accepted the message.\n - MESSAGE_STATUS_FAILED: FAILED — the vendor rejected the request, network/transport failed,\nor context was cancelled. error_message carries the last error."
+    },
+    "v1MessageTenantConfigInfo": {
       "type": "object",
       "properties": {
         "id": {
@@ -12790,18 +12779,7 @@
           "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties."
         }
       },
-      "description": "MessageAppInfo is a registered calling application (the x-app-key\nidentity). Apps own policies; quotas and idempotency namespaces hang off\nthe app_key."
-    },
-    "v1MessageStatus": {
-      "type": "string",
-      "enum": [
-        "MESSAGE_STATUS_UNSPECIFIED",
-        "MESSAGE_STATUS_PENDING",
-        "MESSAGE_STATUS_SENT",
-        "MESSAGE_STATUS_FAILED"
-      ],
-      "default": "MESSAGE_STATUS_UNSPECIFIED",
-      "description": "MessageStatus represents the delivery status of a message.\n\n - MESSAGE_STATUS_UNSPECIFIED: UNSPECIFIED — never persisted.\n - MESSAGE_STATUS_PENDING: PENDING — send in progress. Reserved for future async-send flow;\nthe sync flow does NOT write PENDING (currently unused).\n - MESSAGE_STATUS_SENT: SENT — the vendor synchronously accepted the send request.\nFor SMS: vendor API returned OK; does NOT mean handset received\n         (async delivery is not tracked yet).\nFor email: SMTP server accepted the message.\n - MESSAGE_STATUS_FAILED: FAILED — the vendor rejected the request, network/transport failed,\nor context was cancelled. error_message carries the last error."
+      "description": "MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nMessageAppInfo). The row keeps its calling-application identity: app_key\nis the x-app-key credential, apps own policies, and quotas and\nidempotency namespaces hang off the app_key."
     },
     "v1MiniProgramLoginRequest": {
       "type": "object",
@@ -13471,6 +13449,17 @@
         "secret": {
           "type": "string",
           "description": "new sk_…, shown once — never listed or echoed again."
+        }
+      }
+    },
+    "v1RotateTenantConfigSecretResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
+        },
+        "appSecret": {
+          "type": "string"
         }
       }
     },
@@ -14548,6 +14537,14 @@
       "properties": {
         "template": {
           "$ref": "#/definitions/v1TemplateInfo"
+        }
+      }
+    },
+    "v1UpdateTenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1MessageTenantConfigInfo"
         }
       }
     },

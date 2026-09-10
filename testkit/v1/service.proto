@@ -574,36 +574,36 @@ service TestkitService {
     option (google.api.http) = {get: "/api/v1/region-codes"};
   }
 
-  // ---- Message admin (platform resources: apps / channel accounts /
-  // signatures / templates / policies; 1:1 forwards to
-  // message-service MessageAdminService) ----
+  // ---- Message admin (platform resources: tenant configs / channel
+  // accounts / signatures / templates / policies; 1:1 forwards to
+  // message-service MessageAdminService — phase ④ T6 tenant rename) ----
 
-  rpc MessageCreateApp(messaging.v1.CreateAppRequest) returns (messaging.v1.CreateAppResponse) {
+  rpc MessageCreateTenantConfig(messaging.v1.CreateTenantConfigRequest) returns (messaging.v1.CreateTenantConfigResponse) {
     option (google.api.http) = {
-      post: "/api/v1/message/admin/apps"
+      post: "/api/v1/message/admin/tenant-configs"
       body: "*"
     };
   }
-  rpc MessageGetApp(messaging.v1.GetAppRequest) returns (messaging.v1.GetAppResponse) {
-    option (google.api.http) = {get: "/api/v1/message/admin/apps/{id}"};
+  rpc MessageGetTenantConfig(messaging.v1.GetTenantConfigRequest) returns (messaging.v1.GetTenantConfigResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/tenant-configs/{id}"};
   }
-  rpc MessageUpdateApp(messaging.v1.UpdateAppRequest) returns (messaging.v1.UpdateAppResponse) {
+  rpc MessageUpdateTenantConfig(messaging.v1.UpdateTenantConfigRequest) returns (messaging.v1.UpdateTenantConfigResponse) {
     option (google.api.http) = {
-      put: "/api/v1/message/admin/apps/{id}"
+      put: "/api/v1/message/admin/tenant-configs/{id}"
       body: "*"
     };
   }
-  rpc MessageRotateAppSecret(messaging.v1.RotateAppSecretRequest) returns (messaging.v1.RotateAppSecretResponse) {
+  rpc MessageRotateTenantConfigSecret(messaging.v1.RotateTenantConfigSecretRequest) returns (messaging.v1.RotateTenantConfigSecretResponse) {
     option (google.api.http) = {
-      post: "/api/v1/message/admin/apps/{id}/secret:rotate"
+      post: "/api/v1/message/admin/tenant-configs/{id}/secret:rotate"
       body: "*"
     };
   }
-  rpc MessageListApps(messaging.v1.ListAppsRequest) returns (messaging.v1.ListAppsResponse) {
-    option (google.api.http) = {get: "/api/v1/message/admin/apps"};
+  rpc MessageListTenantConfigs(messaging.v1.ListTenantConfigsRequest) returns (messaging.v1.ListTenantConfigsResponse) {
+    option (google.api.http) = {get: "/api/v1/message/admin/tenant-configs"};
   }
-  rpc MessageDeleteApp(messaging.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/message/admin/apps/{id}"};
+  rpc MessageDeleteTenantConfig(messaging.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/message/admin/tenant-configs/{id}"};
   }
 
   rpc MessageCreateChannelAccount(messaging.v1.CreateChannelAccountRequest) returns (messaging.v1.CreateChannelAccountResponse) {

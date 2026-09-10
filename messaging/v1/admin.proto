@@ -9,10 +9,11 @@ package messaging.v1;
 import "buf/validate/validate.proto";
 import "messaging/v1/enums.proto";
 
-// MessageAppInfo is a registered calling application (the x-app-key
-// identity). Apps own policies; quotas and idempotency namespaces hang off
-// the app_key.
-message MessageAppInfo {
+// MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
+// MessageAppInfo). The row keeps its calling-application identity: app_key
+// is the x-app-key credential, apps own policies, and quotas and
+// idempotency namespaces hang off the app_key.
+message MessageTenantConfigInfo {
   int64 id = 1;
   // app_key is the public credential identifier passed in x-app-key
   // metadata (e.g. "testkit"). Unique.

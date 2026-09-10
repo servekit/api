@@ -24,36 +24,37 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type CreateAppRequest struct {
+type CreateTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key optionally carries a caller-chosen slug (e.g. "testkit").
-	// Empty = the server generates one ("app_" + 8 random chars). Unique and
-	// immutable after creation either way.
-	AppKey          string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// name is the config row's display label.
 	Name            string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	SmsDailyLimit   int64  `protobuf:"varint,3,opt,name=sms_daily_limit,json=smsDailyLimit,proto3" json:"sms_daily_limit,omitempty"`
 	EmailDailyLimit int64  `protobuf:"varint,4,opt,name=email_daily_limit,json=emailDailyLimit,proto3" json:"email_daily_limit,omitempty"`
-	// tenant_key optionally maps the app to a tenant (phase ③). Empty = the
-	// app_key literal (the legacy→tenant fallback value). Unique across apps.
+	// tenant_key names the tenant this config row belongs to. A scoped
+	// caller is clamped to the injected key (the stamp follows the
+	// injection, never the body); the PLATFORM cross-view needs it for a
+	// provisioning create. Unique across rows (one config row per tenant);
+	// when empty on the cross-view the server-minted app key literal is the
+	// legacy→tenant fallback value.
 	TenantKey     string `protobuf:"bytes,5,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppRequest) Reset() {
-	*x = CreateAppRequest{}
+func (x *CreateTenantConfigRequest) Reset() {
+	*x = CreateTenantConfigRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppRequest) String() string {
+func (x *CreateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppRequest) ProtoMessage() {}
+func (*CreateTenantConfigRequest) ProtoMessage() {}
 
-func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -65,70 +66,64 @@ func (x *CreateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppRequest.ProtoReflect.Descriptor instead.
-func (*CreateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateAppRequest) GetAppKey() string {
-	if x != nil {
-		return x.AppKey
-	}
-	return ""
-}
-
-func (x *CreateAppRequest) GetName() string {
+func (x *CreateTenantConfigRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateAppRequest) GetSmsDailyLimit() int64 {
+func (x *CreateTenantConfigRequest) GetSmsDailyLimit() int64 {
 	if x != nil {
 		return x.SmsDailyLimit
 	}
 	return 0
 }
 
-func (x *CreateAppRequest) GetEmailDailyLimit() int64 {
+func (x *CreateTenantConfigRequest) GetEmailDailyLimit() int64 {
 	if x != nil {
 		return x.EmailDailyLimit
 	}
 	return 0
 }
 
-func (x *CreateAppRequest) GetTenantKey() string {
+func (x *CreateTenantConfigRequest) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
 	}
 	return ""
 }
 
-// CreateAppResponse returns the created app plus the plaintext app_secret
-// exactly once — it is not recoverable later (rotate to re-issue).
-type CreateAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *MessageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	AppSecret     string                 `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+// CreateTenantConfigResponse returns the created config row plus the
+// plaintext app_secret exactly once — it is not recoverable later (rotate
+// to re-issue).
+type CreateTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	AppSecret     string                   `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateAppResponse) Reset() {
-	*x = CreateAppResponse{}
+func (x *CreateTenantConfigResponse) Reset() {
+	*x = CreateTenantConfigResponse{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateAppResponse) String() string {
+func (x *CreateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateAppResponse) ProtoMessage() {}
+func (*CreateTenantConfigResponse) ProtoMessage() {}
 
-func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *CreateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -140,46 +135,46 @@ func (x *CreateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateAppResponse.ProtoReflect.Descriptor instead.
-func (*CreateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*CreateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateAppResponse) GetApp() *MessageAppInfo {
+func (x *CreateTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *CreateAppResponse) GetAppSecret() string {
+func (x *CreateTenantConfigResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-type GetAppRequest struct {
+type GetTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppRequest) Reset() {
-	*x = GetAppRequest{}
+func (x *GetTenantConfigRequest) Reset() {
+	*x = GetTenantConfigRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppRequest) String() string {
+func (x *GetTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppRequest) ProtoMessage() {}
+func (*GetTenantConfigRequest) ProtoMessage() {}
 
-func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -191,39 +186,39 @@ func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
-func (*GetAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetAppRequest) GetId() int64 {
+func (x *GetTenantConfigRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-type GetAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *MessageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type GetTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAppResponse) Reset() {
-	*x = GetAppResponse{}
+func (x *GetTenantConfigResponse) Reset() {
+	*x = GetTenantConfigResponse{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAppResponse) String() string {
+func (x *GetTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAppResponse) ProtoMessage() {}
+func (*GetTenantConfigResponse) ProtoMessage() {}
 
-func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
+func (x *GetTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -235,21 +230,21 @@ func (x *GetAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAppResponse.ProtoReflect.Descriptor instead.
-func (*GetAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*GetTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetAppResponse) GetApp() *MessageAppInfo {
+func (x *GetTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-// UpdateAppRequest tweaks app metadata. app_key is immutable; absent
-// optional fields keep their current values.
-type UpdateAppRequest struct {
+// UpdateTenantConfigRequest tweaks config metadata. The row's identity is
+// immutable; absent optional fields keep their current values.
+type UpdateTenantConfigRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name            *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
@@ -260,20 +255,20 @@ type UpdateAppRequest struct {
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *UpdateAppRequest) Reset() {
-	*x = UpdateAppRequest{}
+func (x *UpdateTenantConfigRequest) Reset() {
+	*x = UpdateTenantConfigRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppRequest) String() string {
+func (x *UpdateTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppRequest) ProtoMessage() {}
+func (*UpdateTenantConfigRequest) ProtoMessage() {}
 
-func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -285,67 +280,67 @@ func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
-func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UpdateAppRequest) GetId() int64 {
+func (x *UpdateTenantConfigRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetName() string {
+func (x *UpdateTenantConfigRequest) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
 	}
 	return ""
 }
 
-func (x *UpdateAppRequest) GetDisabled() bool {
+func (x *UpdateTenantConfigRequest) GetDisabled() bool {
 	if x != nil && x.Disabled != nil {
 		return *x.Disabled
 	}
 	return false
 }
 
-func (x *UpdateAppRequest) GetSmsDailyLimit() int64 {
+func (x *UpdateTenantConfigRequest) GetSmsDailyLimit() int64 {
 	if x != nil && x.SmsDailyLimit != nil {
 		return *x.SmsDailyLimit
 	}
 	return 0
 }
 
-func (x *UpdateAppRequest) GetEmailDailyLimit() int64 {
+func (x *UpdateTenantConfigRequest) GetEmailDailyLimit() int64 {
 	if x != nil && x.EmailDailyLimit != nil {
 		return *x.EmailDailyLimit
 	}
 	return 0
 }
 
-type UpdateAppResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *MessageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+type UpdateTenantConfigResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateAppResponse) Reset() {
-	*x = UpdateAppResponse{}
+func (x *UpdateTenantConfigResponse) Reset() {
+	*x = UpdateTenantConfigResponse{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateAppResponse) String() string {
+func (x *UpdateTenantConfigResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateAppResponse) ProtoMessage() {}
+func (*UpdateTenantConfigResponse) ProtoMessage() {}
 
-func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateTenantConfigResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -357,41 +352,41 @@ func (x *UpdateAppResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateAppResponse.ProtoReflect.Descriptor instead.
-func (*UpdateAppResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTenantConfigResponse.ProtoReflect.Descriptor instead.
+func (*UpdateTenantConfigResponse) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *UpdateAppResponse) GetApp() *MessageAppInfo {
+func (x *UpdateTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-// RotateAppSecret mints a new app_secret. The old secret becomes invalid
-// immediately; the new plaintext is returned exactly once.
-type RotateAppSecretRequest struct {
+// RotateTenantConfigSecret mints a new app_secret. The old secret becomes
+// invalid immediately; the new plaintext is returned exactly once.
+type RotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretRequest) Reset() {
-	*x = RotateAppSecretRequest{}
+func (x *RotateTenantConfigSecretRequest) Reset() {
+	*x = RotateTenantConfigSecretRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretRequest) String() string {
+func (x *RotateTenantConfigSecretRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretRequest) ProtoMessage() {}
+func (*RotateTenantConfigSecretRequest) ProtoMessage() {}
 
-func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -403,40 +398,40 @@ func (x *RotateAppSecretRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretRequest.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *RotateAppSecretRequest) GetId() int64 {
+func (x *RotateTenantConfigSecretRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-type RotateAppSecretResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *MessageAppInfo        `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	AppSecret     string                 `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+type RotateTenantConfigSecretResponse struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	AppSecret     string                   `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RotateAppSecretResponse) Reset() {
-	*x = RotateAppSecretResponse{}
+func (x *RotateTenantConfigSecretResponse) Reset() {
+	*x = RotateTenantConfigSecretResponse{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RotateAppSecretResponse) String() string {
+func (x *RotateTenantConfigSecretResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RotateAppSecretResponse) ProtoMessage() {}
+func (*RotateTenantConfigSecretResponse) ProtoMessage() {}
 
-func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
+func (x *RotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -448,45 +443,45 @@ func (x *RotateAppSecretResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RotateAppSecretResponse.ProtoReflect.Descriptor instead.
-func (*RotateAppSecretResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
+func (*RotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *RotateAppSecretResponse) GetApp() *MessageAppInfo {
+func (x *RotateTenantConfigSecretResponse) GetConfig() *MessageTenantConfigInfo {
 	if x != nil {
-		return x.App
+		return x.Config
 	}
 	return nil
 }
 
-func (x *RotateAppSecretResponse) GetAppSecret() string {
+func (x *RotateTenantConfigSecretResponse) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
 	}
 	return ""
 }
 
-type ListAppsRequest struct {
+type ListTenantConfigsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsRequest) Reset() {
-	*x = ListAppsRequest{}
+func (x *ListTenantConfigsRequest) Reset() {
+	*x = ListTenantConfigsRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsRequest) String() string {
+func (x *ListTenantConfigsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsRequest) ProtoMessage() {}
+func (*ListTenantConfigsRequest) ProtoMessage() {}
 
-func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -498,32 +493,32 @@ func (x *ListAppsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsRequest.ProtoReflect.Descriptor instead.
-func (*ListAppsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsRequest.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{8}
 }
 
-type ListAppsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*MessageAppInfo      `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+type ListTenantConfigsResponse struct {
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Configs       []*MessageTenantConfigInfo `protobuf:"bytes,1,rep,name=configs,proto3" json:"configs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListAppsResponse) Reset() {
-	*x = ListAppsResponse{}
+func (x *ListTenantConfigsResponse) Reset() {
+	*x = ListTenantConfigsResponse{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListAppsResponse) String() string {
+func (x *ListTenantConfigsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListAppsResponse) ProtoMessage() {}
+func (*ListTenantConfigsResponse) ProtoMessage() {}
 
-func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
+func (x *ListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -535,41 +530,41 @@ func (x *ListAppsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListAppsResponse.ProtoReflect.Descriptor instead.
-func (*ListAppsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListTenantConfigsResponse.ProtoReflect.Descriptor instead.
+func (*ListTenantConfigsResponse) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListAppsResponse) GetApps() []*MessageAppInfo {
+func (x *ListTenantConfigsResponse) GetConfigs() []*MessageTenantConfigInfo {
 	if x != nil {
-		return x.Apps
+		return x.Configs
 	}
 	return nil
 }
 
-// DeleteAppRequest soft-deletes the app. Sends fail immediately; policies
-// are kept (restore re-activates them).
-type DeleteAppRequest struct {
+// DeleteTenantConfigRequest soft-deletes the tenant config. Sends fail
+// immediately; policies are kept (restore re-activates them).
+type DeleteTenantConfigRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteAppRequest) Reset() {
-	*x = DeleteAppRequest{}
+func (x *DeleteTenantConfigRequest) Reset() {
+	*x = DeleteTenantConfigRequest{}
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteAppRequest) String() string {
+func (x *DeleteTenantConfigRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteAppRequest) ProtoMessage() {}
+func (*DeleteTenantConfigRequest) ProtoMessage() {}
 
-func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
+func (x *DeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -581,12 +576,12 @@ func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
-func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteTenantConfigRequest.ProtoReflect.Descriptor instead.
+func (*DeleteTenantConfigRequest) Descriptor() ([]byte, []int) {
 	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *DeleteAppRequest) GetId() int64 {
+func (x *DeleteTenantConfigRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
@@ -2183,24 +2178,23 @@ var File_messaging_v1_admin_request_response_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\n" +
-	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xe9\x01\n" +
-	"\x10CreateAppRequest\x129\n" +
-	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xb7\x01\n" +
+	"\x19CreateTenantConfigRequest\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12&\n" +
 	"\x0fsms_daily_limit\x18\x03 \x01(\x03R\rsmsDailyLimit\x12*\n" +
 	"\x11email_daily_limit\x18\x04 \x01(\x03R\x0femailDailyLimit\x12&\n" +
 	"\n" +
-	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"b\n" +
-	"\x11CreateAppResponse\x12.\n" +
-	"\x03app\x18\x01 \x01(\v2\x1c.messaging.v1.MessageAppInfoR\x03app\x12\x1d\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"z\n" +
+	"\x1aCreateTenantConfigResponse\x12=\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"(\n" +
-	"\rGetAppRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"@\n" +
-	"\x0eGetAppResponse\x12.\n" +
-	"\x03app\x18\x01 \x01(\v2\x1c.messaging.v1.MessageAppInfoR\x03app\"\x8f\x02\n" +
-	"\x10UpdateAppRequest\x12\x17\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"1\n" +
+	"\x16GetTenantConfigRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"X\n" +
+	"\x17GetTenantConfigResponse\x12=\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\"\x98\x02\n" +
+	"\x19UpdateTenantConfigRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
@@ -2210,19 +2204,19 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x05_nameB\v\n" +
 	"\t_disabledB\x12\n" +
 	"\x10_sms_daily_limitB\x14\n" +
-	"\x12_email_daily_limit\"C\n" +
-	"\x11UpdateAppResponse\x12.\n" +
-	"\x03app\x18\x01 \x01(\v2\x1c.messaging.v1.MessageAppInfoR\x03app\"1\n" +
-	"\x16RotateAppSecretRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"h\n" +
-	"\x17RotateAppSecretResponse\x12.\n" +
-	"\x03app\x18\x01 \x01(\v2\x1c.messaging.v1.MessageAppInfoR\x03app\x12\x1d\n" +
+	"\x12_email_daily_limit\"[\n" +
+	"\x1aUpdateTenantConfigResponse\x12=\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\":\n" +
+	"\x1fRotateTenantConfigSecretRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\x80\x01\n" +
+	" RotateTenantConfigSecretResponse\x12=\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x11\n" +
-	"\x0fListAppsRequest\"D\n" +
-	"\x10ListAppsResponse\x120\n" +
-	"\x04apps\x18\x01 \x03(\v2\x1c.messaging.v1.MessageAppInfoR\x04apps\"+\n" +
-	"\x10DeleteAppRequest\x12\x17\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x1a\n" +
+	"\x18ListTenantConfigsRequest\"\\\n" +
+	"\x19ListTenantConfigsResponse\x12?\n" +
+	"\aconfigs\x18\x01 \x03(\v2%.messaging.v1.MessageTenantConfigInfoR\aconfigs\"4\n" +
+	"\x19DeleteTenantConfigRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xed\x01\n" +
 	"\x1bCreateChannelAccountRequest\x121\n" +
 	"\x04name\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x182\x16^[a-z][a-z0-9-]{0,63}$R\x04name\x12 \n" +
@@ -2343,64 +2337,64 @@ func file_messaging_v1_admin_request_response_proto_rawDescGZIP() []byte {
 
 var file_messaging_v1_admin_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
 var file_messaging_v1_admin_request_response_proto_goTypes = []any{
-	(*CreateAppRequest)(nil),             // 0: messaging.v1.CreateAppRequest
-	(*CreateAppResponse)(nil),            // 1: messaging.v1.CreateAppResponse
-	(*GetAppRequest)(nil),                // 2: messaging.v1.GetAppRequest
-	(*GetAppResponse)(nil),               // 3: messaging.v1.GetAppResponse
-	(*UpdateAppRequest)(nil),             // 4: messaging.v1.UpdateAppRequest
-	(*UpdateAppResponse)(nil),            // 5: messaging.v1.UpdateAppResponse
-	(*RotateAppSecretRequest)(nil),       // 6: messaging.v1.RotateAppSecretRequest
-	(*RotateAppSecretResponse)(nil),      // 7: messaging.v1.RotateAppSecretResponse
-	(*ListAppsRequest)(nil),              // 8: messaging.v1.ListAppsRequest
-	(*ListAppsResponse)(nil),             // 9: messaging.v1.ListAppsResponse
-	(*DeleteAppRequest)(nil),             // 10: messaging.v1.DeleteAppRequest
-	(*CreateChannelAccountRequest)(nil),  // 11: messaging.v1.CreateChannelAccountRequest
-	(*CreateChannelAccountResponse)(nil), // 12: messaging.v1.CreateChannelAccountResponse
-	(*UpdateChannelAccountRequest)(nil),  // 13: messaging.v1.UpdateChannelAccountRequest
-	(*UpdateChannelAccountResponse)(nil), // 14: messaging.v1.UpdateChannelAccountResponse
-	(*DeleteChannelAccountRequest)(nil),  // 15: messaging.v1.DeleteChannelAccountRequest
-	(*ListChannelAccountsRequest)(nil),   // 16: messaging.v1.ListChannelAccountsRequest
-	(*ListChannelAccountsResponse)(nil),  // 17: messaging.v1.ListChannelAccountsResponse
-	(*CreateSignatureRequest)(nil),       // 18: messaging.v1.CreateSignatureRequest
-	(*CreateSignatureResponse)(nil),      // 19: messaging.v1.CreateSignatureResponse
-	(*UpdateSignatureRequest)(nil),       // 20: messaging.v1.UpdateSignatureRequest
-	(*AccountIds)(nil),                   // 21: messaging.v1.AccountIds
-	(*UpdateSignatureResponse)(nil),      // 22: messaging.v1.UpdateSignatureResponse
-	(*DeleteSignatureRequest)(nil),       // 23: messaging.v1.DeleteSignatureRequest
-	(*ListSignaturesRequest)(nil),        // 24: messaging.v1.ListSignaturesRequest
-	(*ListSignaturesResponse)(nil),       // 25: messaging.v1.ListSignaturesResponse
-	(*CreateTemplateRequest)(nil),        // 26: messaging.v1.CreateTemplateRequest
-	(*CreateTemplateResponse)(nil),       // 27: messaging.v1.CreateTemplateResponse
-	(*UpdateTemplateRequest)(nil),        // 28: messaging.v1.UpdateTemplateRequest
-	(*UpdateTemplateResponse)(nil),       // 29: messaging.v1.UpdateTemplateResponse
-	(*DeleteTemplateRequest)(nil),        // 30: messaging.v1.DeleteTemplateRequest
-	(*ListTemplatesRequest)(nil),         // 31: messaging.v1.ListTemplatesRequest
-	(*ListTemplatesResponse)(nil),        // 32: messaging.v1.ListTemplatesResponse
-	(*PolicyScene)(nil),                  // 33: messaging.v1.PolicyScene
-	(*CreatePolicyRequest)(nil),          // 34: messaging.v1.CreatePolicyRequest
-	(*CreatePolicyResponse)(nil),         // 35: messaging.v1.CreatePolicyResponse
-	(*UpdatePolicyRequest)(nil),          // 36: messaging.v1.UpdatePolicyRequest
-	(*UpdatePolicyResponse)(nil),         // 37: messaging.v1.UpdatePolicyResponse
-	(*DeletePolicyRequest)(nil),          // 38: messaging.v1.DeletePolicyRequest
-	(*ListPoliciesRequest)(nil),          // 39: messaging.v1.ListPoliciesRequest
-	(*ListPoliciesResponse)(nil),         // 40: messaging.v1.ListPoliciesResponse
-	(*MessageAppInfo)(nil),               // 41: messaging.v1.MessageAppInfo
-	(*ChannelAccountCredentials)(nil),    // 42: messaging.v1.ChannelAccountCredentials
-	(*ChannelAccountInfo)(nil),           // 43: messaging.v1.ChannelAccountInfo
-	(*SignatureInfo)(nil),                // 44: messaging.v1.SignatureInfo
-	(*TemplateInfo)(nil),                 // 45: messaging.v1.TemplateInfo
-	(TemplateChannel)(0),                 // 46: messaging.v1.TemplateChannel
-	(EmailScene)(0),                      // 47: messaging.v1.EmailScene
-	(SmsScene)(0),                        // 48: messaging.v1.SmsScene
-	(*RouteRule)(nil),                    // 49: messaging.v1.RouteRule
-	(*PolicyInfo)(nil),                   // 50: messaging.v1.PolicyInfo
+	(*CreateTenantConfigRequest)(nil),        // 0: messaging.v1.CreateTenantConfigRequest
+	(*CreateTenantConfigResponse)(nil),       // 1: messaging.v1.CreateTenantConfigResponse
+	(*GetTenantConfigRequest)(nil),           // 2: messaging.v1.GetTenantConfigRequest
+	(*GetTenantConfigResponse)(nil),          // 3: messaging.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigRequest)(nil),        // 4: messaging.v1.UpdateTenantConfigRequest
+	(*UpdateTenantConfigResponse)(nil),       // 5: messaging.v1.UpdateTenantConfigResponse
+	(*RotateTenantConfigSecretRequest)(nil),  // 6: messaging.v1.RotateTenantConfigSecretRequest
+	(*RotateTenantConfigSecretResponse)(nil), // 7: messaging.v1.RotateTenantConfigSecretResponse
+	(*ListTenantConfigsRequest)(nil),         // 8: messaging.v1.ListTenantConfigsRequest
+	(*ListTenantConfigsResponse)(nil),        // 9: messaging.v1.ListTenantConfigsResponse
+	(*DeleteTenantConfigRequest)(nil),        // 10: messaging.v1.DeleteTenantConfigRequest
+	(*CreateChannelAccountRequest)(nil),      // 11: messaging.v1.CreateChannelAccountRequest
+	(*CreateChannelAccountResponse)(nil),     // 12: messaging.v1.CreateChannelAccountResponse
+	(*UpdateChannelAccountRequest)(nil),      // 13: messaging.v1.UpdateChannelAccountRequest
+	(*UpdateChannelAccountResponse)(nil),     // 14: messaging.v1.UpdateChannelAccountResponse
+	(*DeleteChannelAccountRequest)(nil),      // 15: messaging.v1.DeleteChannelAccountRequest
+	(*ListChannelAccountsRequest)(nil),       // 16: messaging.v1.ListChannelAccountsRequest
+	(*ListChannelAccountsResponse)(nil),      // 17: messaging.v1.ListChannelAccountsResponse
+	(*CreateSignatureRequest)(nil),           // 18: messaging.v1.CreateSignatureRequest
+	(*CreateSignatureResponse)(nil),          // 19: messaging.v1.CreateSignatureResponse
+	(*UpdateSignatureRequest)(nil),           // 20: messaging.v1.UpdateSignatureRequest
+	(*AccountIds)(nil),                       // 21: messaging.v1.AccountIds
+	(*UpdateSignatureResponse)(nil),          // 22: messaging.v1.UpdateSignatureResponse
+	(*DeleteSignatureRequest)(nil),           // 23: messaging.v1.DeleteSignatureRequest
+	(*ListSignaturesRequest)(nil),            // 24: messaging.v1.ListSignaturesRequest
+	(*ListSignaturesResponse)(nil),           // 25: messaging.v1.ListSignaturesResponse
+	(*CreateTemplateRequest)(nil),            // 26: messaging.v1.CreateTemplateRequest
+	(*CreateTemplateResponse)(nil),           // 27: messaging.v1.CreateTemplateResponse
+	(*UpdateTemplateRequest)(nil),            // 28: messaging.v1.UpdateTemplateRequest
+	(*UpdateTemplateResponse)(nil),           // 29: messaging.v1.UpdateTemplateResponse
+	(*DeleteTemplateRequest)(nil),            // 30: messaging.v1.DeleteTemplateRequest
+	(*ListTemplatesRequest)(nil),             // 31: messaging.v1.ListTemplatesRequest
+	(*ListTemplatesResponse)(nil),            // 32: messaging.v1.ListTemplatesResponse
+	(*PolicyScene)(nil),                      // 33: messaging.v1.PolicyScene
+	(*CreatePolicyRequest)(nil),              // 34: messaging.v1.CreatePolicyRequest
+	(*CreatePolicyResponse)(nil),             // 35: messaging.v1.CreatePolicyResponse
+	(*UpdatePolicyRequest)(nil),              // 36: messaging.v1.UpdatePolicyRequest
+	(*UpdatePolicyResponse)(nil),             // 37: messaging.v1.UpdatePolicyResponse
+	(*DeletePolicyRequest)(nil),              // 38: messaging.v1.DeletePolicyRequest
+	(*ListPoliciesRequest)(nil),              // 39: messaging.v1.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil),             // 40: messaging.v1.ListPoliciesResponse
+	(*MessageTenantConfigInfo)(nil),          // 41: messaging.v1.MessageTenantConfigInfo
+	(*ChannelAccountCredentials)(nil),        // 42: messaging.v1.ChannelAccountCredentials
+	(*ChannelAccountInfo)(nil),               // 43: messaging.v1.ChannelAccountInfo
+	(*SignatureInfo)(nil),                    // 44: messaging.v1.SignatureInfo
+	(*TemplateInfo)(nil),                     // 45: messaging.v1.TemplateInfo
+	(TemplateChannel)(0),                     // 46: messaging.v1.TemplateChannel
+	(EmailScene)(0),                          // 47: messaging.v1.EmailScene
+	(SmsScene)(0),                            // 48: messaging.v1.SmsScene
+	(*RouteRule)(nil),                        // 49: messaging.v1.RouteRule
+	(*PolicyInfo)(nil),                       // 50: messaging.v1.PolicyInfo
 }
 var file_messaging_v1_admin_request_response_proto_depIdxs = []int32{
-	41, // 0: messaging.v1.CreateAppResponse.app:type_name -> messaging.v1.MessageAppInfo
-	41, // 1: messaging.v1.GetAppResponse.app:type_name -> messaging.v1.MessageAppInfo
-	41, // 2: messaging.v1.UpdateAppResponse.app:type_name -> messaging.v1.MessageAppInfo
-	41, // 3: messaging.v1.RotateAppSecretResponse.app:type_name -> messaging.v1.MessageAppInfo
-	41, // 4: messaging.v1.ListAppsResponse.apps:type_name -> messaging.v1.MessageAppInfo
+	41, // 0: messaging.v1.CreateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	41, // 1: messaging.v1.GetTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	41, // 2: messaging.v1.UpdateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	41, // 3: messaging.v1.RotateTenantConfigSecretResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	41, // 4: messaging.v1.ListTenantConfigsResponse.configs:type_name -> messaging.v1.MessageTenantConfigInfo
 	42, // 5: messaging.v1.CreateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials
 	43, // 6: messaging.v1.CreateChannelAccountResponse.account:type_name -> messaging.v1.ChannelAccountInfo
 	42, // 7: messaging.v1.UpdateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials

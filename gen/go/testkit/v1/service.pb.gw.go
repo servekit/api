@@ -3943,9 +3943,9 @@ func local_request_TestkitService_ListRegionCodes_0(ctx context.Context, marshal
 	return msg, metadata, err
 }
 
-func request_TestkitService_MessageCreateApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_MessageCreateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.CreateAppRequest
+		protoReq messagingv1.CreateTenantConfigRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -3954,70 +3954,28 @@ func request_TestkitService_MessageCreateApp_0(ctx context.Context, marshaler ru
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.MessageCreateApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.MessageCreateTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_MessageCreateApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_MessageCreateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.CreateAppRequest
+		protoReq messagingv1.CreateTenantConfigRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.MessageCreateApp(ctx, &protoReq)
+	msg, err := server.MessageCreateTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_MessageGetApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_MessageGetTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.GetAppRequest
+		protoReq messagingv1.GetTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
-	}
-	protoReq.Id, err = runtime.Int64(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.MessageGetApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_TestkitService_MessageGetApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq messagingv1.GetAppRequest
-		metadata runtime.ServerMetadata
-		err      error
-	)
-	val, ok := pathParams["id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
-	}
-	protoReq.Id, err = runtime.Int64(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
-	}
-	msg, err := server.MessageGetApp(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_TestkitService_MessageUpdateApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq messagingv1.UpdateAppRequest
-		metadata runtime.ServerMetadata
-		err      error
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	val, ok := pathParams["id"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
@@ -4029,19 +3987,16 @@ func request_TestkitService_MessageUpdateApp_0(ctx context.Context, marshaler ru
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.MessageUpdateApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.MessageGetTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_MessageUpdateApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_MessageGetTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.UpdateAppRequest
+		protoReq messagingv1.GetTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
 	val, ok := pathParams["id"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
@@ -4050,13 +4005,13 @@ func local_request_TestkitService_MessageUpdateApp_0(ctx context.Context, marsha
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
-	msg, err := server.MessageUpdateApp(ctx, &protoReq)
+	msg, err := server.MessageGetTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_MessageRotateAppSecret_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_MessageUpdateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.RotateAppSecretRequest
+		protoReq messagingv1.UpdateTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -4074,13 +4029,13 @@ func request_TestkitService_MessageRotateAppSecret_0(ctx context.Context, marsha
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.MessageRotateAppSecret(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.MessageUpdateTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_MessageRotateAppSecret_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_MessageUpdateTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.RotateAppSecretRequest
+		protoReq messagingv1.UpdateTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -4095,34 +4050,79 @@ func local_request_TestkitService_MessageRotateAppSecret_0(ctx context.Context, 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
-	msg, err := server.MessageRotateAppSecret(ctx, &protoReq)
+	msg, err := server.MessageUpdateTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_MessageListApps_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_MessageRotateTenantConfigSecret_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.ListAppsRequest
+		protoReq messagingv1.RotateTenantConfigSecretRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.MessageRotateTenantConfigSecret(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_TestkitService_MessageRotateTenantConfigSecret_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq messagingv1.RotateTenantConfigSecretRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+	msg, err := server.MessageRotateTenantConfigSecret(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_TestkitService_MessageListTenantConfigs_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq messagingv1.ListTenantConfigsRequest
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.MessageListApps(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.MessageListTenantConfigs(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_MessageListApps_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_MessageListTenantConfigs_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.ListAppsRequest
+		protoReq messagingv1.ListTenantConfigsRequest
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.MessageListApps(ctx, &protoReq)
+	msg, err := server.MessageListTenantConfigs(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_TestkitService_MessageDeleteApp_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_TestkitService_MessageDeleteTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, client TestkitServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.DeleteAppRequest
+		protoReq messagingv1.DeleteTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -4137,13 +4137,13 @@ func request_TestkitService_MessageDeleteApp_0(ctx context.Context, marshaler ru
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.MessageDeleteApp(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.MessageDeleteTenantConfig(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_TestkitService_MessageDeleteApp_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_TestkitService_MessageDeleteTenantConfig_0(ctx context.Context, marshaler runtime.Marshaler, server TestkitServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq messagingv1.DeleteAppRequest
+		protoReq messagingv1.DeleteTenantConfigRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -4155,7 +4155,7 @@ func local_request_TestkitService_MessageDeleteApp_0(ctx context.Context, marsha
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
-	msg, err := server.MessageDeleteApp(ctx, &protoReq)
+	msg, err := server.MessageDeleteTenantConfig(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -9750,125 +9750,125 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 		forward_TestkitService_ListRegionCodes_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageCreateApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageCreateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageCreateApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageCreateTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageCreateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageCreateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_MessageGetApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_MessageGetTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageGetApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageGetTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageGetApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageGetTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageGetApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageGetTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_TestkitService_MessageUpdateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_TestkitService_MessageUpdateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageUpdateApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageUpdateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageUpdateApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageUpdateTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageUpdateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageUpdateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_MessageRotateAppSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_MessageRotateTenantConfigSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}/secret:rotate"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageRotateTenantConfigSecret", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}/secret:rotate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageRotateAppSecret_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageRotateTenantConfigSecret_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageRotateAppSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageRotateTenantConfigSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_MessageListApps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_MessageListTenantConfigs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageListApps", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageListTenantConfigs", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageListApps_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageListTenantConfigs_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageListApps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageListTenantConfigs_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodDelete, pattern_TestkitService_MessageDeleteApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodDelete, pattern_TestkitService_MessageDeleteTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageDeleteApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageDeleteTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_TestkitService_MessageDeleteApp_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_TestkitService_MessageDeleteTenantConfig_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageDeleteApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageDeleteTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateChannelAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -13554,107 +13554,107 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		}
 		forward_TestkitService_ListRegionCodes_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageCreateApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageCreateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageCreateApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageCreateTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageCreateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageCreateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_MessageGetApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_MessageGetTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageGetApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageGetTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageGetApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageGetTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageGetApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageGetTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_TestkitService_MessageUpdateApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_TestkitService_MessageUpdateTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageUpdateApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageUpdateTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageUpdateApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageUpdateTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageUpdateApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageUpdateTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_TestkitService_MessageRotateAppSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_TestkitService_MessageRotateTenantConfigSecret_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}/secret:rotate"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageRotateTenantConfigSecret", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}/secret:rotate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageRotateAppSecret_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageRotateTenantConfigSecret_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageRotateAppSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageRotateTenantConfigSecret_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_TestkitService_MessageListApps_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_TestkitService_MessageListTenantConfigs_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageListApps", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageListTenantConfigs", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageListApps_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageListTenantConfigs_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageListApps_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageListTenantConfigs_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodDelete, pattern_TestkitService_MessageDeleteApp_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodDelete, pattern_TestkitService_MessageDeleteTenantConfig_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageDeleteApp", runtime.WithHTTPPathPattern("/api/v1/message/admin/apps/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/MessageDeleteTenantConfig", runtime.WithHTTPPathPattern("/api/v1/message/admin/tenant-configs/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_TestkitService_MessageDeleteApp_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_TestkitService_MessageDeleteTenantConfig_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_TestkitService_MessageDeleteApp_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_TestkitService_MessageDeleteTenantConfig_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_TestkitService_MessageCreateChannelAccount_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -15139,417 +15139,417 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_TestkitService_Ping_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"ping"}, ""))
-	pattern_TestkitService_Login_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "login"}, ""))
-	pattern_TestkitService_Register_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "register"}, ""))
-	pattern_TestkitService_SendVerificationCode_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "captcha", "send"}, ""))
-	pattern_TestkitService_Logout_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "logout"}, ""))
-	pattern_TestkitService_GetProfile_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "profile"}, ""))
-	pattern_TestkitService_UpdateProfile_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "profile"}, ""))
-	pattern_TestkitService_ChangePassword_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "profile", "password"}, ""))
-	pattern_TestkitService_ResetPassword_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "password-reset"}, ""))
-	pattern_TestkitService_ListIdentities_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "identities"}, ""))
-	pattern_TestkitService_BindIdentity_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "identities"}, ""))
-	pattern_TestkitService_BindOAuthIdentity_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "identities", "oauth"}, ""))
-	pattern_TestkitService_UnbindIdentity_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "identities", "identity_id"}, "unbind"))
-	pattern_TestkitService_ListSessions_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sessions"}, ""))
-	pattern_TestkitService_RevokeSession_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "sessions", "session_id", "revoke"}, ""))
-	pattern_TestkitService_RevokeAllSessions_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "revoke-all"}, ""))
-	pattern_TestkitService_GetSession_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "sessions", "session_id"}, ""))
-	pattern_TestkitService_IssueSessionCode_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "issue-code"}, ""))
-	pattern_TestkitService_ExchangeSessionCode_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "exchange"}, ""))
-	pattern_TestkitService_GetOAuthURL_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "social", "provider", "url"}, ""))
-	pattern_TestkitService_SocialLogin_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "social", "login"}, ""))
-	pattern_TestkitService_MiniProgramLogin_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "social", "miniprogram"}, ""))
-	pattern_TestkitService_MiniProgramPhoneLogin_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "social", "miniprogram", "phone"}, ""))
-	pattern_TestkitService_CreateUser_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "users"}, ""))
-	pattern_TestkitService_GetUser_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "users", "user_id"}, ""))
-	pattern_TestkitService_ListUsers_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "users"}, ""))
-	pattern_TestkitService_ListUsersPaged_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "users", "paged"}, ""))
-	pattern_TestkitService_DisableUser_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "users", "user_id", "disable"}, ""))
-	pattern_TestkitService_GetLoginLogs_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "users", "login-logs"}, ""))
-	pattern_TestkitService_CreateGroup_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "groups"}, ""))
-	pattern_TestkitService_GetGroup_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
-	pattern_TestkitService_UpdateGroup_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
-	pattern_TestkitService_ListGroups_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "groups"}, ""))
-	pattern_TestkitService_DeleteGroup_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
-	pattern_TestkitService_AddGroupMember_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "members"}, ""))
-	pattern_TestkitService_RemoveGroupMember_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "groups", "group_id", "members", "user_id"}, ""))
-	pattern_TestkitService_ListGroupMembers_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "members"}, ""))
-	pattern_TestkitService_AddGroupRole_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "roles"}, ""))
-	pattern_TestkitService_RemoveGroupRole_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "groups", "group_id", "roles", "role_id"}, ""))
-	pattern_TestkitService_ListGroupRoles_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "roles"}, ""))
-	pattern_TestkitService_CreateRole_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "roles"}, ""))
-	pattern_TestkitService_GetRole_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
-	pattern_TestkitService_UpdateRole_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
-	pattern_TestkitService_DeleteRole_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
-	pattern_TestkitService_ListRoles_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "roles"}, ""))
-	pattern_TestkitService_AssignRole_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "users", "user_id", "roles"}, ""))
-	pattern_TestkitService_RevokeRole_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "users", "user_id", "roles", "role_id"}, ""))
-	pattern_TestkitService_ListUserRoles_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "users", "user_id", "roles"}, ""))
-	pattern_TestkitService_ListPermissions_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permissions"}, ""))
-	pattern_TestkitService_CreatePermission_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permissions"}, ""))
-	pattern_TestkitService_GetPermission_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
-	pattern_TestkitService_UpdatePermission_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
-	pattern_TestkitService_DeletePermission_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
-	pattern_TestkitService_CreatePermissionGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permission-groups"}, ""))
-	pattern_TestkitService_GetPermissionGroup_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
-	pattern_TestkitService_UpdatePermissionGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
-	pattern_TestkitService_DeletePermissionGroup_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
-	pattern_TestkitService_ListPermissionGroups_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permission-groups"}, ""))
-	pattern_TestkitService_GenerateUploadURL_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, ""))
-	pattern_TestkitService_GetSTSCredential_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "sts"}, ""))
-	pattern_TestkitService_BatchGetSTSCredential_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "sts"}, "batch"))
-	pattern_TestkitService_ConfirmUpload_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, "confirm"))
-	pattern_TestkitService_CancelUpload_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, "cancel"))
-	pattern_TestkitService_GenerateDownloadURL_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "downloadUrl"))
-	pattern_TestkitService_GenerateProcessURL_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "processUrl"))
-	pattern_TestkitService_GenerateCDNURL_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "cdnUrl"))
-	pattern_TestkitService_CreateFileLink_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "files", "file_id", "links"}, ""))
-	pattern_TestkitService_GetFileLinkDownload_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "links", "link_token", "download"}, ""))
-	pattern_TestkitService_ListMyFiles_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, ""))
-	pattern_TestkitService_ListMyFilesPaged_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, "page"))
-	pattern_TestkitService_GetMyFile_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
-	pattern_TestkitService_UpdateMyFile_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
-	pattern_TestkitService_DeleteMyFile_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
-	pattern_TestkitService_BatchDeleteMyFiles_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, "batchDelete"))
-	pattern_TestkitService_GetMyQuota_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "storage", "quota"}, ""))
-	pattern_TestkitService_ListMyAuditLogs_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "storage", "audit-logs"}, ""))
-	pattern_TestkitService_AdminListFiles_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "admin", "files"}, ""))
-	pattern_TestkitService_AdminGetFile_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "admin", "files", "file_id"}, ""))
-	pattern_TestkitService_AdminDeleteFile_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "admin", "files", "file_id"}, ""))
-	pattern_TestkitService_AdminGetQuota_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "quota"}, ""))
-	pattern_TestkitService_AdminSetQuota_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "quota"}, ""))
-	pattern_TestkitService_AdminGetStats_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "stats"}, ""))
-	pattern_TestkitService_AdminListProviders_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "providers"}, ""))
-	pattern_TestkitService_AdminListBuckets_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "buckets"}, ""))
-	pattern_TestkitService_AdminCreateProvider_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "providers"}, ""))
-	pattern_TestkitService_AdminUpdateProvider_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "providers", "name"}, ""))
-	pattern_TestkitService_AdminDeleteProvider_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "providers", "name"}, ""))
-	pattern_TestkitService_AdminUpsertBucket_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
-	pattern_TestkitService_AdminDeleteBucket_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
-	pattern_TestkitService_AdminGetSettings_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
-	pattern_TestkitService_AdminListApps_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
-	pattern_TestkitService_AdminCreateApp_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
-	pattern_TestkitService_AdminGetApp_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
-	pattern_TestkitService_AdminUpdateApp_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
-	pattern_TestkitService_AdminRotateAppSecret_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, "rotateSecret"))
-	pattern_TestkitService_AdminDeleteApp_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
-	pattern_TestkitService_AdminUpdateSettings_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
-	pattern_TestkitService_AdminSoftDeleteOwnerFiles_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "softDeleteFiles"))
-	pattern_TestkitService_AdminDeleteOwner_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "delete"))
-	pattern_TestkitService_AdminListAuditLogs_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "admin", "audit-logs"}, ""))
-	pattern_TestkitService_SendEmail_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "messages"}, "email"))
-	pattern_TestkitService_SendSMS_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "messages"}, "sms"))
-	pattern_TestkitService_GetEmail_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "emails", "id"}, ""))
-	pattern_TestkitService_ListEmails_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, ""))
-	pattern_TestkitService_ListEmailsByCursor_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, "cursor"))
-	pattern_TestkitService_GetEmailStats_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, "stats"))
-	pattern_TestkitService_GetSMS_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "sms", "id"}, ""))
-	pattern_TestkitService_ListSMS_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, ""))
-	pattern_TestkitService_ListSMSByCursor_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "cursor"))
-	pattern_TestkitService_GetSMSStats_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "stats"))
-	pattern_TestkitService_ListSMSRegions_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "regions"))
-	pattern_TestkitService_ListRegionCodes_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "region-codes"}, ""))
-	pattern_TestkitService_MessageCreateApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "apps"}, ""))
-	pattern_TestkitService_MessageGetApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "apps", "id"}, ""))
-	pattern_TestkitService_MessageUpdateApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "apps", "id"}, ""))
-	pattern_TestkitService_MessageRotateAppSecret_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "message", "admin", "apps", "id", "secret"}, "rotate"))
-	pattern_TestkitService_MessageListApps_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "apps"}, ""))
-	pattern_TestkitService_MessageDeleteApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "apps", "id"}, ""))
-	pattern_TestkitService_MessageCreateChannelAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "accounts"}, ""))
-	pattern_TestkitService_MessageUpdateChannelAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "accounts", "id"}, ""))
-	pattern_TestkitService_MessageDeleteChannelAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "accounts", "id"}, ""))
-	pattern_TestkitService_MessageListChannelAccounts_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "accounts"}, ""))
-	pattern_TestkitService_MessageCreateSignature_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "signatures"}, ""))
-	pattern_TestkitService_MessageUpdateSignature_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "signatures", "id"}, ""))
-	pattern_TestkitService_MessageDeleteSignature_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "signatures", "id"}, ""))
-	pattern_TestkitService_MessageListSignatures_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "signatures"}, ""))
-	pattern_TestkitService_MessageCreateTemplate_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "templates"}, ""))
-	pattern_TestkitService_MessageUpdateTemplate_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "templates", "id"}, ""))
-	pattern_TestkitService_MessageDeleteTemplate_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "templates", "id"}, ""))
-	pattern_TestkitService_MessageListTemplates_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "templates"}, ""))
-	pattern_TestkitService_MessageCreatePolicy_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "policies"}, ""))
-	pattern_TestkitService_MessageUpdatePolicy_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "policies", "id"}, ""))
-	pattern_TestkitService_MessageDeletePolicy_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "policies", "id"}, ""))
-	pattern_TestkitService_ListPolicies_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "policies"}, ""))
-	pattern_TestkitService_NextID_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gid", "next"}, ""))
-	pattern_TestkitService_BatchNextID_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gid", "batch"}, ""))
-	pattern_TestkitService_Decompose_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "gid", "decompose", "id"}, ""))
-	pattern_TestkitService_GetDashboard_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "dashboard"}, ""))
-	pattern_TestkitService_Activate_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "activate"}, ""))
-	pattern_TestkitService_Deactivate_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "deactivate"}, ""))
-	pattern_TestkitService_TrialStart_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "trial", "start"}, ""))
-	pattern_TestkitService_Health_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "healthz"}, ""))
-	pattern_TestkitService_CreateKey_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "keys"}, ""))
-	pattern_TestkitService_ShowKey_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
-	pattern_TestkitService_ListKeys_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "keys"}, ""))
-	pattern_TestkitService_UpdateKey_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
-	pattern_TestkitService_RevokeKey_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "revoke"}, ""))
-	pattern_TestkitService_UnrevokeKey_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "unrevoke"}, ""))
-	pattern_TestkitService_DeleteKey_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
-	pattern_TestkitService_GrantModule_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "grants", "module"}, ""))
-	pattern_TestkitService_RevokeModule_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "grants", "module"}, ""))
-	pattern_TestkitService_ListKeyDevices_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "devices"}, ""))
-	pattern_TestkitService_KickDevice_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "devices", "device_token"}, ""))
-	pattern_TestkitService_ShowTrial_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "trials", "fingerprint_id"}, ""))
-	pattern_TestkitService_ResetTrial_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "license", "admin", "trials", "fingerprint_id", "module", "reset"}, ""))
-	pattern_TestkitService_ShowPubKey_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"api", "v1", "license", "admin", "signing", "pubkey"}, ""))
-	pattern_TestkitService_LicenseListApps_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "apps"}, ""))
-	pattern_TestkitService_LicenseCreateApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "apps"}, ""))
-	pattern_TestkitService_LicenseGetApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_LicenseUpdateApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_LicenseRotateAppSecret_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, "rotateSecret"))
-	pattern_TestkitService_LicenseDeleteApp_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_Ingest_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "telemetry", "ingest"}, ""))
-	pattern_TestkitService_CreateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
-	pattern_TestkitService_GetApp_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_UpdateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_ListApps_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
-	pattern_TestkitService_RotateAppSecret_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, "rotateSecret"))
-	pattern_TestkitService_RotateToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens"}, ""))
-	pattern_TestkitService_RevokeToken_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens", "prefix"}, ""))
-	pattern_TestkitService_CreateSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys"}, ""))
-	pattern_TestkitService_RevokeSigningKey_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys", "key_id"}, ""))
-	pattern_TestkitService_ReplaceEventRules_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "events"}, ""))
-	pattern_TestkitService_SetVersionBlocked_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "versions", "version"}, ""))
-	pattern_TestkitService_GetAppStats_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "stats"}, ""))
-	pattern_TestkitService_ListCountries_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, ""))
-	pattern_TestkitService_GetCountries_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, "batch"))
-	pattern_TestkitService_ListTimezones_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "timezones"}, ""))
-	pattern_TestkitService_ListLanguages_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "languages"}, ""))
-	pattern_TestkitService_ListCurrencies_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "currencies"}, ""))
-	pattern_TestkitService_ListRegionGroups_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "region-groups"}, ""))
-	pattern_TestkitService_ParsePhone_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "phone"}, "parse"))
-	pattern_TestkitService_ResolveCodes_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "codes"}, "resolve"))
-	pattern_TestkitService_GetCountryProfile_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "profile"}, ""))
-	pattern_TestkitService_ListCountriesByRegion_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "region-groups", "group_code", "countries"}, ""))
-	pattern_TestkitService_GetCountryDefaults_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "defaults"}, ""))
-	pattern_TestkitService_GetDataInfo_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "data-info"}, ""))
-	pattern_TestkitService_UserListApps_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
-	pattern_TestkitService_UserCreateApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
-	pattern_TestkitService_UserGetApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
-	pattern_TestkitService_UserUpdateApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
-	pattern_TestkitService_UserRotateAppSecret_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, "rotateSecret"))
-	pattern_TestkitService_UserDeleteApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
-	pattern_TestkitService_PortalWhoAmI_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "whoami"}, ""))
-	pattern_TestkitService_PortalMyCapabilities_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "capabilities"}, ""))
-	pattern_TestkitService_PortalListApiKeys_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "api-keys"}, ""))
-	pattern_TestkitService_PortalCreateApiKey_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "api-keys"}, ""))
-	pattern_TestkitService_PortalRotateApiKeySecret_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "api-keys", "access_key"}, "rotateSecret"))
-	pattern_TestkitService_PortalDisableApiKey_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "api-keys", "access_key"}, "disable"))
-	pattern_TestkitService_PortalListTenants_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "tenants"}, ""))
-	pattern_TestkitService_PortalSetCapability_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "tenants", "tenant_key"}, "setCapability"))
-	pattern_TestkitService_PortalDisableTenant_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "tenants", "tenant_key"}, "disable"))
-	pattern_TestkitService_PortalListTenantMembers_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members"}, ""))
-	pattern_TestkitService_PortalAddTenantMember_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members"}, ""))
-	pattern_TestkitService_PortalRemoveTenantMember_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members", "user_id"}, ""))
+	pattern_TestkitService_Ping_0                            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"ping"}, ""))
+	pattern_TestkitService_Login_0                           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "login"}, ""))
+	pattern_TestkitService_Register_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "register"}, ""))
+	pattern_TestkitService_SendVerificationCode_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "captcha", "send"}, ""))
+	pattern_TestkitService_Logout_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "logout"}, ""))
+	pattern_TestkitService_GetProfile_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "profile"}, ""))
+	pattern_TestkitService_UpdateProfile_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "profile"}, ""))
+	pattern_TestkitService_ChangePassword_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "profile", "password"}, ""))
+	pattern_TestkitService_ResetPassword_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "auth", "password-reset"}, ""))
+	pattern_TestkitService_ListIdentities_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "identities"}, ""))
+	pattern_TestkitService_BindIdentity_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "identities"}, ""))
+	pattern_TestkitService_BindOAuthIdentity_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "identities", "oauth"}, ""))
+	pattern_TestkitService_UnbindIdentity_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "identities", "identity_id"}, "unbind"))
+	pattern_TestkitService_ListSessions_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sessions"}, ""))
+	pattern_TestkitService_RevokeSession_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "sessions", "session_id", "revoke"}, ""))
+	pattern_TestkitService_RevokeAllSessions_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "revoke-all"}, ""))
+	pattern_TestkitService_GetSession_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "sessions", "session_id"}, ""))
+	pattern_TestkitService_IssueSessionCode_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "issue-code"}, ""))
+	pattern_TestkitService_ExchangeSessionCode_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sessions", "exchange"}, ""))
+	pattern_TestkitService_GetOAuthURL_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "social", "provider", "url"}, ""))
+	pattern_TestkitService_SocialLogin_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "social", "login"}, ""))
+	pattern_TestkitService_MiniProgramLogin_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "social", "miniprogram"}, ""))
+	pattern_TestkitService_MiniProgramPhoneLogin_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "social", "miniprogram", "phone"}, ""))
+	pattern_TestkitService_CreateUser_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "users"}, ""))
+	pattern_TestkitService_GetUser_0                         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "users", "user_id"}, ""))
+	pattern_TestkitService_ListUsers_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "users"}, ""))
+	pattern_TestkitService_ListUsersPaged_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "users", "paged"}, ""))
+	pattern_TestkitService_DisableUser_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "users", "user_id", "disable"}, ""))
+	pattern_TestkitService_GetLoginLogs_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "users", "login-logs"}, ""))
+	pattern_TestkitService_CreateGroup_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "groups"}, ""))
+	pattern_TestkitService_GetGroup_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
+	pattern_TestkitService_UpdateGroup_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
+	pattern_TestkitService_ListGroups_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "groups"}, ""))
+	pattern_TestkitService_DeleteGroup_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "groups", "group_id"}, ""))
+	pattern_TestkitService_AddGroupMember_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "members"}, ""))
+	pattern_TestkitService_RemoveGroupMember_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "groups", "group_id", "members", "user_id"}, ""))
+	pattern_TestkitService_ListGroupMembers_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "members"}, ""))
+	pattern_TestkitService_AddGroupRole_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "roles"}, ""))
+	pattern_TestkitService_RemoveGroupRole_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "groups", "group_id", "roles", "role_id"}, ""))
+	pattern_TestkitService_ListGroupRoles_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "groups", "group_id", "roles"}, ""))
+	pattern_TestkitService_CreateRole_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "roles"}, ""))
+	pattern_TestkitService_GetRole_0                         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
+	pattern_TestkitService_UpdateRole_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
+	pattern_TestkitService_DeleteRole_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "roles", "role_id"}, ""))
+	pattern_TestkitService_ListRoles_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "roles"}, ""))
+	pattern_TestkitService_AssignRole_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "users", "user_id", "roles"}, ""))
+	pattern_TestkitService_RevokeRole_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "rbac", "users", "user_id", "roles", "role_id"}, ""))
+	pattern_TestkitService_ListUserRoles_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "rbac", "users", "user_id", "roles"}, ""))
+	pattern_TestkitService_ListPermissions_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permissions"}, ""))
+	pattern_TestkitService_CreatePermission_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permissions"}, ""))
+	pattern_TestkitService_GetPermission_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
+	pattern_TestkitService_UpdatePermission_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
+	pattern_TestkitService_DeletePermission_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permissions", "permission_id"}, ""))
+	pattern_TestkitService_CreatePermissionGroup_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permission-groups"}, ""))
+	pattern_TestkitService_GetPermissionGroup_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
+	pattern_TestkitService_UpdatePermissionGroup_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
+	pattern_TestkitService_DeletePermissionGroup_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "rbac", "permission-groups", "permission_group_id"}, ""))
+	pattern_TestkitService_ListPermissionGroups_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "rbac", "permission-groups"}, ""))
+	pattern_TestkitService_GenerateUploadURL_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, ""))
+	pattern_TestkitService_GetSTSCredential_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "sts"}, ""))
+	pattern_TestkitService_BatchGetSTSCredential_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "sts"}, "batch"))
+	pattern_TestkitService_ConfirmUpload_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, "confirm"))
+	pattern_TestkitService_CancelUpload_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "uploads"}, "cancel"))
+	pattern_TestkitService_GenerateDownloadURL_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "downloadUrl"))
+	pattern_TestkitService_GenerateProcessURL_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "processUrl"))
+	pattern_TestkitService_GenerateCDNURL_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, "cdnUrl"))
+	pattern_TestkitService_CreateFileLink_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "files", "file_id", "links"}, ""))
+	pattern_TestkitService_GetFileLinkDownload_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "links", "link_token", "download"}, ""))
+	pattern_TestkitService_ListMyFiles_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, ""))
+	pattern_TestkitService_ListMyFilesPaged_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, "page"))
+	pattern_TestkitService_GetMyFile_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
+	pattern_TestkitService_UpdateMyFile_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
+	pattern_TestkitService_DeleteMyFile_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "files", "file_id"}, ""))
+	pattern_TestkitService_BatchDeleteMyFiles_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, "batchDelete"))
+	pattern_TestkitService_GetMyQuota_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "storage", "quota"}, ""))
+	pattern_TestkitService_ListMyAuditLogs_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "storage", "audit-logs"}, ""))
+	pattern_TestkitService_AdminListFiles_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "admin", "files"}, ""))
+	pattern_TestkitService_AdminGetFile_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "admin", "files", "file_id"}, ""))
+	pattern_TestkitService_AdminDeleteFile_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "admin", "files", "file_id"}, ""))
+	pattern_TestkitService_AdminGetQuota_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "quota"}, ""))
+	pattern_TestkitService_AdminSetQuota_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "quota"}, ""))
+	pattern_TestkitService_AdminGetStats_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "stats"}, ""))
+	pattern_TestkitService_AdminListProviders_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "providers"}, ""))
+	pattern_TestkitService_AdminListBuckets_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "buckets"}, ""))
+	pattern_TestkitService_AdminCreateProvider_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "providers"}, ""))
+	pattern_TestkitService_AdminUpdateProvider_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "providers", "name"}, ""))
+	pattern_TestkitService_AdminDeleteProvider_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "providers", "name"}, ""))
+	pattern_TestkitService_AdminUpsertBucket_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
+	pattern_TestkitService_AdminDeleteBucket_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "buckets", "name"}, ""))
+	pattern_TestkitService_AdminGetSettings_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
+	pattern_TestkitService_AdminListApps_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
+	pattern_TestkitService_AdminCreateApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "apps"}, ""))
+	pattern_TestkitService_AdminGetApp_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
+	pattern_TestkitService_AdminUpdateApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
+	pattern_TestkitService_AdminRotateAppSecret_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, "rotateSecret"))
+	pattern_TestkitService_AdminDeleteApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "admin", "storage", "apps", "app_key"}, ""))
+	pattern_TestkitService_AdminUpdateSettings_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "settings"}, ""))
+	pattern_TestkitService_AdminSoftDeleteOwnerFiles_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "softDeleteFiles"))
+	pattern_TestkitService_AdminDeleteOwner_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "admin", "storage", "owners"}, "delete"))
+	pattern_TestkitService_AdminListAuditLogs_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "admin", "audit-logs"}, ""))
+	pattern_TestkitService_SendEmail_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "messages"}, "email"))
+	pattern_TestkitService_SendSMS_0                         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "messages"}, "sms"))
+	pattern_TestkitService_GetEmail_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "emails", "id"}, ""))
+	pattern_TestkitService_ListEmails_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, ""))
+	pattern_TestkitService_ListEmailsByCursor_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, "cursor"))
+	pattern_TestkitService_GetEmailStats_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "emails"}, "stats"))
+	pattern_TestkitService_GetSMS_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "sms", "id"}, ""))
+	pattern_TestkitService_ListSMS_0                         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, ""))
+	pattern_TestkitService_ListSMSByCursor_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "cursor"))
+	pattern_TestkitService_GetSMSStats_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "stats"))
+	pattern_TestkitService_ListSMSRegions_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sms"}, "regions"))
+	pattern_TestkitService_ListRegionCodes_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "region-codes"}, ""))
+	pattern_TestkitService_MessageCreateTenantConfig_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "tenant-configs"}, ""))
+	pattern_TestkitService_MessageGetTenantConfig_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "tenant-configs", "id"}, ""))
+	pattern_TestkitService_MessageUpdateTenantConfig_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "tenant-configs", "id"}, ""))
+	pattern_TestkitService_MessageRotateTenantConfigSecret_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "message", "admin", "tenant-configs", "id", "secret"}, "rotate"))
+	pattern_TestkitService_MessageListTenantConfigs_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "tenant-configs"}, ""))
+	pattern_TestkitService_MessageDeleteTenantConfig_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "tenant-configs", "id"}, ""))
+	pattern_TestkitService_MessageCreateChannelAccount_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "accounts"}, ""))
+	pattern_TestkitService_MessageUpdateChannelAccount_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "accounts", "id"}, ""))
+	pattern_TestkitService_MessageDeleteChannelAccount_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "accounts", "id"}, ""))
+	pattern_TestkitService_MessageListChannelAccounts_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "accounts"}, ""))
+	pattern_TestkitService_MessageCreateSignature_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "signatures"}, ""))
+	pattern_TestkitService_MessageUpdateSignature_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "signatures", "id"}, ""))
+	pattern_TestkitService_MessageDeleteSignature_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "signatures", "id"}, ""))
+	pattern_TestkitService_MessageListSignatures_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "signatures"}, ""))
+	pattern_TestkitService_MessageCreateTemplate_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "templates"}, ""))
+	pattern_TestkitService_MessageUpdateTemplate_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "templates", "id"}, ""))
+	pattern_TestkitService_MessageDeleteTemplate_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "templates", "id"}, ""))
+	pattern_TestkitService_MessageListTemplates_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "templates"}, ""))
+	pattern_TestkitService_MessageCreatePolicy_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "policies"}, ""))
+	pattern_TestkitService_MessageUpdatePolicy_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "policies", "id"}, ""))
+	pattern_TestkitService_MessageDeletePolicy_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "message", "admin", "policies", "id"}, ""))
+	pattern_TestkitService_ListPolicies_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "message", "admin", "policies"}, ""))
+	pattern_TestkitService_NextID_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gid", "next"}, ""))
+	pattern_TestkitService_BatchNextID_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "gid", "batch"}, ""))
+	pattern_TestkitService_Decompose_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "gid", "decompose", "id"}, ""))
+	pattern_TestkitService_GetDashboard_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "dashboard"}, ""))
+	pattern_TestkitService_Activate_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "activate"}, ""))
+	pattern_TestkitService_Deactivate_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "deactivate"}, ""))
+	pattern_TestkitService_TrialStart_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "trial", "start"}, ""))
+	pattern_TestkitService_Health_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "license", "healthz"}, ""))
+	pattern_TestkitService_CreateKey_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "keys"}, ""))
+	pattern_TestkitService_ShowKey_0                         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
+	pattern_TestkitService_ListKeys_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "keys"}, ""))
+	pattern_TestkitService_UpdateKey_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
+	pattern_TestkitService_RevokeKey_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "revoke"}, ""))
+	pattern_TestkitService_UnrevokeKey_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "unrevoke"}, ""))
+	pattern_TestkitService_DeleteKey_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "keys", "key_id"}, ""))
+	pattern_TestkitService_GrantModule_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "grants", "module"}, ""))
+	pattern_TestkitService_RevokeModule_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "grants", "module"}, ""))
+	pattern_TestkitService_ListKeyDevices_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "license", "admin", "keys", "key_id", "devices"}, ""))
+	pattern_TestkitService_KickDevice_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "license", "admin", "keys", "key_id", "devices", "device_token"}, ""))
+	pattern_TestkitService_ShowTrial_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "trials", "fingerprint_id"}, ""))
+	pattern_TestkitService_ResetTrial_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6, 2, 7}, []string{"api", "v1", "license", "admin", "trials", "fingerprint_id", "module", "reset"}, ""))
+	pattern_TestkitService_ShowPubKey_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"api", "v1", "license", "admin", "signing", "pubkey"}, ""))
+	pattern_TestkitService_LicenseListApps_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "apps"}, ""))
+	pattern_TestkitService_LicenseCreateApp_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "license", "admin", "apps"}, ""))
+	pattern_TestkitService_LicenseGetApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_LicenseUpdateApp_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_LicenseRotateAppSecret_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, "rotateSecret"))
+	pattern_TestkitService_LicenseDeleteApp_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "license", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_Ingest_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "telemetry", "ingest"}, ""))
+	pattern_TestkitService_CreateApp_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
+	pattern_TestkitService_GetApp_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_UpdateApp_0                       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_ListApps_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "telemetry", "admin", "apps"}, ""))
+	pattern_TestkitService_RotateAppSecret_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key"}, "rotateSecret"))
+	pattern_TestkitService_RotateToken_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens"}, ""))
+	pattern_TestkitService_RevokeToken_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "tokens", "prefix"}, ""))
+	pattern_TestkitService_CreateSigningKey_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys"}, ""))
+	pattern_TestkitService_RevokeSigningKey_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "signing-keys", "key_id"}, ""))
+	pattern_TestkitService_ReplaceEventRules_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "events"}, ""))
+	pattern_TestkitService_SetVersionBlocked_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "versions", "version"}, ""))
+	pattern_TestkitService_GetAppStats_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "telemetry", "admin", "apps", "app_key", "stats"}, ""))
+	pattern_TestkitService_ListCountries_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, ""))
+	pattern_TestkitService_GetCountries_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "countries"}, "batch"))
+	pattern_TestkitService_ListTimezones_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "timezones"}, ""))
+	pattern_TestkitService_ListLanguages_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "languages"}, ""))
+	pattern_TestkitService_ListCurrencies_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "currencies"}, ""))
+	pattern_TestkitService_ListRegionGroups_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "region-groups"}, ""))
+	pattern_TestkitService_ParsePhone_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "phone"}, "parse"))
+	pattern_TestkitService_ResolveCodes_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "codes"}, "resolve"))
+	pattern_TestkitService_GetCountryProfile_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "profile"}, ""))
+	pattern_TestkitService_ListCountriesByRegion_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "region-groups", "group_code", "countries"}, ""))
+	pattern_TestkitService_GetCountryDefaults_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "reference", "countries", "region_code", "defaults"}, ""))
+	pattern_TestkitService_GetDataInfo_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "data-info"}, ""))
+	pattern_TestkitService_UserListApps_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
+	pattern_TestkitService_UserCreateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
+	pattern_TestkitService_UserGetApp_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
+	pattern_TestkitService_UserUpdateApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
+	pattern_TestkitService_UserRotateAppSecret_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, "rotateSecret"))
+	pattern_TestkitService_UserDeleteApp_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
+	pattern_TestkitService_PortalWhoAmI_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "whoami"}, ""))
+	pattern_TestkitService_PortalMyCapabilities_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "capabilities"}, ""))
+	pattern_TestkitService_PortalListApiKeys_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "api-keys"}, ""))
+	pattern_TestkitService_PortalCreateApiKey_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "api-keys"}, ""))
+	pattern_TestkitService_PortalRotateApiKeySecret_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "api-keys", "access_key"}, "rotateSecret"))
+	pattern_TestkitService_PortalDisableApiKey_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "api-keys", "access_key"}, "disable"))
+	pattern_TestkitService_PortalListTenants_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "tenants"}, ""))
+	pattern_TestkitService_PortalSetCapability_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "tenants", "tenant_key"}, "setCapability"))
+	pattern_TestkitService_PortalDisableTenant_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "v1", "portal", "tenants", "tenant_key"}, "disable"))
+	pattern_TestkitService_PortalListTenantMembers_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members"}, ""))
+	pattern_TestkitService_PortalAddTenantMember_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members"}, ""))
+	pattern_TestkitService_PortalRemoveTenantMember_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "v1", "portal", "tenants", "tenant_key", "members", "user_id"}, ""))
 )
 
 var (
-	forward_TestkitService_Ping_0                        = runtime.ForwardResponseMessage
-	forward_TestkitService_Login_0                       = runtime.ForwardResponseMessage
-	forward_TestkitService_Register_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_SendVerificationCode_0        = runtime.ForwardResponseMessage
-	forward_TestkitService_Logout_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_GetProfile_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateProfile_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_ChangePassword_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_ResetPassword_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_ListIdentities_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_BindIdentity_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_BindOAuthIdentity_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_UnbindIdentity_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_ListSessions_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeSession_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeAllSessions_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_GetSession_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_IssueSessionCode_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_ExchangeSessionCode_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_GetOAuthURL_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_SocialLogin_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_MiniProgramLogin_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_MiniProgramPhoneLogin_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateUser_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_GetUser_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_ListUsers_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_ListUsersPaged_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_DisableUser_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_GetLoginLogs_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateGroup_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_GetGroup_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateGroup_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_ListGroups_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_DeleteGroup_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_AddGroupMember_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_RemoveGroupMember_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_ListGroupMembers_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_AddGroupRole_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_RemoveGroupRole_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_ListGroupRoles_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateRole_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_GetRole_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateRole_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_DeleteRole_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ListRoles_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_AssignRole_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeRole_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ListUserRoles_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_ListPermissions_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_CreatePermission_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_GetPermission_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdatePermission_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_DeletePermission_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_CreatePermissionGroup_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_GetPermissionGroup_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdatePermissionGroup_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_DeletePermissionGroup_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_ListPermissionGroups_0        = runtime.ForwardResponseMessage
-	forward_TestkitService_GenerateUploadURL_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_GetSTSCredential_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_BatchGetSTSCredential_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_ConfirmUpload_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_CancelUpload_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_GenerateDownloadURL_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_GenerateProcessURL_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_GenerateCDNURL_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateFileLink_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_GetFileLinkDownload_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_ListMyFiles_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_ListMyFilesPaged_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_GetMyFile_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateMyFile_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_DeleteMyFile_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_BatchDeleteMyFiles_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_GetMyQuota_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ListMyAuditLogs_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListFiles_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetFile_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteFile_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetQuota_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminSetQuota_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetStats_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListProviders_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListBuckets_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminCreateProvider_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminUpdateProvider_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteProvider_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminUpsertBucket_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteBucket_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetSettings_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListApps_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminCreateApp_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminGetApp_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminUpdateApp_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminRotateAppSecret_0        = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteApp_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminUpdateSettings_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminSoftDeleteOwnerFiles_0   = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminDeleteOwner_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_AdminListAuditLogs_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_SendEmail_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_SendSMS_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_GetEmail_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_ListEmails_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ListEmailsByCursor_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_GetEmailStats_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_GetSMS_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_ListSMS_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_ListSMSByCursor_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_GetSMSStats_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_ListSMSRegions_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_ListRegionCodes_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageCreateApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageGetApp_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageUpdateApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageRotateAppSecret_0      = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageListApps_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageDeleteApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageCreateChannelAccount_0 = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageUpdateChannelAccount_0 = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageDeleteChannelAccount_0 = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageListChannelAccounts_0  = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageCreateSignature_0      = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageUpdateSignature_0      = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageDeleteSignature_0      = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageListSignatures_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageCreateTemplate_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageUpdateTemplate_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageDeleteTemplate_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageListTemplates_0        = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageCreatePolicy_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageUpdatePolicy_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_MessageDeletePolicy_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_ListPolicies_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_NextID_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_BatchNextID_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_Decompose_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_GetDashboard_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_Activate_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_Deactivate_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_TrialStart_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_Health_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateKey_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_ShowKey_0                     = runtime.ForwardResponseMessage
-	forward_TestkitService_ListKeys_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateKey_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeKey_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_UnrevokeKey_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_DeleteKey_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_GrantModule_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeModule_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_ListKeyDevices_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_KickDevice_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ShowTrial_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_ResetTrial_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ShowPubKey_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseListApps_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseCreateApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseGetApp_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseUpdateApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseRotateAppSecret_0      = runtime.ForwardResponseMessage
-	forward_TestkitService_LicenseDeleteApp_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_Ingest_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateApp_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_GetApp_0                      = runtime.ForwardResponseMessage
-	forward_TestkitService_UpdateApp_0                   = runtime.ForwardResponseMessage
-	forward_TestkitService_ListApps_0                    = runtime.ForwardResponseMessage
-	forward_TestkitService_RotateAppSecret_0             = runtime.ForwardResponseMessage
-	forward_TestkitService_RotateToken_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeToken_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_CreateSigningKey_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_RevokeSigningKey_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_ReplaceEventRules_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_SetVersionBlocked_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_GetAppStats_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_ListCountries_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_GetCountries_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_ListTimezones_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_ListLanguages_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_ListCurrencies_0              = runtime.ForwardResponseMessage
-	forward_TestkitService_ListRegionGroups_0            = runtime.ForwardResponseMessage
-	forward_TestkitService_ParsePhone_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_ResolveCodes_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_GetCountryProfile_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_ListCountriesByRegion_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_GetCountryDefaults_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_GetDataInfo_0                 = runtime.ForwardResponseMessage
-	forward_TestkitService_UserListApps_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_UserCreateApp_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_UserGetApp_0                  = runtime.ForwardResponseMessage
-	forward_TestkitService_UserUpdateApp_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_UserRotateAppSecret_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_UserDeleteApp_0               = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalWhoAmI_0                = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalMyCapabilities_0        = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalListApiKeys_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalCreateApiKey_0          = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalRotateApiKeySecret_0    = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalDisableApiKey_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalListTenants_0           = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalSetCapability_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalDisableTenant_0         = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalListTenantMembers_0     = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalAddTenantMember_0       = runtime.ForwardResponseMessage
-	forward_TestkitService_PortalRemoveTenantMember_0    = runtime.ForwardResponseMessage
+	forward_TestkitService_Ping_0                            = runtime.ForwardResponseMessage
+	forward_TestkitService_Login_0                           = runtime.ForwardResponseMessage
+	forward_TestkitService_Register_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_SendVerificationCode_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_Logout_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_GetProfile_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateProfile_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_ChangePassword_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_ResetPassword_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_ListIdentities_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_BindIdentity_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_BindOAuthIdentity_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_UnbindIdentity_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_ListSessions_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeSession_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeAllSessions_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_GetSession_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_IssueSessionCode_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_ExchangeSessionCode_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_GetOAuthURL_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_SocialLogin_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_MiniProgramLogin_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_MiniProgramPhoneLogin_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateUser_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_GetUser_0                         = runtime.ForwardResponseMessage
+	forward_TestkitService_ListUsers_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_ListUsersPaged_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_DisableUser_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_GetLoginLogs_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateGroup_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_GetGroup_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateGroup_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_ListGroups_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_DeleteGroup_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_AddGroupMember_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_RemoveGroupMember_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_ListGroupMembers_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_AddGroupRole_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_RemoveGroupRole_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_ListGroupRoles_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateRole_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_GetRole_0                         = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateRole_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_DeleteRole_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ListRoles_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_AssignRole_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeRole_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ListUserRoles_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_ListPermissions_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_CreatePermission_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_GetPermission_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdatePermission_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_DeletePermission_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_CreatePermissionGroup_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_GetPermissionGroup_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdatePermissionGroup_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_DeletePermissionGroup_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_ListPermissionGroups_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_GenerateUploadURL_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_GetSTSCredential_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_BatchGetSTSCredential_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_ConfirmUpload_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_CancelUpload_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_GenerateDownloadURL_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_GenerateProcessURL_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_GenerateCDNURL_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateFileLink_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_GetFileLinkDownload_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_ListMyFiles_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_ListMyFilesPaged_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_GetMyFile_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateMyFile_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_DeleteMyFile_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_BatchDeleteMyFiles_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_GetMyQuota_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ListMyAuditLogs_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListFiles_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetFile_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteFile_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetQuota_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminSetQuota_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetStats_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListProviders_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListBuckets_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminCreateProvider_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminUpdateProvider_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteProvider_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminUpsertBucket_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteBucket_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetSettings_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListApps_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminCreateApp_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminGetApp_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminUpdateApp_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminRotateAppSecret_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteApp_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminUpdateSettings_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminSoftDeleteOwnerFiles_0       = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminDeleteOwner_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_AdminListAuditLogs_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_SendEmail_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_SendSMS_0                         = runtime.ForwardResponseMessage
+	forward_TestkitService_GetEmail_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_ListEmails_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ListEmailsByCursor_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_GetEmailStats_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_GetSMS_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_ListSMS_0                         = runtime.ForwardResponseMessage
+	forward_TestkitService_ListSMSByCursor_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_GetSMSStats_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_ListSMSRegions_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_ListRegionCodes_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageCreateTenantConfig_0       = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageGetTenantConfig_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageUpdateTenantConfig_0       = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageRotateTenantConfigSecret_0 = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageListTenantConfigs_0        = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageDeleteTenantConfig_0       = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageCreateChannelAccount_0     = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageUpdateChannelAccount_0     = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageDeleteChannelAccount_0     = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageListChannelAccounts_0      = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageCreateSignature_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageUpdateSignature_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageDeleteSignature_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageListSignatures_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageCreateTemplate_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageUpdateTemplate_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageDeleteTemplate_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageListTemplates_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageCreatePolicy_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageUpdatePolicy_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_MessageDeletePolicy_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_ListPolicies_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_NextID_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_BatchNextID_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_Decompose_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_GetDashboard_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_Activate_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_Deactivate_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_TrialStart_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_Health_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateKey_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_ShowKey_0                         = runtime.ForwardResponseMessage
+	forward_TestkitService_ListKeys_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateKey_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeKey_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_UnrevokeKey_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_DeleteKey_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_GrantModule_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeModule_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_ListKeyDevices_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_KickDevice_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ShowTrial_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_ResetTrial_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ShowPubKey_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseListApps_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseCreateApp_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseGetApp_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseUpdateApp_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseRotateAppSecret_0          = runtime.ForwardResponseMessage
+	forward_TestkitService_LicenseDeleteApp_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_Ingest_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateApp_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_GetApp_0                          = runtime.ForwardResponseMessage
+	forward_TestkitService_UpdateApp_0                       = runtime.ForwardResponseMessage
+	forward_TestkitService_ListApps_0                        = runtime.ForwardResponseMessage
+	forward_TestkitService_RotateAppSecret_0                 = runtime.ForwardResponseMessage
+	forward_TestkitService_RotateToken_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeToken_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_CreateSigningKey_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_RevokeSigningKey_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_ReplaceEventRules_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_SetVersionBlocked_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_GetAppStats_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_ListCountries_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_GetCountries_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_ListTimezones_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_ListLanguages_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_ListCurrencies_0                  = runtime.ForwardResponseMessage
+	forward_TestkitService_ListRegionGroups_0                = runtime.ForwardResponseMessage
+	forward_TestkitService_ParsePhone_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_ResolveCodes_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_GetCountryProfile_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_ListCountriesByRegion_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_GetCountryDefaults_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_GetDataInfo_0                     = runtime.ForwardResponseMessage
+	forward_TestkitService_UserListApps_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_UserCreateApp_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_UserGetApp_0                      = runtime.ForwardResponseMessage
+	forward_TestkitService_UserUpdateApp_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_UserRotateAppSecret_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_UserDeleteApp_0                   = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalWhoAmI_0                    = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalMyCapabilities_0            = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalListApiKeys_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalCreateApiKey_0              = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalRotateApiKeySecret_0        = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalDisableApiKey_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalListTenants_0               = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalSetCapability_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalDisableTenant_0             = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalListTenantMembers_0         = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalAddTenantMember_0           = runtime.ForwardResponseMessage
+	forward_TestkitService_PortalRemoveTenantMember_0        = runtime.ForwardResponseMessage
 )
