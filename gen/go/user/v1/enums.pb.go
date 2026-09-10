@@ -623,27 +623,30 @@ func (LoginFailReason) EnumDescriptor() ([]byte, []int) {
 	return file_user_v1_enums_proto_rawDescGZIP(), []int{9}
 }
 
-// UserType separates external end users from internal platform users
-// (staff, operations, ...). Set at creation time; not user-editable.
+// UserType classifies every user by their relationship to the platform
+// rather than where they come from. Set at creation time; not user-editable.
 type UserType int32
 
 const (
-	UserType_USER_TYPE_UNSPECIFIED UserType = 0
-	UserType_USER_TYPE_NORMAL      UserType = 1 // External end user (default).
-	UserType_USER_TYPE_INTERNAL    UserType = 2 // Platform internal user (staff, operations, etc.).
+	UserType_USER_TYPE_UNSPECIFIED  UserType = 0
+	UserType_USER_TYPE_END_USER     UserType = 1 // 租户的最终用户（原 USER_TYPE_NORMAL，值不变）。
+	UserType_USER_TYPE_PLATFORM     UserType = 2 // 平台员工/运营（原 USER_TYPE_INTERNAL，值不变）。
+	UserType_USER_TYPE_TENANT_ADMIN UserType = 3 // 租户管理员：控制台操作者，钉死本租户。
 )
 
 // Enum value maps for UserType.
 var (
 	UserType_name = map[int32]string{
 		0: "USER_TYPE_UNSPECIFIED",
-		1: "USER_TYPE_NORMAL",
-		2: "USER_TYPE_INTERNAL",
+		1: "USER_TYPE_END_USER",
+		2: "USER_TYPE_PLATFORM",
+		3: "USER_TYPE_TENANT_ADMIN",
 	}
 	UserType_value = map[string]int32{
-		"USER_TYPE_UNSPECIFIED": 0,
-		"USER_TYPE_NORMAL":      1,
-		"USER_TYPE_INTERNAL":    2,
+		"USER_TYPE_UNSPECIFIED":  0,
+		"USER_TYPE_END_USER":     1,
+		"USER_TYPE_PLATFORM":     2,
+		"USER_TYPE_TENANT_ADMIN": 3,
 	}
 )
 
@@ -801,11 +804,12 @@ const file_user_v1_enums_proto_rawDesc = "" +
 	"\x1dLOGIN_FAIL_REASON_UNSPECIFIED\x10\x00\x12$\n" +
 	" LOGIN_FAIL_REASON_WRONG_PASSWORD\x10\x01\x12 \n" +
 	"\x1cLOGIN_FAIL_REASON_WRONG_CODE\x10\x02\x12#\n" +
-	"\x1fLOGIN_FAIL_REASON_VERIFY_FAILED\x10\x03*S\n" +
+	"\x1fLOGIN_FAIL_REASON_VERIFY_FAILED\x10\x03*q\n" +
 	"\bUserType\x12\x19\n" +
-	"\x15USER_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10USER_TYPE_NORMAL\x10\x01\x12\x16\n" +
-	"\x12USER_TYPE_INTERNAL\x10\x02*\xab\x01\n" +
+	"\x15USER_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12USER_TYPE_END_USER\x10\x01\x12\x16\n" +
+	"\x12USER_TYPE_PLATFORM\x10\x02\x12\x1a\n" +
+	"\x16USER_TYPE_TENANT_ADMIN\x10\x03*\xab\x01\n" +
 	"\rUserSortField\x12\x1f\n" +
 	"\x1bUSER_SORT_FIELD_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12USER_SORT_FIELD_ID\x10\x01\x12\x1e\n" +

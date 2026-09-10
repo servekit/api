@@ -7237,14 +7237,15 @@
           },
           {
             "name": "userType",
-            "description": " - USER_TYPE_NORMAL: External end user (default).\n - USER_TYPE_INTERNAL: Platform internal user (staff, operations, etc.).",
+            "description": " - USER_TYPE_END_USER: 租户的最终用户（原 USER_TYPE_NORMAL，值不变）。\n - USER_TYPE_PLATFORM: 平台员工/运营（原 USER_TYPE_INTERNAL，值不变）。\n - USER_TYPE_TENANT_ADMIN: 租户管理员：控制台操作者，钉死本租户。",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
               "USER_TYPE_UNSPECIFIED",
-              "USER_TYPE_NORMAL",
-              "USER_TYPE_INTERNAL"
+              "USER_TYPE_END_USER",
+              "USER_TYPE_PLATFORM",
+              "USER_TYPE_TENANT_ADMIN"
             ],
             "default": "USER_TYPE_UNSPECIFIED"
           },
@@ -7519,14 +7520,15 @@
           },
           {
             "name": "userType",
-            "description": " - USER_TYPE_NORMAL: External end user (default).\n - USER_TYPE_INTERNAL: Platform internal user (staff, operations, etc.).",
+            "description": " - USER_TYPE_END_USER: 租户的最终用户（原 USER_TYPE_NORMAL，值不变）。\n - USER_TYPE_PLATFORM: 平台员工/运营（原 USER_TYPE_INTERNAL，值不变）。\n - USER_TYPE_TENANT_ADMIN: 租户管理员：控制台操作者，钉死本租户。",
             "in": "query",
             "required": false,
             "type": "string",
             "enum": [
               "USER_TYPE_UNSPECIFIED",
-              "USER_TYPE_NORMAL",
-              "USER_TYPE_INTERNAL"
+              "USER_TYPE_END_USER",
+              "USER_TYPE_PLATFORM",
+              "USER_TYPE_TENANT_ADMIN"
             ],
             "default": "USER_TYPE_UNSPECIFIED"
           },
@@ -14114,11 +14116,12 @@
       "type": "string",
       "enum": [
         "USER_TYPE_UNSPECIFIED",
-        "USER_TYPE_NORMAL",
-        "USER_TYPE_INTERNAL"
+        "USER_TYPE_END_USER",
+        "USER_TYPE_PLATFORM",
+        "USER_TYPE_TENANT_ADMIN"
       ],
       "default": "USER_TYPE_UNSPECIFIED",
-      "description": "UserType separates external end users from internal platform users\n(staff, operations, ...). Set at creation time; not user-editable.\n\n - USER_TYPE_NORMAL: External end user (default).\n - USER_TYPE_INTERNAL: Platform internal user (staff, operations, etc.)."
+      "description": "UserType classifies every user by their relationship to the platform\nrather than where they come from. Set at creation time; not user-editable.\n\n - USER_TYPE_END_USER: 租户的最终用户（原 USER_TYPE_NORMAL，值不变）。\n - USER_TYPE_PLATFORM: 平台员工/运营（原 USER_TYPE_INTERNAL，值不变）。\n - USER_TYPE_TENANT_ADMIN: 租户管理员：控制台操作者，钉死本租户。"
     },
     "v1UsersSummary": {
       "type": "object",
