@@ -23,71 +23,72 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_Ping_FullMethodName                  = "/user.v1.UserService/Ping"
-	UserService_Register_FullMethodName              = "/user.v1.UserService/Register"
-	UserService_Login_FullMethodName                 = "/user.v1.UserService/Login"
-	UserService_Logout_FullMethodName                = "/user.v1.UserService/Logout"
-	UserService_GetOAuthURL_FullMethodName           = "/user.v1.UserService/GetOAuthURL"
-	UserService_SocialLogin_FullMethodName           = "/user.v1.UserService/SocialLogin"
-	UserService_MiniProgramLogin_FullMethodName      = "/user.v1.UserService/MiniProgramLogin"
-	UserService_MiniProgramPhoneLogin_FullMethodName = "/user.v1.UserService/MiniProgramPhoneLogin"
-	UserService_GetProfile_FullMethodName            = "/user.v1.UserService/GetProfile"
-	UserService_UpdateProfile_FullMethodName         = "/user.v1.UserService/UpdateProfile"
-	UserService_ChangePassword_FullMethodName        = "/user.v1.UserService/ChangePassword"
-	UserService_ResetPassword_FullMethodName         = "/user.v1.UserService/ResetPassword"
-	UserService_ListIdentities_FullMethodName        = "/user.v1.UserService/ListIdentities"
-	UserService_BindIdentity_FullMethodName          = "/user.v1.UserService/BindIdentity"
-	UserService_BindOAuthIdentity_FullMethodName     = "/user.v1.UserService/BindOAuthIdentity"
-	UserService_UnbindIdentity_FullMethodName        = "/user.v1.UserService/UnbindIdentity"
-	UserService_SendVerificationCode_FullMethodName  = "/user.v1.UserService/SendVerificationCode"
-	UserService_ListSessions_FullMethodName          = "/user.v1.UserService/ListSessions"
-	UserService_RevokeSession_FullMethodName         = "/user.v1.UserService/RevokeSession"
-	UserService_RevokeAllSessions_FullMethodName     = "/user.v1.UserService/RevokeAllSessions"
-	UserService_GetSession_FullMethodName            = "/user.v1.UserService/GetSession"
-	UserService_IssueSessionCode_FullMethodName      = "/user.v1.UserService/IssueSessionCode"
-	UserService_ExchangeSessionCode_FullMethodName   = "/user.v1.UserService/ExchangeSessionCode"
-	UserService_CreateUser_FullMethodName            = "/user.v1.UserService/CreateUser"
-	UserService_GetUser_FullMethodName               = "/user.v1.UserService/GetUser"
-	UserService_ListUsers_FullMethodName             = "/user.v1.UserService/ListUsers"
-	UserService_ListUsersPaged_FullMethodName        = "/user.v1.UserService/ListUsersPaged"
-	UserService_DisableUser_FullMethodName           = "/user.v1.UserService/DisableUser"
-	UserService_GetLoginLogs_FullMethodName          = "/user.v1.UserService/GetLoginLogs"
-	UserService_LookupSubject_FullMethodName         = "/user.v1.UserService/LookupSubject"
-	UserService_CreateGroup_FullMethodName           = "/user.v1.UserService/CreateGroup"
-	UserService_GetGroup_FullMethodName              = "/user.v1.UserService/GetGroup"
-	UserService_UpdateGroup_FullMethodName           = "/user.v1.UserService/UpdateGroup"
-	UserService_ListGroups_FullMethodName            = "/user.v1.UserService/ListGroups"
-	UserService_DeleteGroup_FullMethodName           = "/user.v1.UserService/DeleteGroup"
-	UserService_AddGroupMember_FullMethodName        = "/user.v1.UserService/AddGroupMember"
-	UserService_RemoveGroupMember_FullMethodName     = "/user.v1.UserService/RemoveGroupMember"
-	UserService_ListGroupMembers_FullMethodName      = "/user.v1.UserService/ListGroupMembers"
-	UserService_CreateRole_FullMethodName            = "/user.v1.UserService/CreateRole"
-	UserService_UpdateRole_FullMethodName            = "/user.v1.UserService/UpdateRole"
-	UserService_DeleteRole_FullMethodName            = "/user.v1.UserService/DeleteRole"
-	UserService_ListRoles_FullMethodName             = "/user.v1.UserService/ListRoles"
-	UserService_GetRole_FullMethodName               = "/user.v1.UserService/GetRole"
-	UserService_ListPermissions_FullMethodName       = "/user.v1.UserService/ListPermissions"
-	UserService_CreatePermission_FullMethodName      = "/user.v1.UserService/CreatePermission"
-	UserService_GetPermission_FullMethodName         = "/user.v1.UserService/GetPermission"
-	UserService_UpdatePermission_FullMethodName      = "/user.v1.UserService/UpdatePermission"
-	UserService_DeletePermission_FullMethodName      = "/user.v1.UserService/DeletePermission"
-	UserService_CreatePermissionGroup_FullMethodName = "/user.v1.UserService/CreatePermissionGroup"
-	UserService_GetPermissionGroup_FullMethodName    = "/user.v1.UserService/GetPermissionGroup"
-	UserService_UpdatePermissionGroup_FullMethodName = "/user.v1.UserService/UpdatePermissionGroup"
-	UserService_DeletePermissionGroup_FullMethodName = "/user.v1.UserService/DeletePermissionGroup"
-	UserService_ListPermissionGroups_FullMethodName  = "/user.v1.UserService/ListPermissionGroups"
-	UserService_AddGroupRole_FullMethodName          = "/user.v1.UserService/AddGroupRole"
-	UserService_RemoveGroupRole_FullMethodName       = "/user.v1.UserService/RemoveGroupRole"
-	UserService_ListGroupRoles_FullMethodName        = "/user.v1.UserService/ListGroupRoles"
-	UserService_AssignRole_FullMethodName            = "/user.v1.UserService/AssignRole"
-	UserService_RevokeRole_FullMethodName            = "/user.v1.UserService/RevokeRole"
-	UserService_ListUserRoles_FullMethodName         = "/user.v1.UserService/ListUserRoles"
-	UserService_CreateApp_FullMethodName             = "/user.v1.UserService/CreateApp"
-	UserService_GetApp_FullMethodName                = "/user.v1.UserService/GetApp"
-	UserService_UpdateApp_FullMethodName             = "/user.v1.UserService/UpdateApp"
-	UserService_RotateAppSecret_FullMethodName       = "/user.v1.UserService/RotateAppSecret"
-	UserService_ListApps_FullMethodName              = "/user.v1.UserService/ListApps"
-	UserService_DeleteApp_FullMethodName             = "/user.v1.UserService/DeleteApp"
+	UserService_Ping_FullMethodName                   = "/user.v1.UserService/Ping"
+	UserService_Register_FullMethodName               = "/user.v1.UserService/Register"
+	UserService_Login_FullMethodName                  = "/user.v1.UserService/Login"
+	UserService_Logout_FullMethodName                 = "/user.v1.UserService/Logout"
+	UserService_GetOAuthURL_FullMethodName            = "/user.v1.UserService/GetOAuthURL"
+	UserService_SocialLogin_FullMethodName            = "/user.v1.UserService/SocialLogin"
+	UserService_MiniProgramLogin_FullMethodName       = "/user.v1.UserService/MiniProgramLogin"
+	UserService_MiniProgramPhoneLogin_FullMethodName  = "/user.v1.UserService/MiniProgramPhoneLogin"
+	UserService_GetProfile_FullMethodName             = "/user.v1.UserService/GetProfile"
+	UserService_UpdateProfile_FullMethodName          = "/user.v1.UserService/UpdateProfile"
+	UserService_ChangePassword_FullMethodName         = "/user.v1.UserService/ChangePassword"
+	UserService_ResetPassword_FullMethodName          = "/user.v1.UserService/ResetPassword"
+	UserService_ListIdentities_FullMethodName         = "/user.v1.UserService/ListIdentities"
+	UserService_BindIdentity_FullMethodName           = "/user.v1.UserService/BindIdentity"
+	UserService_BindOAuthIdentity_FullMethodName      = "/user.v1.UserService/BindOAuthIdentity"
+	UserService_UnbindIdentity_FullMethodName         = "/user.v1.UserService/UnbindIdentity"
+	UserService_SendVerificationCode_FullMethodName   = "/user.v1.UserService/SendVerificationCode"
+	UserService_ListSessions_FullMethodName           = "/user.v1.UserService/ListSessions"
+	UserService_RevokeSession_FullMethodName          = "/user.v1.UserService/RevokeSession"
+	UserService_RevokeAllSessions_FullMethodName      = "/user.v1.UserService/RevokeAllSessions"
+	UserService_GetSession_FullMethodName             = "/user.v1.UserService/GetSession"
+	UserService_IssueSessionCode_FullMethodName       = "/user.v1.UserService/IssueSessionCode"
+	UserService_ExchangeSessionCode_FullMethodName    = "/user.v1.UserService/ExchangeSessionCode"
+	UserService_CreateUser_FullMethodName             = "/user.v1.UserService/CreateUser"
+	UserService_GetUser_FullMethodName                = "/user.v1.UserService/GetUser"
+	UserService_ListUsers_FullMethodName              = "/user.v1.UserService/ListUsers"
+	UserService_ListUsersPaged_FullMethodName         = "/user.v1.UserService/ListUsersPaged"
+	UserService_DisableUser_FullMethodName            = "/user.v1.UserService/DisableUser"
+	UserService_GetLoginLogs_FullMethodName           = "/user.v1.UserService/GetLoginLogs"
+	UserService_LookupSubject_FullMethodName          = "/user.v1.UserService/LookupSubject"
+	UserService_EnsureConsoleBootstrap_FullMethodName = "/user.v1.UserService/EnsureConsoleBootstrap"
+	UserService_CreateGroup_FullMethodName            = "/user.v1.UserService/CreateGroup"
+	UserService_GetGroup_FullMethodName               = "/user.v1.UserService/GetGroup"
+	UserService_UpdateGroup_FullMethodName            = "/user.v1.UserService/UpdateGroup"
+	UserService_ListGroups_FullMethodName             = "/user.v1.UserService/ListGroups"
+	UserService_DeleteGroup_FullMethodName            = "/user.v1.UserService/DeleteGroup"
+	UserService_AddGroupMember_FullMethodName         = "/user.v1.UserService/AddGroupMember"
+	UserService_RemoveGroupMember_FullMethodName      = "/user.v1.UserService/RemoveGroupMember"
+	UserService_ListGroupMembers_FullMethodName       = "/user.v1.UserService/ListGroupMembers"
+	UserService_CreateRole_FullMethodName             = "/user.v1.UserService/CreateRole"
+	UserService_UpdateRole_FullMethodName             = "/user.v1.UserService/UpdateRole"
+	UserService_DeleteRole_FullMethodName             = "/user.v1.UserService/DeleteRole"
+	UserService_ListRoles_FullMethodName              = "/user.v1.UserService/ListRoles"
+	UserService_GetRole_FullMethodName                = "/user.v1.UserService/GetRole"
+	UserService_ListPermissions_FullMethodName        = "/user.v1.UserService/ListPermissions"
+	UserService_CreatePermission_FullMethodName       = "/user.v1.UserService/CreatePermission"
+	UserService_GetPermission_FullMethodName          = "/user.v1.UserService/GetPermission"
+	UserService_UpdatePermission_FullMethodName       = "/user.v1.UserService/UpdatePermission"
+	UserService_DeletePermission_FullMethodName       = "/user.v1.UserService/DeletePermission"
+	UserService_CreatePermissionGroup_FullMethodName  = "/user.v1.UserService/CreatePermissionGroup"
+	UserService_GetPermissionGroup_FullMethodName     = "/user.v1.UserService/GetPermissionGroup"
+	UserService_UpdatePermissionGroup_FullMethodName  = "/user.v1.UserService/UpdatePermissionGroup"
+	UserService_DeletePermissionGroup_FullMethodName  = "/user.v1.UserService/DeletePermissionGroup"
+	UserService_ListPermissionGroups_FullMethodName   = "/user.v1.UserService/ListPermissionGroups"
+	UserService_AddGroupRole_FullMethodName           = "/user.v1.UserService/AddGroupRole"
+	UserService_RemoveGroupRole_FullMethodName        = "/user.v1.UserService/RemoveGroupRole"
+	UserService_ListGroupRoles_FullMethodName         = "/user.v1.UserService/ListGroupRoles"
+	UserService_AssignRole_FullMethodName             = "/user.v1.UserService/AssignRole"
+	UserService_RevokeRole_FullMethodName             = "/user.v1.UserService/RevokeRole"
+	UserService_ListUserRoles_FullMethodName          = "/user.v1.UserService/ListUserRoles"
+	UserService_CreateApp_FullMethodName              = "/user.v1.UserService/CreateApp"
+	UserService_GetApp_FullMethodName                 = "/user.v1.UserService/GetApp"
+	UserService_UpdateApp_FullMethodName              = "/user.v1.UserService/UpdateApp"
+	UserService_RotateAppSecret_FullMethodName        = "/user.v1.UserService/RotateAppSecret"
+	UserService_ListApps_FullMethodName               = "/user.v1.UserService/ListApps"
+	UserService_DeleteApp_FullMethodName              = "/user.v1.UserService/DeleteApp"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -251,6 +252,17 @@ type UserServiceClient interface {
 	// authority). Used by portal's bootstrap-admin logic to decide bind-vs-create.
 	// PLATFORM actor only.
 	LookupSubject(ctx context.Context, in *LookupSubjectRequest, opts ...grpc.CallOption) (*LookupSubjectResponse, error)
+	// EnsureConsoleBootstrap idempotently provisions the platform console's
+	// reserved user-service objects: the user_apps row app_key="ten_platform"
+	// plus one login-locked PLATFORM system user inside that directory. Called
+	// by portal-service at startup to obtain its service principal (the actor
+	// portal speaks as when driving user-service admin RPCs — LookupSubject /
+	// CreateUser). ACTOR-EXEMPT by design: it can only create these reserved
+	// ten_platform objects and grants no cross-tenant capability; the trust
+	// basis is the internal-network invariant (spec §8.1), the same posture as
+	// the other internal-trust surfaces. Returns {app_key, system_user_id} on
+	// every call (idempotent read-back).
+	EnsureConsoleBootstrap(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EnsureConsoleBootstrapResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
 	// parent_id builds a hierarchy. After creating, add members via
 	// AddGroupMember and grant roles via AddGroupRole — members inherit the
@@ -659,6 +671,16 @@ func (c *userServiceClient) LookupSubject(ctx context.Context, in *LookupSubject
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LookupSubjectResponse)
 	err := c.cc.Invoke(ctx, UserService_LookupSubject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) EnsureConsoleBootstrap(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EnsureConsoleBootstrapResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EnsureConsoleBootstrapResponse)
+	err := c.cc.Invoke(ctx, UserService_EnsureConsoleBootstrap_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1176,6 +1198,17 @@ type UserServiceServer interface {
 	// authority). Used by portal's bootstrap-admin logic to decide bind-vs-create.
 	// PLATFORM actor only.
 	LookupSubject(context.Context, *LookupSubjectRequest) (*LookupSubjectResponse, error)
+	// EnsureConsoleBootstrap idempotently provisions the platform console's
+	// reserved user-service objects: the user_apps row app_key="ten_platform"
+	// plus one login-locked PLATFORM system user inside that directory. Called
+	// by portal-service at startup to obtain its service principal (the actor
+	// portal speaks as when driving user-service admin RPCs — LookupSubject /
+	// CreateUser). ACTOR-EXEMPT by design: it can only create these reserved
+	// ten_platform objects and grants no cross-tenant capability; the trust
+	// basis is the internal-network invariant (spec §8.1), the same posture as
+	// the other internal-trust surfaces. Returns {app_key, system_user_id} on
+	// every call (idempotent read-back).
+	EnsureConsoleBootstrap(context.Context, *emptypb.Empty) (*EnsureConsoleBootstrapResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
 	// parent_id builds a hierarchy. After creating, add members via
 	// AddGroupMember and grant roles via AddGroupRole — members inherit the
@@ -1379,6 +1412,9 @@ func (UnimplementedUserServiceServer) GetLoginLogs(context.Context, *GetLoginLog
 }
 func (UnimplementedUserServiceServer) LookupSubject(context.Context, *LookupSubjectRequest) (*LookupSubjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method LookupSubject not implemented")
+}
+func (UnimplementedUserServiceServer) EnsureConsoleBootstrap(context.Context, *emptypb.Empty) (*EnsureConsoleBootstrapResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method EnsureConsoleBootstrap not implemented")
 }
 func (UnimplementedUserServiceServer) CreateGroup(context.Context, *CreateGroupRequest) (*Group, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateGroup not implemented")
@@ -2042,6 +2078,24 @@ func _UserService_LookupSubject_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).LookupSubject(ctx, req.(*LookupSubjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_EnsureConsoleBootstrap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).EnsureConsoleBootstrap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_EnsureConsoleBootstrap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).EnsureConsoleBootstrap(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2802,6 +2856,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LookupSubject",
 			Handler:    _UserService_LookupSubject_Handler,
+		},
+		{
+			MethodName: "EnsureConsoleBootstrap",
+			Handler:    _UserService_EnsureConsoleBootstrap_Handler,
 		},
 		{
 			MethodName: "CreateGroup",

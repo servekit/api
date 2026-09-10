@@ -712,6 +712,19 @@ message SubjectMatch {
   UserType user_type = 3; // END_USER / TENANT_ADMIN / PLATFORM
 }
 
+// EnsureConsoleBootstrapResponse identifies the platform console's reserved
+// user-service objects: the ten_platform directory (user_apps.app_key, always
+// the fixed key "ten_platform") and its login-locked system user. Returned on
+// EVERY call — the RPC is an idempotent read-back, so repeat callers (portal
+// restarts, racing replicas) get the same identifiers.
+message EnsureConsoleBootstrapResponse {
+  // app_key is always "ten_platform" (the fixed reserved directory key).
+  string app_key = 1;
+  // system_user_id is the login-locked PLATFORM user portal-service speaks
+  // as (its RequestActor.user_id on admin calls into user-service).
+  int64 system_user_id = 2;
+}
+
 message CreateGroupRequest {
   string name = 1 [(buf.validate.field).string = {
     min_len: 1
