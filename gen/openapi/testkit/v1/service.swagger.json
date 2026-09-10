@@ -14056,10 +14056,6 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "isPlatform": {
-          "type": "boolean",
-          "description": "is_platform marks the platform-operator tenant: its admin surfaces see\nacross ALL tenants (with an optional app_key filter) instead of being\npinned to its own directory."
         }
       },
       "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). Tenants follow the platform-wide ak/sk pattern: app_key\nis minted server-side (\"usr_\" + 8 base36), app_secret is the data-plane\ncredential presented as x-app-key / x-app-secret metadata by trusted BFFs\non login/register/admin surfaces — the tenant IS the verified caller."
