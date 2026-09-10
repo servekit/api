@@ -83,8 +83,9 @@ message User {
   string default_currency = 21;
   // Reserved for MFA; false until an MFA flow exists.
   bool mfa_enabled = 22;
-  // Tenant label (user_apps.app_key) the user belongs to.
-  string app_key = 23;
+  // Tenant label (user_apps.app_key) the user belongs to. Phase ④ terminal
+  // naming: tenant_key on the wire.
+  string tenant_key = 23;
 }
 
 // ---- P2 linkd entity messages (curated frontend-facing shapes) ----
@@ -201,8 +202,8 @@ message LoginLog {
   // The credential subject of the attempt (see user.v1).
   string target = 16;
   // Tenant the attempt happened in (user_apps.app_key); "" on rows from
-  // before tenancy.
-  string app_key = 17;
+  // before tenancy. Phase ④ terminal naming: tenant_key on the wire.
+  string tenant_key = 17;
 }
 
 // UserRole is one role held by a user (direct or group-inherited).

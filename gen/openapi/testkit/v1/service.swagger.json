@@ -7299,7 +7299,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "CreateAppRequest registers a tenant. app_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable).",
+            "description": "CreateAppRequest registers a tenant. tenant_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable; stored as the registry's\napp_key column).",
             "in": "body",
             "required": true,
             "schema": {
@@ -7312,7 +7312,7 @@
         ]
       }
     },
-    "/api/v1/user/admin/apps/{appKey}": {
+    "/api/v1/user/admin/apps/{tenantKey}": {
       "get": {
         "operationId": "UserGetApp",
         "responses": {
@@ -7331,7 +7331,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7360,7 +7360,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7388,7 +7388,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7407,7 +7407,7 @@
         ]
       }
     },
-    "/api/v1/user/admin/apps/{appKey}:rotateSecret": {
+    "/api/v1/user/admin/apps/{tenantKey}:rotateSecret": {
       "post": {
         "operationId": "UserRotateAppSecret",
         "responses": {
@@ -7426,7 +7426,7 @@
         },
         "parameters": [
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "in": "path",
             "required": true,
             "type": "string"
@@ -7666,7 +7666,7 @@
             "type": "boolean"
           },
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "description": "Tenant filter (user_apps.app_key). Platform-operator callers only.",
             "in": "query",
             "required": false,
@@ -7816,7 +7816,7 @@
             "type": "string"
           },
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "description": "Tenant filter (user_apps.app_key). Platform-operator callers only;\ntenant callers are pinned to their own directory regardless.",
             "in": "query",
             "required": false,
@@ -8056,7 +8056,7 @@
             "type": "boolean"
           },
           {
-            "name": "appKey",
+            "name": "tenantKey",
             "description": "Tenant filter (user_apps.app_key). Platform-operator callers only.",
             "in": "query",
             "required": false,
@@ -8747,7 +8747,7 @@
           "type": "boolean"
         }
       },
-      "description": "UpdateAppRequest edits mutable fields; app_key is immutable. Absent\noptional fields keep their current values."
+      "description": "UpdateAppRequest edits mutable fields; tenant_key is immutable. Absent\noptional fields keep their current values."
     },
     "licenseV1CreateAppRequest": {
       "type": "object",
@@ -9256,15 +9256,15 @@
     "userV1CreateAppRequest": {
       "type": "object",
       "properties": {
-        "appKey": {
+        "tenantKey": {
           "type": "string",
-          "description": "app_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
+          "description": "tenant_key pattern: lowercase letter followed by lowercase alphanumerics\nand dashes. Optional; empty = server-generated."
         },
         "name": {
           "type": "string"
         }
       },
-      "description": "CreateAppRequest registers a tenant. app_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable)."
+      "description": "CreateAppRequest registers a tenant. tenant_key empty = the server mints\none (\"usr_\" + 8 base36 chars, immutable; stored as the registry's\napp_key column)."
     },
     "userV1CreateAppResponse": {
       "type": "object",
@@ -10608,7 +10608,7 @@
         "locale": {
           "type": "string"
         },
-        "appKey": {
+        "tenantKey": {
           "type": "string",
           "description": "Target tenant (user_apps.app_key). Platform-operator callers only."
         }
@@ -11620,7 +11620,7 @@
         "loginProvider": {
           "$ref": "#/definitions/v1IdentityProvider"
         },
-        "appKey": {
+        "tenantKey": {
           "type": "string",
           "description": "Tenant the session lives in (user_apps.app_key)."
         }
@@ -12695,9 +12695,9 @@
           "type": "string",
           "description": "The credential subject of the attempt (see user.v1)."
         },
-        "appKey": {
+        "tenantKey": {
           "type": "string",
-          "description": "Tenant the attempt happened in (user_apps.app_key); \"\" on rows from\nbefore tenancy."
+          "description": "Tenant the attempt happened in (user_apps.app_key); \"\" on rows from\nbefore tenancy. Phase ④ terminal naming: tenant_key on the wire."
         }
       },
       "description": "LoginLog is one row of the login audit trail."
@@ -14692,9 +14692,9 @@
           "type": "boolean",
           "description": "Reserved for MFA; false until an MFA flow exists."
         },
-        "appKey": {
+        "tenantKey": {
           "type": "string",
-          "description": "Tenant label (user_apps.app_key) the user belongs to."
+          "description": "Tenant label (user_apps.app_key) the user belongs to. Phase ④ terminal\nnaming: tenant_key on the wire."
         }
       },
       "description": "User is the frontend-facing user shape (P2 enriched). Fields are renumbered\nsequentially vs uservl.User (which has gaps from historical edits); the\nmapping layer translates field-by-name, not field-by-number. Unlike P1's\n6-field login view, this carries the full profile surface (status, gender,\ntimestamps, register_source, ...) used by profile/admin UIs. user_type is\nretained so the frontend can still do its two-track split (design spec §3.5)."
@@ -14706,9 +14706,9 @@
           "type": "string",
           "format": "int64"
         },
-        "appKey": {
+        "tenantKey": {
           "type": "string",
-          "description": "app_key identifies the tenant on every tenant-scoped surface; unique,\nimmutable after creation."
+          "description": "tenant_key identifies the tenant on every tenant-scoped surface; unique,\nimmutable after creation."
         },
         "appSecret": {
           "type": "string",
@@ -14730,7 +14730,7 @@
           "format": "date-time"
         }
       },
-      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). Tenants follow the platform-wide ak/sk pattern: app_key\nis minted server-side (\"usr_\" + 8 base36), app_secret is the data-plane\ncredential presented as x-app-key / x-app-secret metadata by trusted BFFs\non login/register/admin surfaces — the tenant IS the verified caller."
+      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). Tenants follow the platform-wide ak/sk pattern: the key\nis minted server-side (\"usr_\" + 8 base36; the registry column keeps its\nhistorical app_key name), app_secret is the data-plane credential\npresented as x-app-key / x-app-secret metadata by trusted BFFs on\nlogin/register/admin surfaces — the tenant IS the verified caller."
     },
     "v1UserRole": {
       "type": "object",

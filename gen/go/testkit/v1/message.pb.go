@@ -65,8 +65,9 @@ type User struct {
 	DefaultCurrency string `protobuf:"bytes,21,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
 	// Reserved for MFA; false until an MFA flow exists.
 	MfaEnabled bool `protobuf:"varint,22,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
-	// Tenant label (user_apps.app_key) the user belongs to.
-	AppKey        string `protobuf:"bytes,23,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// Tenant label (user_apps.app_key) the user belongs to. Phase ④ terminal
+	// naming: tenant_key on the wire.
+	TenantKey     string `protobuf:"bytes,23,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -255,9 +256,9 @@ func (x *User) GetMfaEnabled() bool {
 	return false
 }
 
-func (x *User) GetAppKey() string {
+func (x *User) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -957,8 +958,8 @@ type LoginLog struct {
 	// The credential subject of the attempt (see user.v1).
 	Target string `protobuf:"bytes,16,opt,name=target,proto3" json:"target,omitempty"`
 	// Tenant the attempt happened in (user_apps.app_key); "" on rows from
-	// before tenancy.
-	AppKey        string `protobuf:"bytes,17,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// before tenancy. Phase ④ terminal naming: tenant_key on the wire.
+	TenantKey     string `protobuf:"bytes,17,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1105,9 +1106,9 @@ func (x *LoginLog) GetTarget() string {
 	return ""
 }
 
-func (x *LoginLog) GetAppKey() string {
+func (x *LoginLog) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -4641,7 +4642,7 @@ var File_testkit_v1_message_proto protoreflect.FileDescriptor
 const file_testkit_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/message.proto\x12\n" +
-	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18storage/v1/message.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\xaa\b\n" +
+	"testkit.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16license/v1/enums.proto\x1a\x18messaging/v1/enums.proto\x1a\x16storage/v1/enums.proto\x1a\x18storage/v1/message.proto\x1a\x18telemetry/v1/enums.proto\x1a\x16testkit/v1/enums.proto\x1a\x13user/v1/enums.proto\"\xb0\b\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -4673,8 +4674,9 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\tdial_code\x18\x14 \x01(\tB\x1d\xbaH\x1a\xd8\x01\x01r\x152\x13^\\+[1-9][0-9]{0,3}$R\bdialCode\x12)\n" +
 	"\x10default_currency\x18\x15 \x01(\tR\x0fdefaultCurrency\x12\x1f\n" +
 	"\vmfa_enabled\x18\x16 \x01(\bR\n" +
-	"mfaEnabled\x12\x17\n" +
-	"\aapp_key\x18\x17 \x01(\tR\x06appKey\"\xd5\x01\n" +
+	"mfaEnabled\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x17 \x01(\tR\ttenantKey\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -4747,7 +4749,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"avatar_url\x18\x03 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x04\x88\x01\x01R\tavatarUrl\x12\x12\n" +
 	"\x04role\x18\x04 \x01(\tR\x04role\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xcb\x04\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd1\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -4768,8 +4770,9 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
 	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
 	"\busername\x18\x0f \x01(\tR\busername\x12\x16\n" +
-	"\x06target\x18\x10 \x01(\tR\x06target\x12\x17\n" +
-	"\aapp_key\x18\x11 \x01(\tR\x06appKey\"\xa3\x01\n" +
+	"\x06target\x18\x10 \x01(\tR\x06target\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x11 \x01(\tR\ttenantKey\"\xa3\x01\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\arole_id\x18\x02 \x01(\x03R\x06roleId\x12\x1b\n" +

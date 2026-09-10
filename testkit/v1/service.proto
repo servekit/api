@@ -990,25 +990,25 @@ service TestkitService {
   }
 
   rpc UserGetApp(user.v1.GetAppRequest) returns (user.v1.GetAppResponse) {
-    option (google.api.http) = {get: "/api/v1/user/admin/apps/{app_key}"};
+    option (google.api.http) = {get: "/api/v1/user/admin/apps/{tenant_key}"};
   }
 
   rpc UserUpdateApp(user.v1.UpdateAppRequest) returns (user.v1.UpdateAppResponse) {
     option (google.api.http) = {
-      put: "/api/v1/user/admin/apps/{app_key}"
+      put: "/api/v1/user/admin/apps/{tenant_key}"
       body: "*"
     };
   }
 
   rpc UserRotateAppSecret(user.v1.RotateAppSecretRequest) returns (user.v1.RotateAppSecretResponse) {
     option (google.api.http) = {
-      post: "/api/v1/user/admin/apps/{app_key}:rotateSecret"
+      post: "/api/v1/user/admin/apps/{tenant_key}:rotateSecret"
       body: "*"
     };
   }
 
   rpc UserDeleteApp(user.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/user/admin/apps/{app_key}"};
+    option (google.api.http) = {delete: "/api/v1/user/admin/apps/{tenant_key}"};
   }
 
   // ==================== Phase ④ portal admin console forwards ====================

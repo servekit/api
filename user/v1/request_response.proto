@@ -462,9 +462,9 @@ message GetSessionResponse {
   string device = 10;
   // Social/mini-program IdP (see Session.login_provider).
   IdentityProvider login_provider = 11;
-  // The tenant this session lives in (user.v1 UserAppInfo.app_key): the
-  // application the user signed into. Rides the RequestActor downstream.
-  string app_key = 12;
+  // The tenant this session lives in (user.v1 UserAppInfo.tenant_key): the
+  // directory the user signed into. Rides the RequestActor downstream.
+  string tenant_key = 12;
   // The directory user's type (platform staff / tenant admin / end user).
   // Rides the RequestActor downstream; filled by joining the user row.
   UserType user_type = 13;
@@ -507,9 +507,9 @@ message CreateUserRequest {
     }
   ];
   // Target tenant (user_apps.app_key). Required for platform-operator
-  // callers; tenant callers may omit it (defaults to their own directory)
-  // and may not target another tenant.
-  string app_key = 11 [(buf.validate.field).string.max_len = 64];
+  // callers without a trusted injection; tenant callers may omit it
+  // (defaults to their own directory) and may not target another tenant.
+  string tenant_key = 11 [(buf.validate.field).string.max_len = 64];
 }
 
 message CreateUserResponse {
@@ -572,7 +572,7 @@ message ListUsersRequest {
   bool descending = 22;
   // Tenant filter (user_apps.app_key). Platform-operator callers only;
   // tenant callers are pinned to their own directory regardless.
-  string app_key = 24 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 24 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersResponse {
@@ -634,7 +634,7 @@ message ListUsersPagedRequest {
   bool count = 23; // when false, total/total_pages are returned as 0 (skip COUNT)
   // Tenant filter (user_apps.app_key). Platform-operator callers only;
   // tenant callers are pinned to their own directory regardless.
-  string app_key = 25 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 25 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersPagedResponse {
@@ -667,7 +667,7 @@ message GetLoginLogsRequest {
   string username = 8 [(buf.validate.field).string.max_len = 64];
   // Tenant filter (user_apps.app_key). Platform-operator callers only;
   // tenant callers are pinned to their own directory regardless.
-  string app_key = 9 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 9 [(buf.validate.field).string.max_len = 64];
 }
 
 message GetLoginLogsResponse {
@@ -718,8 +718,9 @@ message SubjectMatch {
 // EVERY call — the RPC is an idempotent read-back, so repeat callers (portal
 // restarts, racing replicas) get the same identifiers.
 message EnsureConsoleBootstrapResponse {
-  // app_key is always "ten_platform" (the fixed reserved directory key).
-  string app_key = 1;
+  // tenant_key is always "ten_platform" (the fixed reserved directory key;
+  // the registry column keeps its historical app_key name).
+  string tenant_key = 1;
   // system_user_id is the login-locked PLATFORM user portal-service speaks
   // as (its RequestActor.user_id on admin calls into user-service).
   int64 system_user_id = 2;
@@ -958,14 +959,17 @@ message ListUserRolesResponse {
 // ==================== Admin: tenants (user apps) ====================
 // Platform-wide ak/sk pattern (see UserAppInfo). The tenant of every
 // tenant-scoped surface is the VERIFIED CALLING APP (x-app-key /
-// x-app-secret metadata), never a request field.
+// x-app-secret metadata), never a request field. Phase ④ terminal naming:
+// the wire fields say tenant_key (the registry's app_key column keeps its
+// historical name until the data-side closure).
 
-// CreateAppRequest registers a tenant. app_key empty = the server mints
-// one ("usr_" + 8 base36 chars, immutable).
+// CreateAppRequest registers a tenant. tenant_key empty = the server mints
+// one ("usr_" + 8 base36 chars, immutable; stored as the registry's
+// app_key column).
 message CreateAppRequest {
-  // app_key pattern: lowercase letter followed by lowercase alphanumerics
+  // tenant_key pattern: lowercase letter followed by lowercase alphanumerics
   // and dashes. Optional; empty = server-generated.
-  string app_key = 1 [
+  string tenant_key = 1 [
     (buf.validate.field).ignore = IGNORE_IF_ZERO_VALUE,
     (buf.validate.field).string.pattern = "^[a-z][a-z0-9-]{0,63}$"
   ];
@@ -982,7 +986,7 @@ message CreateAppResponse {
 }
 
 message GetAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -992,10 +996,10 @@ message GetAppResponse {
   UserAppInfo app = 1;
 }
 
-// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
+// UpdateAppRequest edits mutable fields; tenant_key is immutable. Absent
 // optional fields keep their current values.
 message UpdateAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1011,7 +1015,7 @@ message UpdateAppResponse {
 }
 
 message RotateAppSecretRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];
@@ -1033,7 +1037,7 @@ message ListAppsResponse {
 // DeleteAppRequest removes the tenant. Refused while users still belong
 // to it (reassign or delete them first).
 message DeleteAppRequest {
-  string app_key = 1 [(buf.validate.field).string = {
+  string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
     max_len: 64
   }];

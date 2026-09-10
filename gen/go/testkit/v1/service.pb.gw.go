@@ -6876,13 +6876,13 @@ func request_TestkitService_UserGetApp_0(ctx context.Context, marshaler runtime.
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6897,13 +6897,13 @@ func local_request_TestkitService_UserGetApp_0(ctx context.Context, marshaler ru
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	msg, err := server.UserGetApp(ctx, &protoReq)
 	return msg, metadata, err
@@ -6918,13 +6918,13 @@ func request_TestkitService_UserUpdateApp_0(ctx context.Context, marshaler runti
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6942,13 +6942,13 @@ func local_request_TestkitService_UserUpdateApp_0(ctx context.Context, marshaler
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	msg, err := server.UserUpdateApp(ctx, &protoReq)
 	return msg, metadata, err
@@ -6963,13 +6963,13 @@ func request_TestkitService_UserRotateAppSecret_0(ctx context.Context, marshaler
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -6987,13 +6987,13 @@ func local_request_TestkitService_UserRotateAppSecret_0(ctx context.Context, mar
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	msg, err := server.UserRotateAppSecret(ctx, &protoReq)
 	return msg, metadata, err
@@ -7005,13 +7005,13 @@ func request_TestkitService_UserDeleteApp_0(ctx context.Context, marshaler runti
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
@@ -7026,13 +7026,13 @@ func local_request_TestkitService_UserDeleteApp_0(ctx context.Context, marshaler
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["app_key"]
+	val, ok := pathParams["tenant_key"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_key")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "tenant_key")
 	}
-	protoReq.AppKey, err = runtime.String(val)
+	protoReq.TenantKey, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_key", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "tenant_key", err)
 	}
 	msg, err := server.UserDeleteApp(ctx, &protoReq)
 	return msg, metadata, err
@@ -11296,7 +11296,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserGetApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserGetApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -11316,7 +11316,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserUpdateApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserUpdateApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -11336,7 +11336,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -11356,7 +11356,7 @@ func RegisterTestkitServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserDeleteApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/testkit.v1.TestkitService/UserDeleteApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -14867,7 +14867,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserGetApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserGetApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -14884,7 +14884,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserUpdateApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserUpdateApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -14901,7 +14901,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}:rotateSecret"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserRotateAppSecret", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}:rotateSecret"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -14918,7 +14918,7 @@ func RegisterTestkitServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserDeleteApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{app_key}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/testkit.v1.TestkitService/UserDeleteApp", runtime.WithHTTPPathPattern("/api/v1/user/admin/apps/{tenant_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -15328,10 +15328,10 @@ var (
 	pattern_TestkitService_GetDataInfo_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "reference", "data-info"}, ""))
 	pattern_TestkitService_UserListApps_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
 	pattern_TestkitService_UserCreateApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "user", "admin", "apps"}, ""))
-	pattern_TestkitService_UserGetApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_UserUpdateApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "app_key"}, ""))
-	pattern_TestkitService_UserRotateAppSecret_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "app_key"}, "rotateSecret"))
-	pattern_TestkitService_UserDeleteApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "app_key"}, ""))
+	pattern_TestkitService_UserGetApp_0                  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
+	pattern_TestkitService_UserUpdateApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
+	pattern_TestkitService_UserRotateAppSecret_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, "rotateSecret"))
+	pattern_TestkitService_UserDeleteApp_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "user", "admin", "apps", "tenant_key"}, ""))
 	pattern_TestkitService_PortalWhoAmI_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "whoami"}, ""))
 	pattern_TestkitService_PortalMyCapabilities_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "portal", "capabilities"}, ""))
 	pattern_TestkitService_PortalListApiKeys_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "v1", "portal", "tenants", "tenant_key", "api-keys"}, ""))

@@ -1903,9 +1903,9 @@ type GetSessionResponse struct {
 	Device string `protobuf:"bytes,10,opt,name=device,proto3" json:"device,omitempty"`
 	// Social/mini-program IdP (see Session.login_provider).
 	LoginProvider IdentityProvider `protobuf:"varint,11,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
-	// The tenant this session lives in (user.v1 UserAppInfo.app_key): the
-	// application the user signed into. Rides the RequestActor downstream.
-	AppKey string `protobuf:"bytes,12,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// The tenant this session lives in (user.v1 UserAppInfo.tenant_key): the
+	// directory the user signed into. Rides the RequestActor downstream.
+	TenantKey string `protobuf:"bytes,12,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// The directory user's type (platform staff / tenant admin / end user).
 	// Rides the RequestActor downstream; filled by joining the user row.
 	UserType      UserType `protobuf:"varint,13,opt,name=user_type,json=userType,proto3,enum=user.v1.UserType" json:"user_type,omitempty"`
@@ -2020,9 +2020,9 @@ func (x *GetSessionResponse) GetLoginProvider() IdentityProvider {
 	return IdentityProvider_IDENTITY_PROVIDER_UNSPECIFIED
 }
 
-func (x *GetSessionResponse) GetAppKey() string {
+func (x *GetSessionResponse) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2049,9 +2049,9 @@ type CreateUserRequest struct {
 	Timezone string `protobuf:"bytes,9,opt,name=timezone,proto3" json:"timezone,omitempty"`
 	Locale   string `protobuf:"bytes,10,opt,name=locale,proto3" json:"locale,omitempty"`
 	// Target tenant (user_apps.app_key). Required for platform-operator
-	// callers; tenant callers may omit it (defaults to their own directory)
-	// and may not target another tenant.
-	AppKey        string `protobuf:"bytes,11,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// callers without a trusted injection; tenant callers may omit it
+	// (defaults to their own directory) and may not target another tenant.
+	TenantKey     string `protobuf:"bytes,11,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2156,9 +2156,9 @@ func (x *CreateUserRequest) GetLocale() string {
 	return ""
 }
 
-func (x *CreateUserRequest) GetAppKey() string {
+func (x *CreateUserRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2284,7 +2284,7 @@ type ListUsersRequest struct {
 	Descending bool          `protobuf:"varint,22,opt,name=descending,proto3" json:"descending,omitempty"`
 	// Tenant filter (user_apps.app_key). Platform-operator callers only;
 	// tenant callers are pinned to their own directory regardless.
-	AppKey        string `protobuf:"bytes,24,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,24,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2481,9 +2481,9 @@ func (x *ListUsersRequest) GetDescending() bool {
 	return false
 }
 
-func (x *ListUsersRequest) GetAppKey() string {
+func (x *ListUsersRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2576,7 +2576,7 @@ type ListUsersPagedRequest struct {
 	Count    bool  `protobuf:"varint,23,opt,name=count,proto3" json:"count,omitempty"` // when false, total/total_pages are returned as 0 (skip COUNT)
 	// Tenant filter (user_apps.app_key). Platform-operator callers only;
 	// tenant callers are pinned to their own directory regardless.
-	AppKey        string `protobuf:"bytes,25,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,25,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2780,9 +2780,9 @@ func (x *ListUsersPagedRequest) GetCount() bool {
 	return false
 }
 
-func (x *ListUsersPagedRequest) GetAppKey() string {
+func (x *ListUsersPagedRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2923,7 +2923,7 @@ type GetLoginLogsRequest struct {
 	Username string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
 	// Tenant filter (user_apps.app_key). Platform-operator callers only;
 	// tenant callers are pinned to their own directory regardless.
-	AppKey        string `protobuf:"bytes,9,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,9,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3014,9 +3014,9 @@ func (x *GetLoginLogsRequest) GetUsername() string {
 	return ""
 }
 
-func (x *GetLoginLogsRequest) GetAppKey() string {
+func (x *GetLoginLogsRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -3284,8 +3284,9 @@ func (x *SubjectMatch) GetUserType() UserType {
 // restarts, racing replicas) get the same identifiers.
 type EnsureConsoleBootstrapResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key is always "ten_platform" (the fixed reserved directory key).
-	AppKey string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// tenant_key is always "ten_platform" (the fixed reserved directory key;
+	// the registry column keeps its historical app_key name).
+	TenantKey string `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// system_user_id is the login-locked PLATFORM user portal-service speaks
 	// as (its RequestActor.user_id on admin calls into user-service).
 	SystemUserId  int64 `protobuf:"varint,2,opt,name=system_user_id,json=systemUserId,proto3" json:"system_user_id,omitempty"`
@@ -3323,9 +3324,9 @@ func (*EnsureConsoleBootstrapResponse) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *EnsureConsoleBootstrapResponse) GetAppKey() string {
+func (x *EnsureConsoleBootstrapResponse) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5289,13 +5290,14 @@ func (x *ListUserRolesResponse) GetRoles() []*UserRole {
 	return nil
 }
 
-// CreateAppRequest registers a tenant. app_key empty = the server mints
-// one ("usr_" + 8 base36 chars, immutable).
+// CreateAppRequest registers a tenant. tenant_key empty = the server mints
+// one ("usr_" + 8 base36 chars, immutable; stored as the registry's
+// app_key column).
 type CreateAppRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_key pattern: lowercase letter followed by lowercase alphanumerics
+	// tenant_key pattern: lowercase letter followed by lowercase alphanumerics
 	// and dashes. Optional; empty = server-generated.
-	AppKey        string `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Name          string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -5331,9 +5333,9 @@ func (*CreateAppRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{82}
 }
 
-func (x *CreateAppRequest) GetAppKey() string {
+func (x *CreateAppRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5400,7 +5402,7 @@ func (x *CreateAppResponse) GetAppSecret() string {
 
 type GetAppRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5435,9 +5437,9 @@ func (*GetAppRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{84}
 }
 
-func (x *GetAppRequest) GetAppKey() string {
+func (x *GetAppRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5486,11 +5488,11 @@ func (x *GetAppResponse) GetApp() *UserAppInfo {
 	return nil
 }
 
-// UpdateAppRequest edits mutable fields; app_key is immutable. Absent
+// UpdateAppRequest edits mutable fields; tenant_key is immutable. Absent
 // optional fields keep their current values.
 type UpdateAppRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	Disabled      *bool                  `protobuf:"varint,3,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -5527,9 +5529,9 @@ func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{86}
 }
 
-func (x *UpdateAppRequest) GetAppKey() string {
+func (x *UpdateAppRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5594,7 +5596,7 @@ func (x *UpdateAppResponse) GetApp() *UserAppInfo {
 
 type RotateAppSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5629,9 +5631,9 @@ func (*RotateAppSecretRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{88}
 }
 
-func (x *RotateAppSecretRequest) GetAppKey() string {
+func (x *RotateAppSecretRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5774,7 +5776,7 @@ func (x *ListAppsResponse) GetApps() []*UserAppInfo {
 // to it (reassign or delete them first).
 type DeleteAppRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5809,9 +5811,9 @@ func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_request_response_proto_rawDescGZIP(), []int{92}
 }
 
-func (x *DeleteAppRequest) GetAppKey() string {
+func (x *DeleteAppRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -5990,7 +5992,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x1bExchangeSessionCodeResponse\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\xfb\x03\n" +
+	"\auser_id\x18\x02 \x01(\x03R\x06userId\"\x81\x04\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -6006,9 +6008,10 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\flogin_target\x18\t \x01(\tR\vloginTarget\x12\x16\n" +
 	"\x06device\x18\n" +
 	" \x01(\tR\x06device\x12@\n" +
-	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\x12\x17\n" +
-	"\aapp_key\x18\f \x01(\tR\x06appKey\x12.\n" +
-	"\tuser_type\x18\r \x01(\x0e2\x11.user.v1.UserTypeR\buserType\"\x85\x04\n" +
+	"\x0elogin_provider\x18\v \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\f \x01(\tR\ttenantKey\x12.\n" +
+	"\tuser_type\x18\r \x01(\x0e2\x11.user.v1.UserTypeR\buserType\"\x8b\x04\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -6023,12 +6026,13 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06gender\x18\b \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
 	"\x06locale\x18\n" +
-	" \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12 \n" +
-	"\aapp_key\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"7\n" +
+	" \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12&\n" +
+	"\n" +
+	"tenant_key\x18\v \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\"7\n" +
 	"\x12CreateUserResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
-	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xaf\t\n" +
+	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"\xb5\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -6059,12 +6063,13 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\border_by\x18\x15 \x01(\x0e2\x16.user.v1.UserSortFieldB\b\xbaH\x05\x82\x01\x02\x10\x01R\aorderBy\x12\x1e\n" +
 	"\n" +
 	"descending\x18\x16 \x01(\bR\n" +
-	"descending\x12 \n" +
-	"\aapp_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"Y\n" +
+	"descending\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\"Y\n" +
 	"\x11ListUsersResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xbc\t\n" +
+	"nextCursor\"\xc2\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
@@ -6096,8 +6101,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"descending\x12\x1b\n" +
 	"\x04page\x18\x15 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x04page\x12&\n" +
 	"\tpage_size\x18\x16 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x14\n" +
-	"\x05count\x18\x17 \x01(\bR\x05count\x12 \n" +
-	"\aapp_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"t\n" +
+	"\x05count\x18\x17 \x01(\bR\x05count\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\"t\n" +
 	"\x16ListUsersPagedResponse\x12#\n" +
 	"\x05users\x18\x01 \x03(\v2\r.user.v1.UserR\x05users\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1f\n" +
@@ -6106,7 +6112,7 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xfc\x02\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\x82\x03\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
@@ -6115,8 +6121,9 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
 	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
 	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12#\n" +
-	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12 \n" +
-	"\aapp_key\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKeyB\n" +
+	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12&\n" +
+	"\n" +
+	"tenant_key\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKeyB\n" +
 	"\n" +
 	"\b_success\"t\n" +
 	"\x14GetLoginLogsResponse\x12%\n" +
@@ -6136,9 +6143,10 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1d\n" +
 	"\n" +
 	"tenant_key\x18\x02 \x01(\tR\ttenantKey\x12.\n" +
-	"\tuser_type\x18\x03 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\"_\n" +
-	"\x1eEnsureConsoleBootstrapResponse\x12\x17\n" +
-	"\aapp_key\x18\x01 \x01(\tR\x06appKey\x12$\n" +
+	"\tuser_type\x18\x03 \x01(\x0e2\x11.user.v1.UserTypeR\buserType\"e\n" +
+	"\x1eEnsureConsoleBootstrapResponse\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tR\ttenantKey\x12$\n" +
 	"\x0esystem_user_id\x18\x02 \x01(\x03R\fsystemUserId\"|\n" +
 	"\x12CreateGroupRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x04name\x12*\n" +
@@ -6262,39 +6270,44 @@ const file_user_v1_request_response_proto_rawDesc = "" +
 	"\x14ListUserRolesRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\"@\n" +
 	"\x15ListUserRolesResponse\x12'\n" +
-	"\x05roles\x18\x01 \x03(\v2\x11.user.v1.UserRoleR\x05roles\"m\n" +
-	"\x10CreateAppRequest\x129\n" +
-	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
+	"\x05roles\x18\x01 \x03(\v2\x11.user.v1.UserRoleR\x05roles\"s\n" +
+	"\x10CreateAppRequest\x12?\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\ttenantKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\"Z\n" +
 	"\x11CreateAppResponse\x12&\n" +
 	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"3\n" +
-	"\rGetAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"8\n" +
+	"app_secret\x18\x02 \x01(\tR\tappSecret\"9\n" +
+	"\rGetAppRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"8\n" +
 	"\x0eGetAppResponse\x12&\n" +
-	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"\x92\x01\n" +
-	"\x10UpdateAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\x12#\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"\x98\x01\n" +
+	"\x10UpdateAppRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12#\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01H\x00R\x04name\x88\x01\x01\x12\x1f\n" +
 	"\bdisabled\x18\x03 \x01(\bH\x01R\bdisabled\x88\x01\x01B\a\n" +
 	"\x05_nameB\v\n" +
 	"\t_disabled\";\n" +
 	"\x11UpdateAppResponse\x12&\n" +
-	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"<\n" +
-	"\x16RotateAppSecretRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKey\"`\n" +
+	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\"B\n" +
+	"\x16RotateAppSecretRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"`\n" +
 	"\x17RotateAppSecretResponse\x12&\n" +
 	"\x03app\x18\x01 \x01(\v2\x14.user.v1.UserAppInfoR\x03app\x12\x1d\n" +
 	"\n" +
 	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x11\n" +
 	"\x0fListAppsRequest\"<\n" +
 	"\x10ListAppsResponse\x12(\n" +
-	"\x04apps\x18\x01 \x03(\v2\x14.user.v1.UserAppInfoR\x04apps\"6\n" +
-	"\x10DeleteAppRequest\x12\"\n" +
-	"\aapp_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\x06appKeyB\x8f\x01\n" +
+	"\x04apps\x18\x01 \x03(\v2\x14.user.v1.UserAppInfoR\x04apps\"<\n" +
+	"\x10DeleteAppRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKeyB\x8f\x01\n" +
 	"\vcom.user.v1B\x14RequestResponseProtoP\x01Z-github.com/servekit/api/gen/go/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (

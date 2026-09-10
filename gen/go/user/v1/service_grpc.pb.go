@@ -253,14 +253,14 @@ type UserServiceClient interface {
 	// PLATFORM actor only.
 	LookupSubject(ctx context.Context, in *LookupSubjectRequest, opts ...grpc.CallOption) (*LookupSubjectResponse, error)
 	// EnsureConsoleBootstrap idempotently provisions the platform console's
-	// reserved user-service objects: the user_apps row app_key="ten_platform"
+	// reserved user-service objects: the user_apps row tenant_key="ten_platform"
 	// plus one login-locked PLATFORM system user inside that directory. Called
 	// by portal-service at startup to obtain its service principal (the actor
 	// portal speaks as when driving user-service admin RPCs — LookupSubject /
 	// CreateUser). ACTOR-EXEMPT by design: it can only create these reserved
 	// ten_platform objects and grants no cross-tenant capability; the trust
 	// basis is the internal-network invariant (spec §8.1), the same posture as
-	// the other internal-trust surfaces. Returns {app_key, system_user_id} on
+	// the other internal-trust surfaces. Returns {tenant_key, system_user_id} on
 	// every call (idempotent read-back).
 	EnsureConsoleBootstrap(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EnsureConsoleBootstrapResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
@@ -360,7 +360,7 @@ type UserServiceClient interface {
 	// CreateApp registers a tenant and mints its app_secret.
 	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
-	// UpdateApp edits mutable fields; app_key is immutable.
+	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
 	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.
@@ -1199,14 +1199,14 @@ type UserServiceServer interface {
 	// PLATFORM actor only.
 	LookupSubject(context.Context, *LookupSubjectRequest) (*LookupSubjectResponse, error)
 	// EnsureConsoleBootstrap idempotently provisions the platform console's
-	// reserved user-service objects: the user_apps row app_key="ten_platform"
+	// reserved user-service objects: the user_apps row tenant_key="ten_platform"
 	// plus one login-locked PLATFORM system user inside that directory. Called
 	// by portal-service at startup to obtain its service principal (the actor
 	// portal speaks as when driving user-service admin RPCs — LookupSubject /
 	// CreateUser). ACTOR-EXEMPT by design: it can only create these reserved
 	// ten_platform objects and grants no cross-tenant capability; the trust
 	// basis is the internal-network invariant (spec §8.1), the same posture as
-	// the other internal-trust surfaces. Returns {app_key, system_user_id} on
+	// the other internal-trust surfaces. Returns {tenant_key, system_user_id} on
 	// every call (idempotent read-back).
 	EnsureConsoleBootstrap(context.Context, *emptypb.Empty) (*EnsureConsoleBootstrapResponse, error)
 	// CreateGroup creates a user group (organizational unit). Optional
@@ -1306,7 +1306,7 @@ type UserServiceServer interface {
 	// CreateApp registers a tenant and mints its app_secret.
 	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
-	// UpdateApp edits mutable fields; app_key is immutable.
+	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
 	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.

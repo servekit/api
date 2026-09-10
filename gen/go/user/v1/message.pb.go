@@ -67,11 +67,11 @@ type User struct {
 	DefaultCurrency string `protobuf:"bytes,27,opt,name=default_currency,json=defaultCurrency,proto3" json:"default_currency,omitempty"`
 	// Reserved for MFA: no write path exists until MFA ships — reads only.
 	MfaEnabled bool `protobuf:"varint,28,opt,name=mfa_enabled,json=mfaEnabled,proto3" json:"mfa_enabled,omitempty"`
-	// The tenant this user belongs to (see UserAppInfo): the app_key of the
-	// application the user registered under. Set by the service from the
+	// The tenant this user belongs to (see UserAppInfo): the tenant_key of
+	// the directory the user registered under. Set by the service from the
 	// calling app's verified credentials; empty on rows created before
 	// tenancy (platform default tenant).
-	AppKey        string `protobuf:"bytes,29,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,29,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -281,9 +281,9 @@ func (x *User) GetMfaEnabled() bool {
 	return false
 }
 
-func (x *User) GetAppKey() string {
+func (x *User) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -566,8 +566,9 @@ type LoginLog struct {
 	// oauth uid), e.g. 17000000000 — the kind derives from method + provider.
 	Target string `protobuf:"bytes,16,opt,name=target,proto3" json:"target,omitempty"`
 	// Tenant the attempt happened in (user_apps.app_key); "" on rows from
-	// before tenancy.
-	AppKey        string `protobuf:"bytes,17,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// before tenancy. Phase ④ terminal naming: tenant_key (the column keeps
+	// its historical app_key name until the data-side closure).
+	TenantKey     string `protobuf:"bytes,17,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -714,9 +715,9 @@ func (x *LoginLog) GetTarget() string {
 	return ""
 }
 
-func (x *LoginLog) GetAppKey() string {
+func (x *LoginLog) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1226,16 +1227,17 @@ func (x *UserRole) GetCreatedAt() *timestamppb.Timestamp {
 }
 
 // UserAppInfo is one tenant of the user platform (a calling application's
-// user directory). Tenants follow the platform-wide ak/sk pattern: app_key
-// is minted server-side ("usr_" + 8 base36), app_secret is the data-plane
-// credential presented as x-app-key / x-app-secret metadata by trusted BFFs
-// on login/register/admin surfaces — the tenant IS the verified caller.
+// user directory). Tenants follow the platform-wide ak/sk pattern: the key
+// is minted server-side ("usr_" + 8 base36; the registry column keeps its
+// historical app_key name), app_secret is the data-plane credential
+// presented as x-app-key / x-app-secret metadata by trusted BFFs on
+// login/register/admin surfaces — the tenant IS the verified caller.
 type UserAppInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_key identifies the tenant on every tenant-scoped surface; unique,
+	// tenant_key identifies the tenant on every tenant-scoped surface; unique,
 	// immutable after creation.
-	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey string `protobuf:"bytes,2,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	// app_secret is the tenant credential. Echoed on every read —
 	// internal-trust posture, same convention as the other platform apps.
 	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
@@ -1285,9 +1287,9 @@ func (x *UserAppInfo) GetId() int64 {
 	return 0
 }
 
-func (x *UserAppInfo) GetAppKey() string {
+func (x *UserAppInfo) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1331,7 +1333,7 @@ var File_user_v1_message_proto protoreflect.FileDescriptor
 
 const file_user_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xd9\t\n" +
+	"\x15user/v1/message.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13user/v1/enums.proto\"\xdf\t\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1368,8 +1370,9 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\x10default_currency\x18\x1b \x01(\tB\x14\xbaH\x11\xd8\x01\x01r\f2\n" +
 	"^[A-Z]{3}$R\x0fdefaultCurrency\x12\x1f\n" +
 	"\vmfa_enabled\x18\x1c \x01(\bR\n" +
-	"mfaEnabled\x12\x17\n" +
-	"\aapp_key\x18\x1d \x01(\tR\x06appKey\"\xd5\x01\n" +
+	"mfaEnabled\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x1d \x01(\tR\ttenantKey\"\xd5\x01\n" +
 	"\bIdentity\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12?\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\bprovider\x12!\n" +
@@ -1395,7 +1398,7 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\flogin_method\x18\f \x01(\x0e2\x14.user.v1.LoginMethodR\vloginMethod\x12!\n" +
 	"\flogin_target\x18\r \x01(\tR\vloginTarget\x12\x16\n" +
 	"\x06device\x18\x0e \x01(\tR\x06device\x12@\n" +
-	"\x0elogin_provider\x18\x0f \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xc1\x04\n" +
+	"\x0elogin_provider\x18\x0f \x01(\x0e2\x19.user.v1.IdentityProviderR\rloginProvider\"\xc7\x04\n" +
 	"\bLoginLog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x03R\x06userId\x125\n" +
@@ -1416,8 +1419,9 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12,\n" +
 	"\x06method\x18\x0e \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12\x1a\n" +
 	"\busername\x18\x0f \x01(\tR\busername\x12\x16\n" +
-	"\x06target\x18\x10 \x01(\tR\x06target\x12\x17\n" +
-	"\aapp_key\x18\x11 \x01(\tR\x06appKey\"\x9b\x02\n" +
+	"\x06target\x18\x10 \x01(\tR\x06target\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x11 \x01(\tR\ttenantKey\"\x9b\x02\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -1471,10 +1475,11 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\trole_name\x18\x03 \x01(\tR\broleName\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xfb\x01\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x81\x02\n" +
 	"\vUserAppInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
-	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x02 \x01(\tR\ttenantKey\x12\x1d\n" +
 	"\n" +
 	"app_secret\x18\x03 \x01(\tR\tappSecret\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +

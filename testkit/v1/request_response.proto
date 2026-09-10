@@ -335,7 +335,7 @@ message GetSessionResponse {
   user.v1.LoginMethod login_method = 8 [(buf.validate.field).enum.defined_only = true];
   user.v1.IdentityProvider login_provider = 9 [(buf.validate.field).enum.defined_only = true];
   // Tenant the session lives in (user_apps.app_key).
-  string app_key = 10;
+  string tenant_key = 10;
 }
 
 message IssueSessionCodeRequest {
@@ -462,7 +462,7 @@ message CreateUserRequest {
     }
   ];
   // Target tenant (user_apps.app_key). Platform-operator callers only.
-  string app_key = 12 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 12 [(buf.validate.field).string.max_len = 64];
 }
 
 message CreateUserResponse {
@@ -522,7 +522,7 @@ message ListUsersRequest {
   user.v1.UserSortField order_by = 22 [(buf.validate.field).enum.defined_only = true];
   bool descending = 23;
   // Tenant filter (user_apps.app_key). Platform-operator callers only.
-  string app_key = 24 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 24 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersResponse {
@@ -574,7 +574,7 @@ message ListUsersPagedRequest {
   }];
   bool count = 24;
   // Tenant filter (user_apps.app_key). Platform-operator callers only.
-  string app_key = 25 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 25 [(buf.validate.field).string.max_len = 64];
 }
 
 message ListUsersPagedResponse {
@@ -601,7 +601,7 @@ message GetLoginLogsRequest {
   string username = 8 [(buf.validate.field).string.max_len = 64];
   // Tenant filter (user_apps.app_key). Platform-operator callers only;
   // tenant callers are pinned to their own directory regardless.
-  string app_key = 9 [(buf.validate.field).string.max_len = 64];
+  string tenant_key = 9 [(buf.validate.field).string.max_len = 64];
 }
 
 message GetLoginLogsResponse {

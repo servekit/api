@@ -37,7 +37,7 @@ var File_testkit_v1_service_proto protoreflect.FileDescriptor
 const file_testkit_v1_service_proto_rawDesc = "" +
 	"\n" +
 	"\x18testkit/v1/service.proto\x12\n" +
-	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\x8e\xcb\x01\n" +
+	"testkit.v1\x1a\x14common/v1/pong.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18license/v1/message.proto\x1a!license/v1/request_response.proto\x1a\x18messaging/v1/admin.proto\x1a)messaging/v1/admin_request_response.proto\x1a&portal/v1/admin_request_response.proto\x1a#reference/v1/request_response.proto\x1a!storage/v1/request_response.proto\x1a#telemetry/v1/request_response.proto\x1a\x18testkit/v1/message.proto\x1a!testkit/v1/request_response.proto\x1a\x15user/v1/message.proto\x1a\x1euser/v1/request_response.proto2\x9a\xcb\x01\n" +
 	"\x0eTestkitService\x12>\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x0f.common.v1.Pong\"\r\x82\xd3\xe4\x93\x02\a\x12\x05/ping\x12[\n" +
 	"\x05Login\x12\x18.testkit.v1.LoginRequest\x1a\x19.testkit.v1.TokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12d\n" +
@@ -244,12 +244,12 @@ const file_testkit_v1_service_proto_rawDesc = "" +
 	"\x12GetCountryDefaults\x12'.reference.v1.GetCountryDefaultsRequest\x1a(.reference.v1.GetCountryDefaultsResponse\":\x82\xd3\xe4\x93\x024\x122/api/v1/reference/countries/{region_code}/defaults\x12w\n" +
 	"\vGetDataInfo\x12 .reference.v1.GetDataInfoRequest\x1a!.reference.v1.GetDataInfoResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/reference/data-info\x12d\n" +
 	"\fUserListApps\x12\x18.user.v1.ListAppsRequest\x1a\x19.user.v1.ListAppsResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/user/admin/apps\x12j\n" +
-	"\rUserCreateApp\x12\x19.user.v1.CreateAppRequest\x1a\x1a.user.v1.CreateAppResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/user/admin/apps\x12h\n" +
+	"\rUserCreateApp\x12\x19.user.v1.CreateAppRequest\x1a\x1a.user.v1.CreateAppResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/user/admin/apps\x12k\n" +
 	"\n" +
-	"UserGetApp\x12\x16.user.v1.GetAppRequest\x1a\x17.user.v1.GetAppResponse\")\x82\xd3\xe4\x93\x02#\x12!/api/v1/user/admin/apps/{app_key}\x12t\n" +
-	"\rUserUpdateApp\x12\x19.user.v1.UpdateAppRequest\x1a\x1a.user.v1.UpdateAppResponse\",\x82\xd3\xe4\x93\x02&:\x01*\x1a!/api/v1/user/admin/apps/{app_key}\x12\x93\x01\n" +
-	"\x13UserRotateAppSecret\x12\x1f.user.v1.RotateAppSecretRequest\x1a .user.v1.RotateAppSecretResponse\"9\x82\xd3\xe4\x93\x023:\x01*\"./api/v1/user/admin/apps/{app_key}:rotateSecret\x12m\n" +
-	"\rUserDeleteApp\x12\x19.user.v1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\")\x82\xd3\xe4\x93\x02#*!/api/v1/user/admin/apps/{app_key}\x12`\n" +
+	"UserGetApp\x12\x16.user.v1.GetAppRequest\x1a\x17.user.v1.GetAppResponse\",\x82\xd3\xe4\x93\x02&\x12$/api/v1/user/admin/apps/{tenant_key}\x12w\n" +
+	"\rUserUpdateApp\x12\x19.user.v1.UpdateAppRequest\x1a\x1a.user.v1.UpdateAppResponse\"/\x82\xd3\xe4\x93\x02):\x01*\x1a$/api/v1/user/admin/apps/{tenant_key}\x12\x96\x01\n" +
+	"\x13UserRotateAppSecret\x12\x1f.user.v1.RotateAppSecretRequest\x1a .user.v1.RotateAppSecretResponse\"<\x82\xd3\xe4\x93\x026:\x01*\"1/api/v1/user/admin/apps/{tenant_key}:rotateSecret\x12p\n" +
+	"\rUserDeleteApp\x12\x19.user.v1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\",\x82\xd3\xe4\x93\x02&*$/api/v1/user/admin/apps/{tenant_key}\x12`\n" +
 	"\fPortalWhoAmI\x12\x16.google.protobuf.Empty\x1a\x19.portal.v1.WhoAmIResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/portal/whoami\x12v\n" +
 	"\x14PortalMyCapabilities\x12\x16.google.protobuf.Empty\x1a!.portal.v1.MyCapabilitiesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v1/portal/capabilities\x12\x88\x01\n" +
 	"\x11PortalListApiKeys\x12\x1d.portal.v1.ListApiKeysRequest\x1a\x1e.portal.v1.ListApiKeysResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/portal/tenants/{tenant_key}/api-keys\x12\x8e\x01\n" +

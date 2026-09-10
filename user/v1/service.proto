@@ -235,14 +235,14 @@ service UserService {
   rpc LookupSubject(LookupSubjectRequest) returns (LookupSubjectResponse);
 
   // EnsureConsoleBootstrap idempotently provisions the platform console's
-  // reserved user-service objects: the user_apps row app_key="ten_platform"
+  // reserved user-service objects: the user_apps row tenant_key="ten_platform"
   // plus one login-locked PLATFORM system user inside that directory. Called
   // by portal-service at startup to obtain its service principal (the actor
   // portal speaks as when driving user-service admin RPCs — LookupSubject /
   // CreateUser). ACTOR-EXEMPT by design: it can only create these reserved
   // ten_platform objects and grants no cross-tenant capability; the trust
   // basis is the internal-network invariant (spec §8.1), the same posture as
-  // the other internal-trust surfaces. Returns {app_key, system_user_id} on
+  // the other internal-trust surfaces. Returns {tenant_key, system_user_id} on
   // every call (idempotent read-back).
   rpc EnsureConsoleBootstrap(google.protobuf.Empty) returns (EnsureConsoleBootstrapResponse);
 
@@ -401,7 +401,7 @@ service UserService {
 
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
 
-  // UpdateApp edits mutable fields; app_key is immutable.
+  // UpdateApp edits mutable fields; tenant_key is immutable.
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
 
   rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);

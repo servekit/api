@@ -1343,7 +1343,7 @@ type GetSessionResponse struct {
 	LoginMethod   v1.LoginMethod         `protobuf:"varint,8,opt,name=login_method,json=loginMethod,proto3,enum=user.v1.LoginMethod" json:"login_method,omitempty"`
 	LoginProvider v1.IdentityProvider    `protobuf:"varint,9,opt,name=login_provider,json=loginProvider,proto3,enum=user.v1.IdentityProvider" json:"login_provider,omitempty"`
 	// Tenant the session lives in (user_apps.app_key).
-	AppKey        string `protobuf:"bytes,10,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,10,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1441,9 +1441,9 @@ func (x *GetSessionResponse) GetLoginProvider() v1.IdentityProvider {
 	return v1.IdentityProvider(0)
 }
 
-func (x *GetSessionResponse) GetAppKey() string {
+func (x *GetSessionResponse) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2030,7 +2030,7 @@ type CreateUserRequest struct {
 	Timezone string                 `protobuf:"bytes,10,opt,name=timezone,proto3" json:"timezone,omitempty"`
 	Locale   string                 `protobuf:"bytes,11,opt,name=locale,proto3" json:"locale,omitempty"`
 	// Target tenant (user_apps.app_key). Platform-operator callers only.
-	AppKey        string `protobuf:"bytes,12,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,12,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2142,9 +2142,9 @@ func (x *CreateUserRequest) GetLocale() string {
 	return ""
 }
 
-func (x *CreateUserRequest) GetAppKey() string {
+func (x *CreateUserRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2323,7 +2323,7 @@ type ListUsersRequest struct {
 	OrderBy          v1.UserSortField       `protobuf:"varint,22,opt,name=order_by,json=orderBy,proto3,enum=user.v1.UserSortField" json:"order_by,omitempty"`
 	Descending       bool                   `protobuf:"varint,23,opt,name=descending,proto3" json:"descending,omitempty"`
 	// Tenant filter (user_apps.app_key). Platform-operator callers only.
-	AppKey        string `protobuf:"bytes,24,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,24,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2519,9 +2519,9 @@ func (x *ListUsersRequest) GetDescending() bool {
 	return false
 }
 
-func (x *ListUsersRequest) GetAppKey() string {
+func (x *ListUsersRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2605,7 +2605,7 @@ type ListUsersPagedRequest struct {
 	PageSize         int32                  `protobuf:"varint,23,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	Count            bool                   `protobuf:"varint,24,opt,name=count,proto3" json:"count,omitempty"`
 	// Tenant filter (user_apps.app_key). Platform-operator callers only.
-	AppKey        string `protobuf:"bytes,25,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,25,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2808,9 +2808,9 @@ func (x *ListUsersPagedRequest) GetCount() bool {
 	return false
 }
 
-func (x *ListUsersPagedRequest) GetAppKey() string {
+func (x *ListUsersPagedRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -2891,7 +2891,7 @@ type GetLoginLogsRequest struct {
 	Username string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
 	// Tenant filter (user_apps.app_key). Platform-operator callers only;
 	// tenant callers are pinned to their own directory regardless.
-	AppKey        string `protobuf:"bytes,9,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	TenantKey     string `protobuf:"bytes,9,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2982,9 +2982,9 @@ func (x *GetLoginLogsRequest) GetUsername() string {
 	return ""
 }
 
-func (x *GetLoginLogsRequest) GetAppKey() string {
+func (x *GetLoginLogsRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
 }
@@ -13550,7 +13550,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x11GetSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"\xa4\x03\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\x01R\tsessionId\"\xaa\x03\n" +
 	"\x12GetSessionResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
@@ -13563,9 +13563,10 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x02os\x18\x06 \x01(\tR\x02os\x12\x18\n" +
 	"\abrowser\x18\a \x01(\tR\abrowser\x12A\n" +
 	"\flogin_method\x18\b \x01(\x0e2\x14.user.v1.LoginMethodB\b\xbaH\x05\x82\x01\x02\x10\x01R\vloginMethod\x12J\n" +
-	"\x0elogin_provider\x18\t \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\rloginProvider\x12\x17\n" +
-	"\aapp_key\x18\n" +
-	" \x01(\tR\x06appKey\"D\n" +
+	"\x0elogin_provider\x18\t \x01(\x0e2\x19.user.v1.IdentityProviderB\b\xbaH\x05\x82\x01\x02\x10\x01R\rloginProvider\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\n" +
+	" \x01(\tR\ttenantKey\"D\n" +
 	"\x17IssueSessionCodeRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tB\n" +
@@ -13612,7 +13613,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06is_new\x18\x03 \x01(\bR\x05isNew\x12+\n" +
 	"\treturn_to\x18\x04 \x01(\tB\x0e\xbaH\v\xd8\x01\x01r\x06\x18\x80\x10\x88\x01\x01R\breturnTo\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x05 \x01(\tR\tsessionId\"\xaa\x04\n" +
+	"session_id\x18\x05 \x01(\tR\tsessionId\"\xb0\x04\n" +
 	"\x11CreateUserRequest\x12:\n" +
 	"\tuser_type\x18\x01 \x01(\x0e2\x11.user.v1.UserTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\buserType\x12#\n" +
@@ -13628,8 +13629,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06gender\x18\t \x01(\x0e2\x0f.user.v1.GenderB\b\xbaH\x05\x82\x01\x02\x10\x01R\x06gender\x12#\n" +
 	"\btimezone\x18\n" +
 	" \x01(\tB\a\xbaH\x04r\x02\x18@R\btimezone\x12G\n" +
-	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12 \n" +
-	"\aapp_key\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\":\n" +
+	"\x06locale\x18\v \x01(\tB/\xbaH,\xd8\x01\x01r'\x18\x102#^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$R\x06locale\x12&\n" +
+	"\n" +
+	"tenant_key\x18\f \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\":\n" +
 	"\x12CreateUserResponse\x12$\n" +
 	"\x04user\x18\x01 \x01(\v2\x10.testkit.v1.UserR\x04user\"2\n" +
 	"\x0eGetUserRequest\x12 \n" +
@@ -13637,7 +13639,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x12DisableUserRequest\x12 \n" +
 	"\auser_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06userId\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xab\t\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"\xb1\t\n" +
 	"\x10ListUsersRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12&\n" +
@@ -13668,12 +13670,13 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\border_by\x18\x16 \x01(\x0e2\x16.user.v1.UserSortFieldB\b\xbaH\x05\x82\x01\x02\x10\x01R\aorderBy\x12\x1e\n" +
 	"\n" +
 	"descending\x18\x17 \x01(\bR\n" +
-	"descending\x12 \n" +
-	"\aapp_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"\\\n" +
+	"descending\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x18 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\"\\\n" +
 	"\x11ListUsersResponse\x12&\n" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xb8\t\n" +
+	"nextCursor\"\xbe\t\n" +
 	"\x15ListUsersPagedRequest\x12+\n" +
 	"\x06status\x18\x01 \x01(\x0e2\x13.user.v1.UserStatusR\x06status\x12#\n" +
 	"\bnickname\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x18@R\bnickname\x12'\n" +
@@ -13705,13 +13708,14 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"descending\x12\x1b\n" +
 	"\x04page\x18\x16 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x04page\x12&\n" +
 	"\tpage_size\x18\x17 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x14\n" +
-	"\x05count\x18\x18 \x01(\bR\x05count\x12 \n" +
-	"\aapp_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKey\"w\n" +
+	"\x05count\x18\x18 \x01(\bR\x05count\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x19 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\"w\n" +
 	"\x16ListUsersPagedResponse\x12&\n" +
 	"\x05users\x18\x01 \x03(\v2\x10.testkit.v1.UserR\x05users\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1f\n" +
 	"\vtotal_pages\x18\x03 \x01(\x05R\n" +
-	"totalPages\"\xfc\x02\n" +
+	"totalPages\"\x82\x03\n" +
 	"\x13GetLoginLogsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x19.user.v1.IdentityProviderR\bprovider\x12\x1d\n" +
@@ -13720,8 +13724,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x06cursor\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18@R\x06cursor\x12,\n" +
 	"\x06action\x18\x06 \x01(\x0e2\x14.user.v1.LoginActionR\x06action\x12,\n" +
 	"\x06method\x18\a \x01(\x0e2\x14.user.v1.LoginMethodR\x06method\x12#\n" +
-	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12 \n" +
-	"\aapp_key\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\x06appKeyB\n" +
+	"\busername\x18\b \x01(\tB\a\xbaH\x04r\x02\x18@R\busername\x12&\n" +
+	"\n" +
+	"tenant_key\x18\t \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKeyB\n" +
 	"\n" +
 	"\b_success\"w\n" +
 	"\x14GetLoginLogsResponse\x12(\n" +
