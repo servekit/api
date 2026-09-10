@@ -48,11 +48,15 @@ type RequestActor struct {
 	// proto enum values are append-only, so the numbers are stable. Treat
 	// unknown values as unspecified (fail closed on strength checks).
 	LoginMethod int32 `protobuf:"varint,4,opt,name=login_method,json=loginMethod,proto3" json:"login_method,omitempty"`
-	// The tenant the session lives in: the user.v1 app_key of the calling
-	// application the user signed into. Downstream services may scope by it;
-	// absent for sessions minted before tenancy (treat as the platform
-	// default tenant, not an error).
-	AppKey        string `protobuf:"bytes,5,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
+	// The tenant the session lives in (the directory the user signed into).
+	// Downstream services may scope by it; absent for sessions minted before
+	// tenancy (treat as the platform default tenant, not an error).
+	TenantKey string `protobuf:"bytes,5,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	// Numeric value of user.v1.UserType — same documented-reference pattern as
+	// login_method above (common must not import the user domain). Cast at the
+	// consumer: userv1.UserType(actor.GetUserType()). Unknown values are
+	// UNSPECIFIED — admin surfaces must fail closed on them.
+	UserType      int32 `protobuf:"varint,6,opt,name=user_type,json=userType,proto3" json:"user_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -115,25 +119,34 @@ func (x *RequestActor) GetLoginMethod() int32 {
 	return 0
 }
 
-func (x *RequestActor) GetAppKey() string {
+func (x *RequestActor) GetTenantKey() string {
 	if x != nil {
-		return x.AppKey
+		return x.TenantKey
 	}
 	return ""
+}
+
+func (x *RequestActor) GetUserType() int32 {
+	if x != nil {
+		return x.UserType
+	}
+	return 0
 }
 
 var File_common_v1_message_proto protoreflect.FileDescriptor
 
 const file_common_v1_message_proto_rawDesc = "" +
 	"\n" +
-	"\x17common/v1/message.proto\x12\tcommon.v1\"\xa5\x01\n" +
+	"\x17common/v1/message.proto\x12\tcommon.v1\"\xc8\x01\n" +
 	"\fRequestActor\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\x12!\n" +
 	"\flogin_target\x18\x03 \x01(\tR\vloginTarget\x12!\n" +
-	"\flogin_method\x18\x04 \x01(\x05R\vloginMethod\x12\x17\n" +
-	"\aapp_key\x18\x05 \x01(\tR\x06appKeyB\x95\x01\n" +
+	"\flogin_method\x18\x04 \x01(\x05R\vloginMethod\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x05 \x01(\tR\ttenantKey\x12\x1b\n" +
+	"\tuser_type\x18\x06 \x01(\x05R\buserTypeB\x95\x01\n" +
 	"\rcom.common.v1B\fMessageProtoP\x01Z1github.com/servekit/api/gen/go/common/v1;commonv1\xa2\x02\x03CXX\xaa\x02\tCommon.V1\xca\x02\tCommon\\V1\xe2\x02\x15Common\\V1\\GPBMetadata\xea\x02\n" +
 	"Common::V1b\x06proto3"
 

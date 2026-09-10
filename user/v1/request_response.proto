@@ -465,6 +465,9 @@ message GetSessionResponse {
   // The tenant this session lives in (user.v1 UserAppInfo.app_key): the
   // application the user signed into. Rides the RequestActor downstream.
   string app_key = 12;
+  // The directory user's type (platform staff / tenant admin / end user).
+  // Rides the RequestActor downstream; filled by joining the user row.
+  UserType user_type = 13;
 }
 
 // ==================== Admin ====================

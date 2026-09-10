@@ -27,9 +27,13 @@ message RequestActor {
   // proto enum values are append-only, so the numbers are stable. Treat
   // unknown values as unspecified (fail closed on strength checks).
   int32 login_method = 4;
-  // The tenant the session lives in: the user.v1 app_key of the calling
-  // application the user signed into. Downstream services may scope by it;
-  // absent for sessions minted before tenancy (treat as the platform
-  // default tenant, not an error).
-  string app_key = 5;
+  // The tenant the session lives in (the directory the user signed into).
+  // Downstream services may scope by it; absent for sessions minted before
+  // tenancy (treat as the platform default tenant, not an error).
+  string tenant_key = 5;
+  // Numeric value of user.v1.UserType — same documented-reference pattern as
+  // login_method above (common must not import the user domain). Cast at the
+  // consumer: userv1.UserType(actor.GetUserType()). Unknown values are
+  // UNSPECIFIED — admin surfaces must fail closed on them.
+  int32 user_type = 6;
 }
