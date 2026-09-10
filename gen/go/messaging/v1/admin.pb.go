@@ -50,8 +50,12 @@ type MessageAppInfo struct {
 	EmailDailyLimit int64 `protobuf:"varint,6,opt,name=email_daily_limit,json=emailDailyLimit,proto3" json:"email_daily_limit,omitempty"`
 	CreatedAt       int64 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt       int64 `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// tenant_key is the tenant this app maps to (phase ③ dual-stack window).
+	// Empty on rows not yet backfilled — the service falls back to the app_key
+	// literal until T10 clears the empties.
+	TenantKey     string `protobuf:"bytes,10,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MessageAppInfo) Reset() {
@@ -145,6 +149,13 @@ func (x *MessageAppInfo) GetUpdatedAt() int64 {
 		return x.UpdatedAt
 	}
 	return 0
+}
+
+func (x *MessageAppInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 // AliyunSmsCredentials configures an Aliyun SMS account.
@@ -762,9 +773,12 @@ type ChannelAccountInfo struct {
 	//	*ChannelAccountInfo_EmailVendor
 	Vendor isChannelAccountInfo_Vendor `protobuf_oneof:"vendor"`
 	// credentials with secret fields EMPTY on read.
-	Credentials   *ChannelAccountCredentials `protobuf:"bytes,7,opt,name=credentials,proto3" json:"credentials,omitempty"`
-	CreatedAt     int64                      `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                      `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Credentials *ChannelAccountCredentials `protobuf:"bytes,7,opt,name=credentials,proto3" json:"credentials,omitempty"`
+	CreatedAt   int64                      `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt   int64                      `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// tenant_key marks a tenant-private account (phase ③ resource domain).
+	// Empty = platform pool (usable by every tenant's policies).
+	TenantKey     string `protobuf:"bytes,10,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -873,6 +887,13 @@ func (x *ChannelAccountInfo) GetUpdatedAt() int64 {
 	return 0
 }
 
+func (x *ChannelAccountInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
 type isChannelAccountInfo_Vendor interface {
 	isChannelAccountInfo_Vendor()
 }
@@ -901,9 +922,12 @@ type SignatureInfo struct {
 	Disabled bool   `protobuf:"varint,3,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	Remark   string `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`
 	// account_ids lists the channel accounts this signature is registered on.
-	AccountIds    []int64 `protobuf:"varint,5,rep,packed,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
-	CreatedAt     int64   `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64   `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	AccountIds []int64 `protobuf:"varint,5,rep,packed,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
+	CreatedAt  int64   `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt  int64   `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// tenant_key marks a tenant-private signature (phase ③ resource domain).
+	// Empty = platform pool (usable by every tenant's policies).
+	TenantKey     string `protobuf:"bytes,8,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -985,6 +1009,13 @@ func (x *SignatureInfo) GetUpdatedAt() int64 {
 		return x.UpdatedAt
 	}
 	return 0
+}
+
+func (x *SignatureInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 // TemplateParamSpec declares one {{param}} placeholder of a template.
@@ -1278,9 +1309,12 @@ type TemplateInfo struct {
 	//	*TemplateInfo_Email
 	//	*TemplateInfo_VendorCodes
 	//	*TemplateInfo_SmsContent
-	Content       isTemplateInfo_Content `protobuf_oneof:"content"`
-	CreatedAt     int64                  `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64                  `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Content   isTemplateInfo_Content `protobuf_oneof:"content"`
+	CreatedAt int64                  `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt int64                  `protobuf:"varint,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// tenant_key scopes a template to one tenant (phase ③). Empty = shared
+	// across all tenants (the former app_id = 0 semantics).
+	TenantKey     string `protobuf:"bytes,13,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1412,6 +1446,13 @@ func (x *TemplateInfo) GetUpdatedAt() int64 {
 	return 0
 }
 
+func (x *TemplateInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
 type isTemplateInfo_Content interface {
 	isTemplateInfo_Content()
 }
@@ -1516,10 +1557,14 @@ type PolicyInfo struct {
 	Routes []*RouteRule `protobuf:"bytes,7,rep,name=routes,proto3" json:"routes,omitempty"`
 	// intl_routes is the ordered route chain for international SMS
 	// (destination country != CN). Unused for email.
-	IntlRoutes    []*RouteRule `protobuf:"bytes,8,rep,name=intl_routes,json=intlRoutes,proto3" json:"intl_routes,omitempty"`
-	Disabled      bool         `protobuf:"varint,9,opt,name=disabled,proto3" json:"disabled,omitempty"`
-	CreatedAt     int64        `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     int64        `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	IntlRoutes []*RouteRule `protobuf:"bytes,8,rep,name=intl_routes,json=intlRoutes,proto3" json:"intl_routes,omitempty"`
+	Disabled   bool         `protobuf:"varint,9,opt,name=disabled,proto3" json:"disabled,omitempty"`
+	CreatedAt  int64        `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt  int64        `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// tenant_key is the tenant this policy belongs to (phase ③ re-keying:
+	// unique per (tenant_key, channel, scene)). Empty on rows not yet
+	// backfilled — resolved through the app mapping at load time.
+	TenantKey     string `protobuf:"bytes,12,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1631,11 +1676,18 @@ func (x *PolicyInfo) GetUpdatedAt() int64 {
 	return 0
 }
 
+func (x *PolicyInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
 var File_messaging_v1_admin_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\x9a\x02\n" +
+	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\xb9\x02\n" +
 	"\x0eMessageAppInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
@@ -1648,7 +1700,10 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\x03R\tupdatedAt\"\x95\x01\n" +
+	"updated_at\x18\b \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\n" +
+	" \x01(\tR\ttenantKey\"\x95\x01\n" +
 	"\x14AliyunSmsCredentials\x12+\n" +
 	"\raccess_key_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\vaccessKeyId\x123\n" +
 	"\x11access_key_secret\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x0faccessKeySecret\x12\x1b\n" +
@@ -1701,7 +1756,7 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"huawei_sms\x18\x05 \x01(\v2\".messaging.v1.HuaweiSmsCredentialsH\x00R\thuaweiSms\x128\n" +
 	"\x04smtp\x18\x06 \x01(\v2\".messaging.v1.SmtpEmailCredentialsH\x00R\x04smtpB\r\n" +
-	"\vcredentials\"\xf9\x02\n" +
+	"\vcredentials\"\x98\x03\n" +
 	"\x12ChannelAccountInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -1714,8 +1769,11 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\b \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\x03R\tupdatedAtB\b\n" +
-	"\x06vendor\"\xc6\x01\n" +
+	"updated_at\x18\t \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\n" +
+	" \x01(\tR\ttenantKeyB\b\n" +
+	"\x06vendor\"\xe5\x01\n" +
 	"\rSignatureInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -1726,7 +1784,9 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x06 \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\a \x01(\x03R\tupdatedAt\"\x8a\x01\n" +
+	"updated_at\x18\a \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\b \x01(\tR\ttenantKey\"\x8a\x01\n" +
 	"\x11TemplateParamSpec\x127\n" +
 	"\x04name\x18\x01 \x01(\tB#\xbaH r\x1e2\x1c^[a-zA-Z][a-zA-Z0-9_]{0,63}$R\x04name\x12\x1a\n" +
 	"\brequired\x18\x02 \x01(\bR\brequired\x12 \n" +
@@ -1744,7 +1804,7 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\x05codes\x18\x01 \x03(\v2 .messaging.v1.VendorTemplateCodeB\b\xbaH\x05\x92\x01\x02\b\x01R\x05codes\":\n" +
 	"\x12SmsContentTemplate\x12$\n" +
 	"\acontent\x18\x01 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\x80\bR\acontent\"\xb3\x04\n" +
+	"\xbaH\ar\x05\x10\x01\x18\x80\bR\acontent\"\xd2\x04\n" +
 	"\fTemplateInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x15\n" +
 	"\x06app_id\x18\x02 \x01(\x03R\x05appId\x12\x12\n" +
@@ -1763,13 +1823,15 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\b \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\x03R\tupdatedAtB\t\n" +
+	"updated_at\x18\t \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\r \x01(\tR\ttenantKeyB\t\n" +
 	"\acontent\"w\n" +
 	"\tRouteRule\x12&\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\taccountId\x12!\n" +
 	"\fsignature_id\x18\x02 \x01(\x03R\vsignatureId\x12\x1f\n" +
-	"\x06weight\x18\x03 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x06weight\"\xe1\x03\n" +
+	"\x06weight\x18\x03 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\x06weight\"\x80\x04\n" +
 	"\n" +
 	"PolicyInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x15\n" +
@@ -1789,7 +1851,9 @@ const file_messaging_v1_admin_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\x03R\tupdatedAtB\xa8\x01\n" +
+	"updated_at\x18\v \x01(\x03R\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\f \x01(\tR\ttenantKeyB\xa8\x01\n" +
 	"\x10com.messaging.v1B\n" +
 	"AdminProtoP\x01Z7github.com/servekit/api/gen/go/messaging/v1;messagingv1\xa2\x02\x03MXX\xaa\x02\fMessaging.V1\xca\x02\fMessaging\\V1\xe2\x02\x18Messaging\\V1\\GPBMetadata\xea\x02\rMessaging::V1b\x06proto3"
 

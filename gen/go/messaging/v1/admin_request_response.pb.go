@@ -33,8 +33,11 @@ type CreateAppRequest struct {
 	Name            string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	SmsDailyLimit   int64  `protobuf:"varint,3,opt,name=sms_daily_limit,json=smsDailyLimit,proto3" json:"sms_daily_limit,omitempty"`
 	EmailDailyLimit int64  `protobuf:"varint,4,opt,name=email_daily_limit,json=emailDailyLimit,proto3" json:"email_daily_limit,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// tenant_key optionally maps the app to a tenant (phase ③). Empty = the
+	// app_key literal (the legacy→tenant fallback value). Unique across apps.
+	TenantKey     string `protobuf:"bytes,5,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateAppRequest) Reset() {
@@ -93,6 +96,13 @@ func (x *CreateAppRequest) GetEmailDailyLimit() int64 {
 		return x.EmailDailyLimit
 	}
 	return 0
+}
+
+func (x *CreateAppRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 // CreateAppResponse returns the created app plus the plaintext app_secret
@@ -587,9 +597,12 @@ type CreateChannelAccountRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// name uniquely identifies the account across vendors (referenced by
 	// policies). Immutable after creation.
-	Name          string                     `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Remark        string                     `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"`
-	Credentials   *ChannelAccountCredentials `protobuf:"bytes,3,opt,name=credentials,proto3" json:"credentials,omitempty"`
+	Name        string                     `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Remark      string                     `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"`
+	Credentials *ChannelAccountCredentials `protobuf:"bytes,3,opt,name=credentials,proto3" json:"credentials,omitempty"`
+	// tenant_key optionally makes the account tenant-private (phase ③
+	// resource domain). Empty = platform pool.
+	TenantKey     string `protobuf:"bytes,4,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -643,6 +656,13 @@ func (x *CreateChannelAccountRequest) GetCredentials() *ChannelAccountCredential
 		return x.Credentials
 	}
 	return nil
+}
+
+func (x *CreateChannelAccountRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 type CreateChannelAccountResponse struct {
@@ -940,7 +960,10 @@ type CreateSignatureRequest struct {
 	Remark string `protobuf:"bytes,2,opt,name=remark,proto3" json:"remark,omitempty"`
 	// account_ids lists the channel accounts the signature is registered on
 	// (报备). Full replace on every update; at least one binding required.
-	AccountIds    []int64 `protobuf:"varint,3,rep,packed,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
+	AccountIds []int64 `protobuf:"varint,3,rep,packed,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
+	// tenant_key optionally makes the signature tenant-private (phase ③
+	// resource domain). Empty = platform pool.
+	TenantKey     string `protobuf:"bytes,4,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -994,6 +1017,13 @@ func (x *CreateSignatureRequest) GetAccountIds() []int64 {
 		return x.AccountIds
 	}
 	return nil
+}
+
+func (x *CreateSignatureRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 type CreateSignatureResponse struct {
@@ -2153,13 +2183,15 @@ var File_messaging_v1_admin_request_response_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\n" +
-	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xc1\x01\n" +
+	")messaging/v1/admin_request_response.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/admin.proto\x1a\x18messaging/v1/enums.proto\"\xe9\x01\n" +
 	"\x10CreateAppRequest\x129\n" +
 	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12&\n" +
 	"\x0fsms_daily_limit\x18\x03 \x01(\x03R\rsmsDailyLimit\x12*\n" +
-	"\x11email_daily_limit\x18\x04 \x01(\x03R\x0femailDailyLimit\"b\n" +
+	"\x11email_daily_limit\x18\x04 \x01(\x03R\x0femailDailyLimit\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"b\n" +
 	"\x11CreateAppResponse\x12.\n" +
 	"\x03app\x18\x01 \x01(\v2\x1c.messaging.v1.MessageAppInfoR\x03app\x12\x1d\n" +
 	"\n" +
@@ -2191,11 +2223,13 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x10ListAppsResponse\x120\n" +
 	"\x04apps\x18\x01 \x03(\v2\x1c.messaging.v1.MessageAppInfoR\x04apps\"+\n" +
 	"\x10DeleteAppRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xc5\x01\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\xed\x01\n" +
 	"\x1bCreateChannelAccountRequest\x121\n" +
 	"\x04name\x18\x01 \x01(\tB\x1d\xbaH\x1ar\x182\x16^[a-z][a-z0-9-]{0,63}$R\x04name\x12 \n" +
 	"\x06remark\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x06remark\x12Q\n" +
-	"\vcredentials\x18\x03 \x01(\v2'.messaging.v1.ChannelAccountCredentialsB\x06\xbaH\x03\xc8\x01\x01R\vcredentials\"Z\n" +
+	"\vcredentials\x18\x03 \x01(\v2'.messaging.v1.ChannelAccountCredentialsB\x06\xbaH\x03\xc8\x01\x01R\vcredentials\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"Z\n" +
 	"\x1cCreateChannelAccountResponse\x12:\n" +
 	"\aaccount\x18\x01 \x01(\v2 .messaging.v1.ChannelAccountInfoR\aaccount\"\xf6\x01\n" +
 	"\x1bUpdateChannelAccountRequest\x12\x17\n" +
@@ -2212,12 +2246,14 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\x1c\n" +
 	"\x1aListChannelAccountsRequest\"[\n" +
 	"\x1bListChannelAccountsResponse\x12<\n" +
-	"\baccounts\x18\x01 \x03(\v2 .messaging.v1.ChannelAccountInfoR\baccounts\"\x84\x01\n" +
+	"\baccounts\x18\x01 \x03(\v2 .messaging.v1.ChannelAccountInfoR\baccounts\"\xac\x01\n" +
 	"\x16CreateSignatureRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x02\x18@R\x04name\x12 \n" +
 	"\x06remark\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x02R\x06remark\x12)\n" +
 	"\vaccount_ids\x18\x03 \x03(\x03B\b\xbaH\x05\x92\x01\x02\b\x01R\n" +
-	"accountIds\"T\n" +
+	"accountIds\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"T\n" +
 	"\x17CreateSignatureResponse\x129\n" +
 	"\tsignature\x18\x01 \x01(\v2\x1b.messaging.v1.SignatureInfoR\tsignature\"\xe1\x01\n" +
 	"\x16UpdateSignatureRequest\x12\x17\n" +

@@ -28,6 +28,9 @@ message CreateAppRequest {
   }];
   int64 sms_daily_limit = 3;
   int64 email_daily_limit = 4;
+  // tenant_key optionally maps the app to a tenant (phase ③). Empty = the
+  // app_key literal (the legacy→tenant fallback value). Unique across apps.
+  string tenant_key = 5 [(buf.validate.field).string.max_len = 16];
 }
 
 // CreateAppResponse returns the created app plus the plaintext app_secret
@@ -95,6 +98,9 @@ message CreateChannelAccountRequest {
   }];
   string remark = 2 [(buf.validate.field).string.max_len = 256];
   ChannelAccountCredentials credentials = 3 [(buf.validate.field).required = true];
+  // tenant_key optionally makes the account tenant-private (phase ③
+  // resource domain). Empty = platform pool.
+  string tenant_key = 4 [(buf.validate.field).string.max_len = 16];
 }
 
 message CreateChannelAccountResponse {
@@ -142,6 +148,9 @@ message CreateSignatureRequest {
   // account_ids lists the channel accounts the signature is registered on
   // (报备). Full replace on every update; at least one binding required.
   repeated int64 account_ids = 3 [(buf.validate.field).repeated.min_items = 1];
+  // tenant_key optionally makes the signature tenant-private (phase ③
+  // resource domain). Empty = platform pool.
+  string tenant_key = 4 [(buf.validate.field).string.max_len = 16];
 }
 
 message CreateSignatureResponse {

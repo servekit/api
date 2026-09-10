@@ -8374,6 +8374,10 @@
         "emailDailyLimit": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key optionally maps the app to a tenant (phase ③). Empty = the\napp_key literal (the legacy→tenant fallback value). Unique across apps."
         }
       }
     },
@@ -9746,6 +9750,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key marks a tenant-private account (phase ③ resource domain).\nEmpty = platform pool (usable by every tenant's policies)."
         }
       },
       "description": "ChannelAccountInfo is a vendor account in the platform channel pool."
@@ -9824,6 +9832,10 @@
         },
         "credentials": {
           "$ref": "#/definitions/v1ChannelAccountCredentials"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key optionally makes the account tenant-private (phase ③\nresource domain). Empty = platform pool."
         }
       }
     },
@@ -10010,6 +10022,10 @@
             "format": "int64"
           },
           "description": "account_ids lists the channel accounts the signature is registered on\n(报备). Full replace on every update; at least one binding required."
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key optionally makes the signature tenant-private (phase ③\nresource domain). Empty = platform pool."
         }
       }
     },
@@ -12228,6 +12244,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties."
         }
       },
       "description": "MessageAppInfo is a registered calling application (the x-app-key\nidentity). Apps own policies; quotas and idempotency namespaces hang off\nthe app_key."
@@ -12511,6 +12531,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key is the tenant this policy belongs to (phase ③ re-keying:\nunique per (tenant_key, channel, scene)). Empty on rows not yet\nbackfilled — resolved through the app mapping at load time."
         }
       },
       "description": "PolicyInfo binds (app, channel, scene) to a template and route chains.\nExactly one of email_scene / sms_scene is set, matching channel."
@@ -13313,6 +13337,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key marks a tenant-private signature (phase ③ resource domain).\nEmpty = platform pool (usable by every tenant's policies)."
         }
       },
       "description": "SignatureInfo is an SMS signature (CN) / sender ID (intl), with the\naccounts it has been pre-registered on (报备). A signature may only be\nused with a bound account in a policy route."
@@ -13632,6 +13660,10 @@
         "updatedAt": {
           "type": "string",
           "format": "int64"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key scopes a template to one tenant (phase ③). Empty = shared\nacross all tenants (the former app_id = 0 semantics)."
         }
       },
       "description": "TemplateInfo is a message template. app_id = 0 means shared across all\napps; otherwise the template belongs to that app's namespace."

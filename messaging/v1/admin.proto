@@ -31,6 +31,10 @@ message MessageAppInfo {
   int64 email_daily_limit = 6;
   int64 created_at = 7;
   int64 updated_at = 8;
+  // tenant_key is the tenant this app maps to (phase ③ dual-stack window).
+  // Empty on rows not yet backfilled — the service falls back to the app_key
+  // literal until T10 clears the empties.
+  string tenant_key = 10;
 }
 
 // ---- Channel accounts (platform-level vendor credentials) ----
@@ -131,6 +135,9 @@ message ChannelAccountInfo {
   ChannelAccountCredentials credentials = 7;
   int64 created_at = 8;
   int64 updated_at = 9;
+  // tenant_key marks a tenant-private account (phase ③ resource domain).
+  // Empty = platform pool (usable by every tenant's policies).
+  string tenant_key = 10;
 }
 
 // ---- Signatures ----
@@ -149,6 +156,9 @@ message SignatureInfo {
   repeated int64 account_ids = 5;
   int64 created_at = 6;
   int64 updated_at = 7;
+  // tenant_key marks a tenant-private signature (phase ③ resource domain).
+  // Empty = platform pool (usable by every tenant's policies).
+  string tenant_key = 8;
 }
 
 // ---- Templates ----
@@ -224,6 +234,9 @@ message TemplateInfo {
   }
   int64 created_at = 8;
   int64 updated_at = 9;
+  // tenant_key scopes a template to one tenant (phase ③). Empty = shared
+  // across all tenants (the former app_id = 0 semantics).
+  string tenant_key = 13;
 }
 
 // ---- Policies ----
@@ -262,4 +275,8 @@ message PolicyInfo {
   bool disabled = 9;
   int64 created_at = 10;
   int64 updated_at = 11;
+  // tenant_key is the tenant this policy belongs to (phase ③ re-keying:
+  // unique per (tenant_key, channel, scene)). Empty on rows not yet
+  // backfilled — resolved through the app mapping at load time.
+  string tenant_key = 12;
 }
