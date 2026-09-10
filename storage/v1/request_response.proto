@@ -585,6 +585,9 @@ message AdminCreateAppRequest {
   }];
   // bucket_id: 0 = the platform default bucket.
   int64 bucket_id = 4;
+  // tenant_key optionally maps the app to a tenant (phase ③). Empty = the
+  // app_key literal (the legacy→tenant fallback value). Unique across apps.
+  string tenant_key = 5 [(buf.validate.field).string.max_len = 16];
 }
 
 message AdminCreateAppResponse {

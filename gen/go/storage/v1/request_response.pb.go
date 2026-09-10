@@ -3581,7 +3581,10 @@ type AdminCreateAppRequest struct {
 	// must end with '/'.
 	KeyPrefix string `protobuf:"bytes,3,opt,name=key_prefix,json=keyPrefix,proto3" json:"key_prefix,omitempty"`
 	// bucket_id: 0 = the platform default bucket.
-	BucketId      int64 `protobuf:"varint,4,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
+	BucketId int64 `protobuf:"varint,4,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
+	// tenant_key optionally maps the app to a tenant (phase ③). Empty = the
+	// app_key literal (the legacy→tenant fallback value). Unique across apps.
+	TenantKey     string `protobuf:"bytes,5,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3642,6 +3645,13 @@ func (x *AdminCreateAppRequest) GetBucketId() int64 {
 		return x.BucketId
 	}
 	return 0
+}
+
+func (x *AdminCreateAppRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
 }
 
 type AdminCreateAppResponse struct {
@@ -5191,14 +5201,16 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\x0f_default_bucketB\x10\n" +
 	"\x0e_public_bucket\"V\n" +
 	"\x1bAdminUpdateSettingsResponse\x127\n" +
-	"\bsettings\x18\x01 \x01(\v2\x1b.storage.v1.StorageSettingsR\bsettings\"\xd2\x01\n" +
+	"\bsettings\x18\x01 \x01(\v2\x1b.storage.v1.StorageSettingsR\bsettings\"\xfa\x01\n" +
 	"\x15AdminCreateAppRequest\x129\n" +
 	"\aapp_key\x18\x01 \x01(\tB \xbaH\x1d\xd8\x01\x01r\x182\x16^[a-z][a-z0-9-]{0,63}$R\x06appKey\x12\x1e\n" +
 	"\x04name\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xc8\x01R\x04name\x12A\n" +
 	"\n" +
 	"key_prefix\x18\x03 \x01(\tB\"\xbaH\x1fr\x1d\x10\x02\x18@2\x17^[a-z][a-z0-9-]{1,62}/$R\tkeyPrefix\x12\x1b\n" +
-	"\tbucket_id\x18\x04 \x01(\x03R\bbucketId\"e\n" +
+	"\tbucket_id\x18\x04 \x01(\x03R\bbucketId\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"e\n" +
 	"\x16AdminCreateAppResponse\x12,\n" +
 	"\x03app\x18\x01 \x01(\v2\x1a.storage.v1.StorageAppInfoR\x03app\x12\x1d\n" +
 	"\n" +

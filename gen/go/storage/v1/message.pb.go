@@ -1325,7 +1325,12 @@ type StorageAppInfo struct {
 	// app_secret is the data-plane credential (x-app-secret metadata). Echoed
 	// on every read — internal-trust posture, same convention as messaging
 	// apps; the ops console is the intended reader.
-	AppSecret     string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	AppSecret string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	// tenant_key is the tenant this app maps to (phase ③ dual-stack window).
+	// Empty on rows not yet backfilled — the service falls back to the app_key
+	// literal until T10 clears the empties. New tenants first seen on the
+	// trusted path are lazily created with key_prefix "{tenant_key}/".
+	TenantKey     string `protobuf:"bytes,10,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1419,6 +1424,13 @@ func (x *StorageAppInfo) GetUpdatedAt() int64 {
 func (x *StorageAppInfo) GetAppSecret() string {
 	if x != nil {
 		return x.AppSecret
+	}
+	return ""
+}
+
+func (x *StorageAppInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1832,7 +1844,7 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\x03acl\x18\x04 \x01(\x0e2\x15.storage.v1.BucketACLR\x03acl\x12*\n" +
 	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12'\n" +
 	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdnJ\x04\b\x03\x10\x04R\n" +
-	"key_prefix\"\x82\x02\n" +
+	"key_prefix\"\xa1\x02\n" +
 	"\x0eStorageAppInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -1846,7 +1858,10 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\b \x01(\x03R\tupdatedAt\x12\x1d\n" +
 	"\n" +
-	"app_secret\x18\t \x01(\tR\tappSecret\"g\n" +
+	"app_secret\x18\t \x01(\tR\tappSecret\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\n" +
+	" \x01(\tR\ttenantKey\"g\n" +
 	"\tCDNConfig\x12\x1f\n" +
 	"\x06domain\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x06domain\x12\x19\n" +
 	"\bauth_key\x18\x02 \x01(\tR\aauthKey\x12\x1e\n" +

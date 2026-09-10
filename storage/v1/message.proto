@@ -193,6 +193,11 @@ message StorageAppInfo {
   // on every read — internal-trust posture, same convention as messaging
   // apps; the ops console is the intended reader.
   string app_secret = 9;
+  // tenant_key is the tenant this app maps to (phase ③ dual-stack window).
+  // Empty on rows not yet backfilled — the service falls back to the app_key
+  // literal until T10 clears the empties. New tenants first seen on the
+  // trusted path are lazily created with key_prefix "{tenant_key}/".
+  string tenant_key = 10;
 }
 
 // CDNConfig is a bucket's CDN fronting configuration. auth_key signs URLs

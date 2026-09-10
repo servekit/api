@@ -8922,6 +8922,10 @@
           "type": "string",
           "format": "int64",
           "description": "bucket_id: 0 = the platform default bucket."
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key optionally maps the app to a tenant (phase ③). Empty = the\napp_key literal (the legacy→tenant fallback value). Unique across apps."
         }
       },
       "description": "AdminCreateAppRequest registers a calling application. app_key empty = the\nserver mints one (\"sto_\" + 8 base36 chars, immutable). The app_secret is\nalso echoed on every read of StorageAppInfo (internal-trust posture)."
@@ -13567,6 +13571,10 @@
         "appSecret": {
           "type": "string",
           "description": "app_secret is the data-plane credential (x-app-secret metadata). Echoed\non every read — internal-trust posture, same convention as messaging\napps; the ops console is the intended reader."
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties. New tenants first seen on the\ntrusted path are lazily created with key_prefix \"{tenant_key}/\"."
         }
       },
       "description": "StorageAppInfo is one calling application of the storage platform. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
