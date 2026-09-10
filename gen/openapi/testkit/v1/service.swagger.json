@@ -4005,6 +4005,401 @@
         ]
       }
     },
+    "/api/v1/portal/api-keys/{accessKey}:disable": {
+      "post": {
+        "operationId": "PortalDisableApiKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accessKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalDisableApiKeyBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/api-keys/{accessKey}:rotateSecret": {
+      "post": {
+        "operationId": "PortalRotateApiKeySecret",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RotateApiKeySecretResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accessKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalRotateApiKeySecretBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/capabilities": {
+      "get": {
+        "summary": "MyCapabilities answers the enabled capability services (the union\nacross the caller's bound tenants).",
+        "operationId": "PortalMyCapabilities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1MyCapabilitiesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants": {
+      "get": {
+        "operationId": "PortalListTenants",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTenantsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}/api-keys": {
+      "get": {
+        "operationId": "PortalListApiKeys",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListApiKeysResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "description": "TENANT_ADMIN callers may only list their own tenant (enforced\nserver-side against the actor).",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "PortalCreateApiKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateApiKeyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "description": "TENANT_ADMIN callers may only target their own tenant (enforced\nserver-side against the actor).",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalCreateApiKeyBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}/members": {
+      "get": {
+        "operationId": "PortalListTenantMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListTenantMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      },
+      "post": {
+        "operationId": "PortalAddTenantMember",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalAddTenantMemberBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}/members/{userId}": {
+      "delete": {
+        "operationId": "PortalRemoveTenantMember",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}:disable": {
+      "post": {
+        "operationId": "PortalDisableTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalDisableTenantBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}:setCapability": {
+      "post": {
+        "operationId": "PortalSetCapability",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SetCapabilityResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalSetCapabilityBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/whoami": {
+      "get": {
+        "summary": "---- Self-service (TENANT_ADMIN) ----\nWhoAmI is the switcher's bootstrap (spec §5.3): the console calls it\nright after login to learn the binding set every later choice is\nvalidated against.",
+        "operationId": "PortalWhoAmI",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1WhoAmIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/profile": {
       "get": {
         "summary": "---- Profile (P2) ----",
@@ -8072,6 +8467,68 @@
       },
       "description": "UpdateTemplateRequest fully replaces the template definition (name,\nparams, content; channel/kind must stay compatible with existing\npolicies — changing them requires delete + recreate). template.id is\noverridden by the top-level id; template.app_id is ignored."
     },
+    "TestkitServicePortalAddTenantMemberBody": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "AddTenantMemberRequest binds an existing console account to a tenant as a\nconsole operator."
+    },
+    "TestkitServicePortalCreateApiKeyBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "description": "CreateApiKeyRequest mints a credential pair for the tenant. The server\ngenerates access_key (\"ak_\" + 12 base36) and secret; the plaintext secret\nis returned exactly once and stored as a bcrypt hash."
+    },
+    "TestkitServicePortalDisableApiKeyBody": {
+      "type": "object",
+      "properties": {
+        "disable": {
+          "type": "boolean",
+          "description": "false re-enables a disabled key."
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "description": "DisableApiKeyRequest toggles a key; reason is an audit label."
+    },
+    "TestkitServicePortalDisableTenantBody": {
+      "type": "object",
+      "properties": {
+        "disable": {
+          "type": "boolean",
+          "description": "false re-enables a disabled tenant."
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "description": "DisableTenantRequest toggles a tenant; reason is an audit label."
+    },
+    "TestkitServicePortalRotateApiKeySecretBody": {
+      "type": "object",
+      "description": "RotateApiKeySecretRequest invalidates the key's current secret\nimmediately; the new plaintext is returned exactly once."
+    },
+    "TestkitServicePortalSetCapabilityBody": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string",
+          "description": "service is one of the five capability strings."
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "description": "SetCapabilityRequest flips one capability service of a tenant."
+    },
     "TestkitServiceReplaceEventRulesBody": {
       "type": "object",
       "properties": {
@@ -9340,6 +9797,32 @@
       },
       "description": "AliyunSmsCredentials configures an Aliyun SMS account."
     },
+    "v1ApiKeyInfo": {
+      "type": "object",
+      "properties": {
+        "accessKey": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled keys fail authentication immediately."
+        },
+        "lastUsedAt": {
+          "type": "string",
+          "format": "int64",
+          "description": "Unix seconds; 0 = never used."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64",
+          "description": "Unix seconds."
+        }
+      },
+      "description": "ApiKeyInfo is one tenant credential row. access_key (\"ak_\" + 12 base36,\nspec §3) identifies the credential; the secret is stored as a bcrypt hash\nand NEVER appears here — only CreateApiKey / RotateApiKeySecret responses\ncarry the plaintext, exactly once."
+    },
     "v1AuditAction": {
       "type": "string",
       "enum": [
@@ -9827,6 +10310,18 @@
         }
       },
       "description": "Country is one row of the ISO 3166-1 + E.164 directory. Field names use\nthe CLDR/libphonenumber \"region\" convention for the alpha-2 code — the\ndirectory covers countries and other territories alike."
+    },
+    "v1CreateApiKeyResponse": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "$ref": "#/definitions/v1ApiKeyInfo"
+        },
+        "secret": {
+          "type": "string",
+          "description": "new sk_…, shown once — never listed or echoed again."
+        }
+      }
     },
     "v1CreateChannelAccountRequest": {
       "type": "object",
@@ -11567,6 +12062,19 @@
       },
       "description": "LicenseAppInfo is one calling application of the licensing platform (a\nbusiness system identity, NOT an end-user license). Data-plane callers\npresent app_key/app_secret as x-app-key / x-app-secret metadata."
     },
+    "v1ListApiKeysResponse": {
+      "type": "object",
+      "properties": {
+        "apiKeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ApiKeyInfo"
+          }
+        }
+      },
+      "description": "ListApiKeysResponse NEVER carries a secret — see ApiKeyInfo."
+    },
     "v1ListChannelAccountsResponse": {
       "type": "object",
       "properties": {
@@ -12019,6 +12527,30 @@
         }
       }
     },
+    "v1ListTenantMembersResponse": {
+      "type": "object",
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TenantMember"
+          }
+        }
+      }
+    },
+    "v1ListTenantsResponse": {
+      "type": "object",
+      "properties": {
+        "tenants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TenantInfo"
+          }
+        }
+      }
+    },
     "v1ListTimezonesResponse": {
       "type": "object",
       "properties": {
@@ -12311,6 +12843,17 @@
       ],
       "default": "MODULE_UNSPECIFIED",
       "description": "Module is a sellable module. player/storage/sound/environment/settings are\nalways free and never enter the entitlement system. The client-facing\ntrial/start request carries the module as the lowercase wire name\n(\"downloads\"/\"tools\", matching the client contract) and converts at the\nservice boundary."
+    },
+    "v1MyCapabilitiesResponse": {
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "v1MyQuota": {
       "type": "object",
@@ -12919,6 +13462,18 @@
       },
       "description": "Role is a named bundle of permissions assignable to users or groups."
     },
+    "v1RotateApiKeySecretResponse": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "$ref": "#/definitions/v1ApiKeyInfo"
+        },
+        "secret": {
+          "type": "string",
+          "description": "new sk_…, shown once — never listed or echoed again."
+        }
+      }
+    },
     "v1RotateTokenResponse": {
       "type": "object",
       "properties": {
@@ -13274,6 +13829,14 @@
       ],
       "default": "SESSION_STATUS_UNSPECIFIED",
       "description": "SessionStatus classifies a row in the session list: live rows come from\nRedis (validate-on-use sliding window); historical rows come from the PG\ntombstone table (user_sessions) once they leave Redis.\n\n - SESSION_STATUS_ACTIVE: in Redis; the sliding window is alive\n - SESSION_STATUS_REVOKED: explicit logout / revoke (revoked_at set)\n - SESSION_STATUS_EXPIRED: not in Redis, not revoked — TTL lapsed or evicted by the max-sessions cap"
+    },
+    "v1SetCapabilityResponse": {
+      "type": "object",
+      "properties": {
+        "tenant": {
+          "$ref": "#/definitions/v1TenantInfo"
+        }
+      }
     },
     "v1SetVersionBlockedResponse": {
       "type": "object"
@@ -13706,6 +14269,71 @@
         }
       },
       "description": "TemplateParamSpec declares one {{param}} placeholder of a template."
+    },
+    "v1TenantInfo": {
+      "type": "object",
+      "properties": {
+        "tenantKey": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remark": {
+          "type": "string"
+        },
+        "enabledCapabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "enabled_capabilities is a subset of the five service strings\nUSER / MESSAGE / STORAGE / TELEMETRY / LICENSE. gid/reference/portal\nitself are platform plumbing and never appear here."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "disabled tenants fail every tenant-scoped surface immediately."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64",
+          "description": "Unix seconds."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "TenantInfo is one platform tenant. tenant_key is THE tenant identifier on\nevery surface (spec §3: \"ten_\" + 12 base36, minted server-side, unique and\nimmutable) — no other alias or internal row id ever leaves the service.\nCredentials never appear here; api keys are listed via ListApiKeys."
+    },
+    "v1TenantMember": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64",
+          "description": "Unix seconds; when the binding was created."
+        }
+      },
+      "description": "TenantMember is one console-operator binding: a directory user authorized\nto operate the tenant's console (actor.user_type = TENANT_ADMIN pinned to\nthis tenant). Display fields are joined from the user directory at read\ntime."
+    },
+    "v1TenantMembership": {
+      "type": "object",
+      "properties": {
+        "tenantKey": {
+          "type": "string"
+        },
+        "tenantName": {
+          "type": "string"
+        }
+      },
+      "description": "TenantMembership is one console-operator binding of the caller."
     },
     "v1TencentSmsCredentials": {
       "type": "object",
@@ -14270,6 +14898,23 @@
         }
       },
       "description": "VolcengineSmsCredentials configures a Volcengine SMS account."
+    },
+    "v1WhoAmIResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TenantMembership"
+          }
+        }
+      },
+      "description": "The caller is the verified actor (common.v1.RequestActor) carried in the\nrequest context — no identity field on the wire."
     }
   }
 }

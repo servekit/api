@@ -13,6 +13,7 @@ import (
 	v1 "github.com/servekit/api/gen/go/common/v1"
 	v13 "github.com/servekit/api/gen/go/license/v1"
 	v12 "github.com/servekit/api/gen/go/messaging/v1"
+	v17 "github.com/servekit/api/gen/go/portal/v1"
 	v15 "github.com/servekit/api/gen/go/reference/v1"
 	v11 "github.com/servekit/api/gen/go/storage/v1"
 	v14 "github.com/servekit/api/gen/go/telemetry/v1"
@@ -222,6 +223,18 @@ const (
 	TestkitService_UserUpdateApp_FullMethodName               = "/testkit.v1.TestkitService/UserUpdateApp"
 	TestkitService_UserRotateAppSecret_FullMethodName         = "/testkit.v1.TestkitService/UserRotateAppSecret"
 	TestkitService_UserDeleteApp_FullMethodName               = "/testkit.v1.TestkitService/UserDeleteApp"
+	TestkitService_PortalWhoAmI_FullMethodName                = "/testkit.v1.TestkitService/PortalWhoAmI"
+	TestkitService_PortalMyCapabilities_FullMethodName        = "/testkit.v1.TestkitService/PortalMyCapabilities"
+	TestkitService_PortalListApiKeys_FullMethodName           = "/testkit.v1.TestkitService/PortalListApiKeys"
+	TestkitService_PortalCreateApiKey_FullMethodName          = "/testkit.v1.TestkitService/PortalCreateApiKey"
+	TestkitService_PortalRotateApiKeySecret_FullMethodName    = "/testkit.v1.TestkitService/PortalRotateApiKeySecret"
+	TestkitService_PortalDisableApiKey_FullMethodName         = "/testkit.v1.TestkitService/PortalDisableApiKey"
+	TestkitService_PortalListTenants_FullMethodName           = "/testkit.v1.TestkitService/PortalListTenants"
+	TestkitService_PortalSetCapability_FullMethodName         = "/testkit.v1.TestkitService/PortalSetCapability"
+	TestkitService_PortalDisableTenant_FullMethodName         = "/testkit.v1.TestkitService/PortalDisableTenant"
+	TestkitService_PortalListTenantMembers_FullMethodName     = "/testkit.v1.TestkitService/PortalListTenantMembers"
+	TestkitService_PortalAddTenantMember_FullMethodName       = "/testkit.v1.TestkitService/PortalAddTenantMember"
+	TestkitService_PortalRemoveTenantMember_FullMethodName    = "/testkit.v1.TestkitService/PortalRemoveTenantMember"
 )
 
 // TestkitServiceClient is the client API for TestkitService service.
@@ -452,6 +465,24 @@ type TestkitServiceClient interface {
 	UserUpdateApp(ctx context.Context, in *v16.UpdateAppRequest, opts ...grpc.CallOption) (*v16.UpdateAppResponse, error)
 	UserRotateAppSecret(ctx context.Context, in *v16.RotateAppSecretRequest, opts ...grpc.CallOption) (*v16.RotateAppSecretResponse, error)
 	UserDeleteApp(ctx context.Context, in *v16.DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ---- Self-service (TENANT_ADMIN) ----
+	// WhoAmI is the switcher's bootstrap (spec §5.3): the console calls it
+	// right after login to learn the binding set every later choice is
+	// validated against.
+	PortalWhoAmI(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v17.WhoAmIResponse, error)
+	// MyCapabilities answers the enabled capability services (the union
+	// across the caller's bound tenants).
+	PortalMyCapabilities(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v17.MyCapabilitiesResponse, error)
+	PortalListApiKeys(ctx context.Context, in *v17.ListApiKeysRequest, opts ...grpc.CallOption) (*v17.ListApiKeysResponse, error)
+	PortalCreateApiKey(ctx context.Context, in *v17.CreateApiKeyRequest, opts ...grpc.CallOption) (*v17.CreateApiKeyResponse, error)
+	PortalRotateApiKeySecret(ctx context.Context, in *v17.RotateApiKeySecretRequest, opts ...grpc.CallOption) (*v17.RotateApiKeySecretResponse, error)
+	PortalDisableApiKey(ctx context.Context, in *v17.DisableApiKeyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PortalListTenants(ctx context.Context, in *v17.ListTenantsRequest, opts ...grpc.CallOption) (*v17.ListTenantsResponse, error)
+	PortalSetCapability(ctx context.Context, in *v17.SetCapabilityRequest, opts ...grpc.CallOption) (*v17.SetCapabilityResponse, error)
+	PortalDisableTenant(ctx context.Context, in *v17.DisableTenantRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PortalListTenantMembers(ctx context.Context, in *v17.ListTenantMembersRequest, opts ...grpc.CallOption) (*v17.ListTenantMembersResponse, error)
+	PortalAddTenantMember(ctx context.Context, in *v17.AddTenantMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PortalRemoveTenantMember(ctx context.Context, in *v17.RemoveTenantMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type testkitServiceClient struct {
@@ -2392,6 +2423,126 @@ func (c *testkitServiceClient) UserDeleteApp(ctx context.Context, in *v16.Delete
 	return out, nil
 }
 
+func (c *testkitServiceClient) PortalWhoAmI(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v17.WhoAmIResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.WhoAmIResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalWhoAmI_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalMyCapabilities(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v17.MyCapabilitiesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.MyCapabilitiesResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalMyCapabilities_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalListApiKeys(ctx context.Context, in *v17.ListApiKeysRequest, opts ...grpc.CallOption) (*v17.ListApiKeysResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.ListApiKeysResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalListApiKeys_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalCreateApiKey(ctx context.Context, in *v17.CreateApiKeyRequest, opts ...grpc.CallOption) (*v17.CreateApiKeyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.CreateApiKeyResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalCreateApiKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalRotateApiKeySecret(ctx context.Context, in *v17.RotateApiKeySecretRequest, opts ...grpc.CallOption) (*v17.RotateApiKeySecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.RotateApiKeySecretResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalRotateApiKeySecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalDisableApiKey(ctx context.Context, in *v17.DisableApiKeyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_PortalDisableApiKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalListTenants(ctx context.Context, in *v17.ListTenantsRequest, opts ...grpc.CallOption) (*v17.ListTenantsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.ListTenantsResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalListTenants_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalSetCapability(ctx context.Context, in *v17.SetCapabilityRequest, opts ...grpc.CallOption) (*v17.SetCapabilityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.SetCapabilityResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalSetCapability_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalDisableTenant(ctx context.Context, in *v17.DisableTenantRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_PortalDisableTenant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalListTenantMembers(ctx context.Context, in *v17.ListTenantMembersRequest, opts ...grpc.CallOption) (*v17.ListTenantMembersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v17.ListTenantMembersResponse)
+	err := c.cc.Invoke(ctx, TestkitService_PortalListTenantMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalAddTenantMember(ctx context.Context, in *v17.AddTenantMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_PortalAddTenantMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *testkitServiceClient) PortalRemoveTenantMember(ctx context.Context, in *v17.RemoveTenantMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, TestkitService_PortalRemoveTenantMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TestkitServiceServer is the server API for TestkitService service.
 // All implementations must embed UnimplementedTestkitServiceServer
 // for forward compatibility.
@@ -2620,6 +2771,24 @@ type TestkitServiceServer interface {
 	UserUpdateApp(context.Context, *v16.UpdateAppRequest) (*v16.UpdateAppResponse, error)
 	UserRotateAppSecret(context.Context, *v16.RotateAppSecretRequest) (*v16.RotateAppSecretResponse, error)
 	UserDeleteApp(context.Context, *v16.DeleteAppRequest) (*emptypb.Empty, error)
+	// ---- Self-service (TENANT_ADMIN) ----
+	// WhoAmI is the switcher's bootstrap (spec §5.3): the console calls it
+	// right after login to learn the binding set every later choice is
+	// validated against.
+	PortalWhoAmI(context.Context, *emptypb.Empty) (*v17.WhoAmIResponse, error)
+	// MyCapabilities answers the enabled capability services (the union
+	// across the caller's bound tenants).
+	PortalMyCapabilities(context.Context, *emptypb.Empty) (*v17.MyCapabilitiesResponse, error)
+	PortalListApiKeys(context.Context, *v17.ListApiKeysRequest) (*v17.ListApiKeysResponse, error)
+	PortalCreateApiKey(context.Context, *v17.CreateApiKeyRequest) (*v17.CreateApiKeyResponse, error)
+	PortalRotateApiKeySecret(context.Context, *v17.RotateApiKeySecretRequest) (*v17.RotateApiKeySecretResponse, error)
+	PortalDisableApiKey(context.Context, *v17.DisableApiKeyRequest) (*emptypb.Empty, error)
+	PortalListTenants(context.Context, *v17.ListTenantsRequest) (*v17.ListTenantsResponse, error)
+	PortalSetCapability(context.Context, *v17.SetCapabilityRequest) (*v17.SetCapabilityResponse, error)
+	PortalDisableTenant(context.Context, *v17.DisableTenantRequest) (*emptypb.Empty, error)
+	PortalListTenantMembers(context.Context, *v17.ListTenantMembersRequest) (*v17.ListTenantMembersResponse, error)
+	PortalAddTenantMember(context.Context, *v17.AddTenantMemberRequest) (*emptypb.Empty, error)
+	PortalRemoveTenantMember(context.Context, *v17.RemoveTenantMemberRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTestkitServiceServer()
 }
 
@@ -3208,6 +3377,42 @@ func (UnimplementedTestkitServiceServer) UserRotateAppSecret(context.Context, *v
 }
 func (UnimplementedTestkitServiceServer) UserDeleteApp(context.Context, *v16.DeleteAppRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method UserDeleteApp not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalWhoAmI(context.Context, *emptypb.Empty) (*v17.WhoAmIResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalWhoAmI not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalMyCapabilities(context.Context, *emptypb.Empty) (*v17.MyCapabilitiesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalMyCapabilities not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalListApiKeys(context.Context, *v17.ListApiKeysRequest) (*v17.ListApiKeysResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalListApiKeys not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalCreateApiKey(context.Context, *v17.CreateApiKeyRequest) (*v17.CreateApiKeyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalCreateApiKey not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalRotateApiKeySecret(context.Context, *v17.RotateApiKeySecretRequest) (*v17.RotateApiKeySecretResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalRotateApiKeySecret not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalDisableApiKey(context.Context, *v17.DisableApiKeyRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalDisableApiKey not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalListTenants(context.Context, *v17.ListTenantsRequest) (*v17.ListTenantsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalListTenants not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalSetCapability(context.Context, *v17.SetCapabilityRequest) (*v17.SetCapabilityResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalSetCapability not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalDisableTenant(context.Context, *v17.DisableTenantRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalDisableTenant not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalListTenantMembers(context.Context, *v17.ListTenantMembersRequest) (*v17.ListTenantMembersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalListTenantMembers not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalAddTenantMember(context.Context, *v17.AddTenantMemberRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalAddTenantMember not implemented")
+}
+func (UnimplementedTestkitServiceServer) PortalRemoveTenantMember(context.Context, *v17.RemoveTenantMemberRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PortalRemoveTenantMember not implemented")
 }
 func (UnimplementedTestkitServiceServer) mustEmbedUnimplementedTestkitServiceServer() {}
 func (UnimplementedTestkitServiceServer) testEmbeddedByValue()                        {}
@@ -6704,6 +6909,222 @@ func _TestkitService_UserDeleteApp_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TestkitService_PortalWhoAmI_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalWhoAmI(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalWhoAmI_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalWhoAmI(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalMyCapabilities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalMyCapabilities(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalMyCapabilities_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalMyCapabilities(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalListApiKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.ListApiKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalListApiKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalListApiKeys_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalListApiKeys(ctx, req.(*v17.ListApiKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalCreateApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.CreateApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalCreateApiKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalCreateApiKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalCreateApiKey(ctx, req.(*v17.CreateApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalRotateApiKeySecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.RotateApiKeySecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalRotateApiKeySecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalRotateApiKeySecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalRotateApiKeySecret(ctx, req.(*v17.RotateApiKeySecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalDisableApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.DisableApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalDisableApiKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalDisableApiKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalDisableApiKey(ctx, req.(*v17.DisableApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalListTenants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.ListTenantsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalListTenants(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalListTenants_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalListTenants(ctx, req.(*v17.ListTenantsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalSetCapability_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.SetCapabilityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalSetCapability(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalSetCapability_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalSetCapability(ctx, req.(*v17.SetCapabilityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalDisableTenant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.DisableTenantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalDisableTenant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalDisableTenant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalDisableTenant(ctx, req.(*v17.DisableTenantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalListTenantMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.ListTenantMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalListTenantMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalListTenantMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalListTenantMembers(ctx, req.(*v17.ListTenantMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalAddTenantMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.AddTenantMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalAddTenantMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalAddTenantMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalAddTenantMember(ctx, req.(*v17.AddTenantMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TestkitService_PortalRemoveTenantMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v17.RemoveTenantMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TestkitServiceServer).PortalRemoveTenantMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TestkitService_PortalRemoveTenantMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TestkitServiceServer).PortalRemoveTenantMember(ctx, req.(*v17.RemoveTenantMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TestkitService_ServiceDesc is the grpc.ServiceDesc for TestkitService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -7482,6 +7903,54 @@ var TestkitService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserDeleteApp",
 			Handler:    _TestkitService_UserDeleteApp_Handler,
+		},
+		{
+			MethodName: "PortalWhoAmI",
+			Handler:    _TestkitService_PortalWhoAmI_Handler,
+		},
+		{
+			MethodName: "PortalMyCapabilities",
+			Handler:    _TestkitService_PortalMyCapabilities_Handler,
+		},
+		{
+			MethodName: "PortalListApiKeys",
+			Handler:    _TestkitService_PortalListApiKeys_Handler,
+		},
+		{
+			MethodName: "PortalCreateApiKey",
+			Handler:    _TestkitService_PortalCreateApiKey_Handler,
+		},
+		{
+			MethodName: "PortalRotateApiKeySecret",
+			Handler:    _TestkitService_PortalRotateApiKeySecret_Handler,
+		},
+		{
+			MethodName: "PortalDisableApiKey",
+			Handler:    _TestkitService_PortalDisableApiKey_Handler,
+		},
+		{
+			MethodName: "PortalListTenants",
+			Handler:    _TestkitService_PortalListTenants_Handler,
+		},
+		{
+			MethodName: "PortalSetCapability",
+			Handler:    _TestkitService_PortalSetCapability_Handler,
+		},
+		{
+			MethodName: "PortalDisableTenant",
+			Handler:    _TestkitService_PortalDisableTenant_Handler,
+		},
+		{
+			MethodName: "PortalListTenantMembers",
+			Handler:    _TestkitService_PortalListTenantMembers_Handler,
+		},
+		{
+			MethodName: "PortalAddTenantMember",
+			Handler:    _TestkitService_PortalAddTenantMember_Handler,
+		},
+		{
+			MethodName: "PortalRemoveTenantMember",
+			Handler:    _TestkitService_PortalRemoveTenantMember_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

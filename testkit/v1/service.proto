@@ -10,6 +10,7 @@ import "license/v1/message.proto";
 import "license/v1/request_response.proto";
 import "messaging/v1/admin.proto";
 import "messaging/v1/admin_request_response.proto";
+import "portal/v1/admin_request_response.proto";
 import "reference/v1/request_response.proto";
 import "storage/v1/request_response.proto";
 import "telemetry/v1/request_response.proto";
@@ -1008,5 +1009,90 @@ service TestkitService {
 
   rpc UserDeleteApp(user.v1.DeleteAppRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/user/admin/apps/{app_key}"};
+  }
+
+  // ==================== Phase ④ portal admin console forwards ====================
+  //
+  // 1:1 forwards of portal.v1 PortalAdminService (the tenant registry behind
+  // the internal-only :19099 admin listener — testkit is its sole legal
+  // caller). Types import across domains like the message/license/user app
+  // forwards, so no mirrored DTOs. The tenant gate (testkit's §5.3 door)
+  // resolves the trusted x-tenant-key from the verified actor + the
+  // x-tenant-choice header BEFORE these run; the forward layer re-checks the
+  // actor's user_type at the door (portal remains the authority), and for
+  // TENANT_ADMIN callers overrides the request's tenant_key with the
+  // trusted injected key — a tenant admin can never even name a foreign
+  // tenant, the choice IS the tenant.
+
+  // ---- Self-service (TENANT_ADMIN) ----
+  // WhoAmI is the switcher's bootstrap (spec §5.3): the console calls it
+  // right after login to learn the binding set every later choice is
+  // validated against.
+  rpc PortalWhoAmI(google.protobuf.Empty) returns (portal.v1.WhoAmIResponse) {
+    option (google.api.http) = {get: "/api/v1/portal/whoami"};
+  }
+  // MyCapabilities answers the enabled capability services (the union
+  // across the caller's bound tenants).
+  rpc PortalMyCapabilities(google.protobuf.Empty) returns (portal.v1.MyCapabilitiesResponse) {
+    option (google.api.http) = {get: "/api/v1/portal/capabilities"};
+  }
+
+  // ---- Api keys (PLATFORM any tenant; TENANT_ADMIN bound tenants only) ----
+
+  rpc PortalListApiKeys(portal.v1.ListApiKeysRequest) returns (portal.v1.ListApiKeysResponse) {
+    option (google.api.http) = {get: "/api/v1/portal/tenants/{tenant_key}/api-keys"};
+  }
+  rpc PortalCreateApiKey(portal.v1.CreateApiKeyRequest) returns (portal.v1.CreateApiKeyResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}/api-keys"
+      body: "*"
+    };
+  }
+  rpc PortalRotateApiKeySecret(portal.v1.RotateApiKeySecretRequest) returns (portal.v1.RotateApiKeySecretResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/api-keys/{access_key}:rotateSecret"
+      body: "*"
+    };
+  }
+  rpc PortalDisableApiKey(portal.v1.DisableApiKeyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/api-keys/{access_key}:disable"
+      body: "*"
+    };
+  }
+
+  // ---- Tenants (PLATFORM only) ----
+
+  rpc PortalListTenants(portal.v1.ListTenantsRequest) returns (portal.v1.ListTenantsResponse) {
+    option (google.api.http) = {get: "/api/v1/portal/tenants"};
+  }
+  rpc PortalSetCapability(portal.v1.SetCapabilityRequest) returns (portal.v1.SetCapabilityResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}:setCapability"
+      body: "*"
+    };
+  }
+  rpc PortalDisableTenant(portal.v1.DisableTenantRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}:disable"
+      body: "*"
+    };
+  }
+
+  // ---- Members (PLATFORM only) ----
+
+  rpc PortalListTenantMembers(portal.v1.ListTenantMembersRequest) returns (portal.v1.ListTenantMembersResponse) {
+    option (google.api.http) = {get: "/api/v1/portal/tenants/{tenant_key}/members"};
+  }
+  rpc PortalAddTenantMember(portal.v1.AddTenantMemberRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}/members"
+      body: "*"
+    };
+  }
+  rpc PortalRemoveTenantMember(portal.v1.RemoveTenantMemberRequest) returns (google.protobuf.Empty) {
+    // Both identifying fields ride the path: grpc-gateway drops DELETE
+    // bodies (allow_delete_body is off).
+    option (google.api.http) = {delete: "/api/v1/portal/tenants/{tenant_key}/members/{user_id}"};
   }
 }
