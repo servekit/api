@@ -1891,8 +1891,10 @@ message CreateTenantConfigResponse {
 
   string token = 2;
 
-  // app_secret convenience echo (also visible via
-  // ListTenantConfigs/GetTenantConfig).
+  // app_secret is RETIRED (④ window close): always empty — the column
+  // was dropped, no surface (create/get/list) ever echoes a secret, and
+  // rotation answers with a retired error. Mirrors
+  // TenantConfig.app_secret.
   string app_secret = 3;
 }
 

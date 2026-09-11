@@ -9121,7 +9121,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close): always empty — the column\nwas dropped, no surface (create/get/list) ever echoes a secret, and\nrotation answers with a retired error. Mirrors\nTenantConfig.app_secret."
         }
       }
     },
@@ -9234,7 +9234,8 @@
           "type": "boolean"
         },
         "appSecret": {
-          "type": "string"
+          "type": "string",
+          "description": "app_secret is RETIRED (④ window close): the column was dropped —\nbackend callers authenticate via the trusted x-tenant-key injected by\nthe portal/doors, and the raw client endpoints (/v1/e/…) keep using\ningest tokens. Always empty. Mirrors telemetry.v1.TenantConfig."
         },
         "createdAt": {
           "type": "string",

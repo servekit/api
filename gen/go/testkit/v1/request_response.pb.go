@@ -12393,8 +12393,10 @@ type CreateTenantConfigResponse struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	Token  string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	// app_secret convenience echo (also visible via
-	// ListTenantConfigs/GetTenantConfig).
+	// app_secret is RETIRED (④ window close): always empty — the column
+	// was dropped, no surface (create/get/list) ever echoes a secret, and
+	// rotation answers with a retired error. Mirrors
+	// TenantConfig.app_secret.
 	AppSecret     string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
