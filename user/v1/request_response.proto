@@ -957,11 +957,10 @@ message ListUserRolesResponse {
 }
 
 // ==================== Admin: tenants (user apps) ====================
-// Platform-wide ak/sk pattern (see UserAppInfo). The tenant of every
-// tenant-scoped surface is the VERIFIED CALLING APP (x-app-key /
-// x-app-secret metadata), never a request field. Phase ④ terminal naming:
-// the wire fields say tenant_key (the registry's app_key column keeps its
-// historical name until the data-side closure).
+// The tenant of every tenant-scoped surface is the trusted x-tenant-key the
+// portal/doors inject, never a request field (the ak/sk credential columns
+// were retired with the ④ window close). Phase ④ terminal naming: the wire
+// fields say tenant_key.
 
 // CreateAppRequest registers a tenant. tenant_key empty = the server mints
 // one ("usr_" + 8 base36 chars, immutable; stored as the registry's
@@ -981,7 +980,7 @@ message CreateAppRequest {
 
 message CreateAppResponse {
   UserAppInfo app = 1;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+  // app_secret is RETIRED (④ window close); always empty.
   string app_secret = 2;
 }
 
@@ -1023,7 +1022,8 @@ message RotateAppSecretRequest {
 
 message RotateAppSecretResponse {
   UserAppInfo app = 1;
-  // app_secret convenience echo (also visible via ListApps/GetApp).
+  // app_secret is RETIRED (④ window close) — the RPC answers
+  // APP_SECRET_RETIRED instead of returning this field.
   string app_secret = 2;
 }
 

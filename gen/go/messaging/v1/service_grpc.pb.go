@@ -42,8 +42,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // MessageService is the data plane. Every Send* call authenticates the
-// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
-// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// calling tenant via the trusted x-tenant-key the portal/doors inject
+// (gRPC metadata; the legacy x-app-key / x-app-secret pair was retired
+// with the ④ window close) and resolves the send policy by
+// (tenant, channel, scene). Read RPCs (Get/List/Stats) are
 // internal-network trusted, no per-app scoping.
 type MessageServiceClient interface {
 	Ping(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.Pong, error)
@@ -253,8 +255,10 @@ func (c *messageServiceClient) ListSMSRegions(ctx context.Context, in *ListSMSRe
 // for forward compatibility.
 //
 // MessageService is the data plane. Every Send* call authenticates the
-// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
-// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// calling tenant via the trusted x-tenant-key the portal/doors inject
+// (gRPC metadata; the legacy x-app-key / x-app-secret pair was retired
+// with the ④ window close) and resolves the send policy by
+// (tenant, channel, scene). Read RPCs (Get/List/Stats) are
 // internal-network trusted, no per-app scoping.
 type MessageServiceServer interface {
 	Ping(context.Context, *emptypb.Empty) (*v1.Pong, error)

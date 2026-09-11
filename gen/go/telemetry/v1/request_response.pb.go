@@ -359,8 +359,7 @@ type CreateTenantConfigResponse struct {
 	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	// Full plaintext ingest token — returned exactly once, never stored.
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	// app_secret convenience echo (also visible via
-	// ListTenantConfigs/GetTenantConfig).
+	// app_secret is RETIRED (④ window close); always empty.
 	AppSecret     string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -894,9 +893,8 @@ func (x *RotateTokenResponse) GetToken() string {
 	return ""
 }
 
-// RotateTenantConfigSecretRequest mints a new business-identity credential
-// (the sk half of the platform ak/sk pair). The old one stops working on
-// the next registry refresh (immediate in-process).
+// RotateTenantConfigSecretRequest is retired (the app_secret column was
+// dropped with the ④ window close); the RPC answers SECRET_RETIRED.
 type RotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
@@ -944,8 +942,8 @@ func (x *RotateTenantConfigSecretRequest) GetTenantKey() string {
 type RotateTenantConfigSecretResponse struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret convenience echo (also visible via
-	// ListTenantConfigs/GetTenantConfig).
+	// app_secret is RETIRED (④ window close) — the RPC answers
+	// SECRET_RETIRED instead of returning this field.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

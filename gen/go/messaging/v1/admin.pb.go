@@ -28,19 +28,18 @@ const (
 )
 
 // MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
-// MessageAppInfo). The row keeps its calling-application identity: app_key
-// is the x-app-key credential, apps own policies, and quotas and
-// idempotency namespaces hang off the app_key.
+// MessageAppInfo). The data plane authenticates via the trusted
+// x-tenant-key; the row keeps its calling-application identity as an
+// internal label — quotas and idempotency namespaces hang off the app_key.
 type MessageTenantConfigInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_key is the public credential identifier passed in x-app-key
-	// metadata (e.g. "testkit"). Unique.
+	// app_key is the row's internal directory label (e.g. "testkit"; was the
+	// x-app-key credential before the ④ window close). Unique.
 	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	// app_secret echoes the stored secret (internal-trust posture: plaintext
-	// at rest, internal-network transport — the ops console needs to copy
-	// credentials for service configuration, so it is list-visible rather
-	// than show-once).
+	// app_secret is RETIRED (④ window close): config rows carry no
+	// credential anymore; the data plane authenticates via the trusted
+	// x-tenant-key. Always empty.
 	AppSecret string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	Name      string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled apps fail every send with ErrAppUnauthorized.

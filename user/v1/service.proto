@@ -393,10 +393,11 @@ service UserService {
   // Returns direct + group-inherited roles; see UserRole.source.
   rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse);
 
-  // ---- Tenant registry (user apps; platform ak/sk pattern). The tenant
-  // of every tenant-scoped surface is the verified calling app. ----
+  // ---- Tenant registry (user apps). The tenant of every tenant-scoped
+  // surface is the trusted x-tenant-key the portal/doors inject — never a
+  // secret (the ak/sk columns were retired with the ④ window close). ----
 
-  // CreateApp registers a tenant and mints its app_secret.
+  // CreateApp registers a tenant directory row.
   rpc CreateApp(CreateAppRequest) returns (CreateAppResponse);
 
   rpc GetApp(GetAppRequest) returns (GetAppResponse);
@@ -404,6 +405,8 @@ service UserService {
   // UpdateApp edits mutable fields; tenant_key is immutable.
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
 
+  // RotateAppSecret is retired (the credential column was dropped with the
+  // ④ window close); it answers SECRET_RETIRED-style errors.
   rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
 
   // ListApps — the tenant registry is low-cardinality; no paging.

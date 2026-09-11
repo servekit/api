@@ -74,8 +74,8 @@ message EmailRecord {
   EmailScene scene = 4;
   MessageStatus status = 5;
   EmailAddress target = 6;
-  // AppKey identifies the calling app (the authenticated sender identity
-  // resolved from x-app-key credentials at send time).
+  // AppKey is the audit label of the sending app (historical; sends
+  // authenticate via the trusted x-tenant-key since the ④ window close).
   string app_key = 7;
   repeated EmailAddress cc = 8;
   repeated EmailAddress bcc = 9;
@@ -113,8 +113,8 @@ message SMSRecord {
       max_len: 20
     }
   ];
-  // AppKey identifies the calling app (the authenticated sender identity
-  // resolved from x-app-key credentials at send time).
+  // AppKey is the audit label of the sending app (historical; sends
+  // authenticate via the trusted x-tenant-key since the ④ window close).
   string app_key = 8;
   string content = 9;
   string template_id = 10;

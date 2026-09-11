@@ -99,13 +99,13 @@ func (x *CreateTenantConfigRequest) GetTenantKey() string {
 	return ""
 }
 
-// CreateTenantConfigResponse returns the created config row plus the
-// plaintext app_secret exactly once — it is not recoverable later (rotate
-// to re-issue).
+// CreateTenantConfigResponse returns the created config row (no secret —
+// the credential column was retired with the ④ window close).
 type CreateTenantConfigResponse struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	AppSecret     string                   `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret is RETIRED (④ window close); always empty.
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -364,8 +364,8 @@ func (x *UpdateTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 	return nil
 }
 
-// RotateTenantConfigSecret mints a new app_secret. The old secret becomes
-// invalid immediately; the new plaintext is returned exactly once.
+// RotateTenantConfigSecret is retired (the app_secret column was dropped
+// with the ④ window close); the RPC answers SECRET_RETIRED.
 type RotateTenantConfigSecretRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -411,9 +411,11 @@ func (x *RotateTenantConfigSecretRequest) GetId() int64 {
 }
 
 type RotateTenantConfigSecretResponse struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	AppSecret     string                   `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	state  protoimpl.MessageState   `protogen:"open.v1"`
+	Config *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	// app_secret is RETIRED (④ window close); the RPC errors instead of
+	// returning this field.
+	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

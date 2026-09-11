@@ -1,9 +1,10 @@
 // Messaging admin service definitions — RPC declarations only.
 //
 // MessageAdminService manages the platform resource model: tenant configs
-// (one calling-app row per tenant — the ak/sk registry behind the data
-// plane), the channel-account pool (vendor credentials), SMS signatures,
-// templates, and per-(app, channel, scene) send policies.
+// (one config row per tenant; the data plane authenticates via the trusted
+// x-tenant-key — the credential columns were retired with the ④ window
+// close), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(tenant, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //

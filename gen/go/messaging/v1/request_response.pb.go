@@ -29,8 +29,9 @@ const (
 // Policy-driven: the caller supplies only the scene and template params.
 // The service resolves (app, EMAIL, scene) → policy → template + ordered
 // provider routes, renders subject/body from the template, and sends along
-// the route chain with fallback. Callers authenticate via app credentials
-// in gRPC metadata (x-app-key / x-app-secret).
+// the route chain with fallback. Callers authenticate via the trusted
+// x-tenant-key in gRPC metadata (injected by the portal/doors; the legacy
+// x-app-key / x-app-secret pair was retired with the ④ window close).
 type SendEmailRequest struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	To      []*EmailAddress        `protobuf:"bytes,1,rep,name=to,proto3" json:"to,omitempty"`

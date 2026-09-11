@@ -967,7 +967,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable) and the\napp_secret is echoed on every read of StorageTenantConfigInfo\n(internal-trust posture).",
+            "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable). No secret\nis minted or returned (the credential column was retired with the ④\nwindow close).",
             "in": "body",
             "required": true,
             "schema": {
@@ -2869,7 +2869,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nthe app_secret is echoed on every read of LicenseTenantConfigInfo\n(internal-trust posture).",
+            "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nno secret is minted or returned (the credential column was retired with\nthe ④ window close).",
             "in": "body",
             "required": true,
             "schema": {
@@ -8378,7 +8378,7 @@
     },
     "TestkitServiceMessageRotateTenantConfigSecretBody": {
       "type": "object",
-      "description": "RotateTenantConfigSecret mints a new app_secret. The old secret becomes\ninvalid immediately; the new plaintext is returned exactly once."
+      "description": "RotateTenantConfigSecret is retired (the app_secret column was dropped\nwith the ④ window close); the RPC answers SECRET_RETIRED."
     },
     "TestkitServiceMessageUpdateChannelAccountBody": {
       "type": "object",
@@ -8561,7 +8561,7 @@
     },
     "TestkitServiceRotateTenantConfigSecretBody": {
       "type": "object",
-      "description": "RotateTenantConfigSecretRequest mints a new business-identity credential\n(the sk half of the platform ak/sk pair). The old one stops working on\nthe next registry refresh (immediate in-process)."
+      "description": "RotateTenantConfigSecretRequest is retired (the app_secret column was\ndropped with the ④ window close); the RPC answers SECRET_RETIRED."
     },
     "TestkitServiceRotateTokenBody": {
       "type": "object"
@@ -8762,7 +8762,7 @@
           "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key (the stamp follows the\ninjection, never the body); the PLATFORM cross-view needs it for a\nprovisioning create — when empty there the server-minted app key\nliteral is the legacy→tenant fallback value. Unique across rows."
         }
       },
-      "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nthe app_secret is echoed on every read of LicenseTenantConfigInfo\n(internal-trust posture)."
+      "description": "CreateTenantConfigRequest registers a tenant's config row. The internal\napp identity is minted server-side (\"lic_\" + 8 base36 chars, immutable);\nno secret is minted or returned (the credential column was retired with\nthe ④ window close)."
     },
     "licenseV1CreateTenantConfigResponse": {
       "type": "object",
@@ -8772,7 +8772,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -8804,7 +8804,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close) — the RPC answers a BadRequest\nretirement error instead of returning this field."
         }
       }
     },
@@ -8844,10 +8844,11 @@
           "$ref": "#/definitions/v1MessageTenantConfigInfo"
         },
         "appSecret": {
-          "type": "string"
+          "type": "string",
+          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       },
-      "description": "CreateTenantConfigResponse returns the created config row plus the\nplaintext app_secret exactly once — it is not recoverable later (rotate\nto re-issue)."
+      "description": "CreateTenantConfigResponse returns the created config row (no secret —\nthe credential column was retired with the ④ window close)."
     },
     "messagingV1GetTenantConfigResponse": {
       "type": "object",
@@ -8876,7 +8877,8 @@
           "$ref": "#/definitions/v1MessageTenantConfigInfo"
         },
         "appSecret": {
-          "type": "string"
+          "type": "string",
+          "description": "app_secret is RETIRED (④ window close); the RPC errors instead of\nreturning this field."
         }
       }
     },
@@ -8995,7 +8997,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nListTenantConfigs/GetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nSECRET_RETIRED instead of returning this field."
         }
       }
     },
@@ -9008,7 +9010,7 @@
         },
         "appKey": {
           "type": "string",
-          "description": "app_key is the row's machine identity and the \"ak\" half of the\nplatform-wide\nak/sk pair: minted server-side on creation (\"tel_\" + 8 base36 chars,\ncollision-checked; a caller-chosen key is accepted when non-empty),\nunique, immutable. The admin surface keys every per-app route by it."
+          "description": "app_key is the row's machine identity (was the \"ak\" half of the\nretired platform ak/sk pair): minted server-side on creation (\"tel_\" +\n8 base36 chars, collision-checked; a caller-chosen key is accepted\nwhen non-empty), unique, immutable. The admin surface keys every\nper-app route by it."
         },
         "name": {
           "type": "string"
@@ -9055,7 +9057,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is the business-identity credential (the \"sk\" half of the\nplatform-wide ak/sk pair; app_key is the \"ak\"). Required by the\ngRPC/module ingest surface — backend callers present it as x-app-key /\nx-app-secret metadata; the raw client endpoints (/v1/e/…) keep using\nthe ingest token instead. Echoed on every read — internal-trust\nposture, same convention as the messaging/storage/license apps."
+          "description": "app_secret is RETIRED (④ window close): the column was dropped —\nbackend callers authenticate via the trusted x-tenant-key injected by\nthe portal/doors, and the raw client endpoints (/v1/e/…) keep using\ningest tokens. Always empty."
         },
         "tenantKey": {
           "type": "string",
@@ -9392,7 +9394,7 @@
           "description": "tenant_key names the tenant this config row belongs to. A scoped\ncaller is clamped to the injected key; the PLATFORM cross-view needs\nit explicit — when empty there the server-minted app key literal is\nthe legacy→tenant fallback value. Unique across rows."
         }
       },
-      "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable) and the\napp_secret is echoed on every read of StorageTenantConfigInfo\n(internal-trust posture)."
+      "description": "AdminEnsureTenantConfigRequest idempotently provisions the tenant's\nconfig row (phase ④ T6 rename of AdminCreateApp): when the tenant\nalready has a live row it is returned as-is (key_prefix/bucket only\napply to a fresh create); otherwise a row is created — the internal app\nidentity is minted server-side (\"sto_\" + 8 base36, immutable). No secret\nis minted or returned (the credential column was retired with the ④\nwindow close)."
     },
     "v1AdminEnsureTenantConfigResponse": {
       "type": "object",
@@ -9402,7 +9404,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nAdminListTenantConfigs/AdminGetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -9617,7 +9619,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via\nAdminListTenantConfigs/AdminGetTenantConfig)."
+          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nSECRET_RETIRED instead of returning this field."
         }
       }
     },
@@ -10278,7 +10280,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -12005,11 +12007,11 @@
         },
         "appKey": {
           "type": "string",
-          "description": "app_key identifies the app on every data-plane call; unique, immutable."
+          "description": "app_key is the row's internal directory label (was the x-app-key\ncredential before the ④ window close); unique, immutable."
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is the data-plane credential. Echoed on every read —\ninternal-trust posture, same convention as the messaging/storage apps;\nthe ops console is the intended reader."
+          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore. Always empty."
         },
         "name": {
           "type": "string"
@@ -12031,7 +12033,7 @@
           "description": "tenant_key names the tenant this config row belongs to (phase ③\ncolumn; empty = the app_key literal fallback during the window)."
         }
       },
-      "description": "LicenseTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nLicenseAppInfo). The row keeps its calling-application identity (a\nbusiness system identity, NOT an end-user license). Data-plane callers\npresent app_key/app_secret as x-app-key / x-app-secret metadata."
+      "description": "LicenseTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nLicenseAppInfo). The row keeps its calling-application identity (a\nbusiness system identity, NOT an end-user license). Data-plane callers\nauthenticate via the trusted x-tenant-key (the credential columns were\nretired with the ④ window close)."
     },
     "v1ListApiKeysResponse": {
       "type": "object",
@@ -12749,11 +12751,11 @@
         },
         "appKey": {
           "type": "string",
-          "description": "app_key is the public credential identifier passed in x-app-key\nmetadata (e.g. \"testkit\"). Unique."
+          "description": "app_key is the row's internal directory label (e.g. \"testkit\"; was the\nx-app-key credential before the ④ window close). Unique."
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret echoes the stored secret (internal-trust posture: plaintext\nat rest, internal-network transport — the ops console needs to copy\ncredentials for service configuration, so it is list-visible rather\nthan show-once)."
+          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
         },
         "name": {
           "type": "string"
@@ -12784,7 +12786,7 @@
           "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties."
         }
       },
-      "description": "MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nMessageAppInfo). The row keeps its calling-application identity: app_key\nis the x-app-key credential, apps own policies, and quotas and\nidempotency namespaces hang off the app_key."
+      "description": "MessageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nMessageAppInfo). The data plane authenticates via the trusted\nx-tenant-key; the row keeps its calling-application identity as an\ninternal label — quotas and idempotency namespaces hang off the app_key."
     },
     "v1MiniProgramLoginRequest": {
       "type": "object",
@@ -13465,7 +13467,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret convenience echo (also visible via ListApps/GetApp)."
+          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nAPP_SECRET_RETIRED instead of returning this field."
         }
       }
     },
@@ -14118,7 +14120,7 @@
         },
         "appKey": {
           "type": "string",
-          "description": "app_key identifies the app on every data-plane call (x-app-key metadata);\nimmutable after creation."
+          "description": "app_key is the row's internal directory label (was the x-app-key\ncredential before the ④ window close); immutable after creation."
         },
         "name": {
           "type": "string"
@@ -14146,14 +14148,14 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is the data-plane credential (x-app-secret metadata). Echoed\non every read — internal-trust posture, same convention as messaging\napps; the ops console is the intended reader."
+          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
         },
         "tenantKey": {
           "type": "string",
           "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties. New tenants first seen on the\ntrusted path are lazily created with key_prefix \"{tenant_key}/\"."
         }
       },
-      "description": "StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nStorageAppInfo). The row keeps its calling-application identity for the\ndata plane. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
+      "description": "StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of\nStorageAppInfo). The data plane authenticates via the trusted\nx-tenant-key; the row keeps its calling-application identity as an\ninternal label. Data\nisolation is by key_prefix: every object an app writes lives under its\nprefix (within the app's bucket, or the default bucket when bucket_id=0);\nPUBLIC uploads land in the public bucket but keep the same prefix. The\nprefix is the dedup domain — identical content under different prefixes is\nstored (and deduplicated) independently."
     },
     "v1TelemetrySigningKeyInfo": {
       "type": "object",
@@ -14715,7 +14717,7 @@
         },
         "appSecret": {
           "type": "string",
-          "description": "app_secret is the tenant credential. Echoed on every read —\ninternal-trust posture, same convention as the other platform apps."
+          "description": "app_secret is RETIRED (④ window close): registry rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
         },
         "name": {
           "type": "string"
@@ -14733,7 +14735,7 @@
           "format": "date-time"
         }
       },
-      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). Tenants follow the platform-wide ak/sk pattern: the key\nis minted server-side (\"usr_\" + 8 base36; the registry column keeps its\nhistorical app_key name), app_secret is the data-plane credential\npresented as x-app-key / x-app-secret metadata by trusted BFFs on\nlogin/register/admin surfaces — the tenant IS the verified caller."
+      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). The data-plane credential is the trusted x-tenant-key\ninjected by the portal (the tenant IS the verified caller); the legacy\napp_secret columns were retired with the ④ window close — the field\nstays on the wire for compatibility and answers empty."
     },
     "v1UserRole": {
       "type": "object",

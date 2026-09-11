@@ -1888,8 +1888,8 @@ func (x *ShowPubKeyResponse) GetKeys() []*SigningKeyInfo {
 
 // CreateTenantConfigRequest registers a tenant's config row. The internal
 // app identity is minted server-side ("lic_" + 8 base36 chars, immutable);
-// the app_secret is echoed on every read of LicenseTenantConfigInfo
-// (internal-trust posture).
+// no secret is minted or returned (the credential column was retired with
+// the ④ window close).
 type CreateTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -1950,8 +1950,7 @@ func (x *CreateTenantConfigRequest) GetTenantKey() string {
 type CreateTenantConfigResponse struct {
 	state  protoimpl.MessageState   `protogen:"open.v1"`
 	Config *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret convenience echo (also visible via
-	// ListTenantConfigs/GetTenantConfig).
+	// app_secret is RETIRED (④ window close); always empty.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2242,8 +2241,8 @@ func (x *RotateTenantConfigSecretRequest) GetTenantKey() string {
 type RotateTenantConfigSecretResponse struct {
 	state  protoimpl.MessageState   `protogen:"open.v1"`
 	Config *LicenseTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret convenience echo (also visible via
-	// ListTenantConfigs/GetTenantConfig).
+	// app_secret is RETIRED (④ window close) — the RPC answers a BadRequest
+	// retirement error instead of returning this field.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

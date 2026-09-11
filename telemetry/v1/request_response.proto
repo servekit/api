@@ -93,8 +93,7 @@ message CreateTenantConfigResponse {
   TenantConfig config = 1;
   // Full plaintext ingest token — returned exactly once, never stored.
   string token = 2;
-  // app_secret convenience echo (also visible via
-  // ListTenantConfigs/GetTenantConfig).
+  // app_secret is RETIRED (④ window close); always empty.
   string app_secret = 3;
 }
 
@@ -183,9 +182,8 @@ message RotateTokenResponse {
   string token = 1;
 }
 
-// RotateTenantConfigSecretRequest mints a new business-identity credential
-// (the sk half of the platform ak/sk pair). The old one stops working on
-// the next registry refresh (immediate in-process).
+// RotateTenantConfigSecretRequest is retired (the app_secret column was
+// dropped with the ④ window close); the RPC answers SECRET_RETIRED.
 message RotateTenantConfigSecretRequest {
   string tenant_key = 1 [(buf.validate.field).string = {
     min_len: 1
@@ -195,8 +193,8 @@ message RotateTenantConfigSecretRequest {
 
 message RotateTenantConfigSecretResponse {
   TenantConfig config = 1;
-  // app_secret convenience echo (also visible via
-  // ListTenantConfigs/GetTenantConfig).
+  // app_secret is RETIRED (④ window close) — the RPC answers
+  // SECRET_RETIRED instead of returning this field.
   string app_secret = 2;
 }
 

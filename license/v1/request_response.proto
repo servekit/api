@@ -307,8 +307,8 @@ message ShowPubKeyResponse {
 
 // CreateTenantConfigRequest registers a tenant's config row. The internal
 // app identity is minted server-side ("lic_" + 8 base36 chars, immutable);
-// the app_secret is echoed on every read of LicenseTenantConfigInfo
-// (internal-trust posture).
+// no secret is minted or returned (the credential column was retired with
+// the ④ window close).
 message CreateTenantConfigRequest {
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
@@ -324,8 +324,7 @@ message CreateTenantConfigRequest {
 
 message CreateTenantConfigResponse {
   LicenseTenantConfigInfo config = 1;
-  // app_secret convenience echo (also visible via
-  // ListTenantConfigs/GetTenantConfig).
+  // app_secret is RETIRED (④ window close); always empty.
   string app_secret = 2;
 }
 
@@ -367,8 +366,8 @@ message RotateTenantConfigSecretRequest {
 
 message RotateTenantConfigSecretResponse {
   LicenseTenantConfigInfo config = 1;
-  // app_secret convenience echo (also visible via
-  // ListTenantConfigs/GetTenantConfig).
+  // app_secret is RETIRED (④ window close) — the RPC answers a BadRequest
+  // retirement error instead of returning this field.
   string app_secret = 2;
 }
 

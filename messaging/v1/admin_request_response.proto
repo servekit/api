@@ -32,11 +32,11 @@ message CreateTenantConfigRequest {
   string tenant_key = 5 [(buf.validate.field).string.max_len = 16];
 }
 
-// CreateTenantConfigResponse returns the created config row plus the
-// plaintext app_secret exactly once — it is not recoverable later (rotate
-// to re-issue).
+// CreateTenantConfigResponse returns the created config row (no secret —
+// the credential column was retired with the ④ window close).
 message CreateTenantConfigResponse {
   MessageTenantConfigInfo config = 1;
+  // app_secret is RETIRED (④ window close); always empty.
   string app_secret = 2;
 }
 
@@ -65,14 +65,16 @@ message UpdateTenantConfigResponse {
   MessageTenantConfigInfo config = 1;
 }
 
-// RotateTenantConfigSecret mints a new app_secret. The old secret becomes
-// invalid immediately; the new plaintext is returned exactly once.
+// RotateTenantConfigSecret is retired (the app_secret column was dropped
+// with the ④ window close); the RPC answers SECRET_RETIRED.
 message RotateTenantConfigSecretRequest {
   int64 id = 1 [(buf.validate.field).int64.gt = 0];
 }
 
 message RotateTenantConfigSecretResponse {
   MessageTenantConfigInfo config = 1;
+  // app_secret is RETIRED (④ window close); the RPC errors instead of
+  // returning this field.
   string app_secret = 2;
 }
 

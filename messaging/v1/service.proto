@@ -9,8 +9,10 @@ import "messaging/v1/message.proto";
 import "messaging/v1/request_response.proto";
 
 // MessageService is the data plane. Every Send* call authenticates the
-// calling app via gRPC metadata (x-app-key / x-app-secret) and resolves the
-// send policy by (app, channel, scene). Read RPCs (Get/List/Stats) are
+// calling tenant via the trusted x-tenant-key the portal/doors inject
+// (gRPC metadata; the legacy x-app-key / x-app-secret pair was retired
+// with the ④ window close) and resolves the send policy by
+// (tenant, channel, scene). Read RPCs (Get/List/Stats) are
 // internal-network trusted, no per-app scoping.
 service MessageService {
   rpc Ping(google.protobuf.Empty) returns (common.v1.Pong);

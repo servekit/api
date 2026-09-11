@@ -1299,8 +1299,9 @@ func (x *BucketInfo) GetCdn() *CDNConfig {
 }
 
 // StorageTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
-// StorageAppInfo). The row keeps its calling-application identity for the
-// data plane. Data
+// StorageAppInfo). The data plane authenticates via the trusted
+// x-tenant-key; the row keeps its calling-application identity as an
+// internal label. Data
 // isolation is by key_prefix: every object an app writes lives under its
 // prefix (within the app's bucket, or the default bucket when bucket_id=0);
 // PUBLIC uploads land in the public bucket but keep the same prefix. The
@@ -1309,8 +1310,8 @@ func (x *BucketInfo) GetCdn() *CDNConfig {
 type StorageTenantConfigInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_key identifies the app on every data-plane call (x-app-key metadata);
-	// immutable after creation.
+	// app_key is the row's internal directory label (was the x-app-key
+	// credential before the ④ window close); immutable after creation.
 	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Name   string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	// key_prefix namespaces every object the app writes. Global unique,
@@ -1324,9 +1325,9 @@ type StorageTenantConfigInfo struct {
 	Disabled  bool  `protobuf:"varint,6,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	CreatedAt int64 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt int64 `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// app_secret is the data-plane credential (x-app-secret metadata). Echoed
-	// on every read — internal-trust posture, same convention as messaging
-	// apps; the ops console is the intended reader.
+	// app_secret is RETIRED (④ window close): config rows carry no
+	// credential anymore; the data plane authenticates via the trusted
+	// x-tenant-key. Always empty.
 	AppSecret string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	// tenant_key is the tenant this app maps to (phase ③ dual-stack window).
 	// Empty on rows not yet backfilled — the service falls back to the app_key

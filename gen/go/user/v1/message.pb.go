@@ -1227,19 +1227,19 @@ func (x *UserRole) GetCreatedAt() *timestamppb.Timestamp {
 }
 
 // UserAppInfo is one tenant of the user platform (a calling application's
-// user directory). Tenants follow the platform-wide ak/sk pattern: the key
-// is minted server-side ("usr_" + 8 base36; the registry column keeps its
-// historical app_key name), app_secret is the data-plane credential
-// presented as x-app-key / x-app-secret metadata by trusted BFFs on
-// login/register/admin surfaces — the tenant IS the verified caller.
+// user directory). The data-plane credential is the trusted x-tenant-key
+// injected by the portal (the tenant IS the verified caller); the legacy
+// app_secret columns were retired with the ④ window close — the field
+// stays on the wire for compatibility and answers empty.
 type UserAppInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// tenant_key identifies the tenant on every tenant-scoped surface; unique,
 	// immutable after creation.
 	TenantKey string `protobuf:"bytes,2,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
-	// app_secret is the tenant credential. Echoed on every read —
-	// internal-trust posture, same convention as the other platform apps.
+	// app_secret is RETIRED (④ window close): registry rows carry no
+	// credential anymore; the data plane authenticates via the trusted
+	// x-tenant-key. Always empty.
 	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled tenants fail every tenant-scoped surface immediately.

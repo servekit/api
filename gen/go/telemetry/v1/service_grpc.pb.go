@@ -278,8 +278,9 @@ type TelemetryAdminServiceClient interface {
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
-	// RotateTenantConfigSecret mints a new business-identity credential
-	// (platform ak/sk pair; see TenantConfig.app_secret).
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
+	// rotate via RotateToken.
 	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
@@ -432,8 +433,9 @@ type TelemetryAdminServiceServer interface {
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
-	// RotateTenantConfigSecret mints a new business-identity credential
-	// (platform ak/sk pair; see TenantConfig.app_secret).
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
+	// rotate via RotateToken.
 	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)

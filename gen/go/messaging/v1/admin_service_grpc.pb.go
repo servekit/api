@@ -1,9 +1,10 @@
 // Messaging admin service definitions — RPC declarations only.
 //
 // MessageAdminService manages the platform resource model: tenant configs
-// (one calling-app row per tenant — the ak/sk registry behind the data
-// plane), the channel-account pool (vendor credentials), SMS signatures,
-// templates, and per-(app, channel, scene) send policies.
+// (one config row per tenant; the data plane authenticates via the trusted
+// x-tenant-key — the credential columns were retired with the ④ window
+// close), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(tenant, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //
@@ -61,16 +62,16 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageAdminServiceClient interface {
-	// CreateTenantConfig registers a tenant's config row and returns the
-	// plaintext app_secret exactly once.
+	// CreateTenantConfig registers a tenant's config row (no secret — the
+	// credential column was retired with the ④ window close).
 	CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error)
 	// GetTenantConfig returns one tenant config by row id.
 	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error)
 	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
 	// limits).
 	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret invalidates the current secret and returns a
-	// new plaintext exactly once.
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers SECRET_RETIRED.
 	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs returns the tenant configs in the caller's scope (no
 	// pagination — low cardinality).
@@ -344,16 +345,16 @@ func (c *messageAdminServiceClient) ListPolicies(ctx context.Context, in *ListPo
 // All implementations must embed UnimplementedMessageAdminServiceServer
 // for forward compatibility.
 type MessageAdminServiceServer interface {
-	// CreateTenantConfig registers a tenant's config row and returns the
-	// plaintext app_secret exactly once.
+	// CreateTenantConfig registers a tenant's config row (no secret — the
+	// credential column was retired with the ④ window close).
 	CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error)
 	// GetTenantConfig returns one tenant config by row id.
 	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error)
 	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
 	// limits).
 	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret invalidates the current secret and returns a
-	// new plaintext exactly once.
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers SECRET_RETIRED.
 	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs returns the tenant configs in the caller's scope (no
 	// pagination — low cardinality).

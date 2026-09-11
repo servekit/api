@@ -128,7 +128,8 @@ service StorageService {
   // AdminUpdateTenantConfig edits name/disabled/bucket; identity and
   // key_prefix are immutable.
   rpc AdminUpdateTenantConfig(AdminUpdateTenantConfigRequest) returns (AdminUpdateTenantConfigResponse);
-  // AdminRotateTenantConfigSecret mints a new secret (shown once).
+  // AdminRotateTenantConfigSecret is retired (the credential column was
+  // dropped with the ④ window close); it answers SECRET_RETIRED.
   rpc AdminRotateTenantConfigSecret(AdminRotateTenantConfigSecretRequest) returns (AdminRotateTenantConfigSecretResponse);
   // AdminListTenantConfigs lists the configs in the caller's scope (low
   // cardinality, no paging).

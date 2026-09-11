@@ -172,7 +172,8 @@ type StorageServiceClient interface {
 	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
 	// key_prefix are immutable.
 	AdminUpdateTenantConfig(ctx context.Context, in *AdminUpdateTenantConfigRequest, opts ...grpc.CallOption) (*AdminUpdateTenantConfigResponse, error)
-	// AdminRotateTenantConfigSecret mints a new secret (shown once).
+	// AdminRotateTenantConfigSecret is retired (the credential column was
+	// dropped with the ④ window close); it answers SECRET_RETIRED.
 	AdminRotateTenantConfigSecret(ctx context.Context, in *AdminRotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*AdminRotateTenantConfigSecretResponse, error)
 	// AdminListTenantConfigs lists the configs in the caller's scope (low
 	// cardinality, no paging).
@@ -758,7 +759,8 @@ type StorageServiceServer interface {
 	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
 	// key_prefix are immutable.
 	AdminUpdateTenantConfig(context.Context, *AdminUpdateTenantConfigRequest) (*AdminUpdateTenantConfigResponse, error)
-	// AdminRotateTenantConfigSecret mints a new secret (shown once).
+	// AdminRotateTenantConfigSecret is retired (the credential column was
+	// dropped with the ④ window close); it answers SECRET_RETIRED.
 	AdminRotateTenantConfigSecret(context.Context, *AdminRotateTenantConfigSecretRequest) (*AdminRotateTenantConfigSecretResponse, error)
 	// AdminListTenantConfigs lists the configs in the caller's scope (low
 	// cardinality, no paging).

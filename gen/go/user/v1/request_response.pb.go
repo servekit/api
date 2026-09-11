@@ -5350,7 +5350,7 @@ func (x *CreateAppRequest) GetName() string {
 type CreateAppResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	App   *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+	// app_secret is RETIRED (④ window close); always empty.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -5641,7 +5641,8 @@ func (x *RotateAppSecretRequest) GetTenantKey() string {
 type RotateAppSecretResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	App   *UserAppInfo           `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
-	// app_secret convenience echo (also visible via ListApps/GetApp).
+	// app_secret is RETIRED (④ window close) — the RPC answers
+	// APP_SECRET_RETIRED instead of returning this field.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -1,9 +1,10 @@
 // Messaging admin service definitions — RPC declarations only.
 //
 // MessageAdminService manages the platform resource model: tenant configs
-// (one calling-app row per tenant — the ak/sk registry behind the data
-// plane), the channel-account pool (vendor credentials), SMS signatures,
-// templates, and per-(app, channel, scene) send policies.
+// (one config row per tenant; the data plane authenticates via the trusted
+// x-tenant-key — the credential columns were retired with the ④ window
+// close), the channel-account pool (vendor credentials), SMS signatures,
+// templates, and per-(tenant, channel, scene) send policies.
 // Mutations take effect immediately (in-process registry refresh) and
 // converge across nodes within the cron refresh window.
 //
@@ -22,16 +23,16 @@ service MessageAdminService {
   // Tenant configs (phase ④ T6 rename: the admin surface speaks tenant —
   // one config row per tenant; the row keeps its internal app identity)
 
-  // CreateTenantConfig registers a tenant's config row and returns the
-  // plaintext app_secret exactly once.
+  // CreateTenantConfig registers a tenant's config row (no secret — the
+  // credential column was retired with the ④ window close).
   rpc CreateTenantConfig(CreateTenantConfigRequest) returns (CreateTenantConfigResponse);
   // GetTenantConfig returns one tenant config by row id.
   rpc GetTenantConfig(GetTenantConfigRequest) returns (GetTenantConfigResponse);
   // UpdateTenantConfig tweaks config metadata (name / disabled / daily
   // limits).
   rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
-  // RotateTenantConfigSecret invalidates the current secret and returns a
-  // new plaintext exactly once.
+  // RotateTenantConfigSecret is retired (the credential column was dropped
+  // with the ④ window close); it answers SECRET_RETIRED.
   rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
   // ListTenantConfigs returns the tenant configs in the caller's scope (no
   // pagination — low cardinality).

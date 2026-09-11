@@ -342,13 +342,14 @@ type LicenseAdminServiceClient interface {
 	ShowTrial(ctx context.Context, in *ShowTrialRequest, opts ...grpc.CallOption) (*ShowTrialResponse, error)
 	ResetTrial(ctx context.Context, in *ResetTrialRequest, opts ...grpc.CallOption) (*ResetTrialResponse, error)
 	ShowPubKey(ctx context.Context, in *ShowPubKeyRequest, opts ...grpc.CallOption) (*ShowPubKeyResponse, error)
-	// CreateTenantConfig registers a tenant's config row and mints its
-	// app_secret.
+	// CreateTenantConfig registers a tenant's config row.
 	CreateTenantConfig(ctx context.Context, in *CreateTenantConfigRequest, opts ...grpc.CallOption) (*CreateTenantConfigResponse, error)
 	GetTenantConfig(ctx context.Context, in *GetTenantConfigRequest, opts ...grpc.CallOption) (*GetTenantConfigResponse, error)
 	// UpdateTenantConfig edits mutable fields; the row's identity is
 	// immutable. Absent optional fields keep their current values.
 	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers a BadRequest retirement error.
 	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
@@ -588,13 +589,14 @@ type LicenseAdminServiceServer interface {
 	ShowTrial(context.Context, *ShowTrialRequest) (*ShowTrialResponse, error)
 	ResetTrial(context.Context, *ResetTrialRequest) (*ResetTrialResponse, error)
 	ShowPubKey(context.Context, *ShowPubKeyRequest) (*ShowPubKeyResponse, error)
-	// CreateTenantConfig registers a tenant's config row and mints its
-	// app_secret.
+	// CreateTenantConfig registers a tenant's config row.
 	CreateTenantConfig(context.Context, *CreateTenantConfigRequest) (*CreateTenantConfigResponse, error)
 	GetTenantConfig(context.Context, *GetTenantConfigRequest) (*GetTenantConfigResponse, error)
 	// UpdateTenantConfig edits mutable fields; the row's identity is
 	// immutable. Absent optional fields keep their current values.
 	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
+	// RotateTenantConfigSecret is retired (the credential column was dropped
+	// with the ④ window close); it answers a BadRequest retirement error.
 	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)

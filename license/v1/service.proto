@@ -67,11 +67,11 @@ service LicenseAdminService {
 
   // ── Tenant configs (phase ④ T6 rename of the app registry) ──
   // Same shape as the messaging/storage tenant configs: one config row per
-  // tenant, carrying the business-system identity data-plane callers
-  // present as x-app-key / x-app-secret metadata. NOT an end-user license.
+  // tenant. The data plane authenticates via the trusted x-tenant-key
+  // (the credential columns were retired with the ④ window close). NOT an
+  // end-user license.
 
-  // CreateTenantConfig registers a tenant's config row and mints its
-  // app_secret.
+  // CreateTenantConfig registers a tenant's config row.
   rpc CreateTenantConfig(CreateTenantConfigRequest) returns (CreateTenantConfigResponse);
 
   rpc GetTenantConfig(GetTenantConfigRequest) returns (GetTenantConfigResponse);
@@ -80,6 +80,8 @@ service LicenseAdminService {
   // immutable. Absent optional fields keep their current values.
   rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
 
+  // RotateTenantConfigSecret is retired (the credential column was dropped
+  // with the ④ window close); it answers a BadRequest retirement error.
   rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
 
   // ListTenantConfigs — one row per tenant, low cardinality; no paging.

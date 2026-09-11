@@ -59,8 +59,9 @@ service TelemetryAdminService {
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
 
-  // RotateTenantConfigSecret mints a new business-identity credential
-  // (platform ak/sk pair; see TenantConfig.app_secret).
+  // RotateTenantConfigSecret is retired (the credential column was dropped
+  // with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
+  // rotate via RotateToken.
   rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
 
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);

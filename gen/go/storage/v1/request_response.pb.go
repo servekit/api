@@ -3572,9 +3572,9 @@ func (x *AdminUpdateSettingsResponse) GetSettings() *StorageSettings {
 // config row (phase ④ T6 rename of AdminCreateApp): when the tenant
 // already has a live row it is returned as-is (key_prefix/bucket only
 // apply to a fresh create); otherwise a row is created — the internal app
-// identity is minted server-side ("sto_" + 8 base36, immutable) and the
-// app_secret is echoed on every read of StorageTenantConfigInfo
-// (internal-trust posture).
+// identity is minted server-side ("sto_" + 8 base36, immutable). No secret
+// is minted or returned (the credential column was retired with the ④
+// window close).
 type AdminEnsureTenantConfigRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Name  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -3654,8 +3654,7 @@ func (x *AdminEnsureTenantConfigRequest) GetTenantKey() string {
 type AdminEnsureTenantConfigResponse struct {
 	state  protoimpl.MessageState   `protogen:"open.v1"`
 	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret convenience echo (also visible via
-	// AdminListTenantConfigs/AdminGetTenantConfig).
+	// app_secret is RETIRED (④ window close); always empty.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3957,8 +3956,8 @@ func (x *AdminRotateTenantConfigSecretRequest) GetTenantKey() string {
 type AdminRotateTenantConfigSecretResponse struct {
 	state  protoimpl.MessageState   `protogen:"open.v1"`
 	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret convenience echo (also visible via
-	// AdminListTenantConfigs/AdminGetTenantConfig).
+	// app_secret is RETIRED (④ window close) — the RPC answers
+	// SECRET_RETIRED instead of returning this field.
 	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -198,8 +198,8 @@ type EmailRecord struct {
 	Scene   EmailScene             `protobuf:"varint,4,opt,name=scene,proto3,enum=messaging.v1.EmailScene" json:"scene,omitempty"`
 	Status  MessageStatus          `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	Target  *EmailAddress          `protobuf:"bytes,6,opt,name=target,proto3" json:"target,omitempty"`
-	// AppKey identifies the calling app (the authenticated sender identity
-	// resolved from x-app-key credentials at send time).
+	// AppKey is the audit label of the sending app (historical; sends
+	// authenticate via the trusted x-tenant-key since the ④ window close).
 	AppKey         string            `protobuf:"bytes,7,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Cc             []*EmailAddress   `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc,omitempty"`
 	Bcc            []*EmailAddress   `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc,omitempty"`
@@ -408,8 +408,8 @@ type SMSRecord struct {
 	Status     MessageStatus          `protobuf:"varint,5,opt,name=status,proto3,enum=messaging.v1.MessageStatus" json:"status,omitempty"`
 	RegionCode string                 `protobuf:"bytes,6,opt,name=region_code,json=regionCode,proto3" json:"region_code,omitempty"`
 	Phone      string                 `protobuf:"bytes,7,opt,name=phone,proto3" json:"phone,omitempty"`
-	// AppKey identifies the calling app (the authenticated sender identity
-	// resolved from x-app-key credentials at send time).
+	// AppKey is the audit label of the sending app (historical; sends
+	// authenticate via the trusted x-tenant-key since the ④ window close).
 	AppKey         string            `protobuf:"bytes,8,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Content        string            `protobuf:"bytes,9,opt,name=content,proto3" json:"content,omitempty"`
 	TemplateId     string            `protobuf:"bytes,10,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`

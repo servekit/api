@@ -357,11 +357,13 @@ type UserServiceClient interface {
 	// ListUserRoles returns roles for a user (direct + group-inherited).
 	// Returns direct + group-inherited roles; see UserRole.source.
 	ListUserRoles(ctx context.Context, in *ListUserRolesRequest, opts ...grpc.CallOption) (*ListUserRolesResponse, error)
-	// CreateApp registers a tenant and mints its app_secret.
+	// CreateApp registers a tenant directory row.
 	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
+	// RotateAppSecret is retired (the credential column was dropped with the
+	// ④ window close); it answers SECRET_RETIRED-style errors.
 	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
@@ -1303,11 +1305,13 @@ type UserServiceServer interface {
 	// ListUserRoles returns roles for a user (direct + group-inherited).
 	// Returns direct + group-inherited roles; see UserRole.source.
 	ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error)
-	// CreateApp registers a tenant and mints its app_secret.
+	// CreateApp registers a tenant directory row.
 	CreateApp(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
 	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
+	// RotateAppSecret is retired (the credential column was dropped with the
+	// ④ window close); it answers SECRET_RETIRED-style errors.
 	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)

@@ -566,9 +566,9 @@ message AdminUpdateSettingsResponse {
 // config row (phase ④ T6 rename of AdminCreateApp): when the tenant
 // already has a live row it is returned as-is (key_prefix/bucket only
 // apply to a fresh create); otherwise a row is created — the internal app
-// identity is minted server-side ("sto_" + 8 base36, immutable) and the
-// app_secret is echoed on every read of StorageTenantConfigInfo
-// (internal-trust posture).
+// identity is minted server-side ("sto_" + 8 base36, immutable). No secret
+// is minted or returned (the credential column was retired with the ④
+// window close).
 message AdminEnsureTenantConfigRequest {
   string name = 2 [(buf.validate.field).string = {
     min_len: 1
@@ -593,8 +593,7 @@ message AdminEnsureTenantConfigRequest {
 
 message AdminEnsureTenantConfigResponse {
   StorageTenantConfigInfo config = 1;
-  // app_secret convenience echo (also visible via
-  // AdminListTenantConfigs/AdminGetTenantConfig).
+  // app_secret is RETIRED (④ window close); always empty.
   string app_secret = 2;
 }
 
@@ -640,8 +639,8 @@ message AdminRotateTenantConfigSecretRequest {
 
 message AdminRotateTenantConfigSecretResponse {
   StorageTenantConfigInfo config = 1;
-  // app_secret convenience echo (also visible via
-  // AdminListTenantConfigs/AdminGetTenantConfig).
+  // app_secret is RETIRED (④ window close) — the RPC answers
+  // SECRET_RETIRED instead of returning this field.
   string app_secret = 2;
 }
 

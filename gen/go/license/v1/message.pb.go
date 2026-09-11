@@ -710,15 +710,16 @@ func (x *SigningKeyInfo) GetPublicKeyB64() string {
 // LicenseTenantConfigInfo is one tenant's config row (phase ④ T6 rename of
 // LicenseAppInfo). The row keeps its calling-application identity (a
 // business system identity, NOT an end-user license). Data-plane callers
-// present app_key/app_secret as x-app-key / x-app-secret metadata.
+// authenticate via the trusted x-tenant-key (the credential columns were
+// retired with the ④ window close).
 type LicenseTenantConfigInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_key identifies the app on every data-plane call; unique, immutable.
+	// app_key is the row's internal directory label (was the x-app-key
+	// credential before the ④ window close); unique, immutable.
 	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	// app_secret is the data-plane credential. Echoed on every read —
-	// internal-trust posture, same convention as the messaging/storage apps;
-	// the ops console is the intended reader.
+	// app_secret is RETIRED (④ window close): config rows carry no
+	// credential anymore. Always empty.
 	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled apps fail every data-plane call immediately.

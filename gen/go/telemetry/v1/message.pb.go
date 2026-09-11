@@ -106,11 +106,11 @@ func (x *ValidateEventResult) GetDropReason() string {
 type TenantConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // uuid
-	// app_key is the row's machine identity and the "ak" half of the
-	// platform-wide
-	// ak/sk pair: minted server-side on creation ("tel_" + 8 base36 chars,
-	// collision-checked; a caller-chosen key is accepted when non-empty),
-	// unique, immutable. The admin surface keys every per-app route by it.
+	// app_key is the row's machine identity (was the "ak" half of the
+	// retired platform ak/sk pair): minted server-side on creation ("tel_" +
+	// 8 base36 chars, collision-checked; a caller-chosen key is accepted
+	// when non-empty), unique, immutable. The admin surface keys every
+	// per-app route by it.
 	AppKey           string                 `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
 	Name             string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Email            string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`                                          // optional operator contact
@@ -128,12 +128,10 @@ type TenantConfig struct {
 	// Disabled apps fail every ingest call immediately (401) — the operator
 	// kill-switch; tokens and signing keys stay in place for re-enable.
 	Disabled bool `protobuf:"varint,14,opt,name=disabled,proto3" json:"disabled,omitempty"`
-	// app_secret is the business-identity credential (the "sk" half of the
-	// platform-wide ak/sk pair; app_key is the "ak"). Required by the
-	// gRPC/module ingest surface — backend callers present it as x-app-key /
-	// x-app-secret metadata; the raw client endpoints (/v1/e/…) keep using
-	// the ingest token instead. Echoed on every read — internal-trust
-	// posture, same convention as the messaging/storage/license apps.
+	// app_secret is RETIRED (④ window close): the column was dropped —
+	// backend callers authenticate via the trusted x-tenant-key injected by
+	// the portal/doors, and the raw client endpoints (/v1/e/…) keep using
+	// ingest tokens. Always empty.
 	AppSecret string `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	// tenant_key is the tenant this app maps to (phase ③ dual-stack window):
 	// the UUID row is the tenant's config row. Empty on rows not yet
