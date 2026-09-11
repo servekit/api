@@ -825,7 +825,8 @@ service TestkitService {
     };
   }
 
-  rpc LicenseDeleteTenantConfig(license.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {    option (google.api.http) = {delete: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
+  rpc LicenseDeleteTenantConfig(license.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
   }
 
   rpc Ingest(IngestRequest) returns (IngestResponse) {
