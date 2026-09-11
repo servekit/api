@@ -119,6 +119,11 @@ message AdminFileInfo {
   string object_key = 16;
   string created_at = 20;
   string updated_at = 21;
+  // tenant_key echoes the tenant the file belongs to (a file row belongs to
+  // exactly one tenant — no shared layer, phase ④ Q11). Empty = an
+  // unattributed pre-③ row (app_key='' history the backfill could not map);
+  // those rows are visible to the PLATFORM cross-view only.
+  string tenant_key = 22;
 }
 
 message OwnerStats {

@@ -7163,8 +7163,12 @@ type AdminListFilesRequest struct {
 	PageToken         string                 `protobuf:"bytes,9,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	Provider          string                 `protobuf:"bytes,10,opt,name=provider,proto3" json:"provider,omitempty"`
 	Bucket            string                 `protobuf:"bytes,11,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// tenant_key filters the list to one tenant (phase ④ Q11). PLATFORM
+	// cross-view only downstream — the BFF clamps a TENANT_ADMIN's value to
+	// the injected key, and storage overrides any scoped value anyway.
+	TenantKey     string `protobuf:"bytes,12,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AdminListFilesRequest) Reset() {
@@ -7270,6 +7274,13 @@ func (x *AdminListFilesRequest) GetProvider() string {
 func (x *AdminListFilesRequest) GetBucket() string {
 	if x != nil {
 		return x.Bucket
+	}
+	return ""
+}
+
+func (x *AdminListFilesRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
 	}
 	return ""
 }
@@ -14081,7 +14092,7 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x04logs\x18\x01 \x03(\v2\x19.testkit.v1.AuditLogEntryR\x04logs\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\x12&\n" +
-	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\x99\x03\n" +
+	"\x0fnext_page_token\x18\x03 \x01(\tR\rnextPageToken\"\xb8\x03\n" +
 	"\x15AdminListFilesRequest\x124\n" +
 	"\n" +
 	"owner_type\x18\x01 \x01(\x0e2\x15.storage.v1.OwnerTypeR\townerType\x12\x19\n" +
@@ -14099,7 +14110,9 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"page_token\x18\t \x01(\tR\tpageToken\x12\x1a\n" +
 	"\bprovider\x18\n" +
 	" \x01(\tR\bprovider\x12\x16\n" +
-	"\x06bucket\x18\v \x01(\tR\x06bucket\"\x92\x01\n" +
+	"\x06bucket\x18\v \x01(\tR\x06bucket\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\f \x01(\tR\ttenantKey\"\x92\x01\n" +
 	"\x16AdminListFilesResponse\x12/\n" +
 	"\x05files\x18\x01 \x03(\v2\x19.testkit.v1.AdminFileInfoR\x05files\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +

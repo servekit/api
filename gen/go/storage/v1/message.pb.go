@@ -757,25 +757,30 @@ func (x *UserFileInfo) GetUpdatedAt() string {
 }
 
 type AdminFileInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	OwnerType     OwnerType              `protobuf:"varint,2,opt,name=owner_type,json=ownerType,proto3,enum=storage.v1.OwnerType" json:"owner_type,omitempty"`
-	OwnerId       int64                  `protobuf:"varint,3,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	Filename      string                 `protobuf:"bytes,4,opt,name=filename,proto3" json:"filename,omitempty"`
-	FilePath      string                 `protobuf:"bytes,5,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
-	Metadata      map[string]string      `protobuf:"bytes,7,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	IsPublic      bool                   `protobuf:"varint,8,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
-	ObjectId      int64                  `protobuf:"varint,9,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
-	Size          int64                  `protobuf:"varint,10,opt,name=size,proto3" json:"size,omitempty"`
-	ContentType   string                 `protobuf:"bytes,11,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	Extension     string                 `protobuf:"bytes,12,opt,name=extension,proto3" json:"extension,omitempty"`
-	Md5           string                 `protobuf:"bytes,13,opt,name=md5,proto3" json:"md5,omitempty"`
-	Provider      string                 `protobuf:"bytes,14,opt,name=provider,proto3" json:"provider,omitempty"`
-	Bucket        string                 `protobuf:"bytes,15,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	ObjectKey     string                 `protobuf:"bytes,16,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,20,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     string                 `protobuf:"bytes,21,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	OwnerType   OwnerType              `protobuf:"varint,2,opt,name=owner_type,json=ownerType,proto3,enum=storage.v1.OwnerType" json:"owner_type,omitempty"`
+	OwnerId     int64                  `protobuf:"varint,3,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	Filename    string                 `protobuf:"bytes,4,opt,name=filename,proto3" json:"filename,omitempty"`
+	FilePath    string                 `protobuf:"bytes,5,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`
+	Description string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Metadata    map[string]string      `protobuf:"bytes,7,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IsPublic    bool                   `protobuf:"varint,8,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
+	ObjectId    int64                  `protobuf:"varint,9,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
+	Size        int64                  `protobuf:"varint,10,opt,name=size,proto3" json:"size,omitempty"`
+	ContentType string                 `protobuf:"bytes,11,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	Extension   string                 `protobuf:"bytes,12,opt,name=extension,proto3" json:"extension,omitempty"`
+	Md5         string                 `protobuf:"bytes,13,opt,name=md5,proto3" json:"md5,omitempty"`
+	Provider    string                 `protobuf:"bytes,14,opt,name=provider,proto3" json:"provider,omitempty"`
+	Bucket      string                 `protobuf:"bytes,15,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	ObjectKey   string                 `protobuf:"bytes,16,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
+	CreatedAt   string                 `protobuf:"bytes,20,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt   string                 `protobuf:"bytes,21,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// tenant_key echoes the tenant the file belongs to (a file row belongs to
+	// exactly one tenant — no shared layer, phase ④ Q11). Empty = an
+	// unattributed pre-③ row (app_key=” history the backfill could not map);
+	// those rows are visible to the PLATFORM cross-view only.
+	TenantKey     string `protobuf:"bytes,22,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -932,6 +937,13 @@ func (x *AdminFileInfo) GetCreatedAt() string {
 func (x *AdminFileInfo) GetUpdatedAt() string {
 	if x != nil {
 		return x.UpdatedAt
+	}
+	return ""
+}
+
+func (x *AdminFileInfo) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
 	}
 	return ""
 }
@@ -1772,7 +1784,7 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"updated_at\x18\x15 \x01(\tR\tupdatedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xff\x04\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x9e\x05\n" +
 	"\rAdminFileInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x124\n" +
 	"\n" +
@@ -1796,7 +1808,9 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x14 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x15 \x01(\tR\tupdatedAt\x1a;\n" +
+	"updated_at\x18\x15 \x01(\tR\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"tenant_key\x18\x16 \x01(\tR\ttenantKey\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x82\x01\n" +

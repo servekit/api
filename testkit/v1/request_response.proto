@@ -1148,6 +1148,10 @@ message AdminListFilesRequest {
   string page_token = 9;
   string provider = 10;
   string bucket = 11;
+  // tenant_key filters the list to one tenant (phase ④ Q11). PLATFORM
+  // cross-view only downstream — the BFF clamps a TENANT_ADMIN's value to
+  // the injected key, and storage overrides any scoped value anyway.
+  string tenant_key = 12;
 }
 
 message AdminListFilesResponse {

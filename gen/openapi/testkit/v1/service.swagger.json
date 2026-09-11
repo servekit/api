@@ -266,6 +266,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "tenantKey",
+            "description": "tenant_key filters the list to one tenant (phase ④ Q11). PLATFORM\ncross-view only downstream — the BFF clamps a TENANT_ADMIN's value to\nthe injected key, and storage overrides any scoped value anyway.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -9202,6 +9209,10 @@
         },
         "updatedAt": {
           "type": "string"
+        },
+        "tenantKey": {
+          "type": "string",
+          "description": "tenant_key echoes the file's tenant (a file row belongs to exactly one\ntenant — no shared layer, phase ④ Q11). Empty = an unattributed pre-③\nrow; those are cross-view only downstream."
         }
       },
       "description": "AdminFileInfo is the admin-facing file entity (adds provider/bucket/object_key/\nobject_id internal-location fields absent from the user view)."

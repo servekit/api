@@ -375,6 +375,10 @@ message AdminListFilesRequest {
   string page_token = 9;
   string provider = 10;
   string bucket = 11;
+  // tenant_key filters the list to one tenant (phase ④ Q11). Only the
+  // PLATFORM cross-view honors it — a tenant-scoped caller's value is
+  // overridden server-side by the injected key.
+  string tenant_key = 12;
 }
 
 message AdminListFilesResponse {
