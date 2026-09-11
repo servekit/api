@@ -122,9 +122,6 @@ message LicenseTenantConfigInfo {
   // app_key is the row's internal directory label (was the x-app-key
   // credential before the ④ window close); unique, immutable.
   string app_key = 2;
-  // app_secret is RETIRED (④ window close): config rows carry no
-  // credential anymore. Always empty.
-  string app_secret = 3;
   string name = 4;
   // disabled apps fail every data-plane call immediately.
   bool disabled = 5;

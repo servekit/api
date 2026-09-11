@@ -718,10 +718,7 @@ type LicenseTenantConfigInfo struct {
 	// app_key is the row's internal directory label (was the x-app-key
 	// credential before the ④ window close); unique, immutable.
 	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	// app_secret is RETIRED (④ window close): config rows carry no
-	// credential anymore. Always empty.
-	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
-	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Name   string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled apps fail every data-plane call immediately.
 	Disabled  bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
@@ -773,13 +770,6 @@ func (x *LicenseTenantConfigInfo) GetId() int64 {
 func (x *LicenseTenantConfigInfo) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
-	}
-	return ""
-}
-
-func (x *LicenseTenantConfigInfo) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
 	}
 	return ""
 }
@@ -888,12 +878,10 @@ const file_license_v1_message_proto_rawDesc = "" +
 	"\x12first_device_token\x18\x05 \x01(\tR\x10firstDeviceToken\"M\n" +
 	"\x0eSigningKeyInfo\x12\x15\n" +
 	"\x06key_id\x18\x01 \x01(\tR\x05keyId\x12$\n" +
-	"\x0epublic_key_b64\x18\x02 \x01(\tR\fpublicKeyB64\"\xa6\x02\n" +
+	"\x0epublic_key_b64\x18\x02 \x01(\tR\fpublicKeyB64\"\x87\x02\n" +
 	"\x17LicenseTenantConfigInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
-	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x03 \x01(\tR\tappSecret\x12\x12\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
 	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x129\n" +
 	"\n" +

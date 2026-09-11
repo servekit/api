@@ -405,10 +405,6 @@ service UserService {
   // UpdateApp edits mutable fields; tenant_key is immutable.
   rpc UpdateApp(UpdateAppRequest) returns (UpdateAppResponse);
 
-  // RotateAppSecret is retired (the credential column was dropped with the
-  // ④ window close); it answers SECRET_RETIRED-style errors.
-  rpc RotateAppSecret(RotateAppSecretRequest) returns (RotateAppSecretResponse);
-
   // ListApps — the tenant registry is low-cardinality; no paging.
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse);
 

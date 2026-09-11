@@ -1890,12 +1890,6 @@ message CreateTenantConfigResponse {
   TenantConfig config = 1;
 
   string token = 2;
-
-  // app_secret is RETIRED (④ window close): always empty — the column
-  // was dropped, no surface (create/get/list) ever echoes a secret, and
-  // rotation answers with a retired error. Mirrors
-  // TenantConfig.app_secret.
-  string app_secret = 3;
 }
 
 message GetTenantConfigRequest {

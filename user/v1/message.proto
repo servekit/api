@@ -245,17 +245,12 @@ message UserRole {
 // UserAppInfo is one tenant of the user platform (a calling application's
 // user directory). The data-plane credential is the trusted x-tenant-key
 // injected by the portal (the tenant IS the verified caller); the legacy
-// app_secret columns were retired with the ④ window close — the field
-// stays on the wire for compatibility and answers empty.
+// app_secret column was dropped with the ④ window close (no wire field).
 message UserAppInfo {
   int64 id = 1;
   // tenant_key identifies the tenant on every tenant-scoped surface; unique,
   // immutable after creation.
   string tenant_key = 2;
-  // app_secret is RETIRED (④ window close): registry rows carry no
-  // credential anymore; the data plane authenticates via the trusted
-  // x-tenant-key. Always empty.
-  string app_secret = 3;
   string name = 4;
   // disabled tenants fail every tenant-scoped surface immediately.
   bool disabled = 5;

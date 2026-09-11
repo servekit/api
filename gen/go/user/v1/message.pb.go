@@ -1229,18 +1229,13 @@ func (x *UserRole) GetCreatedAt() *timestamppb.Timestamp {
 // UserAppInfo is one tenant of the user platform (a calling application's
 // user directory). The data-plane credential is the trusted x-tenant-key
 // injected by the portal (the tenant IS the verified caller); the legacy
-// app_secret columns were retired with the ④ window close — the field
-// stays on the wire for compatibility and answers empty.
+// app_secret column was dropped with the ④ window close (no wire field).
 type UserAppInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// tenant_key identifies the tenant on every tenant-scoped surface; unique,
 	// immutable after creation.
 	TenantKey string `protobuf:"bytes,2,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
-	// app_secret is RETIRED (④ window close): registry rows carry no
-	// credential anymore; the data plane authenticates via the trusted
-	// x-tenant-key. Always empty.
-	AppSecret string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	Name      string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled tenants fail every tenant-scoped surface immediately.
 	Disabled      bool                   `protobuf:"varint,5,opt,name=disabled,proto3" json:"disabled,omitempty"`
@@ -1290,13 +1285,6 @@ func (x *UserAppInfo) GetId() int64 {
 func (x *UserAppInfo) GetTenantKey() string {
 	if x != nil {
 		return x.TenantKey
-	}
-	return ""
-}
-
-func (x *UserAppInfo) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
 	}
 	return ""
 }
@@ -1475,13 +1463,11 @@ const file_user_v1_message_proto_rawDesc = "" +
 	"\trole_name\x18\x03 \x01(\tR\broleName\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x81\x02\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xe2\x01\n" +
 	"\vUserAppInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
-	"tenant_key\x18\x02 \x01(\tR\ttenantKey\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x03 \x01(\tR\tappSecret\x12\x12\n" +
+	"tenant_key\x18\x02 \x01(\tR\ttenantKey\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1a\n" +
 	"\bdisabled\x18\x05 \x01(\bR\bdisabled\x129\n" +
 	"\n" +

@@ -23,51 +23,50 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StorageService_Ping_FullMethodName                          = "/storage.v1.StorageService/Ping"
-	StorageService_GenerateUploadURL_FullMethodName             = "/storage.v1.StorageService/GenerateUploadURL"
-	StorageService_GetSTSCredential_FullMethodName              = "/storage.v1.StorageService/GetSTSCredential"
-	StorageService_BatchGetSTSCredential_FullMethodName         = "/storage.v1.StorageService/BatchGetSTSCredential"
-	StorageService_ConfirmUpload_FullMethodName                 = "/storage.v1.StorageService/ConfirmUpload"
-	StorageService_CancelUpload_FullMethodName                  = "/storage.v1.StorageService/CancelUpload"
-	StorageService_GenerateDownloadURL_FullMethodName           = "/storage.v1.StorageService/GenerateDownloadURL"
-	StorageService_CreateFileLink_FullMethodName                = "/storage.v1.StorageService/CreateFileLink"
-	StorageService_GetFileLinkDownload_FullMethodName           = "/storage.v1.StorageService/GetFileLinkDownload"
-	StorageService_ListMyFiles_FullMethodName                   = "/storage.v1.StorageService/ListMyFiles"
-	StorageService_ListMyFilesPaged_FullMethodName              = "/storage.v1.StorageService/ListMyFilesPaged"
-	StorageService_GetMyFile_FullMethodName                     = "/storage.v1.StorageService/GetMyFile"
-	StorageService_UpdateMyFile_FullMethodName                  = "/storage.v1.StorageService/UpdateMyFile"
-	StorageService_DeleteMyFile_FullMethodName                  = "/storage.v1.StorageService/DeleteMyFile"
-	StorageService_BatchDeleteMyFiles_FullMethodName            = "/storage.v1.StorageService/BatchDeleteMyFiles"
-	StorageService_GenerateProcessURL_FullMethodName            = "/storage.v1.StorageService/GenerateProcessURL"
-	StorageService_GenerateCDNURL_FullMethodName                = "/storage.v1.StorageService/GenerateCDNURL"
-	StorageService_GetMyQuota_FullMethodName                    = "/storage.v1.StorageService/GetMyQuota"
-	StorageService_AdminListFiles_FullMethodName                = "/storage.v1.StorageService/AdminListFiles"
-	StorageService_AdminGetFile_FullMethodName                  = "/storage.v1.StorageService/AdminGetFile"
-	StorageService_AdminDeleteFile_FullMethodName               = "/storage.v1.StorageService/AdminDeleteFile"
-	StorageService_AdminGetQuota_FullMethodName                 = "/storage.v1.StorageService/AdminGetQuota"
-	StorageService_AdminSetQuota_FullMethodName                 = "/storage.v1.StorageService/AdminSetQuota"
-	StorageService_AdminGetStats_FullMethodName                 = "/storage.v1.StorageService/AdminGetStats"
-	StorageService_AdminListProviders_FullMethodName            = "/storage.v1.StorageService/AdminListProviders"
-	StorageService_AdminListBuckets_FullMethodName              = "/storage.v1.StorageService/AdminListBuckets"
-	StorageService_AdminCreateProvider_FullMethodName           = "/storage.v1.StorageService/AdminCreateProvider"
-	StorageService_AdminUpdateProvider_FullMethodName           = "/storage.v1.StorageService/AdminUpdateProvider"
-	StorageService_AdminDeleteProvider_FullMethodName           = "/storage.v1.StorageService/AdminDeleteProvider"
-	StorageService_AdminUpsertBucket_FullMethodName             = "/storage.v1.StorageService/AdminUpsertBucket"
-	StorageService_AdminDeleteBucket_FullMethodName             = "/storage.v1.StorageService/AdminDeleteBucket"
-	StorageService_AdminGetSettings_FullMethodName              = "/storage.v1.StorageService/AdminGetSettings"
-	StorageService_AdminUpdateSettings_FullMethodName           = "/storage.v1.StorageService/AdminUpdateSettings"
-	StorageService_AdminEnsureTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminEnsureTenantConfig"
-	StorageService_AdminGetTenantConfig_FullMethodName          = "/storage.v1.StorageService/AdminGetTenantConfig"
-	StorageService_AdminUpdateTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminUpdateTenantConfig"
-	StorageService_AdminRotateTenantConfigSecret_FullMethodName = "/storage.v1.StorageService/AdminRotateTenantConfigSecret"
-	StorageService_AdminListTenantConfigs_FullMethodName        = "/storage.v1.StorageService/AdminListTenantConfigs"
-	StorageService_AdminDeleteTenantConfig_FullMethodName       = "/storage.v1.StorageService/AdminDeleteTenantConfig"
-	StorageService_AdminSoftDeleteOwnerFiles_FullMethodName     = "/storage.v1.StorageService/AdminSoftDeleteOwnerFiles"
-	StorageService_AdminDeleteOwner_FullMethodName              = "/storage.v1.StorageService/AdminDeleteOwner"
-	StorageService_ListMyAuditLogs_FullMethodName               = "/storage.v1.StorageService/ListMyAuditLogs"
-	StorageService_AdminListAuditLogs_FullMethodName            = "/storage.v1.StorageService/AdminListAuditLogs"
-	StorageService_SetOwnerQuota_FullMethodName                 = "/storage.v1.StorageService/SetOwnerQuota"
-	StorageService_AddOwnerQuota_FullMethodName                 = "/storage.v1.StorageService/AddOwnerQuota"
+	StorageService_Ping_FullMethodName                      = "/storage.v1.StorageService/Ping"
+	StorageService_GenerateUploadURL_FullMethodName         = "/storage.v1.StorageService/GenerateUploadURL"
+	StorageService_GetSTSCredential_FullMethodName          = "/storage.v1.StorageService/GetSTSCredential"
+	StorageService_BatchGetSTSCredential_FullMethodName     = "/storage.v1.StorageService/BatchGetSTSCredential"
+	StorageService_ConfirmUpload_FullMethodName             = "/storage.v1.StorageService/ConfirmUpload"
+	StorageService_CancelUpload_FullMethodName              = "/storage.v1.StorageService/CancelUpload"
+	StorageService_GenerateDownloadURL_FullMethodName       = "/storage.v1.StorageService/GenerateDownloadURL"
+	StorageService_CreateFileLink_FullMethodName            = "/storage.v1.StorageService/CreateFileLink"
+	StorageService_GetFileLinkDownload_FullMethodName       = "/storage.v1.StorageService/GetFileLinkDownload"
+	StorageService_ListMyFiles_FullMethodName               = "/storage.v1.StorageService/ListMyFiles"
+	StorageService_ListMyFilesPaged_FullMethodName          = "/storage.v1.StorageService/ListMyFilesPaged"
+	StorageService_GetMyFile_FullMethodName                 = "/storage.v1.StorageService/GetMyFile"
+	StorageService_UpdateMyFile_FullMethodName              = "/storage.v1.StorageService/UpdateMyFile"
+	StorageService_DeleteMyFile_FullMethodName              = "/storage.v1.StorageService/DeleteMyFile"
+	StorageService_BatchDeleteMyFiles_FullMethodName        = "/storage.v1.StorageService/BatchDeleteMyFiles"
+	StorageService_GenerateProcessURL_FullMethodName        = "/storage.v1.StorageService/GenerateProcessURL"
+	StorageService_GenerateCDNURL_FullMethodName            = "/storage.v1.StorageService/GenerateCDNURL"
+	StorageService_GetMyQuota_FullMethodName                = "/storage.v1.StorageService/GetMyQuota"
+	StorageService_AdminListFiles_FullMethodName            = "/storage.v1.StorageService/AdminListFiles"
+	StorageService_AdminGetFile_FullMethodName              = "/storage.v1.StorageService/AdminGetFile"
+	StorageService_AdminDeleteFile_FullMethodName           = "/storage.v1.StorageService/AdminDeleteFile"
+	StorageService_AdminGetQuota_FullMethodName             = "/storage.v1.StorageService/AdminGetQuota"
+	StorageService_AdminSetQuota_FullMethodName             = "/storage.v1.StorageService/AdminSetQuota"
+	StorageService_AdminGetStats_FullMethodName             = "/storage.v1.StorageService/AdminGetStats"
+	StorageService_AdminListProviders_FullMethodName        = "/storage.v1.StorageService/AdminListProviders"
+	StorageService_AdminListBuckets_FullMethodName          = "/storage.v1.StorageService/AdminListBuckets"
+	StorageService_AdminCreateProvider_FullMethodName       = "/storage.v1.StorageService/AdminCreateProvider"
+	StorageService_AdminUpdateProvider_FullMethodName       = "/storage.v1.StorageService/AdminUpdateProvider"
+	StorageService_AdminDeleteProvider_FullMethodName       = "/storage.v1.StorageService/AdminDeleteProvider"
+	StorageService_AdminUpsertBucket_FullMethodName         = "/storage.v1.StorageService/AdminUpsertBucket"
+	StorageService_AdminDeleteBucket_FullMethodName         = "/storage.v1.StorageService/AdminDeleteBucket"
+	StorageService_AdminGetSettings_FullMethodName          = "/storage.v1.StorageService/AdminGetSettings"
+	StorageService_AdminUpdateSettings_FullMethodName       = "/storage.v1.StorageService/AdminUpdateSettings"
+	StorageService_AdminEnsureTenantConfig_FullMethodName   = "/storage.v1.StorageService/AdminEnsureTenantConfig"
+	StorageService_AdminGetTenantConfig_FullMethodName      = "/storage.v1.StorageService/AdminGetTenantConfig"
+	StorageService_AdminUpdateTenantConfig_FullMethodName   = "/storage.v1.StorageService/AdminUpdateTenantConfig"
+	StorageService_AdminListTenantConfigs_FullMethodName    = "/storage.v1.StorageService/AdminListTenantConfigs"
+	StorageService_AdminDeleteTenantConfig_FullMethodName   = "/storage.v1.StorageService/AdminDeleteTenantConfig"
+	StorageService_AdminSoftDeleteOwnerFiles_FullMethodName = "/storage.v1.StorageService/AdminSoftDeleteOwnerFiles"
+	StorageService_AdminDeleteOwner_FullMethodName          = "/storage.v1.StorageService/AdminDeleteOwner"
+	StorageService_ListMyAuditLogs_FullMethodName           = "/storage.v1.StorageService/ListMyAuditLogs"
+	StorageService_AdminListAuditLogs_FullMethodName        = "/storage.v1.StorageService/AdminListAuditLogs"
+	StorageService_SetOwnerQuota_FullMethodName             = "/storage.v1.StorageService/SetOwnerQuota"
+	StorageService_AddOwnerQuota_FullMethodName             = "/storage.v1.StorageService/AddOwnerQuota"
 )
 
 // StorageServiceClient is the client API for StorageService service.
@@ -172,9 +171,6 @@ type StorageServiceClient interface {
 	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
 	// key_prefix are immutable.
 	AdminUpdateTenantConfig(ctx context.Context, in *AdminUpdateTenantConfigRequest, opts ...grpc.CallOption) (*AdminUpdateTenantConfigResponse, error)
-	// AdminRotateTenantConfigSecret is retired (the credential column was
-	// dropped with the ④ window close); it answers SECRET_RETIRED.
-	AdminRotateTenantConfigSecret(ctx context.Context, in *AdminRotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*AdminRotateTenantConfigSecretResponse, error)
 	// AdminListTenantConfigs lists the configs in the caller's scope (low
 	// cardinality, no paging).
 	AdminListTenantConfigs(ctx context.Context, in *AdminListTenantConfigsRequest, opts ...grpc.CallOption) (*AdminListTenantConfigsResponse, error)
@@ -567,16 +563,6 @@ func (c *storageServiceClient) AdminUpdateTenantConfig(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *storageServiceClient) AdminRotateTenantConfigSecret(ctx context.Context, in *AdminRotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*AdminRotateTenantConfigSecretResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminRotateTenantConfigSecretResponse)
-	err := c.cc.Invoke(ctx, StorageService_AdminRotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *storageServiceClient) AdminListTenantConfigs(ctx context.Context, in *AdminListTenantConfigsRequest, opts ...grpc.CallOption) (*AdminListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminListTenantConfigsResponse)
@@ -759,9 +745,6 @@ type StorageServiceServer interface {
 	// AdminUpdateTenantConfig edits name/disabled/bucket; identity and
 	// key_prefix are immutable.
 	AdminUpdateTenantConfig(context.Context, *AdminUpdateTenantConfigRequest) (*AdminUpdateTenantConfigResponse, error)
-	// AdminRotateTenantConfigSecret is retired (the credential column was
-	// dropped with the ④ window close); it answers SECRET_RETIRED.
-	AdminRotateTenantConfigSecret(context.Context, *AdminRotateTenantConfigSecretRequest) (*AdminRotateTenantConfigSecretResponse, error)
 	// AdminListTenantConfigs lists the configs in the caller's scope (low
 	// cardinality, no paging).
 	AdminListTenantConfigs(context.Context, *AdminListTenantConfigsRequest) (*AdminListTenantConfigsResponse, error)
@@ -901,9 +884,6 @@ func (UnimplementedStorageServiceServer) AdminGetTenantConfig(context.Context, *
 }
 func (UnimplementedStorageServiceServer) AdminUpdateTenantConfig(context.Context, *AdminUpdateTenantConfigRequest) (*AdminUpdateTenantConfigResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminUpdateTenantConfig not implemented")
-}
-func (UnimplementedStorageServiceServer) AdminRotateTenantConfigSecret(context.Context, *AdminRotateTenantConfigSecretRequest) (*AdminRotateTenantConfigSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminRotateTenantConfigSecret not implemented")
 }
 func (UnimplementedStorageServiceServer) AdminListTenantConfigs(context.Context, *AdminListTenantConfigsRequest) (*AdminListTenantConfigsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminListTenantConfigs not implemented")
@@ -1598,24 +1578,6 @@ func _StorageService_AdminUpdateTenantConfig_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StorageService_AdminRotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminRotateTenantConfigSecretRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(StorageServiceServer).AdminRotateTenantConfigSecret(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: StorageService_AdminRotateTenantConfigSecret_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServiceServer).AdminRotateTenantConfigSecret(ctx, req.(*AdminRotateTenantConfigSecretRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _StorageService_AdminListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminListTenantConfigsRequest)
 	if err := dec(in); err != nil {
@@ -1910,10 +1872,6 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AdminUpdateTenantConfig",
 			Handler:    _StorageService_AdminUpdateTenantConfig_Handler,
-		},
-		{
-			MethodName: "AdminRotateTenantConfigSecret",
-			Handler:    _StorageService_AdminRotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "AdminListTenantConfigs",

@@ -593,8 +593,6 @@ message AdminEnsureTenantConfigRequest {
 
 message AdminEnsureTenantConfigResponse {
   StorageTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close); always empty.
-  string app_secret = 2;
 }
 
 message AdminGetTenantConfigRequest {
@@ -628,20 +626,6 @@ message AdminUpdateTenantConfigRequest {
 
 message AdminUpdateTenantConfigResponse {
   StorageTenantConfigInfo config = 1;
-}
-
-message AdminRotateTenantConfigSecretRequest {
-  string tenant_key = 1 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 64
-  }];
-}
-
-message AdminRotateTenantConfigSecretResponse {
-  StorageTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close) — the RPC answers
-  // SECRET_RETIRED instead of returning this field.
-  string app_secret = 2;
 }
 
 // AdminListTenantConfigsRequest — one row per tenant, low cardinality; no

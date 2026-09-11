@@ -297,26 +297,25 @@ var LicenseService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	LicenseAdminService_CreateKey_FullMethodName                = "/license.v1.LicenseAdminService/CreateKey"
-	LicenseAdminService_ShowKey_FullMethodName                  = "/license.v1.LicenseAdminService/ShowKey"
-	LicenseAdminService_ListKeys_FullMethodName                 = "/license.v1.LicenseAdminService/ListKeys"
-	LicenseAdminService_UpdateKey_FullMethodName                = "/license.v1.LicenseAdminService/UpdateKey"
-	LicenseAdminService_RevokeKey_FullMethodName                = "/license.v1.LicenseAdminService/RevokeKey"
-	LicenseAdminService_UnrevokeKey_FullMethodName              = "/license.v1.LicenseAdminService/UnrevokeKey"
-	LicenseAdminService_DeleteKey_FullMethodName                = "/license.v1.LicenseAdminService/DeleteKey"
-	LicenseAdminService_GrantModule_FullMethodName              = "/license.v1.LicenseAdminService/GrantModule"
-	LicenseAdminService_RevokeModule_FullMethodName             = "/license.v1.LicenseAdminService/RevokeModule"
-	LicenseAdminService_ListKeyDevices_FullMethodName           = "/license.v1.LicenseAdminService/ListKeyDevices"
-	LicenseAdminService_KickDevice_FullMethodName               = "/license.v1.LicenseAdminService/KickDevice"
-	LicenseAdminService_ShowTrial_FullMethodName                = "/license.v1.LicenseAdminService/ShowTrial"
-	LicenseAdminService_ResetTrial_FullMethodName               = "/license.v1.LicenseAdminService/ResetTrial"
-	LicenseAdminService_ShowPubKey_FullMethodName               = "/license.v1.LicenseAdminService/ShowPubKey"
-	LicenseAdminService_CreateTenantConfig_FullMethodName       = "/license.v1.LicenseAdminService/CreateTenantConfig"
-	LicenseAdminService_GetTenantConfig_FullMethodName          = "/license.v1.LicenseAdminService/GetTenantConfig"
-	LicenseAdminService_UpdateTenantConfig_FullMethodName       = "/license.v1.LicenseAdminService/UpdateTenantConfig"
-	LicenseAdminService_RotateTenantConfigSecret_FullMethodName = "/license.v1.LicenseAdminService/RotateTenantConfigSecret"
-	LicenseAdminService_ListTenantConfigs_FullMethodName        = "/license.v1.LicenseAdminService/ListTenantConfigs"
-	LicenseAdminService_DeleteTenantConfig_FullMethodName       = "/license.v1.LicenseAdminService/DeleteTenantConfig"
+	LicenseAdminService_CreateKey_FullMethodName          = "/license.v1.LicenseAdminService/CreateKey"
+	LicenseAdminService_ShowKey_FullMethodName            = "/license.v1.LicenseAdminService/ShowKey"
+	LicenseAdminService_ListKeys_FullMethodName           = "/license.v1.LicenseAdminService/ListKeys"
+	LicenseAdminService_UpdateKey_FullMethodName          = "/license.v1.LicenseAdminService/UpdateKey"
+	LicenseAdminService_RevokeKey_FullMethodName          = "/license.v1.LicenseAdminService/RevokeKey"
+	LicenseAdminService_UnrevokeKey_FullMethodName        = "/license.v1.LicenseAdminService/UnrevokeKey"
+	LicenseAdminService_DeleteKey_FullMethodName          = "/license.v1.LicenseAdminService/DeleteKey"
+	LicenseAdminService_GrantModule_FullMethodName        = "/license.v1.LicenseAdminService/GrantModule"
+	LicenseAdminService_RevokeModule_FullMethodName       = "/license.v1.LicenseAdminService/RevokeModule"
+	LicenseAdminService_ListKeyDevices_FullMethodName     = "/license.v1.LicenseAdminService/ListKeyDevices"
+	LicenseAdminService_KickDevice_FullMethodName         = "/license.v1.LicenseAdminService/KickDevice"
+	LicenseAdminService_ShowTrial_FullMethodName          = "/license.v1.LicenseAdminService/ShowTrial"
+	LicenseAdminService_ResetTrial_FullMethodName         = "/license.v1.LicenseAdminService/ResetTrial"
+	LicenseAdminService_ShowPubKey_FullMethodName         = "/license.v1.LicenseAdminService/ShowPubKey"
+	LicenseAdminService_CreateTenantConfig_FullMethodName = "/license.v1.LicenseAdminService/CreateTenantConfig"
+	LicenseAdminService_GetTenantConfig_FullMethodName    = "/license.v1.LicenseAdminService/GetTenantConfig"
+	LicenseAdminService_UpdateTenantConfig_FullMethodName = "/license.v1.LicenseAdminService/UpdateTenantConfig"
+	LicenseAdminService_ListTenantConfigs_FullMethodName  = "/license.v1.LicenseAdminService/ListTenantConfigs"
+	LicenseAdminService_DeleteTenantConfig_FullMethodName = "/license.v1.LicenseAdminService/DeleteTenantConfig"
 )
 
 // LicenseAdminServiceClient is the client API for LicenseAdminService service.
@@ -348,9 +347,6 @@ type LicenseAdminServiceClient interface {
 	// UpdateTenantConfig edits mutable fields; the row's identity is
 	// immutable. Absent optional fields keep their current values.
 	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers a BadRequest retirement error.
-	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
 	// DeleteTenantConfig removes the config row (hard delete — licensing
@@ -536,16 +532,6 @@ func (c *licenseAdminServiceClient) UpdateTenantConfig(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *licenseAdminServiceClient) RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateTenantConfigSecretResponse)
-	err := c.cc.Invoke(ctx, LicenseAdminService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *licenseAdminServiceClient) ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListTenantConfigsResponse)
@@ -595,9 +581,6 @@ type LicenseAdminServiceServer interface {
 	// UpdateTenantConfig edits mutable fields; the row's identity is
 	// immutable. Absent optional fields keep their current values.
 	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers a BadRequest retirement error.
-	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
 	// DeleteTenantConfig removes the config row (hard delete — licensing
@@ -663,9 +646,6 @@ func (UnimplementedLicenseAdminServiceServer) GetTenantConfig(context.Context, *
 }
 func (UnimplementedLicenseAdminServiceServer) UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
-}
-func (UnimplementedLicenseAdminServiceServer) RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
 func (UnimplementedLicenseAdminServiceServer) ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTenantConfigs not implemented")
@@ -1000,24 +980,6 @@ func _LicenseAdminService_UpdateTenantConfig_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LicenseAdminService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateTenantConfigSecretRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LicenseAdminServiceServer).RotateTenantConfigSecret(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: LicenseAdminService_RotateTenantConfigSecret_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LicenseAdminServiceServer).RotateTenantConfigSecret(ctx, req.(*RotateTenantConfigSecretRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _LicenseAdminService_ListTenantConfigs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListTenantConfigsRequest)
 	if err := dec(in); err != nil {
@@ -1128,10 +1090,6 @@ var LicenseAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateTenantConfig",
 			Handler:    _LicenseAdminService_UpdateTenantConfig_Handler,
-		},
-		{
-			MethodName: "RotateTenantConfigSecret",
-			Handler:    _LicenseAdminService_RotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "ListTenantConfigs",

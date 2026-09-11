@@ -93,8 +93,6 @@ message CreateTenantConfigResponse {
   TenantConfig config = 1;
   // Full plaintext ingest token — returned exactly once, never stored.
   string token = 2;
-  // app_secret is RETIRED (④ window close); always empty.
-  string app_secret = 3;
 }
 
 message GetTenantConfigRequest {
@@ -180,22 +178,6 @@ message RotateTokenResponse {
   // Full plaintext ingest token — returned exactly once, never stored. The
   // previous token stays valid until explicitly revoked.
   string token = 1;
-}
-
-// RotateTenantConfigSecretRequest is retired (the app_secret column was
-// dropped with the ④ window close); the RPC answers SECRET_RETIRED.
-message RotateTenantConfigSecretRequest {
-  string tenant_key = 1 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 64
-  }];
-}
-
-message RotateTenantConfigSecretResponse {
-  TenantConfig config = 1;
-  // app_secret is RETIRED (④ window close) — the RPC answers
-  // SECRET_RETIRED instead of returning this field.
-  string app_secret = 2;
 }
 
 message RevokeTokenRequest {

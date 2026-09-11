@@ -629,11 +629,6 @@ message TenantConfig {
 
   int64 daily_event_budget = 13;
   bool disabled = 14;
-  // app_secret is RETIRED (④ window close): the column was dropped —
-  // backend callers authenticate via the trusted x-tenant-key injected by
-  // the portal/doors, and the raw client endpoints (/v1/e/…) keep using
-  // ingest tokens. Always empty. Mirrors telemetry.v1.TenantConfig.
-  string app_secret = 15;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
   // tenant_key names the tenant this config row belongs to (phase ④ T6).

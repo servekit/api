@@ -128,11 +128,6 @@ type TenantConfig struct {
 	// Disabled apps fail every ingest call immediately (401) — the operator
 	// kill-switch; tokens and signing keys stay in place for re-enable.
 	Disabled bool `protobuf:"varint,14,opt,name=disabled,proto3" json:"disabled,omitempty"`
-	// app_secret is RETIRED (④ window close): the column was dropped —
-	// backend callers authenticate via the trusted x-tenant-key injected by
-	// the portal/doors, and the raw client endpoints (/v1/e/…) keep using
-	// ingest tokens. Always empty.
-	AppSecret string `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	// tenant_key is the tenant this app maps to (phase ③ dual-stack window):
 	// the UUID row is the tenant's config row. Empty on rows not yet
 	// backfilled — the service falls back to the app_key literal until T10
@@ -257,13 +252,6 @@ func (x *TenantConfig) GetDisabled() bool {
 		return x.Disabled
 	}
 	return false
-}
-
-func (x *TenantConfig) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
 }
 
 func (x *TenantConfig) GetTenantKey() string {
@@ -632,7 +620,7 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\x8a\x05\n" +
+	"dropReason\"\xeb\x04\n" +
 	"\fTenantConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -649,8 +637,6 @@ const file_telemetry_v1_message_proto_rawDesc = "" +
 	" \x01(\x05R\x10rawRetentionDays\x12,\n" +
 	"\x12daily_event_budget\x18\r \x01(\x03R\x10dailyEventBudget\x12\x1a\n" +
 	"\bdisabled\x18\x0e \x01(\bR\bdisabled\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x0f \x01(\tR\tappSecret\x12\x1d\n" +
 	"\n" +
 	"tenant_key\x18\x10 \x01(\tR\ttenantKey\x129\n" +
 	"\n" +

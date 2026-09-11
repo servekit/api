@@ -1325,10 +1325,6 @@ type StorageTenantConfigInfo struct {
 	Disabled  bool  `protobuf:"varint,6,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	CreatedAt int64 `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt int64 `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// app_secret is RETIRED (④ window close): config rows carry no
-	// credential anymore; the data plane authenticates via the trusted
-	// x-tenant-key. Always empty.
-	AppSecret string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
 	// tenant_key is the tenant this app maps to (phase ③ dual-stack window).
 	// Empty on rows not yet backfilled — the service falls back to the app_key
 	// literal until T10 clears the empties. New tenants first seen on the
@@ -1422,13 +1418,6 @@ func (x *StorageTenantConfigInfo) GetUpdatedAt() int64 {
 		return x.UpdatedAt
 	}
 	return 0
-}
-
-func (x *StorageTenantConfigInfo) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
 }
 
 func (x *StorageTenantConfigInfo) GetTenantKey() string {
@@ -1847,7 +1836,7 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"\x03acl\x18\x04 \x01(\x0e2\x15.storage.v1.BucketACLR\x03acl\x12*\n" +
 	"\x06vendor\x18\x05 \x01(\x0e2\x12.storage.v1.VendorR\x06vendor\x12'\n" +
 	"\x03cdn\x18\x06 \x01(\v2\x15.storage.v1.CDNConfigR\x03cdnJ\x04\b\x03\x10\x04R\n" +
-	"key_prefix\"\xaa\x02\n" +
+	"key_prefix\"\x8b\x02\n" +
 	"\x17StorageTenantConfigInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -1860,8 +1849,6 @@ const file_storage_v1_message_proto_rawDesc = "" +
 	"created_at\x18\a \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
 	"updated_at\x18\b \x01(\x03R\tupdatedAt\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\t \x01(\tR\tappSecret\x12\x1d\n" +
 	"\n" +
 	"tenant_key\x18\n" +
 	" \x01(\tR\ttenantKey\"g\n" +

@@ -100,12 +100,10 @@ func (x *CreateTenantConfigRequest) GetTenantKey() string {
 }
 
 // CreateTenantConfigResponse returns the created config row (no secret —
-// the credential column was retired with the ④ window close).
+// the credential column was dropped with the ④ window close).
 type CreateTenantConfigResponse struct {
-	state  protoimpl.MessageState   `protogen:"open.v1"`
-	Config *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret is RETIRED (④ window close); always empty.
-	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -145,13 +143,6 @@ func (x *CreateTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 		return x.Config
 	}
 	return nil
-}
-
-func (x *CreateTenantConfigResponse) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
 }
 
 type GetTenantConfigRequest struct {
@@ -364,106 +355,6 @@ func (x *UpdateTenantConfigResponse) GetConfig() *MessageTenantConfigInfo {
 	return nil
 }
 
-// RotateTenantConfigSecret is retired (the app_secret column was dropped
-// with the ④ window close); the RPC answers SECRET_RETIRED.
-type RotateTenantConfigSecretRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RotateTenantConfigSecretRequest) Reset() {
-	*x = RotateTenantConfigSecretRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RotateTenantConfigSecretRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RotateTenantConfigSecretRequest) ProtoMessage() {}
-
-func (x *RotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
-func (*RotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *RotateTenantConfigSecretRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type RotateTenantConfigSecretResponse struct {
-	state  protoimpl.MessageState   `protogen:"open.v1"`
-	Config *MessageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret is RETIRED (④ window close); the RPC errors instead of
-	// returning this field.
-	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RotateTenantConfigSecretResponse) Reset() {
-	*x = RotateTenantConfigSecretResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RotateTenantConfigSecretResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RotateTenantConfigSecretResponse) ProtoMessage() {}
-
-func (x *RotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
-func (*RotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *RotateTenantConfigSecretResponse) GetConfig() *MessageTenantConfigInfo {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-func (x *RotateTenantConfigSecretResponse) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
-}
-
 type ListTenantConfigsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -472,7 +363,7 @@ type ListTenantConfigsRequest struct {
 
 func (x *ListTenantConfigsRequest) Reset() {
 	*x = ListTenantConfigsRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -484,7 +375,7 @@ func (x *ListTenantConfigsRequest) String() string {
 func (*ListTenantConfigsRequest) ProtoMessage() {}
 
 func (x *ListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -497,7 +388,7 @@ func (x *ListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenantConfigsRequest.ProtoReflect.Descriptor instead.
 func (*ListTenantConfigsRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{8}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{6}
 }
 
 type ListTenantConfigsResponse struct {
@@ -509,7 +400,7 @@ type ListTenantConfigsResponse struct {
 
 func (x *ListTenantConfigsResponse) Reset() {
 	*x = ListTenantConfigsResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -521,7 +412,7 @@ func (x *ListTenantConfigsResponse) String() string {
 func (*ListTenantConfigsResponse) ProtoMessage() {}
 
 func (x *ListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -534,7 +425,7 @@ func (x *ListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenantConfigsResponse.ProtoReflect.Descriptor instead.
 func (*ListTenantConfigsResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{9}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListTenantConfigsResponse) GetConfigs() []*MessageTenantConfigInfo {
@@ -555,7 +446,7 @@ type DeleteTenantConfigRequest struct {
 
 func (x *DeleteTenantConfigRequest) Reset() {
 	*x = DeleteTenantConfigRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -567,7 +458,7 @@ func (x *DeleteTenantConfigRequest) String() string {
 func (*DeleteTenantConfigRequest) ProtoMessage() {}
 
 func (x *DeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -580,7 +471,7 @@ func (x *DeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTenantConfigRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTenantConfigRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{10}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteTenantConfigRequest) GetId() int64 {
@@ -606,7 +497,7 @@ type CreateChannelAccountRequest struct {
 
 func (x *CreateChannelAccountRequest) Reset() {
 	*x = CreateChannelAccountRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[11]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -618,7 +509,7 @@ func (x *CreateChannelAccountRequest) String() string {
 func (*CreateChannelAccountRequest) ProtoMessage() {}
 
 func (x *CreateChannelAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[11]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -631,7 +522,7 @@ func (x *CreateChannelAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateChannelAccountRequest.ProtoReflect.Descriptor instead.
 func (*CreateChannelAccountRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{11}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateChannelAccountRequest) GetName() string {
@@ -671,7 +562,7 @@ type CreateChannelAccountResponse struct {
 
 func (x *CreateChannelAccountResponse) Reset() {
 	*x = CreateChannelAccountResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[12]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -683,7 +574,7 @@ func (x *CreateChannelAccountResponse) String() string {
 func (*CreateChannelAccountResponse) ProtoMessage() {}
 
 func (x *CreateChannelAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[12]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -696,7 +587,7 @@ func (x *CreateChannelAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateChannelAccountResponse.ProtoReflect.Descriptor instead.
 func (*CreateChannelAccountResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{12}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CreateChannelAccountResponse) GetAccount() *ChannelAccountInfo {
@@ -722,7 +613,7 @@ type UpdateChannelAccountRequest struct {
 
 func (x *UpdateChannelAccountRequest) Reset() {
 	*x = UpdateChannelAccountRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[13]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -734,7 +625,7 @@ func (x *UpdateChannelAccountRequest) String() string {
 func (*UpdateChannelAccountRequest) ProtoMessage() {}
 
 func (x *UpdateChannelAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[13]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -747,7 +638,7 @@ func (x *UpdateChannelAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateChannelAccountRequest.ProtoReflect.Descriptor instead.
 func (*UpdateChannelAccountRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{13}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UpdateChannelAccountRequest) GetId() int64 {
@@ -787,7 +678,7 @@ type UpdateChannelAccountResponse struct {
 
 func (x *UpdateChannelAccountResponse) Reset() {
 	*x = UpdateChannelAccountResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[14]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -799,7 +690,7 @@ func (x *UpdateChannelAccountResponse) String() string {
 func (*UpdateChannelAccountResponse) ProtoMessage() {}
 
 func (x *UpdateChannelAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[14]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -812,7 +703,7 @@ func (x *UpdateChannelAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateChannelAccountResponse.ProtoReflect.Descriptor instead.
 func (*UpdateChannelAccountResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{14}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdateChannelAccountResponse) GetAccount() *ChannelAccountInfo {
@@ -834,7 +725,7 @@ type DeleteChannelAccountRequest struct {
 
 func (x *DeleteChannelAccountRequest) Reset() {
 	*x = DeleteChannelAccountRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[15]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -846,7 +737,7 @@ func (x *DeleteChannelAccountRequest) String() string {
 func (*DeleteChannelAccountRequest) ProtoMessage() {}
 
 func (x *DeleteChannelAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[15]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -859,7 +750,7 @@ func (x *DeleteChannelAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteChannelAccountRequest.ProtoReflect.Descriptor instead.
 func (*DeleteChannelAccountRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{15}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DeleteChannelAccountRequest) GetId() int64 {
@@ -877,7 +768,7 @@ type ListChannelAccountsRequest struct {
 
 func (x *ListChannelAccountsRequest) Reset() {
 	*x = ListChannelAccountsRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[16]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -889,7 +780,7 @@ func (x *ListChannelAccountsRequest) String() string {
 func (*ListChannelAccountsRequest) ProtoMessage() {}
 
 func (x *ListChannelAccountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[16]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -902,7 +793,7 @@ func (x *ListChannelAccountsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListChannelAccountsRequest.ProtoReflect.Descriptor instead.
 func (*ListChannelAccountsRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{16}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{14}
 }
 
 type ListChannelAccountsResponse struct {
@@ -914,7 +805,7 @@ type ListChannelAccountsResponse struct {
 
 func (x *ListChannelAccountsResponse) Reset() {
 	*x = ListChannelAccountsResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[17]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -926,7 +817,7 @@ func (x *ListChannelAccountsResponse) String() string {
 func (*ListChannelAccountsResponse) ProtoMessage() {}
 
 func (x *ListChannelAccountsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[17]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -939,7 +830,7 @@ func (x *ListChannelAccountsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListChannelAccountsResponse.ProtoReflect.Descriptor instead.
 func (*ListChannelAccountsResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{17}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListChannelAccountsResponse) GetAccounts() []*ChannelAccountInfo {
@@ -967,7 +858,7 @@ type CreateSignatureRequest struct {
 
 func (x *CreateSignatureRequest) Reset() {
 	*x = CreateSignatureRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[18]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -979,7 +870,7 @@ func (x *CreateSignatureRequest) String() string {
 func (*CreateSignatureRequest) ProtoMessage() {}
 
 func (x *CreateSignatureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[18]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -992,7 +883,7 @@ func (x *CreateSignatureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSignatureRequest.ProtoReflect.Descriptor instead.
 func (*CreateSignatureRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{18}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CreateSignatureRequest) GetName() string {
@@ -1032,7 +923,7 @@ type CreateSignatureResponse struct {
 
 func (x *CreateSignatureResponse) Reset() {
 	*x = CreateSignatureResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[19]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1044,7 +935,7 @@ func (x *CreateSignatureResponse) String() string {
 func (*CreateSignatureResponse) ProtoMessage() {}
 
 func (x *CreateSignatureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[19]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1057,7 +948,7 @@ func (x *CreateSignatureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSignatureResponse.ProtoReflect.Descriptor instead.
 func (*CreateSignatureResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{19}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CreateSignatureResponse) GetSignature() *SignatureInfo {
@@ -1082,7 +973,7 @@ type UpdateSignatureRequest struct {
 
 func (x *UpdateSignatureRequest) Reset() {
 	*x = UpdateSignatureRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[20]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1094,7 +985,7 @@ func (x *UpdateSignatureRequest) String() string {
 func (*UpdateSignatureRequest) ProtoMessage() {}
 
 func (x *UpdateSignatureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[20]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1107,7 +998,7 @@ func (x *UpdateSignatureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSignatureRequest.ProtoReflect.Descriptor instead.
 func (*UpdateSignatureRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{20}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *UpdateSignatureRequest) GetId() int64 {
@@ -1151,7 +1042,7 @@ type AccountIds struct {
 
 func (x *AccountIds) Reset() {
 	*x = AccountIds{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[21]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1163,7 +1054,7 @@ func (x *AccountIds) String() string {
 func (*AccountIds) ProtoMessage() {}
 
 func (x *AccountIds) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[21]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1176,7 +1067,7 @@ func (x *AccountIds) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountIds.ProtoReflect.Descriptor instead.
 func (*AccountIds) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{21}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *AccountIds) GetIds() []int64 {
@@ -1195,7 +1086,7 @@ type UpdateSignatureResponse struct {
 
 func (x *UpdateSignatureResponse) Reset() {
 	*x = UpdateSignatureResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[22]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1207,7 +1098,7 @@ func (x *UpdateSignatureResponse) String() string {
 func (*UpdateSignatureResponse) ProtoMessage() {}
 
 func (x *UpdateSignatureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[22]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1220,7 +1111,7 @@ func (x *UpdateSignatureResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSignatureResponse.ProtoReflect.Descriptor instead.
 func (*UpdateSignatureResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{22}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *UpdateSignatureResponse) GetSignature() *SignatureInfo {
@@ -1241,7 +1132,7 @@ type DeleteSignatureRequest struct {
 
 func (x *DeleteSignatureRequest) Reset() {
 	*x = DeleteSignatureRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[23]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1253,7 +1144,7 @@ func (x *DeleteSignatureRequest) String() string {
 func (*DeleteSignatureRequest) ProtoMessage() {}
 
 func (x *DeleteSignatureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[23]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1266,7 +1157,7 @@ func (x *DeleteSignatureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSignatureRequest.ProtoReflect.Descriptor instead.
 func (*DeleteSignatureRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{23}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DeleteSignatureRequest) GetId() int64 {
@@ -1284,7 +1175,7 @@ type ListSignaturesRequest struct {
 
 func (x *ListSignaturesRequest) Reset() {
 	*x = ListSignaturesRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[24]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1296,7 +1187,7 @@ func (x *ListSignaturesRequest) String() string {
 func (*ListSignaturesRequest) ProtoMessage() {}
 
 func (x *ListSignaturesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[24]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1309,7 +1200,7 @@ func (x *ListSignaturesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSignaturesRequest.ProtoReflect.Descriptor instead.
 func (*ListSignaturesRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{24}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{22}
 }
 
 type ListSignaturesResponse struct {
@@ -1321,7 +1212,7 @@ type ListSignaturesResponse struct {
 
 func (x *ListSignaturesResponse) Reset() {
 	*x = ListSignaturesResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[25]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1333,7 +1224,7 @@ func (x *ListSignaturesResponse) String() string {
 func (*ListSignaturesResponse) ProtoMessage() {}
 
 func (x *ListSignaturesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[25]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1346,7 +1237,7 @@ func (x *ListSignaturesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSignaturesResponse.ProtoReflect.Descriptor instead.
 func (*ListSignaturesResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{25}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListSignaturesResponse) GetSignatures() []*SignatureInfo {
@@ -1369,7 +1260,7 @@ type CreateTemplateRequest struct {
 
 func (x *CreateTemplateRequest) Reset() {
 	*x = CreateTemplateRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[26]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1381,7 +1272,7 @@ func (x *CreateTemplateRequest) String() string {
 func (*CreateTemplateRequest) ProtoMessage() {}
 
 func (x *CreateTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[26]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1394,7 +1285,7 @@ func (x *CreateTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTemplateRequest.ProtoReflect.Descriptor instead.
 func (*CreateTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{26}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *CreateTemplateRequest) GetAppId() int64 {
@@ -1420,7 +1311,7 @@ type CreateTemplateResponse struct {
 
 func (x *CreateTemplateResponse) Reset() {
 	*x = CreateTemplateResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[27]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1432,7 +1323,7 @@ func (x *CreateTemplateResponse) String() string {
 func (*CreateTemplateResponse) ProtoMessage() {}
 
 func (x *CreateTemplateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[27]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1445,7 +1336,7 @@ func (x *CreateTemplateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTemplateResponse.ProtoReflect.Descriptor instead.
 func (*CreateTemplateResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{27}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *CreateTemplateResponse) GetTemplate() *TemplateInfo {
@@ -1469,7 +1360,7 @@ type UpdateTemplateRequest struct {
 
 func (x *UpdateTemplateRequest) Reset() {
 	*x = UpdateTemplateRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[28]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1481,7 +1372,7 @@ func (x *UpdateTemplateRequest) String() string {
 func (*UpdateTemplateRequest) ProtoMessage() {}
 
 func (x *UpdateTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[28]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1494,7 +1385,7 @@ func (x *UpdateTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTemplateRequest.ProtoReflect.Descriptor instead.
 func (*UpdateTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{28}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *UpdateTemplateRequest) GetId() int64 {
@@ -1520,7 +1411,7 @@ type UpdateTemplateResponse struct {
 
 func (x *UpdateTemplateResponse) Reset() {
 	*x = UpdateTemplateResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[29]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1532,7 +1423,7 @@ func (x *UpdateTemplateResponse) String() string {
 func (*UpdateTemplateResponse) ProtoMessage() {}
 
 func (x *UpdateTemplateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[29]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1545,7 +1436,7 @@ func (x *UpdateTemplateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTemplateResponse.ProtoReflect.Descriptor instead.
 func (*UpdateTemplateResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{29}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *UpdateTemplateResponse) GetTemplate() *TemplateInfo {
@@ -1566,7 +1457,7 @@ type DeleteTemplateRequest struct {
 
 func (x *DeleteTemplateRequest) Reset() {
 	*x = DeleteTemplateRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[30]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1578,7 +1469,7 @@ func (x *DeleteTemplateRequest) String() string {
 func (*DeleteTemplateRequest) ProtoMessage() {}
 
 func (x *DeleteTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[30]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1591,7 +1482,7 @@ func (x *DeleteTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTemplateRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{30}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *DeleteTemplateRequest) GetId() int64 {
@@ -1603,8 +1494,9 @@ func (x *DeleteTemplateRequest) GetId() int64 {
 
 type ListTemplatesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 0 = all templates (shared + every app's).
-	AppId         int64           `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	// tenant_key filters to one tenant's private templates plus the shared
+	// ones; empty = all templates (shared + every tenant's, scope-permitted).
+	TenantKey     string          `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Channel       TemplateChannel `protobuf:"varint,2,opt,name=channel,proto3,enum=messaging.v1.TemplateChannel" json:"channel,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1612,7 +1504,7 @@ type ListTemplatesRequest struct {
 
 func (x *ListTemplatesRequest) Reset() {
 	*x = ListTemplatesRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[31]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1624,7 +1516,7 @@ func (x *ListTemplatesRequest) String() string {
 func (*ListTemplatesRequest) ProtoMessage() {}
 
 func (x *ListTemplatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[31]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1637,14 +1529,14 @@ func (x *ListTemplatesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTemplatesRequest.ProtoReflect.Descriptor instead.
 func (*ListTemplatesRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{31}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{29}
 }
 
-func (x *ListTemplatesRequest) GetAppId() int64 {
+func (x *ListTemplatesRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppId
+		return x.TenantKey
 	}
-	return 0
+	return ""
 }
 
 func (x *ListTemplatesRequest) GetChannel() TemplateChannel {
@@ -1663,7 +1555,7 @@ type ListTemplatesResponse struct {
 
 func (x *ListTemplatesResponse) Reset() {
 	*x = ListTemplatesResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[32]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1675,7 +1567,7 @@ func (x *ListTemplatesResponse) String() string {
 func (*ListTemplatesResponse) ProtoMessage() {}
 
 func (x *ListTemplatesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[32]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1688,7 +1580,7 @@ func (x *ListTemplatesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTemplatesResponse.ProtoReflect.Descriptor instead.
 func (*ListTemplatesResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{32}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ListTemplatesResponse) GetTemplates() []*TemplateInfo {
@@ -1713,7 +1605,7 @@ type PolicyScene struct {
 
 func (x *PolicyScene) Reset() {
 	*x = PolicyScene{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[33]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1725,7 +1617,7 @@ func (x *PolicyScene) String() string {
 func (*PolicyScene) ProtoMessage() {}
 
 func (x *PolicyScene) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[33]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1738,7 +1630,7 @@ func (x *PolicyScene) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PolicyScene.ProtoReflect.Descriptor instead.
 func (*PolicyScene) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{33}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *PolicyScene) GetScene() isPolicyScene_Scene {
@@ -1801,7 +1693,7 @@ type CreatePolicyRequest struct {
 
 func (x *CreatePolicyRequest) Reset() {
 	*x = CreatePolicyRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[34]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1813,7 +1705,7 @@ func (x *CreatePolicyRequest) String() string {
 func (*CreatePolicyRequest) ProtoMessage() {}
 
 func (x *CreatePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[34]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1826,7 +1718,7 @@ func (x *CreatePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePolicyRequest.ProtoReflect.Descriptor instead.
 func (*CreatePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{34}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *CreatePolicyRequest) GetAppId() int64 {
@@ -1873,7 +1765,7 @@ type CreatePolicyResponse struct {
 
 func (x *CreatePolicyResponse) Reset() {
 	*x = CreatePolicyResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[35]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1885,7 +1777,7 @@ func (x *CreatePolicyResponse) String() string {
 func (*CreatePolicyResponse) ProtoMessage() {}
 
 func (x *CreatePolicyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[35]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1898,7 +1790,7 @@ func (x *CreatePolicyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePolicyResponse.ProtoReflect.Descriptor instead.
 func (*CreatePolicyResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{35}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *CreatePolicyResponse) GetPolicy() *PolicyInfo {
@@ -1926,7 +1818,7 @@ type UpdatePolicyRequest struct {
 
 func (x *UpdatePolicyRequest) Reset() {
 	*x = UpdatePolicyRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[36]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1938,7 +1830,7 @@ func (x *UpdatePolicyRequest) String() string {
 func (*UpdatePolicyRequest) ProtoMessage() {}
 
 func (x *UpdatePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[36]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1951,7 +1843,7 @@ func (x *UpdatePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePolicyRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{36}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *UpdatePolicyRequest) GetId() int64 {
@@ -1998,7 +1890,7 @@ type UpdatePolicyResponse struct {
 
 func (x *UpdatePolicyResponse) Reset() {
 	*x = UpdatePolicyResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[37]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2010,7 +1902,7 @@ func (x *UpdatePolicyResponse) String() string {
 func (*UpdatePolicyResponse) ProtoMessage() {}
 
 func (x *UpdatePolicyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[37]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2023,7 +1915,7 @@ func (x *UpdatePolicyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePolicyResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePolicyResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{37}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UpdatePolicyResponse) GetPolicy() *PolicyInfo {
@@ -2044,7 +1936,7 @@ type DeletePolicyRequest struct {
 
 func (x *DeletePolicyRequest) Reset() {
 	*x = DeletePolicyRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[38]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2056,7 +1948,7 @@ func (x *DeletePolicyRequest) String() string {
 func (*DeletePolicyRequest) ProtoMessage() {}
 
 func (x *DeletePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[38]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2069,7 +1961,7 @@ func (x *DeletePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePolicyRequest.ProtoReflect.Descriptor instead.
 func (*DeletePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{38}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *DeletePolicyRequest) GetId() int64 {
@@ -2081,8 +1973,9 @@ func (x *DeletePolicyRequest) GetId() int64 {
 
 type ListPoliciesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 0 = all apps.
-	AppId         int64           `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	// tenant_key filters to one tenant's policies; empty = all
+	// (scope-permitted).
+	TenantKey     string          `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	Channel       TemplateChannel `protobuf:"varint,2,opt,name=channel,proto3,enum=messaging.v1.TemplateChannel" json:"channel,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2090,7 +1983,7 @@ type ListPoliciesRequest struct {
 
 func (x *ListPoliciesRequest) Reset() {
 	*x = ListPoliciesRequest{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[39]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2102,7 +1995,7 @@ func (x *ListPoliciesRequest) String() string {
 func (*ListPoliciesRequest) ProtoMessage() {}
 
 func (x *ListPoliciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[39]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2115,14 +2008,14 @@ func (x *ListPoliciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoliciesRequest.ProtoReflect.Descriptor instead.
 func (*ListPoliciesRequest) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{39}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *ListPoliciesRequest) GetAppId() int64 {
+func (x *ListPoliciesRequest) GetTenantKey() string {
 	if x != nil {
-		return x.AppId
+		return x.TenantKey
 	}
-	return 0
+	return ""
 }
 
 func (x *ListPoliciesRequest) GetChannel() TemplateChannel {
@@ -2141,7 +2034,7 @@ type ListPoliciesResponse struct {
 
 func (x *ListPoliciesResponse) Reset() {
 	*x = ListPoliciesResponse{}
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[40]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2153,7 +2046,7 @@ func (x *ListPoliciesResponse) String() string {
 func (*ListPoliciesResponse) ProtoMessage() {}
 
 func (x *ListPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[40]
+	mi := &file_messaging_v1_admin_request_response_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2166,7 +2059,7 @@ func (x *ListPoliciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoliciesResponse.ProtoReflect.Descriptor instead.
 func (*ListPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{40}
+	return file_messaging_v1_admin_request_response_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListPoliciesResponse) GetPolicies() []*PolicyInfo {
@@ -2187,11 +2080,9 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x0fsms_daily_limit\x18\x03 \x01(\x03R\rsmsDailyLimit\x12*\n" +
 	"\x11email_daily_limit\x18\x04 \x01(\x03R\x0femailDailyLimit\x12&\n" +
 	"\n" +
-	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"z\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"[\n" +
 	"\x1aCreateTenantConfigResponse\x12=\n" +
-	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"1\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\"1\n" +
 	"\x16GetTenantConfigRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"X\n" +
 	"\x17GetTenantConfigResponse\x12=\n" +
@@ -2208,13 +2099,7 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x10_sms_daily_limitB\x14\n" +
 	"\x12_email_daily_limit\"[\n" +
 	"\x1aUpdateTenantConfigResponse\x12=\n" +
-	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\":\n" +
-	"\x1fRotateTenantConfigSecretRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"\x80\x01\n" +
-	" RotateTenantConfigSecretResponse\x12=\n" +
-	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x1a\n" +
+	"\x06config\x18\x01 \x01(\v2%.messaging.v1.MessageTenantConfigInfoR\x06config\"\x1a\n" +
 	"\x18ListTenantConfigsRequest\"\\\n" +
 	"\x19ListTenantConfigsResponse\x12?\n" +
 	"\aconfigs\x18\x01 \x03(\v2%.messaging.v1.MessageTenantConfigInfoR\aconfigs\"4\n" +
@@ -2284,9 +2169,10 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x16UpdateTemplateResponse\x126\n" +
 	"\btemplate\x18\x01 \x01(\v2\x1a.messaging.v1.TemplateInfoR\btemplate\"0\n" +
 	"\x15DeleteTemplateRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"f\n" +
-	"\x14ListTemplatesRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\x03R\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"w\n" +
+	"\x14ListTemplatesRequest\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\x127\n" +
 	"\achannel\x18\x02 \x01(\x0e2\x1d.messaging.v1.TemplateChannelR\achannel\"Q\n" +
 	"\x15ListTemplatesResponse\x128\n" +
 	"\ttemplates\x18\x01 \x03(\v2\x1a.messaging.v1.TemplateInfoR\ttemplates\"\x8a\x01\n" +
@@ -2317,9 +2203,10 @@ const file_messaging_v1_admin_request_response_proto_rawDesc = "" +
 	"\x14UpdatePolicyResponse\x120\n" +
 	"\x06policy\x18\x01 \x01(\v2\x18.messaging.v1.PolicyInfoR\x06policy\".\n" +
 	"\x13DeletePolicyRequest\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"e\n" +
-	"\x13ListPoliciesRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\x03R\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\"v\n" +
+	"\x13ListPoliciesRequest\x12&\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x18@R\ttenantKey\x127\n" +
 	"\achannel\x18\x02 \x01(\x0e2\x1d.messaging.v1.TemplateChannelR\achannel\"L\n" +
 	"\x14ListPoliciesResponse\x124\n" +
 	"\bpolicies\x18\x01 \x03(\v2\x18.messaging.v1.PolicyInfoR\bpoliciesB\xb7\x01\n" +
@@ -2337,97 +2224,94 @@ func file_messaging_v1_admin_request_response_proto_rawDescGZIP() []byte {
 	return file_messaging_v1_admin_request_response_proto_rawDescData
 }
 
-var file_messaging_v1_admin_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
+var file_messaging_v1_admin_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 39)
 var file_messaging_v1_admin_request_response_proto_goTypes = []any{
-	(*CreateTenantConfigRequest)(nil),        // 0: messaging.v1.CreateTenantConfigRequest
-	(*CreateTenantConfigResponse)(nil),       // 1: messaging.v1.CreateTenantConfigResponse
-	(*GetTenantConfigRequest)(nil),           // 2: messaging.v1.GetTenantConfigRequest
-	(*GetTenantConfigResponse)(nil),          // 3: messaging.v1.GetTenantConfigResponse
-	(*UpdateTenantConfigRequest)(nil),        // 4: messaging.v1.UpdateTenantConfigRequest
-	(*UpdateTenantConfigResponse)(nil),       // 5: messaging.v1.UpdateTenantConfigResponse
-	(*RotateTenantConfigSecretRequest)(nil),  // 6: messaging.v1.RotateTenantConfigSecretRequest
-	(*RotateTenantConfigSecretResponse)(nil), // 7: messaging.v1.RotateTenantConfigSecretResponse
-	(*ListTenantConfigsRequest)(nil),         // 8: messaging.v1.ListTenantConfigsRequest
-	(*ListTenantConfigsResponse)(nil),        // 9: messaging.v1.ListTenantConfigsResponse
-	(*DeleteTenantConfigRequest)(nil),        // 10: messaging.v1.DeleteTenantConfigRequest
-	(*CreateChannelAccountRequest)(nil),      // 11: messaging.v1.CreateChannelAccountRequest
-	(*CreateChannelAccountResponse)(nil),     // 12: messaging.v1.CreateChannelAccountResponse
-	(*UpdateChannelAccountRequest)(nil),      // 13: messaging.v1.UpdateChannelAccountRequest
-	(*UpdateChannelAccountResponse)(nil),     // 14: messaging.v1.UpdateChannelAccountResponse
-	(*DeleteChannelAccountRequest)(nil),      // 15: messaging.v1.DeleteChannelAccountRequest
-	(*ListChannelAccountsRequest)(nil),       // 16: messaging.v1.ListChannelAccountsRequest
-	(*ListChannelAccountsResponse)(nil),      // 17: messaging.v1.ListChannelAccountsResponse
-	(*CreateSignatureRequest)(nil),           // 18: messaging.v1.CreateSignatureRequest
-	(*CreateSignatureResponse)(nil),          // 19: messaging.v1.CreateSignatureResponse
-	(*UpdateSignatureRequest)(nil),           // 20: messaging.v1.UpdateSignatureRequest
-	(*AccountIds)(nil),                       // 21: messaging.v1.AccountIds
-	(*UpdateSignatureResponse)(nil),          // 22: messaging.v1.UpdateSignatureResponse
-	(*DeleteSignatureRequest)(nil),           // 23: messaging.v1.DeleteSignatureRequest
-	(*ListSignaturesRequest)(nil),            // 24: messaging.v1.ListSignaturesRequest
-	(*ListSignaturesResponse)(nil),           // 25: messaging.v1.ListSignaturesResponse
-	(*CreateTemplateRequest)(nil),            // 26: messaging.v1.CreateTemplateRequest
-	(*CreateTemplateResponse)(nil),           // 27: messaging.v1.CreateTemplateResponse
-	(*UpdateTemplateRequest)(nil),            // 28: messaging.v1.UpdateTemplateRequest
-	(*UpdateTemplateResponse)(nil),           // 29: messaging.v1.UpdateTemplateResponse
-	(*DeleteTemplateRequest)(nil),            // 30: messaging.v1.DeleteTemplateRequest
-	(*ListTemplatesRequest)(nil),             // 31: messaging.v1.ListTemplatesRequest
-	(*ListTemplatesResponse)(nil),            // 32: messaging.v1.ListTemplatesResponse
-	(*PolicyScene)(nil),                      // 33: messaging.v1.PolicyScene
-	(*CreatePolicyRequest)(nil),              // 34: messaging.v1.CreatePolicyRequest
-	(*CreatePolicyResponse)(nil),             // 35: messaging.v1.CreatePolicyResponse
-	(*UpdatePolicyRequest)(nil),              // 36: messaging.v1.UpdatePolicyRequest
-	(*UpdatePolicyResponse)(nil),             // 37: messaging.v1.UpdatePolicyResponse
-	(*DeletePolicyRequest)(nil),              // 38: messaging.v1.DeletePolicyRequest
-	(*ListPoliciesRequest)(nil),              // 39: messaging.v1.ListPoliciesRequest
-	(*ListPoliciesResponse)(nil),             // 40: messaging.v1.ListPoliciesResponse
-	(*MessageTenantConfigInfo)(nil),          // 41: messaging.v1.MessageTenantConfigInfo
-	(*ChannelAccountCredentials)(nil),        // 42: messaging.v1.ChannelAccountCredentials
-	(*ChannelAccountInfo)(nil),               // 43: messaging.v1.ChannelAccountInfo
-	(*SignatureInfo)(nil),                    // 44: messaging.v1.SignatureInfo
-	(*TemplateInfo)(nil),                     // 45: messaging.v1.TemplateInfo
-	(TemplateChannel)(0),                     // 46: messaging.v1.TemplateChannel
-	(EmailScene)(0),                          // 47: messaging.v1.EmailScene
-	(SmsScene)(0),                            // 48: messaging.v1.SmsScene
-	(*RouteRule)(nil),                        // 49: messaging.v1.RouteRule
-	(*PolicyInfo)(nil),                       // 50: messaging.v1.PolicyInfo
+	(*CreateTenantConfigRequest)(nil),    // 0: messaging.v1.CreateTenantConfigRequest
+	(*CreateTenantConfigResponse)(nil),   // 1: messaging.v1.CreateTenantConfigResponse
+	(*GetTenantConfigRequest)(nil),       // 2: messaging.v1.GetTenantConfigRequest
+	(*GetTenantConfigResponse)(nil),      // 3: messaging.v1.GetTenantConfigResponse
+	(*UpdateTenantConfigRequest)(nil),    // 4: messaging.v1.UpdateTenantConfigRequest
+	(*UpdateTenantConfigResponse)(nil),   // 5: messaging.v1.UpdateTenantConfigResponse
+	(*ListTenantConfigsRequest)(nil),     // 6: messaging.v1.ListTenantConfigsRequest
+	(*ListTenantConfigsResponse)(nil),    // 7: messaging.v1.ListTenantConfigsResponse
+	(*DeleteTenantConfigRequest)(nil),    // 8: messaging.v1.DeleteTenantConfigRequest
+	(*CreateChannelAccountRequest)(nil),  // 9: messaging.v1.CreateChannelAccountRequest
+	(*CreateChannelAccountResponse)(nil), // 10: messaging.v1.CreateChannelAccountResponse
+	(*UpdateChannelAccountRequest)(nil),  // 11: messaging.v1.UpdateChannelAccountRequest
+	(*UpdateChannelAccountResponse)(nil), // 12: messaging.v1.UpdateChannelAccountResponse
+	(*DeleteChannelAccountRequest)(nil),  // 13: messaging.v1.DeleteChannelAccountRequest
+	(*ListChannelAccountsRequest)(nil),   // 14: messaging.v1.ListChannelAccountsRequest
+	(*ListChannelAccountsResponse)(nil),  // 15: messaging.v1.ListChannelAccountsResponse
+	(*CreateSignatureRequest)(nil),       // 16: messaging.v1.CreateSignatureRequest
+	(*CreateSignatureResponse)(nil),      // 17: messaging.v1.CreateSignatureResponse
+	(*UpdateSignatureRequest)(nil),       // 18: messaging.v1.UpdateSignatureRequest
+	(*AccountIds)(nil),                   // 19: messaging.v1.AccountIds
+	(*UpdateSignatureResponse)(nil),      // 20: messaging.v1.UpdateSignatureResponse
+	(*DeleteSignatureRequest)(nil),       // 21: messaging.v1.DeleteSignatureRequest
+	(*ListSignaturesRequest)(nil),        // 22: messaging.v1.ListSignaturesRequest
+	(*ListSignaturesResponse)(nil),       // 23: messaging.v1.ListSignaturesResponse
+	(*CreateTemplateRequest)(nil),        // 24: messaging.v1.CreateTemplateRequest
+	(*CreateTemplateResponse)(nil),       // 25: messaging.v1.CreateTemplateResponse
+	(*UpdateTemplateRequest)(nil),        // 26: messaging.v1.UpdateTemplateRequest
+	(*UpdateTemplateResponse)(nil),       // 27: messaging.v1.UpdateTemplateResponse
+	(*DeleteTemplateRequest)(nil),        // 28: messaging.v1.DeleteTemplateRequest
+	(*ListTemplatesRequest)(nil),         // 29: messaging.v1.ListTemplatesRequest
+	(*ListTemplatesResponse)(nil),        // 30: messaging.v1.ListTemplatesResponse
+	(*PolicyScene)(nil),                  // 31: messaging.v1.PolicyScene
+	(*CreatePolicyRequest)(nil),          // 32: messaging.v1.CreatePolicyRequest
+	(*CreatePolicyResponse)(nil),         // 33: messaging.v1.CreatePolicyResponse
+	(*UpdatePolicyRequest)(nil),          // 34: messaging.v1.UpdatePolicyRequest
+	(*UpdatePolicyResponse)(nil),         // 35: messaging.v1.UpdatePolicyResponse
+	(*DeletePolicyRequest)(nil),          // 36: messaging.v1.DeletePolicyRequest
+	(*ListPoliciesRequest)(nil),          // 37: messaging.v1.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil),         // 38: messaging.v1.ListPoliciesResponse
+	(*MessageTenantConfigInfo)(nil),      // 39: messaging.v1.MessageTenantConfigInfo
+	(*ChannelAccountCredentials)(nil),    // 40: messaging.v1.ChannelAccountCredentials
+	(*ChannelAccountInfo)(nil),           // 41: messaging.v1.ChannelAccountInfo
+	(*SignatureInfo)(nil),                // 42: messaging.v1.SignatureInfo
+	(*TemplateInfo)(nil),                 // 43: messaging.v1.TemplateInfo
+	(TemplateChannel)(0),                 // 44: messaging.v1.TemplateChannel
+	(EmailScene)(0),                      // 45: messaging.v1.EmailScene
+	(SmsScene)(0),                        // 46: messaging.v1.SmsScene
+	(*RouteRule)(nil),                    // 47: messaging.v1.RouteRule
+	(*PolicyInfo)(nil),                   // 48: messaging.v1.PolicyInfo
 }
 var file_messaging_v1_admin_request_response_proto_depIdxs = []int32{
-	41, // 0: messaging.v1.CreateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
-	41, // 1: messaging.v1.GetTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
-	41, // 2: messaging.v1.UpdateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
-	41, // 3: messaging.v1.RotateTenantConfigSecretResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
-	41, // 4: messaging.v1.ListTenantConfigsResponse.configs:type_name -> messaging.v1.MessageTenantConfigInfo
-	42, // 5: messaging.v1.CreateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials
-	43, // 6: messaging.v1.CreateChannelAccountResponse.account:type_name -> messaging.v1.ChannelAccountInfo
-	42, // 7: messaging.v1.UpdateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials
-	43, // 8: messaging.v1.UpdateChannelAccountResponse.account:type_name -> messaging.v1.ChannelAccountInfo
-	43, // 9: messaging.v1.ListChannelAccountsResponse.accounts:type_name -> messaging.v1.ChannelAccountInfo
-	44, // 10: messaging.v1.CreateSignatureResponse.signature:type_name -> messaging.v1.SignatureInfo
-	21, // 11: messaging.v1.UpdateSignatureRequest.account_ids:type_name -> messaging.v1.AccountIds
-	44, // 12: messaging.v1.UpdateSignatureResponse.signature:type_name -> messaging.v1.SignatureInfo
-	44, // 13: messaging.v1.ListSignaturesResponse.signatures:type_name -> messaging.v1.SignatureInfo
-	45, // 14: messaging.v1.CreateTemplateRequest.template:type_name -> messaging.v1.TemplateInfo
-	45, // 15: messaging.v1.CreateTemplateResponse.template:type_name -> messaging.v1.TemplateInfo
-	45, // 16: messaging.v1.UpdateTemplateRequest.template:type_name -> messaging.v1.TemplateInfo
-	45, // 17: messaging.v1.UpdateTemplateResponse.template:type_name -> messaging.v1.TemplateInfo
-	46, // 18: messaging.v1.ListTemplatesRequest.channel:type_name -> messaging.v1.TemplateChannel
-	45, // 19: messaging.v1.ListTemplatesResponse.templates:type_name -> messaging.v1.TemplateInfo
-	47, // 20: messaging.v1.PolicyScene.email_scene:type_name -> messaging.v1.EmailScene
-	48, // 21: messaging.v1.PolicyScene.sms_scene:type_name -> messaging.v1.SmsScene
-	33, // 22: messaging.v1.CreatePolicyRequest.scene:type_name -> messaging.v1.PolicyScene
-	49, // 23: messaging.v1.CreatePolicyRequest.routes:type_name -> messaging.v1.RouteRule
-	49, // 24: messaging.v1.CreatePolicyRequest.intl_routes:type_name -> messaging.v1.RouteRule
-	50, // 25: messaging.v1.CreatePolicyResponse.policy:type_name -> messaging.v1.PolicyInfo
-	49, // 26: messaging.v1.UpdatePolicyRequest.routes:type_name -> messaging.v1.RouteRule
-	49, // 27: messaging.v1.UpdatePolicyRequest.intl_routes:type_name -> messaging.v1.RouteRule
-	50, // 28: messaging.v1.UpdatePolicyResponse.policy:type_name -> messaging.v1.PolicyInfo
-	46, // 29: messaging.v1.ListPoliciesRequest.channel:type_name -> messaging.v1.TemplateChannel
-	50, // 30: messaging.v1.ListPoliciesResponse.policies:type_name -> messaging.v1.PolicyInfo
-	31, // [31:31] is the sub-list for method output_type
-	31, // [31:31] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	39, // 0: messaging.v1.CreateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	39, // 1: messaging.v1.GetTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	39, // 2: messaging.v1.UpdateTenantConfigResponse.config:type_name -> messaging.v1.MessageTenantConfigInfo
+	39, // 3: messaging.v1.ListTenantConfigsResponse.configs:type_name -> messaging.v1.MessageTenantConfigInfo
+	40, // 4: messaging.v1.CreateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials
+	41, // 5: messaging.v1.CreateChannelAccountResponse.account:type_name -> messaging.v1.ChannelAccountInfo
+	40, // 6: messaging.v1.UpdateChannelAccountRequest.credentials:type_name -> messaging.v1.ChannelAccountCredentials
+	41, // 7: messaging.v1.UpdateChannelAccountResponse.account:type_name -> messaging.v1.ChannelAccountInfo
+	41, // 8: messaging.v1.ListChannelAccountsResponse.accounts:type_name -> messaging.v1.ChannelAccountInfo
+	42, // 9: messaging.v1.CreateSignatureResponse.signature:type_name -> messaging.v1.SignatureInfo
+	19, // 10: messaging.v1.UpdateSignatureRequest.account_ids:type_name -> messaging.v1.AccountIds
+	42, // 11: messaging.v1.UpdateSignatureResponse.signature:type_name -> messaging.v1.SignatureInfo
+	42, // 12: messaging.v1.ListSignaturesResponse.signatures:type_name -> messaging.v1.SignatureInfo
+	43, // 13: messaging.v1.CreateTemplateRequest.template:type_name -> messaging.v1.TemplateInfo
+	43, // 14: messaging.v1.CreateTemplateResponse.template:type_name -> messaging.v1.TemplateInfo
+	43, // 15: messaging.v1.UpdateTemplateRequest.template:type_name -> messaging.v1.TemplateInfo
+	43, // 16: messaging.v1.UpdateTemplateResponse.template:type_name -> messaging.v1.TemplateInfo
+	44, // 17: messaging.v1.ListTemplatesRequest.channel:type_name -> messaging.v1.TemplateChannel
+	43, // 18: messaging.v1.ListTemplatesResponse.templates:type_name -> messaging.v1.TemplateInfo
+	45, // 19: messaging.v1.PolicyScene.email_scene:type_name -> messaging.v1.EmailScene
+	46, // 20: messaging.v1.PolicyScene.sms_scene:type_name -> messaging.v1.SmsScene
+	31, // 21: messaging.v1.CreatePolicyRequest.scene:type_name -> messaging.v1.PolicyScene
+	47, // 22: messaging.v1.CreatePolicyRequest.routes:type_name -> messaging.v1.RouteRule
+	47, // 23: messaging.v1.CreatePolicyRequest.intl_routes:type_name -> messaging.v1.RouteRule
+	48, // 24: messaging.v1.CreatePolicyResponse.policy:type_name -> messaging.v1.PolicyInfo
+	47, // 25: messaging.v1.UpdatePolicyRequest.routes:type_name -> messaging.v1.RouteRule
+	47, // 26: messaging.v1.UpdatePolicyRequest.intl_routes:type_name -> messaging.v1.RouteRule
+	48, // 27: messaging.v1.UpdatePolicyResponse.policy:type_name -> messaging.v1.PolicyInfo
+	44, // 28: messaging.v1.ListPoliciesRequest.channel:type_name -> messaging.v1.TemplateChannel
+	48, // 29: messaging.v1.ListPoliciesResponse.policies:type_name -> messaging.v1.PolicyInfo
+	30, // [30:30] is the sub-list for method output_type
+	30, // [30:30] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_messaging_v1_admin_request_response_proto_init() }
@@ -2438,20 +2322,20 @@ func file_messaging_v1_admin_request_response_proto_init() {
 	file_messaging_v1_admin_proto_init()
 	file_messaging_v1_enums_proto_init()
 	file_messaging_v1_admin_request_response_proto_msgTypes[4].OneofWrappers = []any{}
-	file_messaging_v1_admin_request_response_proto_msgTypes[13].OneofWrappers = []any{}
-	file_messaging_v1_admin_request_response_proto_msgTypes[20].OneofWrappers = []any{}
-	file_messaging_v1_admin_request_response_proto_msgTypes[33].OneofWrappers = []any{
+	file_messaging_v1_admin_request_response_proto_msgTypes[11].OneofWrappers = []any{}
+	file_messaging_v1_admin_request_response_proto_msgTypes[18].OneofWrappers = []any{}
+	file_messaging_v1_admin_request_response_proto_msgTypes[31].OneofWrappers = []any{
 		(*PolicyScene_EmailScene)(nil),
 		(*PolicyScene_SmsScene)(nil),
 	}
-	file_messaging_v1_admin_request_response_proto_msgTypes[36].OneofWrappers = []any{}
+	file_messaging_v1_admin_request_response_proto_msgTypes[34].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_messaging_v1_admin_request_response_proto_rawDesc), len(file_messaging_v1_admin_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   41,
+			NumMessages:   39,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

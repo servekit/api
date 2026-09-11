@@ -86,7 +86,6 @@ const (
 	UserService_CreateApp_FullMethodName              = "/user.v1.UserService/CreateApp"
 	UserService_GetApp_FullMethodName                 = "/user.v1.UserService/GetApp"
 	UserService_UpdateApp_FullMethodName              = "/user.v1.UserService/UpdateApp"
-	UserService_RotateAppSecret_FullMethodName        = "/user.v1.UserService/RotateAppSecret"
 	UserService_ListApps_FullMethodName               = "/user.v1.UserService/ListApps"
 	UserService_DeleteApp_FullMethodName              = "/user.v1.UserService/DeleteApp"
 )
@@ -362,9 +361,6 @@ type UserServiceClient interface {
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppResponse, error)
 	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppResponse, error)
-	// RotateAppSecret is retired (the credential column was dropped with the
-	// ④ window close); it answers SECRET_RETIRED-style errors.
-	RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.
 	ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error)
 	// DeleteApp removes the tenant; refused while users belong to it.
@@ -1009,16 +1005,6 @@ func (c *userServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest,
 	return out, nil
 }
 
-func (c *userServiceClient) RotateAppSecret(ctx context.Context, in *RotateAppSecretRequest, opts ...grpc.CallOption) (*RotateAppSecretResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateAppSecretResponse)
-	err := c.cc.Invoke(ctx, UserService_RotateAppSecret_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListAppsResponse)
@@ -1310,9 +1296,6 @@ type UserServiceServer interface {
 	GetApp(context.Context, *GetAppRequest) (*GetAppResponse, error)
 	// UpdateApp edits mutable fields; tenant_key is immutable.
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error)
-	// RotateAppSecret is retired (the credential column was dropped with the
-	// ④ window close); it answers SECRET_RETIRED-style errors.
-	RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error)
 	// ListApps — the tenant registry is low-cardinality; no paging.
 	ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error)
 	// DeleteApp removes the tenant; refused while users belong to it.
@@ -1515,9 +1498,6 @@ func (UnimplementedUserServiceServer) GetApp(context.Context, *GetAppRequest) (*
 }
 func (UnimplementedUserServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateApp not implemented")
-}
-func (UnimplementedUserServiceServer) RotateAppSecret(context.Context, *RotateAppSecretRequest) (*RotateAppSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateAppSecret not implemented")
 }
 func (UnimplementedUserServiceServer) ListApps(context.Context, *ListAppsRequest) (*ListAppsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListApps not implemented")
@@ -2680,24 +2660,6 @@ func _UserService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_RotateAppSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateAppSecretRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).RotateAppSecret(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_RotateAppSecret_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RotateAppSecret(ctx, req.(*RotateAppSecretRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_ListApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListAppsRequest)
 	if err := dec(in); err != nil {
@@ -2992,10 +2954,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateApp",
 			Handler:    _UserService_UpdateApp_Handler,
-		},
-		{
-			MethodName: "RotateAppSecret",
-			Handler:    _UserService_RotateAppSecret_Handler,
 		},
 		{
 			MethodName: "ListApps",

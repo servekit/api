@@ -59,11 +59,6 @@ service TelemetryAdminService {
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse);
 
-  // RotateTenantConfigSecret is retired (the credential column was dropped
-  // with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
-  // rotate via RotateToken.
-  rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
-
   rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
 
   rpc CreateSigningKey(CreateSigningKeyRequest) returns (CreateSigningKeyResponse);

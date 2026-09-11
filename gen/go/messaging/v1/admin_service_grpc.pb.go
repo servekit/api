@@ -34,28 +34,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MessageAdminService_CreateTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/CreateTenantConfig"
-	MessageAdminService_GetTenantConfig_FullMethodName          = "/messaging.v1.MessageAdminService/GetTenantConfig"
-	MessageAdminService_UpdateTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/UpdateTenantConfig"
-	MessageAdminService_RotateTenantConfigSecret_FullMethodName = "/messaging.v1.MessageAdminService/RotateTenantConfigSecret"
-	MessageAdminService_ListTenantConfigs_FullMethodName        = "/messaging.v1.MessageAdminService/ListTenantConfigs"
-	MessageAdminService_DeleteTenantConfig_FullMethodName       = "/messaging.v1.MessageAdminService/DeleteTenantConfig"
-	MessageAdminService_CreateChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/CreateChannelAccount"
-	MessageAdminService_UpdateChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/UpdateChannelAccount"
-	MessageAdminService_DeleteChannelAccount_FullMethodName     = "/messaging.v1.MessageAdminService/DeleteChannelAccount"
-	MessageAdminService_ListChannelAccounts_FullMethodName      = "/messaging.v1.MessageAdminService/ListChannelAccounts"
-	MessageAdminService_CreateSignature_FullMethodName          = "/messaging.v1.MessageAdminService/CreateSignature"
-	MessageAdminService_UpdateSignature_FullMethodName          = "/messaging.v1.MessageAdminService/UpdateSignature"
-	MessageAdminService_DeleteSignature_FullMethodName          = "/messaging.v1.MessageAdminService/DeleteSignature"
-	MessageAdminService_ListSignatures_FullMethodName           = "/messaging.v1.MessageAdminService/ListSignatures"
-	MessageAdminService_CreateTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/CreateTemplate"
-	MessageAdminService_UpdateTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/UpdateTemplate"
-	MessageAdminService_DeleteTemplate_FullMethodName           = "/messaging.v1.MessageAdminService/DeleteTemplate"
-	MessageAdminService_ListTemplates_FullMethodName            = "/messaging.v1.MessageAdminService/ListTemplates"
-	MessageAdminService_CreatePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/CreatePolicy"
-	MessageAdminService_UpdatePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/UpdatePolicy"
-	MessageAdminService_DeletePolicy_FullMethodName             = "/messaging.v1.MessageAdminService/DeletePolicy"
-	MessageAdminService_ListPolicies_FullMethodName             = "/messaging.v1.MessageAdminService/ListPolicies"
+	MessageAdminService_CreateTenantConfig_FullMethodName   = "/messaging.v1.MessageAdminService/CreateTenantConfig"
+	MessageAdminService_GetTenantConfig_FullMethodName      = "/messaging.v1.MessageAdminService/GetTenantConfig"
+	MessageAdminService_UpdateTenantConfig_FullMethodName   = "/messaging.v1.MessageAdminService/UpdateTenantConfig"
+	MessageAdminService_ListTenantConfigs_FullMethodName    = "/messaging.v1.MessageAdminService/ListTenantConfigs"
+	MessageAdminService_DeleteTenantConfig_FullMethodName   = "/messaging.v1.MessageAdminService/DeleteTenantConfig"
+	MessageAdminService_CreateChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/CreateChannelAccount"
+	MessageAdminService_UpdateChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/UpdateChannelAccount"
+	MessageAdminService_DeleteChannelAccount_FullMethodName = "/messaging.v1.MessageAdminService/DeleteChannelAccount"
+	MessageAdminService_ListChannelAccounts_FullMethodName  = "/messaging.v1.MessageAdminService/ListChannelAccounts"
+	MessageAdminService_CreateSignature_FullMethodName      = "/messaging.v1.MessageAdminService/CreateSignature"
+	MessageAdminService_UpdateSignature_FullMethodName      = "/messaging.v1.MessageAdminService/UpdateSignature"
+	MessageAdminService_DeleteSignature_FullMethodName      = "/messaging.v1.MessageAdminService/DeleteSignature"
+	MessageAdminService_ListSignatures_FullMethodName       = "/messaging.v1.MessageAdminService/ListSignatures"
+	MessageAdminService_CreateTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/CreateTemplate"
+	MessageAdminService_UpdateTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/UpdateTemplate"
+	MessageAdminService_DeleteTemplate_FullMethodName       = "/messaging.v1.MessageAdminService/DeleteTemplate"
+	MessageAdminService_ListTemplates_FullMethodName        = "/messaging.v1.MessageAdminService/ListTemplates"
+	MessageAdminService_CreatePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/CreatePolicy"
+	MessageAdminService_UpdatePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/UpdatePolicy"
+	MessageAdminService_DeletePolicy_FullMethodName         = "/messaging.v1.MessageAdminService/DeletePolicy"
+	MessageAdminService_ListPolicies_FullMethodName         = "/messaging.v1.MessageAdminService/ListPolicies"
 )
 
 // MessageAdminServiceClient is the client API for MessageAdminService service.
@@ -70,9 +69,6 @@ type MessageAdminServiceClient interface {
 	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
 	// limits).
 	UpdateTenantConfig(ctx context.Context, in *UpdateTenantConfigRequest, opts ...grpc.CallOption) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers SECRET_RETIRED.
-	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs returns the tenant configs in the caller's scope (no
 	// pagination — low cardinality).
 	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
@@ -101,7 +97,8 @@ type MessageAdminServiceClient interface {
 	UpdateTemplate(ctx context.Context, in *UpdateTemplateRequest, opts ...grpc.CallOption) (*UpdateTemplateResponse, error)
 	// DeleteTemplate soft-deletes a template.
 	DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ListTemplates filters by app (0 = all) and channel (0 = all).
+	// ListTemplates filters by tenant (empty = all: shared + every tenant's
+	// private, scope-permitted) and channel (0 = all).
 	ListTemplates(ctx context.Context, in *ListTemplatesRequest, opts ...grpc.CallOption) (*ListTemplatesResponse, error)
 	// CreatePolicy binds (app, channel, scene) → template + route chains.
 	CreatePolicy(ctx context.Context, in *CreatePolicyRequest, opts ...grpc.CallOption) (*CreatePolicyResponse, error)
@@ -109,7 +106,8 @@ type MessageAdminServiceClient interface {
 	UpdatePolicy(ctx context.Context, in *UpdatePolicyRequest, opts ...grpc.CallOption) (*UpdatePolicyResponse, error)
 	// DeletePolicy removes the binding; sends fail closed from then on.
 	DeletePolicy(ctx context.Context, in *DeletePolicyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ListPolicies filters by app (0 = all) and channel (0 = all).
+	// ListPolicies filters by tenant (empty = all, scope-permitted) and
+	// channel (0 = all).
 	ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error)
 }
 
@@ -145,16 +143,6 @@ func (c *messageAdminServiceClient) UpdateTenantConfig(ctx context.Context, in *
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateTenantConfigResponse)
 	err := c.cc.Invoke(ctx, MessageAdminService_UpdateTenantConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageAdminServiceClient) RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateTenantConfigSecretResponse)
-	err := c.cc.Invoke(ctx, MessageAdminService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -353,9 +341,6 @@ type MessageAdminServiceServer interface {
 	// UpdateTenantConfig tweaks config metadata (name / disabled / daily
 	// limits).
 	UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers SECRET_RETIRED.
-	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	// ListTenantConfigs returns the tenant configs in the caller's scope (no
 	// pagination — low cardinality).
 	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
@@ -384,7 +369,8 @@ type MessageAdminServiceServer interface {
 	UpdateTemplate(context.Context, *UpdateTemplateRequest) (*UpdateTemplateResponse, error)
 	// DeleteTemplate soft-deletes a template.
 	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*emptypb.Empty, error)
-	// ListTemplates filters by app (0 = all) and channel (0 = all).
+	// ListTemplates filters by tenant (empty = all: shared + every tenant's
+	// private, scope-permitted) and channel (0 = all).
 	ListTemplates(context.Context, *ListTemplatesRequest) (*ListTemplatesResponse, error)
 	// CreatePolicy binds (app, channel, scene) → template + route chains.
 	CreatePolicy(context.Context, *CreatePolicyRequest) (*CreatePolicyResponse, error)
@@ -392,7 +378,8 @@ type MessageAdminServiceServer interface {
 	UpdatePolicy(context.Context, *UpdatePolicyRequest) (*UpdatePolicyResponse, error)
 	// DeletePolicy removes the binding; sends fail closed from then on.
 	DeletePolicy(context.Context, *DeletePolicyRequest) (*emptypb.Empty, error)
-	// ListPolicies filters by app (0 = all) and channel (0 = all).
+	// ListPolicies filters by tenant (empty = all, scope-permitted) and
+	// channel (0 = all).
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	mustEmbedUnimplementedMessageAdminServiceServer()
 }
@@ -412,9 +399,6 @@ func (UnimplementedMessageAdminServiceServer) GetTenantConfig(context.Context, *
 }
 func (UnimplementedMessageAdminServiceServer) UpdateTenantConfig(context.Context, *UpdateTenantConfigRequest) (*UpdateTenantConfigResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateTenantConfig not implemented")
-}
-func (UnimplementedMessageAdminServiceServer) RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
 func (UnimplementedMessageAdminServiceServer) ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTenantConfigs not implemented")
@@ -541,24 +525,6 @@ func _MessageAdminService_UpdateTenantConfig_Handler(srv interface{}, ctx contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageAdminServiceServer).UpdateTenantConfig(ctx, req.(*UpdateTenantConfigRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageAdminService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateTenantConfigSecretRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageAdminServiceServer).RotateTenantConfigSecret(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MessageAdminService_RotateTenantConfigSecret_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageAdminServiceServer).RotateTenantConfigSecret(ctx, req.(*RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -905,10 +871,6 @@ var MessageAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateTenantConfig",
 			Handler:    _MessageAdminService_UpdateTenantConfig_Handler,
-		},
-		{
-			MethodName: "RotateTenantConfigSecret",
-			Handler:    _MessageAdminService_RotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "ListTenantConfigs",

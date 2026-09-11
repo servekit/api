@@ -12390,14 +12390,9 @@ func (x *CreateTenantConfigRequest) GetTenantKey() string {
 }
 
 type CreateTenantConfigResponse struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Config *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	Token  string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	// app_secret is RETIRED (④ window close): always empty — the column
-	// was dropped, no surface (create/get/list) ever echoes a secret, and
-	// rotation answers with a retired error. Mirrors
-	// TenantConfig.app_secret.
-	AppSecret     string `protobuf:"bytes,3,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Config        *TenantConfig          `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
+	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -12442,13 +12437,6 @@ func (x *CreateTenantConfigResponse) GetConfig() *TenantConfig {
 func (x *CreateTenantConfigResponse) GetToken() string {
 	if x != nil {
 		return x.Token
-	}
-	return ""
-}
-
-func (x *CreateTenantConfigResponse) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
 	}
 	return ""
 }
@@ -14541,12 +14529,10 @@ const file_testkit_v1_request_response_proto_rawDesc = "" +
 	"\x05email\x18\x03 \x01(\tB\n" +
 	"\xbaH\a\xd8\x01\x01r\x02`\x01R\x05email\x12&\n" +
 	"\n" +
-	"tenant_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"\x83\x01\n" +
+	"tenant_key\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"d\n" +
 	"\x1aCreateTenantConfigResponse\x120\n" +
 	"\x06config\x18\x01 \x01(\v2\x18.testkit.v1.TenantConfigR\x06config\x12\x14\n" +
-	"\x05token\x18\x02 \x01(\tR\x05token\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x03 \x01(\tR\tappSecret\"B\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\"B\n" +
 	"\x16GetTenantConfigRequest\x12(\n" +
 	"\n" +
 	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"\xaa\x02\n" +

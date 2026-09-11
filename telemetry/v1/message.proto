@@ -47,11 +47,6 @@ message TenantConfig {
   // Disabled apps fail every ingest call immediately (401) — the operator
   // kill-switch; tokens and signing keys stay in place for re-enable.
   bool disabled = 14;
-  // app_secret is RETIRED (④ window close): the column was dropped —
-  // backend callers authenticate via the trusted x-tenant-key injected by
-  // the portal/doors, and the raw client endpoints (/v1/e/…) keep using
-  // ingest tokens. Always empty.
-  string app_secret = 15;
   // tenant_key is the tenant this app maps to (phase ③ dual-stack window):
   // the UUID row is the tenant's config row. Empty on rows not yet
   // backfilled — the service falls back to the app_key literal until T10

@@ -4171,13 +4171,8 @@ type TenantConfig struct {
 	RawRetentionDays int32                  `protobuf:"varint,10,opt,name=raw_retention_days,json=rawRetentionDays,proto3" json:"raw_retention_days,omitempty"`
 	DailyEventBudget int64                  `protobuf:"varint,13,opt,name=daily_event_budget,json=dailyEventBudget,proto3" json:"daily_event_budget,omitempty"`
 	Disabled         bool                   `protobuf:"varint,14,opt,name=disabled,proto3" json:"disabled,omitempty"`
-	// app_secret is RETIRED (④ window close): the column was dropped —
-	// backend callers authenticate via the trusted x-tenant-key injected by
-	// the portal/doors, and the raw client endpoints (/v1/e/…) keep using
-	// ingest tokens. Always empty. Mirrors telemetry.v1.TenantConfig.
-	AppSecret string                 `protobuf:"bytes,15,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CreatedAt        *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt        *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	// tenant_key names the tenant this config row belongs to (phase ④ T6).
 	TenantKey     string `protobuf:"bytes,16,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4296,13 +4291,6 @@ func (x *TenantConfig) GetDisabled() bool {
 		return x.Disabled
 	}
 	return false
-}
-
-func (x *TenantConfig) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
 }
 
 func (x *TenantConfig) GetCreatedAt() *timestamppb.Timestamp {
@@ -5111,7 +5099,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\baccepted\x18\x04 \x01(\bR\baccepted\x12\x1f\n" +
 	"\vdrop_reason\x18\x05 \x01(\tR\n" +
-	"dropReason\"\x8a\x05\n" +
+	"dropReason\"\xeb\x04\n" +
 	"\fTenantConfig\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -5127,9 +5115,7 @@ const file_testkit_v1_message_proto_rawDesc = "" +
 	"\x12raw_retention_days\x18\n" +
 	" \x01(\x05R\x10rawRetentionDays\x12,\n" +
 	"\x12daily_event_budget\x18\r \x01(\x03R\x10dailyEventBudget\x12\x1a\n" +
-	"\bdisabled\x18\x0e \x01(\bR\bdisabled\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x0f \x01(\tR\tappSecret\x129\n" +
+	"\bdisabled\x18\x0e \x01(\bR\bdisabled\x129\n" +
 	"\n" +
 	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +

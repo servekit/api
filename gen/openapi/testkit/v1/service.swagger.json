@@ -909,44 +909,6 @@
         ]
       }
     },
-    "/api/v1/admin/storage/tenant-configs/{tenantKey}:rotateSecret": {
-      "post": {
-        "operationId": "AdminRotateTenantConfigSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1AdminRotateTenantConfigSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "tenantKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceAdminRotateTenantConfigSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/admin/storage/tenant-configs:ensure": {
       "post": {
         "operationId": "AdminEnsureTenantConfig",
@@ -2977,44 +2939,6 @@
         ]
       }
     },
-    "/api/v1/license/admin/tenant-configs/{tenantKey}:rotateSecret": {
-      "post": {
-        "operationId": "LicenseRotateTenantConfigSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/licenseV1RotateTenantConfigSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "tenantKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceLicenseRotateTenantConfigSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/license/admin/trials/{fingerprintId}": {
       "get": {
         "operationId": "ShowTrial",
@@ -3363,12 +3287,11 @@
         },
         "parameters": [
           {
-            "name": "appId",
-            "description": "app_id 0 = all apps.",
+            "name": "tenantKey",
+            "description": "tenant_key filters to one tenant's policies; empty = all\n(scope-permitted).",
             "in": "query",
             "required": false,
-            "type": "string",
-            "format": "int64"
+            "type": "string"
           },
           {
             "name": "channel",
@@ -3628,12 +3551,11 @@
         },
         "parameters": [
           {
-            "name": "appId",
-            "description": "app_id 0 = all templates (shared + every app's).",
+            "name": "tenantKey",
+            "description": "tenant_key filters to one tenant's private templates plus the shared\nones; empty = all templates (shared + every tenant's, scope-permitted).",
             "in": "query",
             "required": false,
-            "type": "string",
-            "format": "int64"
+            "type": "string"
           },
           {
             "name": "channel",
@@ -3895,45 +3817,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestkitServiceMessageUpdateTenantConfigBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/message/admin/tenant-configs/{id}/secret:rotate": {
-      "post": {
-        "operationId": "MessageRotateTenantConfigSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/messagingV1RotateTenantConfigSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceMessageRotateTenantConfigSecretBody"
             }
           }
         ],
@@ -7191,44 +7074,6 @@
         ]
       }
     },
-    "/api/v1/telemetry/admin/tenant-configs/{tenantKey}:rotateSecret": {
-      "post": {
-        "operationId": "RotateTenantConfigSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/telemetryV1RotateTenantConfigSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "tenantKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceRotateTenantConfigSecretBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
     "/api/v1/telemetry/ingest": {
       "post": {
         "operationId": "Ingest",
@@ -7401,44 +7246,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestkitServiceUserUpdateAppBody"
-            }
-          }
-        ],
-        "tags": [
-          "TestkitService"
-        ]
-      }
-    },
-    "/api/v1/user/admin/apps/{tenantKey}:rotateSecret": {
-      "post": {
-        "operationId": "UserRotateAppSecret",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1RotateAppSecretResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "tenantKey",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TestkitServiceUserRotateAppSecretBody"
             }
           }
         ],
@@ -8188,9 +7995,6 @@
         }
       }
     },
-    "TestkitServiceAdminRotateTenantConfigSecretBody": {
-      "type": "object"
-    },
     "TestkitServiceAdminUpdateProviderBody": {
       "type": "object",
       "properties": {
@@ -8361,9 +8165,6 @@
         }
       }
     },
-    "TestkitServiceLicenseRotateTenantConfigSecretBody": {
-      "type": "object"
-    },
     "TestkitServiceLicenseUpdateTenantConfigBody": {
       "type": "object",
       "properties": {
@@ -8375,10 +8176,6 @@
         }
       },
       "description": "UpdateTenantConfigRequest edits mutable fields; the row's identity is\nimmutable. Absent optional fields keep their current values."
-    },
-    "TestkitServiceMessageRotateTenantConfigSecretBody": {
-      "type": "object",
-      "description": "RotateTenantConfigSecret is retired (the app_secret column was dropped\nwith the ④ window close); the RPC answers SECRET_RETIRED."
     },
     "TestkitServiceMessageUpdateChannelAccountBody": {
       "type": "object",
@@ -8559,10 +8356,6 @@
         }
       }
     },
-    "TestkitServiceRotateTenantConfigSecretBody": {
-      "type": "object",
-      "description": "RotateTenantConfigSecretRequest is retired (the app_secret column was\ndropped with the ④ window close); the RPC answers SECRET_RETIRED."
-    },
     "TestkitServiceRotateTokenBody": {
       "type": "object"
     },
@@ -8736,9 +8529,6 @@
         }
       }
     },
-    "TestkitServiceUserRotateAppSecretBody": {
-      "type": "object"
-    },
     "TestkitServiceUserUpdateAppBody": {
       "type": "object",
       "properties": {
@@ -8769,10 +8559,6 @@
       "properties": {
         "config": {
           "$ref": "#/definitions/v1LicenseTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -8793,18 +8579,6 @@
             "type": "object",
             "$ref": "#/definitions/v1LicenseTenantConfigInfo"
           }
-        }
-      }
-    },
-    "licenseV1RotateTenantConfigSecretResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1LicenseTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close) — the RPC answers a BadRequest\nretirement error instead of returning this field."
         }
       }
     },
@@ -8842,13 +8616,9 @@
       "properties": {
         "config": {
           "$ref": "#/definitions/v1MessageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       },
-      "description": "CreateTenantConfigResponse returns the created config row (no secret —\nthe credential column was retired with the ④ window close)."
+      "description": "CreateTenantConfigResponse returns the created config row (no secret —\nthe credential column was dropped with the ④ window close)."
     },
     "messagingV1GetTenantConfigResponse": {
       "type": "object",
@@ -8867,18 +8637,6 @@
             "type": "object",
             "$ref": "#/definitions/v1MessageTenantConfigInfo"
           }
-        }
-      }
-    },
-    "messagingV1RotateTenantConfigSecretResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1MessageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close); the RPC errors instead of\nreturning this field."
         }
       }
     },
@@ -8989,18 +8747,6 @@
         }
       }
     },
-    "telemetryV1RotateTenantConfigSecretResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/telemetryV1TenantConfig"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nSECRET_RETIRED instead of returning this field."
-        }
-      }
-    },
     "telemetryV1TenantConfig": {
       "type": "object",
       "properties": {
@@ -9054,10 +8800,6 @@
         "disabled": {
           "type": "boolean",
           "description": "Disabled apps fail every ingest call immediately (401) — the operator\nkill-switch; tokens and signing keys stay in place for re-enable."
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): the column was dropped —\nbackend callers authenticate via the trusted x-tenant-key injected by\nthe portal/doors, and the raw client endpoints (/v1/e/…) keep using\ningest tokens. Always empty."
         },
         "tenantKey": {
           "type": "string",
@@ -9118,10 +8860,6 @@
         },
         "token": {
           "type": "string"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): always empty — the column\nwas dropped, no surface (create/get/list) ever echoes a secret, and\nrotation answers with a retired error. Mirrors\nTenantConfig.app_secret."
         }
       }
     },
@@ -9232,10 +8970,6 @@
         },
         "disabled": {
           "type": "boolean"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): the column was dropped —\nbackend callers authenticate via the trusted x-tenant-key injected by\nthe portal/doors, and the raw client endpoints (/v1/e/…) keep using\ningest tokens. Always empty. Mirrors telemetry.v1.TenantConfig."
         },
         "createdAt": {
           "type": "string",
@@ -9402,10 +9136,6 @@
       "properties": {
         "config": {
           "$ref": "#/definitions/v1StorageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -9609,18 +9339,6 @@
             "type": "object",
             "$ref": "#/definitions/v1StorageTenantConfigInfo"
           }
-        }
-      }
-    },
-    "v1AdminRotateTenantConfigSecretResponse": {
-      "type": "object",
-      "properties": {
-        "config": {
-          "$ref": "#/definitions/v1StorageTenantConfigInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nSECRET_RETIRED instead of returning this field."
         }
       }
     },
@@ -10278,10 +9996,6 @@
       "properties": {
         "app": {
           "$ref": "#/definitions/v1UserAppInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close); always empty."
         }
       }
     },
@@ -12010,10 +11724,6 @@
           "type": "string",
           "description": "app_key is the row's internal directory label (was the x-app-key\ncredential before the ④ window close); unique, immutable."
         },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore. Always empty."
-        },
         "name": {
           "type": "string"
         },
@@ -12754,10 +12464,6 @@
           "type": "string",
           "description": "app_key is the row's internal directory label (e.g. \"testkit\"; was the\nx-app-key credential before the ④ window close). Unique."
         },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
-        },
         "name": {
           "type": "string"
         },
@@ -13460,18 +13166,6 @@
         }
       }
     },
-    "v1RotateAppSecretResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1UserAppInfo"
-        },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close) — the RPC answers\nAPP_SECRET_RETIRED instead of returning this field."
-        }
-      }
-    },
     "v1RotateTokenResponse": {
       "type": "object",
       "properties": {
@@ -14147,10 +13841,6 @@
           "type": "string",
           "format": "int64"
         },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): config rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
-        },
         "tenantKey": {
           "type": "string",
           "description": "tenant_key is the tenant this app maps to (phase ③ dual-stack window).\nEmpty on rows not yet backfilled — the service falls back to the app_key\nliteral until T10 clears the empties. New tenants first seen on the\ntrusted path are lazily created with key_prefix \"{tenant_key}/\"."
@@ -14716,10 +14406,6 @@
           "type": "string",
           "description": "tenant_key identifies the tenant on every tenant-scoped surface; unique,\nimmutable after creation."
         },
-        "appSecret": {
-          "type": "string",
-          "description": "app_secret is RETIRED (④ window close): registry rows carry no\ncredential anymore; the data plane authenticates via the trusted\nx-tenant-key. Always empty."
-        },
         "name": {
           "type": "string"
         },
@@ -14736,7 +14422,7 @@
           "format": "date-time"
         }
       },
-      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). The data-plane credential is the trusted x-tenant-key\ninjected by the portal (the tenant IS the verified caller); the legacy\napp_secret columns were retired with the ④ window close — the field\nstays on the wire for compatibility and answers empty."
+      "description": "UserAppInfo is one tenant of the user platform (a calling application's\nuser directory). The data-plane credential is the trusted x-tenant-key\ninjected by the portal (the tenant IS the verified caller); the legacy\napp_secret column was dropped with the ④ window close (no wire field)."
     },
     "v1UserRole": {
       "type": "object",

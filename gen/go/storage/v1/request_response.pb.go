@@ -3652,10 +3652,8 @@ func (x *AdminEnsureTenantConfigRequest) GetTenantKey() string {
 }
 
 type AdminEnsureTenantConfigResponse struct {
-	state  protoimpl.MessageState   `protogen:"open.v1"`
-	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret is RETIRED (④ window close); always empty.
-	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Config        *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3695,13 +3693,6 @@ func (x *AdminEnsureTenantConfigResponse) GetConfig() *StorageTenantConfigInfo {
 		return x.Config
 	}
 	return nil
-}
-
-func (x *AdminEnsureTenantConfigResponse) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
 }
 
 type AdminGetTenantConfigRequest struct {
@@ -3909,104 +3900,6 @@ func (x *AdminUpdateTenantConfigResponse) GetConfig() *StorageTenantConfigInfo {
 	return nil
 }
 
-type AdminRotateTenantConfigSecretRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AdminRotateTenantConfigSecretRequest) Reset() {
-	*x = AdminRotateTenantConfigSecretRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[57]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AdminRotateTenantConfigSecretRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AdminRotateTenantConfigSecretRequest) ProtoMessage() {}
-
-func (x *AdminRotateTenantConfigSecretRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[57]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AdminRotateTenantConfigSecretRequest.ProtoReflect.Descriptor instead.
-func (*AdminRotateTenantConfigSecretRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{57}
-}
-
-func (x *AdminRotateTenantConfigSecretRequest) GetTenantKey() string {
-	if x != nil {
-		return x.TenantKey
-	}
-	return ""
-}
-
-type AdminRotateTenantConfigSecretResponse struct {
-	state  protoimpl.MessageState   `protogen:"open.v1"`
-	Config *StorageTenantConfigInfo `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	// app_secret is RETIRED (④ window close) — the RPC answers
-	// SECRET_RETIRED instead of returning this field.
-	AppSecret     string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AdminRotateTenantConfigSecretResponse) Reset() {
-	*x = AdminRotateTenantConfigSecretResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[58]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AdminRotateTenantConfigSecretResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AdminRotateTenantConfigSecretResponse) ProtoMessage() {}
-
-func (x *AdminRotateTenantConfigSecretResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[58]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AdminRotateTenantConfigSecretResponse.ProtoReflect.Descriptor instead.
-func (*AdminRotateTenantConfigSecretResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{58}
-}
-
-func (x *AdminRotateTenantConfigSecretResponse) GetConfig() *StorageTenantConfigInfo {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-func (x *AdminRotateTenantConfigSecretResponse) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
-	}
-	return ""
-}
-
 // AdminListTenantConfigsRequest — one row per tenant, low cardinality; no
 // paging.
 type AdminListTenantConfigsRequest struct {
@@ -4017,7 +3910,7 @@ type AdminListTenantConfigsRequest struct {
 
 func (x *AdminListTenantConfigsRequest) Reset() {
 	*x = AdminListTenantConfigsRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[59]
+	mi := &file_storage_v1_request_response_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4029,7 +3922,7 @@ func (x *AdminListTenantConfigsRequest) String() string {
 func (*AdminListTenantConfigsRequest) ProtoMessage() {}
 
 func (x *AdminListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[59]
+	mi := &file_storage_v1_request_response_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4042,7 +3935,7 @@ func (x *AdminListTenantConfigsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminListTenantConfigsRequest.ProtoReflect.Descriptor instead.
 func (*AdminListTenantConfigsRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{59}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{57}
 }
 
 type AdminListTenantConfigsResponse struct {
@@ -4054,7 +3947,7 @@ type AdminListTenantConfigsResponse struct {
 
 func (x *AdminListTenantConfigsResponse) Reset() {
 	*x = AdminListTenantConfigsResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[60]
+	mi := &file_storage_v1_request_response_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4066,7 +3959,7 @@ func (x *AdminListTenantConfigsResponse) String() string {
 func (*AdminListTenantConfigsResponse) ProtoMessage() {}
 
 func (x *AdminListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[60]
+	mi := &file_storage_v1_request_response_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4079,7 +3972,7 @@ func (x *AdminListTenantConfigsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminListTenantConfigsResponse.ProtoReflect.Descriptor instead.
 func (*AdminListTenantConfigsResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{60}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *AdminListTenantConfigsResponse) GetConfigs() []*StorageTenantConfigInfo {
@@ -4103,7 +3996,7 @@ type AdminDeleteTenantConfigRequest struct {
 
 func (x *AdminDeleteTenantConfigRequest) Reset() {
 	*x = AdminDeleteTenantConfigRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[61]
+	mi := &file_storage_v1_request_response_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4115,7 +4008,7 @@ func (x *AdminDeleteTenantConfigRequest) String() string {
 func (*AdminDeleteTenantConfigRequest) ProtoMessage() {}
 
 func (x *AdminDeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[61]
+	mi := &file_storage_v1_request_response_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4128,7 +4021,7 @@ func (x *AdminDeleteTenantConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminDeleteTenantConfigRequest.ProtoReflect.Descriptor instead.
 func (*AdminDeleteTenantConfigRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{61}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *AdminDeleteTenantConfigRequest) GetTenantKey() string {
@@ -4150,7 +4043,7 @@ type AdminSoftDeleteOwnerFilesRequest struct {
 
 func (x *AdminSoftDeleteOwnerFilesRequest) Reset() {
 	*x = AdminSoftDeleteOwnerFilesRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[62]
+	mi := &file_storage_v1_request_response_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4162,7 +4055,7 @@ func (x *AdminSoftDeleteOwnerFilesRequest) String() string {
 func (*AdminSoftDeleteOwnerFilesRequest) ProtoMessage() {}
 
 func (x *AdminSoftDeleteOwnerFilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[62]
+	mi := &file_storage_v1_request_response_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4175,7 +4068,7 @@ func (x *AdminSoftDeleteOwnerFilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminSoftDeleteOwnerFilesRequest.ProtoReflect.Descriptor instead.
 func (*AdminSoftDeleteOwnerFilesRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{62}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *AdminSoftDeleteOwnerFilesRequest) GetOwnerType() OwnerType {
@@ -4209,7 +4102,7 @@ type AdminSoftDeleteOwnerFilesResponse struct {
 
 func (x *AdminSoftDeleteOwnerFilesResponse) Reset() {
 	*x = AdminSoftDeleteOwnerFilesResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[63]
+	mi := &file_storage_v1_request_response_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4221,7 +4114,7 @@ func (x *AdminSoftDeleteOwnerFilesResponse) String() string {
 func (*AdminSoftDeleteOwnerFilesResponse) ProtoMessage() {}
 
 func (x *AdminSoftDeleteOwnerFilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[63]
+	mi := &file_storage_v1_request_response_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4234,7 +4127,7 @@ func (x *AdminSoftDeleteOwnerFilesResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use AdminSoftDeleteOwnerFilesResponse.ProtoReflect.Descriptor instead.
 func (*AdminSoftDeleteOwnerFilesResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{63}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *AdminSoftDeleteOwnerFilesResponse) GetFilesDeleted() int64 {
@@ -4263,7 +4156,7 @@ type AdminDeleteOwnerRequest struct {
 
 func (x *AdminDeleteOwnerRequest) Reset() {
 	*x = AdminDeleteOwnerRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[64]
+	mi := &file_storage_v1_request_response_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4275,7 +4168,7 @@ func (x *AdminDeleteOwnerRequest) String() string {
 func (*AdminDeleteOwnerRequest) ProtoMessage() {}
 
 func (x *AdminDeleteOwnerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[64]
+	mi := &file_storage_v1_request_response_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4288,7 +4181,7 @@ func (x *AdminDeleteOwnerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminDeleteOwnerRequest.ProtoReflect.Descriptor instead.
 func (*AdminDeleteOwnerRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{64}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *AdminDeleteOwnerRequest) GetOwnerType() OwnerType {
@@ -4322,7 +4215,7 @@ type AdminDeleteOwnerResponse struct {
 
 func (x *AdminDeleteOwnerResponse) Reset() {
 	*x = AdminDeleteOwnerResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[65]
+	mi := &file_storage_v1_request_response_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4334,7 +4227,7 @@ func (x *AdminDeleteOwnerResponse) String() string {
 func (*AdminDeleteOwnerResponse) ProtoMessage() {}
 
 func (x *AdminDeleteOwnerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[65]
+	mi := &file_storage_v1_request_response_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4347,7 +4240,7 @@ func (x *AdminDeleteOwnerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminDeleteOwnerResponse.ProtoReflect.Descriptor instead.
 func (*AdminDeleteOwnerResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{65}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *AdminDeleteOwnerResponse) GetFilesDeleted() int64 {
@@ -4379,7 +4272,7 @@ type ListMyAuditLogsRequest struct {
 
 func (x *ListMyAuditLogsRequest) Reset() {
 	*x = ListMyAuditLogsRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[66]
+	mi := &file_storage_v1_request_response_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4391,7 +4284,7 @@ func (x *ListMyAuditLogsRequest) String() string {
 func (*ListMyAuditLogsRequest) ProtoMessage() {}
 
 func (x *ListMyAuditLogsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[66]
+	mi := &file_storage_v1_request_response_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4404,7 +4297,7 @@ func (x *ListMyAuditLogsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyAuditLogsRequest.ProtoReflect.Descriptor instead.
 func (*ListMyAuditLogsRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{66}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *ListMyAuditLogsRequest) GetAction() AuditAction {
@@ -4467,7 +4360,7 @@ type ListMyAuditLogsResponse struct {
 
 func (x *ListMyAuditLogsResponse) Reset() {
 	*x = ListMyAuditLogsResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[67]
+	mi := &file_storage_v1_request_response_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4479,7 +4372,7 @@ func (x *ListMyAuditLogsResponse) String() string {
 func (*ListMyAuditLogsResponse) ProtoMessage() {}
 
 func (x *ListMyAuditLogsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[67]
+	mi := &file_storage_v1_request_response_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4492,7 +4385,7 @@ func (x *ListMyAuditLogsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMyAuditLogsResponse.ProtoReflect.Descriptor instead.
 func (*ListMyAuditLogsResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{67}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *ListMyAuditLogsResponse) GetLogs() []*AuditLogEntry {
@@ -4535,7 +4428,7 @@ type AdminListAuditLogsRequest struct {
 
 func (x *AdminListAuditLogsRequest) Reset() {
 	*x = AdminListAuditLogsRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[68]
+	mi := &file_storage_v1_request_response_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4547,7 +4440,7 @@ func (x *AdminListAuditLogsRequest) String() string {
 func (*AdminListAuditLogsRequest) ProtoMessage() {}
 
 func (x *AdminListAuditLogsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[68]
+	mi := &file_storage_v1_request_response_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4560,7 +4453,7 @@ func (x *AdminListAuditLogsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminListAuditLogsRequest.ProtoReflect.Descriptor instead.
 func (*AdminListAuditLogsRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{68}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *AdminListAuditLogsRequest) GetAction() AuditAction {
@@ -4651,7 +4544,7 @@ type AdminListAuditLogsResponse struct {
 
 func (x *AdminListAuditLogsResponse) Reset() {
 	*x = AdminListAuditLogsResponse{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[69]
+	mi := &file_storage_v1_request_response_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4663,7 +4556,7 @@ func (x *AdminListAuditLogsResponse) String() string {
 func (*AdminListAuditLogsResponse) ProtoMessage() {}
 
 func (x *AdminListAuditLogsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[69]
+	mi := &file_storage_v1_request_response_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4676,7 +4569,7 @@ func (x *AdminListAuditLogsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdminListAuditLogsResponse.ProtoReflect.Descriptor instead.
 func (*AdminListAuditLogsResponse) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{69}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *AdminListAuditLogsResponse) GetLogs() []*AuditLogEntry {
@@ -4713,7 +4606,7 @@ type SetOwnerQuotaRequest struct {
 
 func (x *SetOwnerQuotaRequest) Reset() {
 	*x = SetOwnerQuotaRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[70]
+	mi := &file_storage_v1_request_response_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4725,7 +4618,7 @@ func (x *SetOwnerQuotaRequest) String() string {
 func (*SetOwnerQuotaRequest) ProtoMessage() {}
 
 func (x *SetOwnerQuotaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[70]
+	mi := &file_storage_v1_request_response_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4738,7 +4631,7 @@ func (x *SetOwnerQuotaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetOwnerQuotaRequest.ProtoReflect.Descriptor instead.
 func (*SetOwnerQuotaRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{70}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *SetOwnerQuotaRequest) GetOwnerType() OwnerType {
@@ -4783,7 +4676,7 @@ type AddOwnerQuotaRequest struct {
 
 func (x *AddOwnerQuotaRequest) Reset() {
 	*x = AddOwnerQuotaRequest{}
-	mi := &file_storage_v1_request_response_proto_msgTypes[71]
+	mi := &file_storage_v1_request_response_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4795,7 +4688,7 @@ func (x *AddOwnerQuotaRequest) String() string {
 func (*AddOwnerQuotaRequest) ProtoMessage() {}
 
 func (x *AddOwnerQuotaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_v1_request_response_proto_msgTypes[71]
+	mi := &file_storage_v1_request_response_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4808,7 +4701,7 @@ func (x *AddOwnerQuotaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddOwnerQuotaRequest.ProtoReflect.Descriptor instead.
 func (*AddOwnerQuotaRequest) Descriptor() ([]byte, []int) {
-	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{71}
+	return file_storage_v1_request_response_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *AddOwnerQuotaRequest) GetOwnerType() OwnerType {
@@ -5210,11 +5103,9 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"key_prefix\x18\x03 \x01(\tB\"\xbaH\x1fr\x1d\x10\x02\x18@2\x17^[a-z][a-z0-9-]{1,62}/$R\tkeyPrefix\x12\x1b\n" +
 	"\tbucket_id\x18\x04 \x01(\x03R\bbucketId\x12&\n" +
 	"\n" +
-	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"}\n" +
+	"tenant_key\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x18\x10R\ttenantKey\"^\n" +
 	"\x1fAdminEnsureTenantConfigResponse\x12;\n" +
-	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"G\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\"G\n" +
 	"\x1bAdminGetTenantConfigRequest\x12(\n" +
 	"\n" +
 	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"[\n" +
@@ -5232,14 +5123,7 @@ const file_storage_v1_request_response_proto_rawDesc = "" +
 	"\n" +
 	"_bucket_id\"^\n" +
 	"\x1fAdminUpdateTenantConfigResponse\x12;\n" +
-	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\"P\n" +
-	"$AdminRotateTenantConfigSecretRequest\x12(\n" +
-	"\n" +
-	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\"\x83\x01\n" +
-	"%AdminRotateTenantConfigSecretResponse\x12;\n" +
-	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\x02 \x01(\tR\tappSecret\"\x1f\n" +
+	"\x06config\x18\x01 \x01(\v2#.storage.v1.StorageTenantConfigInfoR\x06config\"\x1f\n" +
 	"\x1dAdminListTenantConfigsRequest\"_\n" +
 	"\x1eAdminListTenantConfigsResponse\x12=\n" +
 	"\aconfigs\x18\x01 \x03(\v2#.storage.v1.StorageTenantConfigInfoR\aconfigs\"J\n" +
@@ -5335,191 +5219,188 @@ func file_storage_v1_request_response_proto_rawDescGZIP() []byte {
 	return file_storage_v1_request_response_proto_rawDescData
 }
 
-var file_storage_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 76)
+var file_storage_v1_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 74)
 var file_storage_v1_request_response_proto_goTypes = []any{
-	(*GenerateUploadURLRequest)(nil),              // 0: storage.v1.GenerateUploadURLRequest
-	(*GenerateUploadURLResponse)(nil),             // 1: storage.v1.GenerateUploadURLResponse
-	(*GetSTSCredentialRequest)(nil),               // 2: storage.v1.GetSTSCredentialRequest
-	(*GetSTSCredentialResponse)(nil),              // 3: storage.v1.GetSTSCredentialResponse
-	(*BatchGetSTSCredentialRequest)(nil),          // 4: storage.v1.BatchGetSTSCredentialRequest
-	(*BatchGetSTSCredentialResponse)(nil),         // 5: storage.v1.BatchGetSTSCredentialResponse
-	(*ConfirmUploadRequest)(nil),                  // 6: storage.v1.ConfirmUploadRequest
-	(*ConfirmUploadResponse)(nil),                 // 7: storage.v1.ConfirmUploadResponse
-	(*CancelUploadRequest)(nil),                   // 8: storage.v1.CancelUploadRequest
-	(*GenerateDownloadURLRequest)(nil),            // 9: storage.v1.GenerateDownloadURLRequest
-	(*GenerateDownloadURLResponse)(nil),           // 10: storage.v1.GenerateDownloadURLResponse
-	(*CreateFileLinkRequest)(nil),                 // 11: storage.v1.CreateFileLinkRequest
-	(*CreateFileLinkResponse)(nil),                // 12: storage.v1.CreateFileLinkResponse
-	(*GetFileLinkDownloadRequest)(nil),            // 13: storage.v1.GetFileLinkDownloadRequest
-	(*GetFileLinkDownloadResponse)(nil),           // 14: storage.v1.GetFileLinkDownloadResponse
-	(*ListMyFilesRequest)(nil),                    // 15: storage.v1.ListMyFilesRequest
-	(*ListMyFilesResponse)(nil),                   // 16: storage.v1.ListMyFilesResponse
-	(*ListMyFilesPagedRequest)(nil),               // 17: storage.v1.ListMyFilesPagedRequest
-	(*ListMyFilesPagedResponse)(nil),              // 18: storage.v1.ListMyFilesPagedResponse
-	(*GetMyFileRequest)(nil),                      // 19: storage.v1.GetMyFileRequest
-	(*UpdateMyFileRequest)(nil),                   // 20: storage.v1.UpdateMyFileRequest
-	(*DeleteMyFileRequest)(nil),                   // 21: storage.v1.DeleteMyFileRequest
-	(*BatchDeleteMyFilesRequest)(nil),             // 22: storage.v1.BatchDeleteMyFilesRequest
-	(*BatchDeleteMyFilesResponse)(nil),            // 23: storage.v1.BatchDeleteMyFilesResponse
-	(*GenerateProcessURLRequest)(nil),             // 24: storage.v1.GenerateProcessURLRequest
-	(*GenerateProcessURLResponse)(nil),            // 25: storage.v1.GenerateProcessURLResponse
-	(*GenerateCDNURLRequest)(nil),                 // 26: storage.v1.GenerateCDNURLRequest
-	(*GenerateCDNURLResponse)(nil),                // 27: storage.v1.GenerateCDNURLResponse
-	(*GetMyQuotaRequest)(nil),                     // 28: storage.v1.GetMyQuotaRequest
-	(*AdminListFilesRequest)(nil),                 // 29: storage.v1.AdminListFilesRequest
-	(*AdminListFilesResponse)(nil),                // 30: storage.v1.AdminListFilesResponse
-	(*AdminGetFileRequest)(nil),                   // 31: storage.v1.AdminGetFileRequest
-	(*AdminDeleteFileRequest)(nil),                // 32: storage.v1.AdminDeleteFileRequest
-	(*AdminGetQuotaRequest)(nil),                  // 33: storage.v1.AdminGetQuotaRequest
-	(*AdminSetQuotaRequest)(nil),                  // 34: storage.v1.AdminSetQuotaRequest
-	(*AdminGetStatsRequest)(nil),                  // 35: storage.v1.AdminGetStatsRequest
-	(*AdminGetStatsResponse)(nil),                 // 36: storage.v1.AdminGetStatsResponse
-	(*AdminListProvidersResponse)(nil),            // 37: storage.v1.AdminListProvidersResponse
-	(*AdminListBucketsResponse)(nil),              // 38: storage.v1.AdminListBucketsResponse
-	(*AdminCreateProviderRequest)(nil),            // 39: storage.v1.AdminCreateProviderRequest
-	(*AdminCreateProviderResponse)(nil),           // 40: storage.v1.AdminCreateProviderResponse
-	(*AdminUpdateProviderRequest)(nil),            // 41: storage.v1.AdminUpdateProviderRequest
-	(*AdminUpdateProviderResponse)(nil),           // 42: storage.v1.AdminUpdateProviderResponse
-	(*AdminDeleteProviderRequest)(nil),            // 43: storage.v1.AdminDeleteProviderRequest
-	(*AdminUpsertBucketRequest)(nil),              // 44: storage.v1.AdminUpsertBucketRequest
-	(*AdminUpsertBucketResponse)(nil),             // 45: storage.v1.AdminUpsertBucketResponse
-	(*AdminDeleteBucketRequest)(nil),              // 46: storage.v1.AdminDeleteBucketRequest
-	(*AdminGetSettingsRequest)(nil),               // 47: storage.v1.AdminGetSettingsRequest
-	(*AdminGetSettingsResponse)(nil),              // 48: storage.v1.AdminGetSettingsResponse
-	(*AdminUpdateSettingsRequest)(nil),            // 49: storage.v1.AdminUpdateSettingsRequest
-	(*AdminUpdateSettingsResponse)(nil),           // 50: storage.v1.AdminUpdateSettingsResponse
-	(*AdminEnsureTenantConfigRequest)(nil),        // 51: storage.v1.AdminEnsureTenantConfigRequest
-	(*AdminEnsureTenantConfigResponse)(nil),       // 52: storage.v1.AdminEnsureTenantConfigResponse
-	(*AdminGetTenantConfigRequest)(nil),           // 53: storage.v1.AdminGetTenantConfigRequest
-	(*AdminGetTenantConfigResponse)(nil),          // 54: storage.v1.AdminGetTenantConfigResponse
-	(*AdminUpdateTenantConfigRequest)(nil),        // 55: storage.v1.AdminUpdateTenantConfigRequest
-	(*AdminUpdateTenantConfigResponse)(nil),       // 56: storage.v1.AdminUpdateTenantConfigResponse
-	(*AdminRotateTenantConfigSecretRequest)(nil),  // 57: storage.v1.AdminRotateTenantConfigSecretRequest
-	(*AdminRotateTenantConfigSecretResponse)(nil), // 58: storage.v1.AdminRotateTenantConfigSecretResponse
-	(*AdminListTenantConfigsRequest)(nil),         // 59: storage.v1.AdminListTenantConfigsRequest
-	(*AdminListTenantConfigsResponse)(nil),        // 60: storage.v1.AdminListTenantConfigsResponse
-	(*AdminDeleteTenantConfigRequest)(nil),        // 61: storage.v1.AdminDeleteTenantConfigRequest
-	(*AdminSoftDeleteOwnerFilesRequest)(nil),      // 62: storage.v1.AdminSoftDeleteOwnerFilesRequest
-	(*AdminSoftDeleteOwnerFilesResponse)(nil),     // 63: storage.v1.AdminSoftDeleteOwnerFilesResponse
-	(*AdminDeleteOwnerRequest)(nil),               // 64: storage.v1.AdminDeleteOwnerRequest
-	(*AdminDeleteOwnerResponse)(nil),              // 65: storage.v1.AdminDeleteOwnerResponse
-	(*ListMyAuditLogsRequest)(nil),                // 66: storage.v1.ListMyAuditLogsRequest
-	(*ListMyAuditLogsResponse)(nil),               // 67: storage.v1.ListMyAuditLogsResponse
-	(*AdminListAuditLogsRequest)(nil),             // 68: storage.v1.AdminListAuditLogsRequest
-	(*AdminListAuditLogsResponse)(nil),            // 69: storage.v1.AdminListAuditLogsResponse
-	(*SetOwnerQuotaRequest)(nil),                  // 70: storage.v1.SetOwnerQuotaRequest
-	(*AddOwnerQuotaRequest)(nil),                  // 71: storage.v1.AddOwnerQuotaRequest
-	nil,                                           // 72: storage.v1.GenerateUploadURLRequest.MetadataEntry
-	nil,                                           // 73: storage.v1.GenerateUploadURLResponse.HeadersEntry
-	nil,                                           // 74: storage.v1.GetSTSCredentialRequest.MetadataEntry
-	nil,                                           // 75: storage.v1.UpdateMyFileRequest.MetadataEntry
-	(Vendor)(0),                                   // 76: storage.v1.Vendor
-	(Visibility)(0),                               // 77: storage.v1.Visibility
-	(*Owner)(nil),                                 // 78: storage.v1.Owner
-	(*UserFileInfo)(nil),                          // 79: storage.v1.UserFileInfo
-	(*durationpb.Duration)(nil),                   // 80: google.protobuf.Duration
-	(*UploadFileMeta)(nil),                        // 81: storage.v1.UploadFileMeta
-	(*UploadCredentialItem)(nil),                  // 82: storage.v1.UploadCredentialItem
-	(SortField)(0),                                // 83: storage.v1.SortField
-	(*ImageProcessOp)(nil),                        // 84: storage.v1.ImageProcessOp
-	(OwnerType)(0),                                // 85: storage.v1.OwnerType
-	(*AdminFileInfo)(nil),                         // 86: storage.v1.AdminFileInfo
-	(*OwnerStats)(nil),                            // 87: storage.v1.OwnerStats
-	(*ProviderStats)(nil),                         // 88: storage.v1.ProviderStats
-	(*BucketStats)(nil),                           // 89: storage.v1.BucketStats
-	(*ProviderInfo)(nil),                          // 90: storage.v1.ProviderInfo
-	(*BucketInfo)(nil),                            // 91: storage.v1.BucketInfo
-	(BucketACL)(0),                                // 92: storage.v1.BucketACL
-	(*CDNConfig)(nil),                             // 93: storage.v1.CDNConfig
-	(*StorageSettings)(nil),                       // 94: storage.v1.StorageSettings
-	(*StorageTenantConfigInfo)(nil),               // 95: storage.v1.StorageTenantConfigInfo
-	(AuditAction)(0),                              // 96: storage.v1.AuditAction
-	(AuditLogTargetType)(0),                       // 97: storage.v1.AuditLogTargetType
-	(*AuditLogEntry)(nil),                         // 98: storage.v1.AuditLogEntry
-	(AuditLogStatus)(0),                           // 99: storage.v1.AuditLogStatus
+	(*GenerateUploadURLRequest)(nil),          // 0: storage.v1.GenerateUploadURLRequest
+	(*GenerateUploadURLResponse)(nil),         // 1: storage.v1.GenerateUploadURLResponse
+	(*GetSTSCredentialRequest)(nil),           // 2: storage.v1.GetSTSCredentialRequest
+	(*GetSTSCredentialResponse)(nil),          // 3: storage.v1.GetSTSCredentialResponse
+	(*BatchGetSTSCredentialRequest)(nil),      // 4: storage.v1.BatchGetSTSCredentialRequest
+	(*BatchGetSTSCredentialResponse)(nil),     // 5: storage.v1.BatchGetSTSCredentialResponse
+	(*ConfirmUploadRequest)(nil),              // 6: storage.v1.ConfirmUploadRequest
+	(*ConfirmUploadResponse)(nil),             // 7: storage.v1.ConfirmUploadResponse
+	(*CancelUploadRequest)(nil),               // 8: storage.v1.CancelUploadRequest
+	(*GenerateDownloadURLRequest)(nil),        // 9: storage.v1.GenerateDownloadURLRequest
+	(*GenerateDownloadURLResponse)(nil),       // 10: storage.v1.GenerateDownloadURLResponse
+	(*CreateFileLinkRequest)(nil),             // 11: storage.v1.CreateFileLinkRequest
+	(*CreateFileLinkResponse)(nil),            // 12: storage.v1.CreateFileLinkResponse
+	(*GetFileLinkDownloadRequest)(nil),        // 13: storage.v1.GetFileLinkDownloadRequest
+	(*GetFileLinkDownloadResponse)(nil),       // 14: storage.v1.GetFileLinkDownloadResponse
+	(*ListMyFilesRequest)(nil),                // 15: storage.v1.ListMyFilesRequest
+	(*ListMyFilesResponse)(nil),               // 16: storage.v1.ListMyFilesResponse
+	(*ListMyFilesPagedRequest)(nil),           // 17: storage.v1.ListMyFilesPagedRequest
+	(*ListMyFilesPagedResponse)(nil),          // 18: storage.v1.ListMyFilesPagedResponse
+	(*GetMyFileRequest)(nil),                  // 19: storage.v1.GetMyFileRequest
+	(*UpdateMyFileRequest)(nil),               // 20: storage.v1.UpdateMyFileRequest
+	(*DeleteMyFileRequest)(nil),               // 21: storage.v1.DeleteMyFileRequest
+	(*BatchDeleteMyFilesRequest)(nil),         // 22: storage.v1.BatchDeleteMyFilesRequest
+	(*BatchDeleteMyFilesResponse)(nil),        // 23: storage.v1.BatchDeleteMyFilesResponse
+	(*GenerateProcessURLRequest)(nil),         // 24: storage.v1.GenerateProcessURLRequest
+	(*GenerateProcessURLResponse)(nil),        // 25: storage.v1.GenerateProcessURLResponse
+	(*GenerateCDNURLRequest)(nil),             // 26: storage.v1.GenerateCDNURLRequest
+	(*GenerateCDNURLResponse)(nil),            // 27: storage.v1.GenerateCDNURLResponse
+	(*GetMyQuotaRequest)(nil),                 // 28: storage.v1.GetMyQuotaRequest
+	(*AdminListFilesRequest)(nil),             // 29: storage.v1.AdminListFilesRequest
+	(*AdminListFilesResponse)(nil),            // 30: storage.v1.AdminListFilesResponse
+	(*AdminGetFileRequest)(nil),               // 31: storage.v1.AdminGetFileRequest
+	(*AdminDeleteFileRequest)(nil),            // 32: storage.v1.AdminDeleteFileRequest
+	(*AdminGetQuotaRequest)(nil),              // 33: storage.v1.AdminGetQuotaRequest
+	(*AdminSetQuotaRequest)(nil),              // 34: storage.v1.AdminSetQuotaRequest
+	(*AdminGetStatsRequest)(nil),              // 35: storage.v1.AdminGetStatsRequest
+	(*AdminGetStatsResponse)(nil),             // 36: storage.v1.AdminGetStatsResponse
+	(*AdminListProvidersResponse)(nil),        // 37: storage.v1.AdminListProvidersResponse
+	(*AdminListBucketsResponse)(nil),          // 38: storage.v1.AdminListBucketsResponse
+	(*AdminCreateProviderRequest)(nil),        // 39: storage.v1.AdminCreateProviderRequest
+	(*AdminCreateProviderResponse)(nil),       // 40: storage.v1.AdminCreateProviderResponse
+	(*AdminUpdateProviderRequest)(nil),        // 41: storage.v1.AdminUpdateProviderRequest
+	(*AdminUpdateProviderResponse)(nil),       // 42: storage.v1.AdminUpdateProviderResponse
+	(*AdminDeleteProviderRequest)(nil),        // 43: storage.v1.AdminDeleteProviderRequest
+	(*AdminUpsertBucketRequest)(nil),          // 44: storage.v1.AdminUpsertBucketRequest
+	(*AdminUpsertBucketResponse)(nil),         // 45: storage.v1.AdminUpsertBucketResponse
+	(*AdminDeleteBucketRequest)(nil),          // 46: storage.v1.AdminDeleteBucketRequest
+	(*AdminGetSettingsRequest)(nil),           // 47: storage.v1.AdminGetSettingsRequest
+	(*AdminGetSettingsResponse)(nil),          // 48: storage.v1.AdminGetSettingsResponse
+	(*AdminUpdateSettingsRequest)(nil),        // 49: storage.v1.AdminUpdateSettingsRequest
+	(*AdminUpdateSettingsResponse)(nil),       // 50: storage.v1.AdminUpdateSettingsResponse
+	(*AdminEnsureTenantConfigRequest)(nil),    // 51: storage.v1.AdminEnsureTenantConfigRequest
+	(*AdminEnsureTenantConfigResponse)(nil),   // 52: storage.v1.AdminEnsureTenantConfigResponse
+	(*AdminGetTenantConfigRequest)(nil),       // 53: storage.v1.AdminGetTenantConfigRequest
+	(*AdminGetTenantConfigResponse)(nil),      // 54: storage.v1.AdminGetTenantConfigResponse
+	(*AdminUpdateTenantConfigRequest)(nil),    // 55: storage.v1.AdminUpdateTenantConfigRequest
+	(*AdminUpdateTenantConfigResponse)(nil),   // 56: storage.v1.AdminUpdateTenantConfigResponse
+	(*AdminListTenantConfigsRequest)(nil),     // 57: storage.v1.AdminListTenantConfigsRequest
+	(*AdminListTenantConfigsResponse)(nil),    // 58: storage.v1.AdminListTenantConfigsResponse
+	(*AdminDeleteTenantConfigRequest)(nil),    // 59: storage.v1.AdminDeleteTenantConfigRequest
+	(*AdminSoftDeleteOwnerFilesRequest)(nil),  // 60: storage.v1.AdminSoftDeleteOwnerFilesRequest
+	(*AdminSoftDeleteOwnerFilesResponse)(nil), // 61: storage.v1.AdminSoftDeleteOwnerFilesResponse
+	(*AdminDeleteOwnerRequest)(nil),           // 62: storage.v1.AdminDeleteOwnerRequest
+	(*AdminDeleteOwnerResponse)(nil),          // 63: storage.v1.AdminDeleteOwnerResponse
+	(*ListMyAuditLogsRequest)(nil),            // 64: storage.v1.ListMyAuditLogsRequest
+	(*ListMyAuditLogsResponse)(nil),           // 65: storage.v1.ListMyAuditLogsResponse
+	(*AdminListAuditLogsRequest)(nil),         // 66: storage.v1.AdminListAuditLogsRequest
+	(*AdminListAuditLogsResponse)(nil),        // 67: storage.v1.AdminListAuditLogsResponse
+	(*SetOwnerQuotaRequest)(nil),              // 68: storage.v1.SetOwnerQuotaRequest
+	(*AddOwnerQuotaRequest)(nil),              // 69: storage.v1.AddOwnerQuotaRequest
+	nil,                                       // 70: storage.v1.GenerateUploadURLRequest.MetadataEntry
+	nil,                                       // 71: storage.v1.GenerateUploadURLResponse.HeadersEntry
+	nil,                                       // 72: storage.v1.GetSTSCredentialRequest.MetadataEntry
+	nil,                                       // 73: storage.v1.UpdateMyFileRequest.MetadataEntry
+	(Vendor)(0),                               // 74: storage.v1.Vendor
+	(Visibility)(0),                           // 75: storage.v1.Visibility
+	(*Owner)(nil),                             // 76: storage.v1.Owner
+	(*UserFileInfo)(nil),                      // 77: storage.v1.UserFileInfo
+	(*durationpb.Duration)(nil),               // 78: google.protobuf.Duration
+	(*UploadFileMeta)(nil),                    // 79: storage.v1.UploadFileMeta
+	(*UploadCredentialItem)(nil),              // 80: storage.v1.UploadCredentialItem
+	(SortField)(0),                            // 81: storage.v1.SortField
+	(*ImageProcessOp)(nil),                    // 82: storage.v1.ImageProcessOp
+	(OwnerType)(0),                            // 83: storage.v1.OwnerType
+	(*AdminFileInfo)(nil),                     // 84: storage.v1.AdminFileInfo
+	(*OwnerStats)(nil),                        // 85: storage.v1.OwnerStats
+	(*ProviderStats)(nil),                     // 86: storage.v1.ProviderStats
+	(*BucketStats)(nil),                       // 87: storage.v1.BucketStats
+	(*ProviderInfo)(nil),                      // 88: storage.v1.ProviderInfo
+	(*BucketInfo)(nil),                        // 89: storage.v1.BucketInfo
+	(BucketACL)(0),                            // 90: storage.v1.BucketACL
+	(*CDNConfig)(nil),                         // 91: storage.v1.CDNConfig
+	(*StorageSettings)(nil),                   // 92: storage.v1.StorageSettings
+	(*StorageTenantConfigInfo)(nil),           // 93: storage.v1.StorageTenantConfigInfo
+	(AuditAction)(0),                          // 94: storage.v1.AuditAction
+	(AuditLogTargetType)(0),                   // 95: storage.v1.AuditLogTargetType
+	(*AuditLogEntry)(nil),                     // 96: storage.v1.AuditLogEntry
+	(AuditLogStatus)(0),                       // 97: storage.v1.AuditLogStatus
 }
 var file_storage_v1_request_response_proto_depIdxs = []int32{
-	72, // 0: storage.v1.GenerateUploadURLRequest.metadata:type_name -> storage.v1.GenerateUploadURLRequest.MetadataEntry
-	76, // 1: storage.v1.GenerateUploadURLRequest.vendor:type_name -> storage.v1.Vendor
-	77, // 2: storage.v1.GenerateUploadURLRequest.visibility:type_name -> storage.v1.Visibility
-	78, // 3: storage.v1.GenerateUploadURLRequest.owner:type_name -> storage.v1.Owner
-	79, // 4: storage.v1.GenerateUploadURLResponse.file_info:type_name -> storage.v1.UserFileInfo
-	73, // 5: storage.v1.GenerateUploadURLResponse.headers:type_name -> storage.v1.GenerateUploadURLResponse.HeadersEntry
-	74, // 6: storage.v1.GetSTSCredentialRequest.metadata:type_name -> storage.v1.GetSTSCredentialRequest.MetadataEntry
-	76, // 7: storage.v1.GetSTSCredentialRequest.vendor:type_name -> storage.v1.Vendor
-	80, // 8: storage.v1.GetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
-	77, // 9: storage.v1.GetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
-	78, // 10: storage.v1.GetSTSCredentialRequest.owner:type_name -> storage.v1.Owner
-	79, // 11: storage.v1.GetSTSCredentialResponse.file_info:type_name -> storage.v1.UserFileInfo
-	81, // 12: storage.v1.BatchGetSTSCredentialRequest.files:type_name -> storage.v1.UploadFileMeta
-	80, // 13: storage.v1.BatchGetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
-	77, // 14: storage.v1.BatchGetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
-	78, // 15: storage.v1.BatchGetSTSCredentialRequest.owner:type_name -> storage.v1.Owner
-	82, // 16: storage.v1.BatchGetSTSCredentialResponse.items:type_name -> storage.v1.UploadCredentialItem
-	78, // 17: storage.v1.ConfirmUploadRequest.owner:type_name -> storage.v1.Owner
-	79, // 18: storage.v1.ConfirmUploadResponse.file_info:type_name -> storage.v1.UserFileInfo
-	78, // 19: storage.v1.CancelUploadRequest.owner:type_name -> storage.v1.Owner
-	78, // 20: storage.v1.GenerateDownloadURLRequest.owner:type_name -> storage.v1.Owner
-	78, // 21: storage.v1.CreateFileLinkRequest.owner:type_name -> storage.v1.Owner
-	83, // 22: storage.v1.ListMyFilesRequest.order_by:type_name -> storage.v1.SortField
-	78, // 23: storage.v1.ListMyFilesRequest.owner:type_name -> storage.v1.Owner
-	79, // 24: storage.v1.ListMyFilesResponse.files:type_name -> storage.v1.UserFileInfo
-	83, // 25: storage.v1.ListMyFilesPagedRequest.order_by:type_name -> storage.v1.SortField
-	78, // 26: storage.v1.ListMyFilesPagedRequest.owner:type_name -> storage.v1.Owner
-	79, // 27: storage.v1.ListMyFilesPagedResponse.files:type_name -> storage.v1.UserFileInfo
-	78, // 28: storage.v1.GetMyFileRequest.owner:type_name -> storage.v1.Owner
-	75, // 29: storage.v1.UpdateMyFileRequest.metadata:type_name -> storage.v1.UpdateMyFileRequest.MetadataEntry
-	78, // 30: storage.v1.UpdateMyFileRequest.owner:type_name -> storage.v1.Owner
-	78, // 31: storage.v1.DeleteMyFileRequest.owner:type_name -> storage.v1.Owner
-	78, // 32: storage.v1.BatchDeleteMyFilesRequest.owner:type_name -> storage.v1.Owner
-	84, // 33: storage.v1.GenerateProcessURLRequest.ops:type_name -> storage.v1.ImageProcessOp
-	78, // 34: storage.v1.GenerateProcessURLRequest.owner:type_name -> storage.v1.Owner
-	84, // 35: storage.v1.GenerateCDNURLRequest.ops:type_name -> storage.v1.ImageProcessOp
-	80, // 36: storage.v1.GenerateCDNURLRequest.ttl:type_name -> google.protobuf.Duration
-	78, // 37: storage.v1.GenerateCDNURLRequest.owner:type_name -> storage.v1.Owner
-	78, // 38: storage.v1.GetMyQuotaRequest.owner:type_name -> storage.v1.Owner
-	85, // 39: storage.v1.AdminListFilesRequest.owner_type:type_name -> storage.v1.OwnerType
-	83, // 40: storage.v1.AdminListFilesRequest.order_by:type_name -> storage.v1.SortField
-	86, // 41: storage.v1.AdminListFilesResponse.files:type_name -> storage.v1.AdminFileInfo
-	85, // 42: storage.v1.AdminGetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	85, // 43: storage.v1.AdminSetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	85, // 44: storage.v1.AdminGetStatsRequest.owner_type:type_name -> storage.v1.OwnerType
-	87, // 45: storage.v1.AdminGetStatsResponse.owner_stats:type_name -> storage.v1.OwnerStats
-	88, // 46: storage.v1.AdminGetStatsResponse.provider_stats:type_name -> storage.v1.ProviderStats
-	89, // 47: storage.v1.AdminGetStatsResponse.bucket_stats:type_name -> storage.v1.BucketStats
-	90, // 48: storage.v1.AdminListProvidersResponse.providers:type_name -> storage.v1.ProviderInfo
-	91, // 49: storage.v1.AdminListBucketsResponse.buckets:type_name -> storage.v1.BucketInfo
-	76, // 50: storage.v1.AdminCreateProviderRequest.vendor:type_name -> storage.v1.Vendor
-	90, // 51: storage.v1.AdminCreateProviderResponse.provider:type_name -> storage.v1.ProviderInfo
-	90, // 52: storage.v1.AdminUpdateProviderResponse.provider:type_name -> storage.v1.ProviderInfo
-	92, // 53: storage.v1.AdminUpsertBucketRequest.acl:type_name -> storage.v1.BucketACL
-	93, // 54: storage.v1.AdminUpsertBucketRequest.cdn:type_name -> storage.v1.CDNConfig
-	91, // 55: storage.v1.AdminUpsertBucketResponse.bucket:type_name -> storage.v1.BucketInfo
-	94, // 56: storage.v1.AdminGetSettingsResponse.settings:type_name -> storage.v1.StorageSettings
-	94, // 57: storage.v1.AdminUpdateSettingsResponse.settings:type_name -> storage.v1.StorageSettings
-	95, // 58: storage.v1.AdminEnsureTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
-	95, // 59: storage.v1.AdminGetTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
-	95, // 60: storage.v1.AdminUpdateTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
-	95, // 61: storage.v1.AdminRotateTenantConfigSecretResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
-	95, // 62: storage.v1.AdminListTenantConfigsResponse.configs:type_name -> storage.v1.StorageTenantConfigInfo
-	85, // 63: storage.v1.AdminSoftDeleteOwnerFilesRequest.owner_type:type_name -> storage.v1.OwnerType
-	85, // 64: storage.v1.AdminDeleteOwnerRequest.owner_type:type_name -> storage.v1.OwnerType
-	96, // 65: storage.v1.ListMyAuditLogsRequest.action:type_name -> storage.v1.AuditAction
-	97, // 66: storage.v1.ListMyAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
-	78, // 67: storage.v1.ListMyAuditLogsRequest.owner:type_name -> storage.v1.Owner
-	98, // 68: storage.v1.ListMyAuditLogsResponse.logs:type_name -> storage.v1.AuditLogEntry
-	96, // 69: storage.v1.AdminListAuditLogsRequest.action:type_name -> storage.v1.AuditAction
-	97, // 70: storage.v1.AdminListAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
-	99, // 71: storage.v1.AdminListAuditLogsRequest.status:type_name -> storage.v1.AuditLogStatus
-	85, // 72: storage.v1.AdminListAuditLogsRequest.owner_type:type_name -> storage.v1.OwnerType
-	98, // 73: storage.v1.AdminListAuditLogsResponse.logs:type_name -> storage.v1.AuditLogEntry
-	85, // 74: storage.v1.SetOwnerQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	85, // 75: storage.v1.AddOwnerQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
-	76, // [76:76] is the sub-list for method output_type
-	76, // [76:76] is the sub-list for method input_type
-	76, // [76:76] is the sub-list for extension type_name
-	76, // [76:76] is the sub-list for extension extendee
-	0,  // [0:76] is the sub-list for field type_name
+	70, // 0: storage.v1.GenerateUploadURLRequest.metadata:type_name -> storage.v1.GenerateUploadURLRequest.MetadataEntry
+	74, // 1: storage.v1.GenerateUploadURLRequest.vendor:type_name -> storage.v1.Vendor
+	75, // 2: storage.v1.GenerateUploadURLRequest.visibility:type_name -> storage.v1.Visibility
+	76, // 3: storage.v1.GenerateUploadURLRequest.owner:type_name -> storage.v1.Owner
+	77, // 4: storage.v1.GenerateUploadURLResponse.file_info:type_name -> storage.v1.UserFileInfo
+	71, // 5: storage.v1.GenerateUploadURLResponse.headers:type_name -> storage.v1.GenerateUploadURLResponse.HeadersEntry
+	72, // 6: storage.v1.GetSTSCredentialRequest.metadata:type_name -> storage.v1.GetSTSCredentialRequest.MetadataEntry
+	74, // 7: storage.v1.GetSTSCredentialRequest.vendor:type_name -> storage.v1.Vendor
+	78, // 8: storage.v1.GetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
+	75, // 9: storage.v1.GetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
+	76, // 10: storage.v1.GetSTSCredentialRequest.owner:type_name -> storage.v1.Owner
+	77, // 11: storage.v1.GetSTSCredentialResponse.file_info:type_name -> storage.v1.UserFileInfo
+	79, // 12: storage.v1.BatchGetSTSCredentialRequest.files:type_name -> storage.v1.UploadFileMeta
+	78, // 13: storage.v1.BatchGetSTSCredentialRequest.ttl:type_name -> google.protobuf.Duration
+	75, // 14: storage.v1.BatchGetSTSCredentialRequest.visibility:type_name -> storage.v1.Visibility
+	76, // 15: storage.v1.BatchGetSTSCredentialRequest.owner:type_name -> storage.v1.Owner
+	80, // 16: storage.v1.BatchGetSTSCredentialResponse.items:type_name -> storage.v1.UploadCredentialItem
+	76, // 17: storage.v1.ConfirmUploadRequest.owner:type_name -> storage.v1.Owner
+	77, // 18: storage.v1.ConfirmUploadResponse.file_info:type_name -> storage.v1.UserFileInfo
+	76, // 19: storage.v1.CancelUploadRequest.owner:type_name -> storage.v1.Owner
+	76, // 20: storage.v1.GenerateDownloadURLRequest.owner:type_name -> storage.v1.Owner
+	76, // 21: storage.v1.CreateFileLinkRequest.owner:type_name -> storage.v1.Owner
+	81, // 22: storage.v1.ListMyFilesRequest.order_by:type_name -> storage.v1.SortField
+	76, // 23: storage.v1.ListMyFilesRequest.owner:type_name -> storage.v1.Owner
+	77, // 24: storage.v1.ListMyFilesResponse.files:type_name -> storage.v1.UserFileInfo
+	81, // 25: storage.v1.ListMyFilesPagedRequest.order_by:type_name -> storage.v1.SortField
+	76, // 26: storage.v1.ListMyFilesPagedRequest.owner:type_name -> storage.v1.Owner
+	77, // 27: storage.v1.ListMyFilesPagedResponse.files:type_name -> storage.v1.UserFileInfo
+	76, // 28: storage.v1.GetMyFileRequest.owner:type_name -> storage.v1.Owner
+	73, // 29: storage.v1.UpdateMyFileRequest.metadata:type_name -> storage.v1.UpdateMyFileRequest.MetadataEntry
+	76, // 30: storage.v1.UpdateMyFileRequest.owner:type_name -> storage.v1.Owner
+	76, // 31: storage.v1.DeleteMyFileRequest.owner:type_name -> storage.v1.Owner
+	76, // 32: storage.v1.BatchDeleteMyFilesRequest.owner:type_name -> storage.v1.Owner
+	82, // 33: storage.v1.GenerateProcessURLRequest.ops:type_name -> storage.v1.ImageProcessOp
+	76, // 34: storage.v1.GenerateProcessURLRequest.owner:type_name -> storage.v1.Owner
+	82, // 35: storage.v1.GenerateCDNURLRequest.ops:type_name -> storage.v1.ImageProcessOp
+	78, // 36: storage.v1.GenerateCDNURLRequest.ttl:type_name -> google.protobuf.Duration
+	76, // 37: storage.v1.GenerateCDNURLRequest.owner:type_name -> storage.v1.Owner
+	76, // 38: storage.v1.GetMyQuotaRequest.owner:type_name -> storage.v1.Owner
+	83, // 39: storage.v1.AdminListFilesRequest.owner_type:type_name -> storage.v1.OwnerType
+	81, // 40: storage.v1.AdminListFilesRequest.order_by:type_name -> storage.v1.SortField
+	84, // 41: storage.v1.AdminListFilesResponse.files:type_name -> storage.v1.AdminFileInfo
+	83, // 42: storage.v1.AdminGetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	83, // 43: storage.v1.AdminSetQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	83, // 44: storage.v1.AdminGetStatsRequest.owner_type:type_name -> storage.v1.OwnerType
+	85, // 45: storage.v1.AdminGetStatsResponse.owner_stats:type_name -> storage.v1.OwnerStats
+	86, // 46: storage.v1.AdminGetStatsResponse.provider_stats:type_name -> storage.v1.ProviderStats
+	87, // 47: storage.v1.AdminGetStatsResponse.bucket_stats:type_name -> storage.v1.BucketStats
+	88, // 48: storage.v1.AdminListProvidersResponse.providers:type_name -> storage.v1.ProviderInfo
+	89, // 49: storage.v1.AdminListBucketsResponse.buckets:type_name -> storage.v1.BucketInfo
+	74, // 50: storage.v1.AdminCreateProviderRequest.vendor:type_name -> storage.v1.Vendor
+	88, // 51: storage.v1.AdminCreateProviderResponse.provider:type_name -> storage.v1.ProviderInfo
+	88, // 52: storage.v1.AdminUpdateProviderResponse.provider:type_name -> storage.v1.ProviderInfo
+	90, // 53: storage.v1.AdminUpsertBucketRequest.acl:type_name -> storage.v1.BucketACL
+	91, // 54: storage.v1.AdminUpsertBucketRequest.cdn:type_name -> storage.v1.CDNConfig
+	89, // 55: storage.v1.AdminUpsertBucketResponse.bucket:type_name -> storage.v1.BucketInfo
+	92, // 56: storage.v1.AdminGetSettingsResponse.settings:type_name -> storage.v1.StorageSettings
+	92, // 57: storage.v1.AdminUpdateSettingsResponse.settings:type_name -> storage.v1.StorageSettings
+	93, // 58: storage.v1.AdminEnsureTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	93, // 59: storage.v1.AdminGetTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	93, // 60: storage.v1.AdminUpdateTenantConfigResponse.config:type_name -> storage.v1.StorageTenantConfigInfo
+	93, // 61: storage.v1.AdminListTenantConfigsResponse.configs:type_name -> storage.v1.StorageTenantConfigInfo
+	83, // 62: storage.v1.AdminSoftDeleteOwnerFilesRequest.owner_type:type_name -> storage.v1.OwnerType
+	83, // 63: storage.v1.AdminDeleteOwnerRequest.owner_type:type_name -> storage.v1.OwnerType
+	94, // 64: storage.v1.ListMyAuditLogsRequest.action:type_name -> storage.v1.AuditAction
+	95, // 65: storage.v1.ListMyAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
+	76, // 66: storage.v1.ListMyAuditLogsRequest.owner:type_name -> storage.v1.Owner
+	96, // 67: storage.v1.ListMyAuditLogsResponse.logs:type_name -> storage.v1.AuditLogEntry
+	94, // 68: storage.v1.AdminListAuditLogsRequest.action:type_name -> storage.v1.AuditAction
+	95, // 69: storage.v1.AdminListAuditLogsRequest.target_type:type_name -> storage.v1.AuditLogTargetType
+	97, // 70: storage.v1.AdminListAuditLogsRequest.status:type_name -> storage.v1.AuditLogStatus
+	83, // 71: storage.v1.AdminListAuditLogsRequest.owner_type:type_name -> storage.v1.OwnerType
+	96, // 72: storage.v1.AdminListAuditLogsResponse.logs:type_name -> storage.v1.AuditLogEntry
+	83, // 73: storage.v1.SetOwnerQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	83, // 74: storage.v1.AddOwnerQuotaRequest.owner_type:type_name -> storage.v1.OwnerType
+	75, // [75:75] is the sub-list for method output_type
+	75, // [75:75] is the sub-list for method input_type
+	75, // [75:75] is the sub-list for extension type_name
+	75, // [75:75] is the sub-list for extension extendee
+	0,  // [0:75] is the sub-list for field type_name
 }
 
 func init() { file_storage_v1_request_response_proto_init() }
@@ -5541,7 +5422,7 @@ func file_storage_v1_request_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_v1_request_response_proto_rawDesc), len(file_storage_v1_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   76,
+			NumMessages:   74,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

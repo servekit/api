@@ -33,11 +33,9 @@ message CreateTenantConfigRequest {
 }
 
 // CreateTenantConfigResponse returns the created config row (no secret —
-// the credential column was retired with the ④ window close).
+// the credential column was dropped with the ④ window close).
 message CreateTenantConfigResponse {
   MessageTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close); always empty.
-  string app_secret = 2;
 }
 
 message GetTenantConfigRequest {
@@ -63,19 +61,6 @@ message UpdateTenantConfigRequest {
 
 message UpdateTenantConfigResponse {
   MessageTenantConfigInfo config = 1;
-}
-
-// RotateTenantConfigSecret is retired (the app_secret column was dropped
-// with the ④ window close); the RPC answers SECRET_RETIRED.
-message RotateTenantConfigSecretRequest {
-  int64 id = 1 [(buf.validate.field).int64.gt = 0];
-}
-
-message RotateTenantConfigSecretResponse {
-  MessageTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close); the RPC errors instead of
-  // returning this field.
-  string app_secret = 2;
 }
 
 message ListTenantConfigsRequest {}
@@ -227,8 +212,9 @@ message DeleteTemplateRequest {
 }
 
 message ListTemplatesRequest {
-  // app_id 0 = all templates (shared + every app's).
-  int64 app_id = 1;
+  // tenant_key filters to one tenant's private templates plus the shared
+  // ones; empty = all templates (shared + every tenant's, scope-permitted).
+  string tenant_key = 1 [(buf.validate.field).string.max_len = 64];
   TemplateChannel channel = 2;
 }
 
@@ -289,8 +275,9 @@ message DeletePolicyRequest {
 }
 
 message ListPoliciesRequest {
-  // app_id 0 = all apps.
-  int64 app_id = 1;
+  // tenant_key filters to one tenant's policies; empty = all
+  // (scope-permitted).
+  string tenant_key = 1 [(buf.validate.field).string.max_len = 64];
   TemplateChannel channel = 2;
 }
 

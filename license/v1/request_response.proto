@@ -324,8 +324,6 @@ message CreateTenantConfigRequest {
 
 message CreateTenantConfigResponse {
   LicenseTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close); always empty.
-  string app_secret = 2;
 }
 
 message GetTenantConfigRequest {
@@ -355,20 +353,6 @@ message UpdateTenantConfigRequest {
 
 message UpdateTenantConfigResponse {
   LicenseTenantConfigInfo config = 1;
-}
-
-message RotateTenantConfigSecretRequest {
-  string tenant_key = 1 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 64
-  }];
-}
-
-message RotateTenantConfigSecretResponse {
-  LicenseTenantConfigInfo config = 1;
-  // app_secret is RETIRED (④ window close) — the RPC answers a BadRequest
-  // retirement error instead of returning this field.
-  string app_secret = 2;
 }
 
 // ListTenantConfigsRequest — one row per tenant, low cardinality; no

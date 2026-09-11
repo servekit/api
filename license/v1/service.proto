@@ -80,10 +80,6 @@ service LicenseAdminService {
   // immutable. Absent optional fields keep their current values.
   rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
 
-  // RotateTenantConfigSecret is retired (the credential column was dropped
-  // with the ④ window close); it answers a BadRequest retirement error.
-  rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
-
   // ListTenantConfigs — one row per tenant, low cardinality; no paging.
   rpc ListTenantConfigs(ListTenantConfigsRequest) returns (ListTenantConfigsResponse);
 

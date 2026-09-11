@@ -980,8 +980,6 @@ message CreateAppRequest {
 
 message CreateAppResponse {
   UserAppInfo app = 1;
-  // app_secret is RETIRED (④ window close); always empty.
-  string app_secret = 2;
 }
 
 message GetAppRequest {
@@ -1011,20 +1009,6 @@ message UpdateAppRequest {
 
 message UpdateAppResponse {
   UserAppInfo app = 1;
-}
-
-message RotateAppSecretRequest {
-  string tenant_key = 1 [(buf.validate.field).string = {
-    min_len: 1
-    max_len: 64
-  }];
-}
-
-message RotateAppSecretResponse {
-  UserAppInfo app = 1;
-  // app_secret is RETIRED (④ window close) — the RPC answers
-  // APP_SECRET_RETIRED instead of returning this field.
-  string app_secret = 2;
 }
 
 // ListAppsRequest — the tenant registry is low-cardinality; no paging.

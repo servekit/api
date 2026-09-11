@@ -37,11 +37,7 @@ type MessageTenantConfigInfo struct {
 	// app_key is the row's internal directory label (e.g. "testkit"; was the
 	// x-app-key credential before the ④ window close). Unique.
 	AppKey string `protobuf:"bytes,2,opt,name=app_key,json=appKey,proto3" json:"app_key,omitempty"`
-	// app_secret is RETIRED (④ window close): config rows carry no
-	// credential anymore; the data plane authenticates via the trusted
-	// x-tenant-key. Always empty.
-	AppSecret string `protobuf:"bytes,9,opt,name=app_secret,json=appSecret,proto3" json:"app_secret,omitempty"`
-	Name      string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Name   string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	// disabled apps fail every send with ErrAppUnauthorized.
 	Disabled bool `protobuf:"varint,4,opt,name=disabled,proto3" json:"disabled,omitempty"`
 	// Daily send-attempt caps (0 = unlimited). Counts attempts, not
@@ -98,13 +94,6 @@ func (x *MessageTenantConfigInfo) GetId() int64 {
 func (x *MessageTenantConfigInfo) GetAppKey() string {
 	if x != nil {
 		return x.AppKey
-	}
-	return ""
-}
-
-func (x *MessageTenantConfigInfo) GetAppSecret() string {
-	if x != nil {
-		return x.AppSecret
 	}
 	return ""
 }
@@ -1687,12 +1676,10 @@ var File_messaging_v1_admin_proto protoreflect.FileDescriptor
 
 const file_messaging_v1_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\xc2\x02\n" +
+	"\x18messaging/v1/admin.proto\x12\fmessaging.v1\x1a\x1bbuf/validate/validate.proto\x1a\x18messaging/v1/enums.proto\"\xa3\x02\n" +
 	"\x17MessageTenantConfigInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
-	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x1d\n" +
-	"\n" +
-	"app_secret\x18\t \x01(\tR\tappSecret\x12\x12\n" +
+	"\aapp_key\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1a\n" +
 	"\bdisabled\x18\x04 \x01(\bR\bdisabled\x12&\n" +
 	"\x0fsms_daily_limit\x18\x05 \x01(\x03R\rsmsDailyLimit\x12*\n" +

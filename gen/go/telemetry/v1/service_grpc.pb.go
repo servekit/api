@@ -249,18 +249,17 @@ var TelemetryService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	TelemetryAdminService_CreateTenantConfig_FullMethodName       = "/telemetry.v1.TelemetryAdminService/CreateTenantConfig"
-	TelemetryAdminService_GetTenantConfig_FullMethodName          = "/telemetry.v1.TelemetryAdminService/GetTenantConfig"
-	TelemetryAdminService_UpdateTenantConfig_FullMethodName       = "/telemetry.v1.TelemetryAdminService/UpdateTenantConfig"
-	TelemetryAdminService_ListTenantConfigs_FullMethodName        = "/telemetry.v1.TelemetryAdminService/ListTenantConfigs"
-	TelemetryAdminService_RotateToken_FullMethodName              = "/telemetry.v1.TelemetryAdminService/RotateToken"
-	TelemetryAdminService_RotateTenantConfigSecret_FullMethodName = "/telemetry.v1.TelemetryAdminService/RotateTenantConfigSecret"
-	TelemetryAdminService_RevokeToken_FullMethodName              = "/telemetry.v1.TelemetryAdminService/RevokeToken"
-	TelemetryAdminService_CreateSigningKey_FullMethodName         = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
-	TelemetryAdminService_RevokeSigningKey_FullMethodName         = "/telemetry.v1.TelemetryAdminService/RevokeSigningKey"
-	TelemetryAdminService_ReplaceEventRules_FullMethodName        = "/telemetry.v1.TelemetryAdminService/ReplaceEventRules"
-	TelemetryAdminService_SetVersionBlocked_FullMethodName        = "/telemetry.v1.TelemetryAdminService/SetVersionBlocked"
-	TelemetryAdminService_GetTenantConfigStats_FullMethodName     = "/telemetry.v1.TelemetryAdminService/GetTenantConfigStats"
+	TelemetryAdminService_CreateTenantConfig_FullMethodName   = "/telemetry.v1.TelemetryAdminService/CreateTenantConfig"
+	TelemetryAdminService_GetTenantConfig_FullMethodName      = "/telemetry.v1.TelemetryAdminService/GetTenantConfig"
+	TelemetryAdminService_UpdateTenantConfig_FullMethodName   = "/telemetry.v1.TelemetryAdminService/UpdateTenantConfig"
+	TelemetryAdminService_ListTenantConfigs_FullMethodName    = "/telemetry.v1.TelemetryAdminService/ListTenantConfigs"
+	TelemetryAdminService_RotateToken_FullMethodName          = "/telemetry.v1.TelemetryAdminService/RotateToken"
+	TelemetryAdminService_RevokeToken_FullMethodName          = "/telemetry.v1.TelemetryAdminService/RevokeToken"
+	TelemetryAdminService_CreateSigningKey_FullMethodName     = "/telemetry.v1.TelemetryAdminService/CreateSigningKey"
+	TelemetryAdminService_RevokeSigningKey_FullMethodName     = "/telemetry.v1.TelemetryAdminService/RevokeSigningKey"
+	TelemetryAdminService_ReplaceEventRules_FullMethodName    = "/telemetry.v1.TelemetryAdminService/ReplaceEventRules"
+	TelemetryAdminService_SetVersionBlocked_FullMethodName    = "/telemetry.v1.TelemetryAdminService/SetVersionBlocked"
+	TelemetryAdminService_GetTenantConfigStats_FullMethodName = "/telemetry.v1.TelemetryAdminService/GetTenantConfigStats"
 )
 
 // TelemetryAdminServiceClient is the client API for TelemetryAdminService service.
@@ -278,10 +277,6 @@ type TelemetryAdminServiceClient interface {
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(ctx context.Context, in *ListTenantConfigsRequest, opts ...grpc.CallOption) (*ListTenantConfigsResponse, error)
 	RotateToken(ctx context.Context, in *RotateTokenRequest, opts ...grpc.CallOption) (*RotateTokenResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
-	// rotate via RotateToken.
-	RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(ctx context.Context, in *RevokeTokenRequest, opts ...grpc.CallOption) (*RevokeTokenResponse, error)
 	CreateSigningKey(ctx context.Context, in *CreateSigningKeyRequest, opts ...grpc.CallOption) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(ctx context.Context, in *RevokeSigningKeyRequest, opts ...grpc.CallOption) (*RevokeSigningKeyResponse, error)
@@ -342,16 +337,6 @@ func (c *telemetryAdminServiceClient) RotateToken(ctx context.Context, in *Rotat
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RotateTokenResponse)
 	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateToken_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *telemetryAdminServiceClient) RotateTenantConfigSecret(ctx context.Context, in *RotateTenantConfigSecretRequest, opts ...grpc.CallOption) (*RotateTenantConfigSecretResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RotateTenantConfigSecretResponse)
-	err := c.cc.Invoke(ctx, TelemetryAdminService_RotateTenantConfigSecret_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -433,10 +418,6 @@ type TelemetryAdminServiceServer interface {
 	// ListTenantConfigs — one row per tenant, low cardinality; no paging.
 	ListTenantConfigs(context.Context, *ListTenantConfigsRequest) (*ListTenantConfigsResponse, error)
 	RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error)
-	// RotateTenantConfigSecret is retired (the credential column was dropped
-	// with the ④ window close); it answers SECRET_RETIRED. Ingest tokens
-	// rotate via RotateToken.
-	RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error)
 	RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error)
 	CreateSigningKey(context.Context, *CreateSigningKeyRequest) (*CreateSigningKeyResponse, error)
 	RevokeSigningKey(context.Context, *RevokeSigningKeyRequest) (*RevokeSigningKeyResponse, error)
@@ -467,9 +448,6 @@ func (UnimplementedTelemetryAdminServiceServer) ListTenantConfigs(context.Contex
 }
 func (UnimplementedTelemetryAdminServiceServer) RotateToken(context.Context, *RotateTokenRequest) (*RotateTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RotateToken not implemented")
-}
-func (UnimplementedTelemetryAdminServiceServer) RotateTenantConfigSecret(context.Context, *RotateTenantConfigSecretRequest) (*RotateTenantConfigSecretResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method RotateTenantConfigSecret not implemented")
 }
 func (UnimplementedTelemetryAdminServiceServer) RevokeToken(context.Context, *RevokeTokenRequest) (*RevokeTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeToken not implemented")
@@ -596,24 +574,6 @@ func _TelemetryAdminService_RotateToken_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TelemetryAdminServiceServer).RotateToken(ctx, req.(*RotateTokenRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _TelemetryAdminService_RotateTenantConfigSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RotateTenantConfigSecretRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TelemetryAdminServiceServer).RotateTenantConfigSecret(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TelemetryAdminService_RotateTenantConfigSecret_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TelemetryAdminServiceServer).RotateTenantConfigSecret(ctx, req.(*RotateTenantConfigSecretRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -752,10 +712,6 @@ var TelemetryAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RotateToken",
 			Handler:    _TelemetryAdminService_RotateToken_Handler,
-		},
-		{
-			MethodName: "RotateTenantConfigSecret",
-			Handler:    _TelemetryAdminService_RotateTenantConfigSecret_Handler,
 		},
 		{
 			MethodName: "RevokeToken",

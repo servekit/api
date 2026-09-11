@@ -192,10 +192,6 @@ message StorageTenantConfigInfo {
   bool disabled = 6;
   int64 created_at = 7;
   int64 updated_at = 8;
-  // app_secret is RETIRED (④ window close): config rows carry no
-  // credential anymore; the data plane authenticates via the trusted
-  // x-tenant-key. Always empty.
-  string app_secret = 9;
   // tenant_key is the tenant this app maps to (phase ③ dual-stack window).
   // Empty on rows not yet backfilled — the service falls back to the app_key
   // literal until T10 clears the empties. New tenants first seen on the

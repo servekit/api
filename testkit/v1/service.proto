@@ -489,12 +489,6 @@ service TestkitService {
       body: "*"
     };
   }
-  rpc AdminRotateTenantConfigSecret(storage.v1.AdminRotateTenantConfigSecretRequest) returns (storage.v1.AdminRotateTenantConfigSecretResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/admin/storage/tenant-configs/{tenant_key}:rotateSecret"
-      body: "*"
-    };
-  }
   rpc AdminDeleteTenantConfig(storage.v1.AdminDeleteTenantConfigRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/admin/storage/tenant-configs/{tenant_key}"};
   }
@@ -591,12 +585,6 @@ service TestkitService {
   rpc MessageUpdateTenantConfig(messaging.v1.UpdateTenantConfigRequest) returns (messaging.v1.UpdateTenantConfigResponse) {
     option (google.api.http) = {
       put: "/api/v1/message/admin/tenant-configs/{id}"
-      body: "*"
-    };
-  }
-  rpc MessageRotateTenantConfigSecret(messaging.v1.RotateTenantConfigSecretRequest) returns (messaging.v1.RotateTenantConfigSecretResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/message/admin/tenant-configs/{id}/secret:rotate"
       body: "*"
     };
   }
@@ -837,15 +825,7 @@ service TestkitService {
     };
   }
 
-  rpc LicenseRotateTenantConfigSecret(license.v1.RotateTenantConfigSecretRequest) returns (license.v1.RotateTenantConfigSecretResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/license/admin/tenant-configs/{tenant_key}:rotateSecret"
-      body: "*"
-    };
-  }
-
-  rpc LicenseDeleteTenantConfig(license.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
+  rpc LicenseDeleteTenantConfig(license.v1.DeleteTenantConfigRequest) returns (google.protobuf.Empty) {    option (google.api.http) = {delete: "/api/v1/license/admin/tenant-configs/{tenant_key}"};
   }
 
   rpc Ingest(IngestRequest) returns (IngestResponse) {
@@ -878,13 +858,6 @@ service TestkitService {
 
   rpc ListTenantConfigs(telemetry.v1.ListTenantConfigsRequest) returns (telemetry.v1.ListTenantConfigsResponse) {
     option (google.api.http) = {get: "/api/v1/telemetry/admin/tenant-configs"};
-  }
-
-  rpc RotateTenantConfigSecret(telemetry.v1.RotateTenantConfigSecretRequest) returns (telemetry.v1.RotateTenantConfigSecretResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/telemetry/admin/tenant-configs/{tenant_key}:rotateSecret"
-      body: "*"
-    };
   }
 
   rpc RotateToken(RotateTokenRequest) returns (RotateTokenResponse) {
@@ -1001,13 +974,6 @@ service TestkitService {
   rpc UserUpdateApp(user.v1.UpdateAppRequest) returns (user.v1.UpdateAppResponse) {
     option (google.api.http) = {
       put: "/api/v1/user/admin/apps/{tenant_key}"
-      body: "*"
-    };
-  }
-
-  rpc UserRotateAppSecret(user.v1.RotateAppSecretRequest) returns (user.v1.RotateAppSecretResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/user/admin/apps/{tenant_key}:rotateSecret"
       body: "*"
     };
   }

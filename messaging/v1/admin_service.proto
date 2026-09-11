@@ -31,9 +31,6 @@ service MessageAdminService {
   // UpdateTenantConfig tweaks config metadata (name / disabled / daily
   // limits).
   rpc UpdateTenantConfig(UpdateTenantConfigRequest) returns (UpdateTenantConfigResponse);
-  // RotateTenantConfigSecret is retired (the credential column was dropped
-  // with the ④ window close); it answers SECRET_RETIRED.
-  rpc RotateTenantConfigSecret(RotateTenantConfigSecretRequest) returns (RotateTenantConfigSecretResponse);
   // ListTenantConfigs returns the tenant configs in the caller's scope (no
   // pagination — low cardinality).
   rpc ListTenantConfigs(ListTenantConfigsRequest) returns (ListTenantConfigsResponse);
@@ -71,7 +68,8 @@ service MessageAdminService {
   rpc UpdateTemplate(UpdateTemplateRequest) returns (UpdateTemplateResponse);
   // DeleteTemplate soft-deletes a template.
   rpc DeleteTemplate(DeleteTemplateRequest) returns (google.protobuf.Empty);
-  // ListTemplates filters by app (0 = all) and channel (0 = all).
+  // ListTemplates filters by tenant (empty = all: shared + every tenant's
+  // private, scope-permitted) and channel (0 = all).
   rpc ListTemplates(ListTemplatesRequest) returns (ListTemplatesResponse);
 
   // Policies
@@ -82,6 +80,7 @@ service MessageAdminService {
   rpc UpdatePolicy(UpdatePolicyRequest) returns (UpdatePolicyResponse);
   // DeletePolicy removes the binding; sends fail closed from then on.
   rpc DeletePolicy(DeletePolicyRequest) returns (google.protobuf.Empty);
-  // ListPolicies filters by app (0 = all) and channel (0 = all).
+  // ListPolicies filters by tenant (empty = all, scope-permitted) and
+  // channel (0 = all).
   rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse);
 }
