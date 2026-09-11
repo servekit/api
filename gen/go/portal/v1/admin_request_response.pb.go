@@ -810,6 +810,60 @@ func (x *DisableTenantRequest) GetReason() string {
 	return ""
 }
 
+// DeleteTenantRequest soft-deletes a tenant. The tenant must be disabled
+// first (delete is not the kill-switch); reason is an audit label.
+type DeleteTenantRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TenantKey     string                 `protobuf:"bytes,1,opt,name=tenant_key,json=tenantKey,proto3" json:"tenant_key,omitempty"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteTenantRequest) Reset() {
+	*x = DeleteTenantRequest{}
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteTenantRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTenantRequest) ProtoMessage() {}
+
+func (x *DeleteTenantRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTenantRequest.ProtoReflect.Descriptor instead.
+func (*DeleteTenantRequest) Descriptor() ([]byte, []int) {
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *DeleteTenantRequest) GetTenantKey() string {
+	if x != nil {
+		return x.TenantKey
+	}
+	return ""
+}
+
+func (x *DeleteTenantRequest) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
 // CreateApiKeyRequest mints a credential pair for the tenant. The server
 // generates access_key ("ak_" + 12 base36) and secret; the plaintext secret
 // is returned exactly once and stored as a bcrypt hash.
@@ -825,7 +879,7 @@ type CreateApiKeyRequest struct {
 
 func (x *CreateApiKeyRequest) Reset() {
 	*x = CreateApiKeyRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[13]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -837,7 +891,7 @@ func (x *CreateApiKeyRequest) String() string {
 func (*CreateApiKeyRequest) ProtoMessage() {}
 
 func (x *CreateApiKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[13]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -850,7 +904,7 @@ func (x *CreateApiKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateApiKeyRequest.ProtoReflect.Descriptor instead.
 func (*CreateApiKeyRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{13}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CreateApiKeyRequest) GetTenantKey() string {
@@ -878,7 +932,7 @@ type CreateApiKeyResponse struct {
 
 func (x *CreateApiKeyResponse) Reset() {
 	*x = CreateApiKeyResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[14]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +944,7 @@ func (x *CreateApiKeyResponse) String() string {
 func (*CreateApiKeyResponse) ProtoMessage() {}
 
 func (x *CreateApiKeyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[14]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +957,7 @@ func (x *CreateApiKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateApiKeyResponse.ProtoReflect.Descriptor instead.
 func (*CreateApiKeyResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{14}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *CreateApiKeyResponse) GetApiKey() *ApiKeyInfo {
@@ -931,7 +985,7 @@ type ListApiKeysRequest struct {
 
 func (x *ListApiKeysRequest) Reset() {
 	*x = ListApiKeysRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[15]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -943,7 +997,7 @@ func (x *ListApiKeysRequest) String() string {
 func (*ListApiKeysRequest) ProtoMessage() {}
 
 func (x *ListApiKeysRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[15]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -956,7 +1010,7 @@ func (x *ListApiKeysRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListApiKeysRequest.ProtoReflect.Descriptor instead.
 func (*ListApiKeysRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{15}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *ListApiKeysRequest) GetTenantKey() string {
@@ -976,7 +1030,7 @@ type ListApiKeysResponse struct {
 
 func (x *ListApiKeysResponse) Reset() {
 	*x = ListApiKeysResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[16]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -988,7 +1042,7 @@ func (x *ListApiKeysResponse) String() string {
 func (*ListApiKeysResponse) ProtoMessage() {}
 
 func (x *ListApiKeysResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[16]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1001,7 +1055,7 @@ func (x *ListApiKeysResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListApiKeysResponse.ProtoReflect.Descriptor instead.
 func (*ListApiKeysResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{16}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ListApiKeysResponse) GetApiKeys() []*ApiKeyInfo {
@@ -1022,7 +1076,7 @@ type RotateApiKeySecretRequest struct {
 
 func (x *RotateApiKeySecretRequest) Reset() {
 	*x = RotateApiKeySecretRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[17]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1034,7 +1088,7 @@ func (x *RotateApiKeySecretRequest) String() string {
 func (*RotateApiKeySecretRequest) ProtoMessage() {}
 
 func (x *RotateApiKeySecretRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[17]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1047,7 +1101,7 @@ func (x *RotateApiKeySecretRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RotateApiKeySecretRequest.ProtoReflect.Descriptor instead.
 func (*RotateApiKeySecretRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{17}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *RotateApiKeySecretRequest) GetAccessKey() string {
@@ -1068,7 +1122,7 @@ type RotateApiKeySecretResponse struct {
 
 func (x *RotateApiKeySecretResponse) Reset() {
 	*x = RotateApiKeySecretResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[18]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1080,7 +1134,7 @@ func (x *RotateApiKeySecretResponse) String() string {
 func (*RotateApiKeySecretResponse) ProtoMessage() {}
 
 func (x *RotateApiKeySecretResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[18]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1093,7 +1147,7 @@ func (x *RotateApiKeySecretResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RotateApiKeySecretResponse.ProtoReflect.Descriptor instead.
 func (*RotateApiKeySecretResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{18}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *RotateApiKeySecretResponse) GetApiKey() *ApiKeyInfo {
@@ -1123,7 +1177,7 @@ type DisableApiKeyRequest struct {
 
 func (x *DisableApiKeyRequest) Reset() {
 	*x = DisableApiKeyRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[19]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1135,7 +1189,7 @@ func (x *DisableApiKeyRequest) String() string {
 func (*DisableApiKeyRequest) ProtoMessage() {}
 
 func (x *DisableApiKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[19]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1148,7 +1202,7 @@ func (x *DisableApiKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableApiKeyRequest.ProtoReflect.Descriptor instead.
 func (*DisableApiKeyRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{19}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DisableApiKeyRequest) GetAccessKey() string {
@@ -1184,7 +1238,7 @@ type AddTenantMemberRequest struct {
 
 func (x *AddTenantMemberRequest) Reset() {
 	*x = AddTenantMemberRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[20]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1196,7 +1250,7 @@ func (x *AddTenantMemberRequest) String() string {
 func (*AddTenantMemberRequest) ProtoMessage() {}
 
 func (x *AddTenantMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[20]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1209,7 +1263,7 @@ func (x *AddTenantMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddTenantMemberRequest.ProtoReflect.Descriptor instead.
 func (*AddTenantMemberRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{20}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *AddTenantMemberRequest) GetTenantKey() string {
@@ -1238,7 +1292,7 @@ type RemoveTenantMemberRequest struct {
 
 func (x *RemoveTenantMemberRequest) Reset() {
 	*x = RemoveTenantMemberRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[21]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1250,7 +1304,7 @@ func (x *RemoveTenantMemberRequest) String() string {
 func (*RemoveTenantMemberRequest) ProtoMessage() {}
 
 func (x *RemoveTenantMemberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[21]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1263,7 +1317,7 @@ func (x *RemoveTenantMemberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveTenantMemberRequest.ProtoReflect.Descriptor instead.
 func (*RemoveTenantMemberRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{21}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RemoveTenantMemberRequest) GetTenantKey() string {
@@ -1290,7 +1344,7 @@ type ListTenantMembersRequest struct {
 
 func (x *ListTenantMembersRequest) Reset() {
 	*x = ListTenantMembersRequest{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[22]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1302,7 +1356,7 @@ func (x *ListTenantMembersRequest) String() string {
 func (*ListTenantMembersRequest) ProtoMessage() {}
 
 func (x *ListTenantMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[22]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1315,7 +1369,7 @@ func (x *ListTenantMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenantMembersRequest.ProtoReflect.Descriptor instead.
 func (*ListTenantMembersRequest) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{22}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListTenantMembersRequest) GetTenantKey() string {
@@ -1334,7 +1388,7 @@ type ListTenantMembersResponse struct {
 
 func (x *ListTenantMembersResponse) Reset() {
 	*x = ListTenantMembersResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[23]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1346,7 +1400,7 @@ func (x *ListTenantMembersResponse) String() string {
 func (*ListTenantMembersResponse) ProtoMessage() {}
 
 func (x *ListTenantMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[23]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1359,7 +1413,7 @@ func (x *ListTenantMembersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenantMembersResponse.ProtoReflect.Descriptor instead.
 func (*ListTenantMembersResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{23}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ListTenantMembersResponse) GetMembers() []*TenantMember {
@@ -1381,7 +1435,7 @@ type WhoAmIResponse struct {
 
 func (x *WhoAmIResponse) Reset() {
 	*x = WhoAmIResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[24]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1393,7 +1447,7 @@ func (x *WhoAmIResponse) String() string {
 func (*WhoAmIResponse) ProtoMessage() {}
 
 func (x *WhoAmIResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[24]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1406,7 +1460,7 @@ func (x *WhoAmIResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WhoAmIResponse.ProtoReflect.Descriptor instead.
 func (*WhoAmIResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{24}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *WhoAmIResponse) GetUserId() int64 {
@@ -1434,7 +1488,7 @@ type TenantMembership struct {
 
 func (x *TenantMembership) Reset() {
 	*x = TenantMembership{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[25]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1446,7 +1500,7 @@ func (x *TenantMembership) String() string {
 func (*TenantMembership) ProtoMessage() {}
 
 func (x *TenantMembership) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[25]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1459,7 +1513,7 @@ func (x *TenantMembership) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenantMembership.ProtoReflect.Descriptor instead.
 func (*TenantMembership) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{25}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *TenantMembership) GetTenantKey() string {
@@ -1485,7 +1539,7 @@ type MyCapabilitiesResponse struct {
 
 func (x *MyCapabilitiesResponse) Reset() {
 	*x = MyCapabilitiesResponse{}
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[26]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1497,7 +1551,7 @@ func (x *MyCapabilitiesResponse) String() string {
 func (*MyCapabilitiesResponse) ProtoMessage() {}
 
 func (x *MyCapabilitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_portal_v1_admin_request_response_proto_msgTypes[26]
+	mi := &file_portal_v1_admin_request_response_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1510,7 +1564,7 @@ func (x *MyCapabilitiesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MyCapabilitiesResponse.ProtoReflect.Descriptor instead.
 func (*MyCapabilitiesResponse) Descriptor() ([]byte, []int) {
-	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{26}
+	return file_portal_v1_admin_request_response_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *MyCapabilitiesResponse) GetCapabilities() []string {
@@ -1580,7 +1634,11 @@ const file_portal_v1_admin_request_response_proto_rawDesc = "" +
 	"\n" +
 	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12\x18\n" +
 	"\adisable\x18\x02 \x01(\bR\adisable\x12 \n" +
-	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"^\n" +
+	"\x06reason\x18\x03 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"a\n" +
+	"\x13DeleteTenantRequest\x12(\n" +
+	"\n" +
+	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12 \n" +
+	"\x06reason\x18\x02 \x01(\tB\b\xbaH\x05r\x03\x18\x80\x04R\x06reason\"^\n" +
 	"\x13CreateApiKeyRequest\x12(\n" +
 	"\n" +
 	"tenant_key\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18@R\ttenantKey\x12\x1d\n" +
@@ -1642,7 +1700,7 @@ func file_portal_v1_admin_request_response_proto_rawDescGZIP() []byte {
 	return file_portal_v1_admin_request_response_proto_rawDescData
 }
 
-var file_portal_v1_admin_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_portal_v1_admin_request_response_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_portal_v1_admin_request_response_proto_goTypes = []any{
 	(*BootstrapAdmin)(nil),             // 0: portal.v1.BootstrapAdmin
 	(*NewAdminAccount)(nil),            // 1: portal.v1.NewAdminAccount
@@ -1657,36 +1715,37 @@ var file_portal_v1_admin_request_response_proto_goTypes = []any{
 	(*SetCapabilityRequest)(nil),       // 10: portal.v1.SetCapabilityRequest
 	(*SetCapabilityResponse)(nil),      // 11: portal.v1.SetCapabilityResponse
 	(*DisableTenantRequest)(nil),       // 12: portal.v1.DisableTenantRequest
-	(*CreateApiKeyRequest)(nil),        // 13: portal.v1.CreateApiKeyRequest
-	(*CreateApiKeyResponse)(nil),       // 14: portal.v1.CreateApiKeyResponse
-	(*ListApiKeysRequest)(nil),         // 15: portal.v1.ListApiKeysRequest
-	(*ListApiKeysResponse)(nil),        // 16: portal.v1.ListApiKeysResponse
-	(*RotateApiKeySecretRequest)(nil),  // 17: portal.v1.RotateApiKeySecretRequest
-	(*RotateApiKeySecretResponse)(nil), // 18: portal.v1.RotateApiKeySecretResponse
-	(*DisableApiKeyRequest)(nil),       // 19: portal.v1.DisableApiKeyRequest
-	(*AddTenantMemberRequest)(nil),     // 20: portal.v1.AddTenantMemberRequest
-	(*RemoveTenantMemberRequest)(nil),  // 21: portal.v1.RemoveTenantMemberRequest
-	(*ListTenantMembersRequest)(nil),   // 22: portal.v1.ListTenantMembersRequest
-	(*ListTenantMembersResponse)(nil),  // 23: portal.v1.ListTenantMembersResponse
-	(*WhoAmIResponse)(nil),             // 24: portal.v1.WhoAmIResponse
-	(*TenantMembership)(nil),           // 25: portal.v1.TenantMembership
-	(*MyCapabilitiesResponse)(nil),     // 26: portal.v1.MyCapabilitiesResponse
-	(*TenantInfo)(nil),                 // 27: portal.v1.TenantInfo
-	(*ApiKeyInfo)(nil),                 // 28: portal.v1.ApiKeyInfo
-	(*TenantMember)(nil),               // 29: portal.v1.TenantMember
+	(*DeleteTenantRequest)(nil),        // 13: portal.v1.DeleteTenantRequest
+	(*CreateApiKeyRequest)(nil),        // 14: portal.v1.CreateApiKeyRequest
+	(*CreateApiKeyResponse)(nil),       // 15: portal.v1.CreateApiKeyResponse
+	(*ListApiKeysRequest)(nil),         // 16: portal.v1.ListApiKeysRequest
+	(*ListApiKeysResponse)(nil),        // 17: portal.v1.ListApiKeysResponse
+	(*RotateApiKeySecretRequest)(nil),  // 18: portal.v1.RotateApiKeySecretRequest
+	(*RotateApiKeySecretResponse)(nil), // 19: portal.v1.RotateApiKeySecretResponse
+	(*DisableApiKeyRequest)(nil),       // 20: portal.v1.DisableApiKeyRequest
+	(*AddTenantMemberRequest)(nil),     // 21: portal.v1.AddTenantMemberRequest
+	(*RemoveTenantMemberRequest)(nil),  // 22: portal.v1.RemoveTenantMemberRequest
+	(*ListTenantMembersRequest)(nil),   // 23: portal.v1.ListTenantMembersRequest
+	(*ListTenantMembersResponse)(nil),  // 24: portal.v1.ListTenantMembersResponse
+	(*WhoAmIResponse)(nil),             // 25: portal.v1.WhoAmIResponse
+	(*TenantMembership)(nil),           // 26: portal.v1.TenantMembership
+	(*MyCapabilitiesResponse)(nil),     // 27: portal.v1.MyCapabilitiesResponse
+	(*TenantInfo)(nil),                 // 28: portal.v1.TenantInfo
+	(*ApiKeyInfo)(nil),                 // 29: portal.v1.ApiKeyInfo
+	(*TenantMember)(nil),               // 30: portal.v1.TenantMember
 }
 var file_portal_v1_admin_request_response_proto_depIdxs = []int32{
 	1,  // 0: portal.v1.BootstrapAdmin.new_account:type_name -> portal.v1.NewAdminAccount
 	0,  // 1: portal.v1.CreateTenantRequest.admin:type_name -> portal.v1.BootstrapAdmin
-	27, // 2: portal.v1.GetTenantResponse.tenant:type_name -> portal.v1.TenantInfo
-	27, // 3: portal.v1.ListTenantsResponse.tenants:type_name -> portal.v1.TenantInfo
-	27, // 4: portal.v1.UpdateTenantResponse.tenant:type_name -> portal.v1.TenantInfo
-	27, // 5: portal.v1.SetCapabilityResponse.tenant:type_name -> portal.v1.TenantInfo
-	28, // 6: portal.v1.CreateApiKeyResponse.api_key:type_name -> portal.v1.ApiKeyInfo
-	28, // 7: portal.v1.ListApiKeysResponse.api_keys:type_name -> portal.v1.ApiKeyInfo
-	28, // 8: portal.v1.RotateApiKeySecretResponse.api_key:type_name -> portal.v1.ApiKeyInfo
-	29, // 9: portal.v1.ListTenantMembersResponse.members:type_name -> portal.v1.TenantMember
-	25, // 10: portal.v1.WhoAmIResponse.memberships:type_name -> portal.v1.TenantMembership
+	28, // 2: portal.v1.GetTenantResponse.tenant:type_name -> portal.v1.TenantInfo
+	28, // 3: portal.v1.ListTenantsResponse.tenants:type_name -> portal.v1.TenantInfo
+	28, // 4: portal.v1.UpdateTenantResponse.tenant:type_name -> portal.v1.TenantInfo
+	28, // 5: portal.v1.SetCapabilityResponse.tenant:type_name -> portal.v1.TenantInfo
+	29, // 6: portal.v1.CreateApiKeyResponse.api_key:type_name -> portal.v1.ApiKeyInfo
+	29, // 7: portal.v1.ListApiKeysResponse.api_keys:type_name -> portal.v1.ApiKeyInfo
+	29, // 8: portal.v1.RotateApiKeySecretResponse.api_key:type_name -> portal.v1.ApiKeyInfo
+	30, // 9: portal.v1.ListTenantMembersResponse.members:type_name -> portal.v1.TenantMember
+	26, // 10: portal.v1.WhoAmIResponse.memberships:type_name -> portal.v1.TenantMembership
 	11, // [11:11] is the sub-list for method output_type
 	11, // [11:11] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
@@ -1715,7 +1774,7 @@ func file_portal_v1_admin_request_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_portal_v1_admin_request_response_proto_rawDesc), len(file_portal_v1_admin_request_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   27,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

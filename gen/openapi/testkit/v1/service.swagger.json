@@ -4017,6 +4017,36 @@
         "tags": [
           "TestkitService"
         ]
+      },
+      "post": {
+        "operationId": "PortalCreateTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateTenantResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateTenantRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
       }
     },
     "/api/v1/portal/tenants/{tenantKey}/api-keys": {
@@ -4192,6 +4222,45 @@
         ]
       }
     },
+    "/api/v1/portal/tenants/{tenantKey}:delete": {
+      "post": {
+        "operationId": "PortalDeleteTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalDeleteTenantBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
     "/api/v1/portal/tenants/{tenantKey}:disable": {
       "post": {
         "operationId": "PortalDisableTenant",
@@ -4261,6 +4330,44 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestkitServicePortalSetCapabilityBody"
+            }
+          }
+        ],
+        "tags": [
+          "TestkitService"
+        ]
+      }
+    },
+    "/api/v1/portal/tenants/{tenantKey}:update": {
+      "post": {
+        "operationId": "PortalUpdateTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateTenantResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenantKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestkitServicePortalUpdateTenantBody"
             }
           }
         ],
@@ -8292,6 +8399,15 @@
       },
       "description": "CreateApiKeyRequest mints a credential pair for the tenant. The server\ngenerates access_key (\"ak_\" + 12 base36) and secret; the plaintext secret\nis returned exactly once and stored as a bcrypt hash."
     },
+    "TestkitServicePortalDeleteTenantBody": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string"
+        }
+      },
+      "description": "DeleteTenantRequest soft-deletes a tenant. The tenant must be disabled\nfirst (delete is not the kill-switch); reason is an audit label."
+    },
     "TestkitServicePortalDisableApiKeyBody": {
       "type": "object",
       "properties": {
@@ -8334,6 +8450,18 @@
         }
       },
       "description": "SetCapabilityRequest flips one capability service of a tenant."
+    },
+    "TestkitServicePortalUpdateTenantBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "remark": {
+          "type": "string"
+        }
+      },
+      "description": "UpdateTenantRequest edits name/remark only. tenant_key is immutable;\nabsent optional fields keep their current values."
     },
     "TestkitServiceReplaceEventRulesBody": {
       "type": "object",
@@ -9761,6 +9889,21 @@
         }
       }
     },
+    "v1BootstrapAdmin": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64",
+          "title": "mechanism 1: existing console account"
+        },
+        "newAccount": {
+          "$ref": "#/definitions/v1NewAdminAccount",
+          "title": "mechanism 2: create console account"
+        }
+      },
+      "description": "BootstrapAdmin: two explicit mechanisms — bind an existing console account,\nor create a new one. Never a generic \"identifier\" string (spec §6.1)."
+    },
     "v1BucketACL": {
       "type": "string",
       "enum": [
@@ -10256,6 +10399,56 @@
       "properties": {
         "template": {
           "$ref": "#/definitions/v1TemplateInfo"
+        }
+      }
+    },
+    "v1CreateTenantRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "capabilities is a subset of USER/MESSAGE/STORAGE/TELEMETRY/LICENSE; the\nempty set is allowed (enable later via SetCapability)."
+        },
+        "admin": {
+          "$ref": "#/definitions/v1BootstrapAdmin",
+          "description": "admin is optional — omit to bind the first console operator later."
+        }
+      }
+    },
+    "v1CreateTenantResponse": {
+      "type": "object",
+      "properties": {
+        "tenantKey": {
+          "type": "string"
+        },
+        "enabledCapabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "accessKey": {
+          "type": "string",
+          "title": "ak/sk always minted at creation; shown once"
+        },
+        "secret": {
+          "type": "string",
+          "title": "sk_…, shown once"
+        },
+        "bootstrapUserId": {
+          "type": "string",
+          "format": "int64",
+          "title": "0 when admin omitted or bound existing"
+        },
+        "initialPassword": {
+          "type": "string",
+          "title": "shown once; only when a new account was created"
         }
       }
     },
@@ -12580,6 +12773,23 @@
       },
       "description": "MyQuota mirrors storage.QuotaInfo (read-only snapshot of the caller's quota)."
     },
+    "v1NewAdminAccount": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "title": "email mechanism"
+        },
+        "phone": {
+          "type": "string",
+          "title": "phone mechanism (E.164)"
+        }
+      },
+      "description": "NewAdminAccount describes the console account to create for the bootstrap\nadmin; the server mints the initial password and returns it exactly once."
+    },
     "v1NextIDResponse": {
       "type": "object",
       "properties": {
@@ -14255,6 +14465,14 @@
       "properties": {
         "template": {
           "$ref": "#/definitions/v1TemplateInfo"
+        }
+      }
+    },
+    "v1UpdateTenantResponse": {
+      "type": "object",
+      "properties": {
+        "tenant": {
+          "$ref": "#/definitions/v1TenantInfo"
         }
       }
     },

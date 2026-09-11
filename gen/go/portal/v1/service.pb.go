@@ -27,14 +27,16 @@ var File_portal_v1_service_proto protoreflect.FileDescriptor
 
 const file_portal_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x17portal/v1/service.proto\x12\tportal.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a&portal/v1/admin_request_response.proto2\xc2\t\n" +
+	"\x17portal/v1/service.proto\x12\tportal.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a&portal/v1/admin_request_response.proto2\x8a\n" +
+	"\n" +
 	"\x12PortalAdminService\x12O\n" +
 	"\fCreateTenant\x12\x1e.portal.v1.CreateTenantRequest\x1a\x1f.portal.v1.CreateTenantResponse\x12F\n" +
 	"\tGetTenant\x12\x1b.portal.v1.GetTenantRequest\x1a\x1c.portal.v1.GetTenantResponse\x12L\n" +
 	"\vListTenants\x12\x1d.portal.v1.ListTenantsRequest\x1a\x1e.portal.v1.ListTenantsResponse\x12O\n" +
 	"\fUpdateTenant\x12\x1e.portal.v1.UpdateTenantRequest\x1a\x1f.portal.v1.UpdateTenantResponse\x12R\n" +
 	"\rSetCapability\x12\x1f.portal.v1.SetCapabilityRequest\x1a .portal.v1.SetCapabilityResponse\x12H\n" +
-	"\rDisableTenant\x12\x1f.portal.v1.DisableTenantRequest\x1a\x16.google.protobuf.Empty\x12O\n" +
+	"\rDisableTenant\x12\x1f.portal.v1.DisableTenantRequest\x1a\x16.google.protobuf.Empty\x12F\n" +
+	"\fDeleteTenant\x12\x1e.portal.v1.DeleteTenantRequest\x1a\x16.google.protobuf.Empty\x12O\n" +
 	"\fCreateApiKey\x12\x1e.portal.v1.CreateApiKeyRequest\x1a\x1f.portal.v1.CreateApiKeyResponse\x12L\n" +
 	"\vListApiKeys\x12\x1d.portal.v1.ListApiKeysRequest\x1a\x1e.portal.v1.ListApiKeysResponse\x12a\n" +
 	"\x12RotateApiKeySecret\x12$.portal.v1.RotateApiKeySecretRequest\x1a%.portal.v1.RotateApiKeySecretResponse\x12H\n" +
@@ -54,25 +56,26 @@ var file_portal_v1_service_proto_goTypes = []any{
 	(*UpdateTenantRequest)(nil),        // 3: portal.v1.UpdateTenantRequest
 	(*SetCapabilityRequest)(nil),       // 4: portal.v1.SetCapabilityRequest
 	(*DisableTenantRequest)(nil),       // 5: portal.v1.DisableTenantRequest
-	(*CreateApiKeyRequest)(nil),        // 6: portal.v1.CreateApiKeyRequest
-	(*ListApiKeysRequest)(nil),         // 7: portal.v1.ListApiKeysRequest
-	(*RotateApiKeySecretRequest)(nil),  // 8: portal.v1.RotateApiKeySecretRequest
-	(*DisableApiKeyRequest)(nil),       // 9: portal.v1.DisableApiKeyRequest
-	(*AddTenantMemberRequest)(nil),     // 10: portal.v1.AddTenantMemberRequest
-	(*RemoveTenantMemberRequest)(nil),  // 11: portal.v1.RemoveTenantMemberRequest
-	(*ListTenantMembersRequest)(nil),   // 12: portal.v1.ListTenantMembersRequest
-	(*emptypb.Empty)(nil),              // 13: google.protobuf.Empty
-	(*CreateTenantResponse)(nil),       // 14: portal.v1.CreateTenantResponse
-	(*GetTenantResponse)(nil),          // 15: portal.v1.GetTenantResponse
-	(*ListTenantsResponse)(nil),        // 16: portal.v1.ListTenantsResponse
-	(*UpdateTenantResponse)(nil),       // 17: portal.v1.UpdateTenantResponse
-	(*SetCapabilityResponse)(nil),      // 18: portal.v1.SetCapabilityResponse
-	(*CreateApiKeyResponse)(nil),       // 19: portal.v1.CreateApiKeyResponse
-	(*ListApiKeysResponse)(nil),        // 20: portal.v1.ListApiKeysResponse
-	(*RotateApiKeySecretResponse)(nil), // 21: portal.v1.RotateApiKeySecretResponse
-	(*ListTenantMembersResponse)(nil),  // 22: portal.v1.ListTenantMembersResponse
-	(*WhoAmIResponse)(nil),             // 23: portal.v1.WhoAmIResponse
-	(*MyCapabilitiesResponse)(nil),     // 24: portal.v1.MyCapabilitiesResponse
+	(*DeleteTenantRequest)(nil),        // 6: portal.v1.DeleteTenantRequest
+	(*CreateApiKeyRequest)(nil),        // 7: portal.v1.CreateApiKeyRequest
+	(*ListApiKeysRequest)(nil),         // 8: portal.v1.ListApiKeysRequest
+	(*RotateApiKeySecretRequest)(nil),  // 9: portal.v1.RotateApiKeySecretRequest
+	(*DisableApiKeyRequest)(nil),       // 10: portal.v1.DisableApiKeyRequest
+	(*AddTenantMemberRequest)(nil),     // 11: portal.v1.AddTenantMemberRequest
+	(*RemoveTenantMemberRequest)(nil),  // 12: portal.v1.RemoveTenantMemberRequest
+	(*ListTenantMembersRequest)(nil),   // 13: portal.v1.ListTenantMembersRequest
+	(*emptypb.Empty)(nil),              // 14: google.protobuf.Empty
+	(*CreateTenantResponse)(nil),       // 15: portal.v1.CreateTenantResponse
+	(*GetTenantResponse)(nil),          // 16: portal.v1.GetTenantResponse
+	(*ListTenantsResponse)(nil),        // 17: portal.v1.ListTenantsResponse
+	(*UpdateTenantResponse)(nil),       // 18: portal.v1.UpdateTenantResponse
+	(*SetCapabilityResponse)(nil),      // 19: portal.v1.SetCapabilityResponse
+	(*CreateApiKeyResponse)(nil),       // 20: portal.v1.CreateApiKeyResponse
+	(*ListApiKeysResponse)(nil),        // 21: portal.v1.ListApiKeysResponse
+	(*RotateApiKeySecretResponse)(nil), // 22: portal.v1.RotateApiKeySecretResponse
+	(*ListTenantMembersResponse)(nil),  // 23: portal.v1.ListTenantMembersResponse
+	(*WhoAmIResponse)(nil),             // 24: portal.v1.WhoAmIResponse
+	(*MyCapabilitiesResponse)(nil),     // 25: portal.v1.MyCapabilitiesResponse
 }
 var file_portal_v1_service_proto_depIdxs = []int32{
 	0,  // 0: portal.v1.PortalAdminService.CreateTenant:input_type -> portal.v1.CreateTenantRequest
@@ -81,32 +84,34 @@ var file_portal_v1_service_proto_depIdxs = []int32{
 	3,  // 3: portal.v1.PortalAdminService.UpdateTenant:input_type -> portal.v1.UpdateTenantRequest
 	4,  // 4: portal.v1.PortalAdminService.SetCapability:input_type -> portal.v1.SetCapabilityRequest
 	5,  // 5: portal.v1.PortalAdminService.DisableTenant:input_type -> portal.v1.DisableTenantRequest
-	6,  // 6: portal.v1.PortalAdminService.CreateApiKey:input_type -> portal.v1.CreateApiKeyRequest
-	7,  // 7: portal.v1.PortalAdminService.ListApiKeys:input_type -> portal.v1.ListApiKeysRequest
-	8,  // 8: portal.v1.PortalAdminService.RotateApiKeySecret:input_type -> portal.v1.RotateApiKeySecretRequest
-	9,  // 9: portal.v1.PortalAdminService.DisableApiKey:input_type -> portal.v1.DisableApiKeyRequest
-	10, // 10: portal.v1.PortalAdminService.AddTenantMember:input_type -> portal.v1.AddTenantMemberRequest
-	11, // 11: portal.v1.PortalAdminService.RemoveTenantMember:input_type -> portal.v1.RemoveTenantMemberRequest
-	12, // 12: portal.v1.PortalAdminService.ListTenantMembers:input_type -> portal.v1.ListTenantMembersRequest
-	13, // 13: portal.v1.PortalAdminService.WhoAmI:input_type -> google.protobuf.Empty
-	13, // 14: portal.v1.PortalAdminService.MyCapabilities:input_type -> google.protobuf.Empty
-	14, // 15: portal.v1.PortalAdminService.CreateTenant:output_type -> portal.v1.CreateTenantResponse
-	15, // 16: portal.v1.PortalAdminService.GetTenant:output_type -> portal.v1.GetTenantResponse
-	16, // 17: portal.v1.PortalAdminService.ListTenants:output_type -> portal.v1.ListTenantsResponse
-	17, // 18: portal.v1.PortalAdminService.UpdateTenant:output_type -> portal.v1.UpdateTenantResponse
-	18, // 19: portal.v1.PortalAdminService.SetCapability:output_type -> portal.v1.SetCapabilityResponse
-	13, // 20: portal.v1.PortalAdminService.DisableTenant:output_type -> google.protobuf.Empty
-	19, // 21: portal.v1.PortalAdminService.CreateApiKey:output_type -> portal.v1.CreateApiKeyResponse
-	20, // 22: portal.v1.PortalAdminService.ListApiKeys:output_type -> portal.v1.ListApiKeysResponse
-	21, // 23: portal.v1.PortalAdminService.RotateApiKeySecret:output_type -> portal.v1.RotateApiKeySecretResponse
-	13, // 24: portal.v1.PortalAdminService.DisableApiKey:output_type -> google.protobuf.Empty
-	13, // 25: portal.v1.PortalAdminService.AddTenantMember:output_type -> google.protobuf.Empty
-	13, // 26: portal.v1.PortalAdminService.RemoveTenantMember:output_type -> google.protobuf.Empty
-	22, // 27: portal.v1.PortalAdminService.ListTenantMembers:output_type -> portal.v1.ListTenantMembersResponse
-	23, // 28: portal.v1.PortalAdminService.WhoAmI:output_type -> portal.v1.WhoAmIResponse
-	24, // 29: portal.v1.PortalAdminService.MyCapabilities:output_type -> portal.v1.MyCapabilitiesResponse
-	15, // [15:30] is the sub-list for method output_type
-	0,  // [0:15] is the sub-list for method input_type
+	6,  // 6: portal.v1.PortalAdminService.DeleteTenant:input_type -> portal.v1.DeleteTenantRequest
+	7,  // 7: portal.v1.PortalAdminService.CreateApiKey:input_type -> portal.v1.CreateApiKeyRequest
+	8,  // 8: portal.v1.PortalAdminService.ListApiKeys:input_type -> portal.v1.ListApiKeysRequest
+	9,  // 9: portal.v1.PortalAdminService.RotateApiKeySecret:input_type -> portal.v1.RotateApiKeySecretRequest
+	10, // 10: portal.v1.PortalAdminService.DisableApiKey:input_type -> portal.v1.DisableApiKeyRequest
+	11, // 11: portal.v1.PortalAdminService.AddTenantMember:input_type -> portal.v1.AddTenantMemberRequest
+	12, // 12: portal.v1.PortalAdminService.RemoveTenantMember:input_type -> portal.v1.RemoveTenantMemberRequest
+	13, // 13: portal.v1.PortalAdminService.ListTenantMembers:input_type -> portal.v1.ListTenantMembersRequest
+	14, // 14: portal.v1.PortalAdminService.WhoAmI:input_type -> google.protobuf.Empty
+	14, // 15: portal.v1.PortalAdminService.MyCapabilities:input_type -> google.protobuf.Empty
+	15, // 16: portal.v1.PortalAdminService.CreateTenant:output_type -> portal.v1.CreateTenantResponse
+	16, // 17: portal.v1.PortalAdminService.GetTenant:output_type -> portal.v1.GetTenantResponse
+	17, // 18: portal.v1.PortalAdminService.ListTenants:output_type -> portal.v1.ListTenantsResponse
+	18, // 19: portal.v1.PortalAdminService.UpdateTenant:output_type -> portal.v1.UpdateTenantResponse
+	19, // 20: portal.v1.PortalAdminService.SetCapability:output_type -> portal.v1.SetCapabilityResponse
+	14, // 21: portal.v1.PortalAdminService.DisableTenant:output_type -> google.protobuf.Empty
+	14, // 22: portal.v1.PortalAdminService.DeleteTenant:output_type -> google.protobuf.Empty
+	20, // 23: portal.v1.PortalAdminService.CreateApiKey:output_type -> portal.v1.CreateApiKeyResponse
+	21, // 24: portal.v1.PortalAdminService.ListApiKeys:output_type -> portal.v1.ListApiKeysResponse
+	22, // 25: portal.v1.PortalAdminService.RotateApiKeySecret:output_type -> portal.v1.RotateApiKeySecretResponse
+	14, // 26: portal.v1.PortalAdminService.DisableApiKey:output_type -> google.protobuf.Empty
+	14, // 27: portal.v1.PortalAdminService.AddTenantMember:output_type -> google.protobuf.Empty
+	14, // 28: portal.v1.PortalAdminService.RemoveTenantMember:output_type -> google.protobuf.Empty
+	23, // 29: portal.v1.PortalAdminService.ListTenantMembers:output_type -> portal.v1.ListTenantMembersResponse
+	24, // 30: portal.v1.PortalAdminService.WhoAmI:output_type -> portal.v1.WhoAmIResponse
+	25, // 31: portal.v1.PortalAdminService.MyCapabilities:output_type -> portal.v1.MyCapabilitiesResponse
+	16, // [16:32] is the sub-list for method output_type
+	0,  // [0:16] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -35,6 +35,12 @@ service PortalAdminService {
   // tenant fails every tenant-scoped surface immediately.
   rpc DisableTenant(DisableTenantRequest) returns (google.protobuf.Empty);
 
+  // DeleteTenant soft-deletes a tenant (gorm soft-delete row + registry
+  // disappearance). Prerequisite: the tenant must already be disabled —
+  // delete is never the kill-switch itself. Per-service data is retained
+  // (unsubscribe semantics); tenant_key is never reused.
+  rpc DeleteTenant(DeleteTenantRequest) returns (google.protobuf.Empty);
+
   // Api keys (PLATFORM any tenant; TENANT_ADMIN own tenant only)
 
   // CreateApiKey mints a new credential pair for a tenant; the plaintext

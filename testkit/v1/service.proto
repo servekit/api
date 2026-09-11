@@ -1038,6 +1038,18 @@ service TestkitService {
   rpc PortalListTenants(portal.v1.ListTenantsRequest) returns (portal.v1.ListTenantsResponse) {
     option (google.api.http) = {get: "/api/v1/portal/tenants"};
   }
+  rpc PortalCreateTenant(portal.v1.CreateTenantRequest) returns (portal.v1.CreateTenantResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants"
+      body: "*"
+    };
+  }
+  rpc PortalUpdateTenant(portal.v1.UpdateTenantRequest) returns (portal.v1.UpdateTenantResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}:update"
+      body: "*"
+    };
+  }
   rpc PortalSetCapability(portal.v1.SetCapabilityRequest) returns (portal.v1.SetCapabilityResponse) {
     option (google.api.http) = {
       post: "/api/v1/portal/tenants/{tenant_key}:setCapability"
@@ -1047,6 +1059,12 @@ service TestkitService {
   rpc PortalDisableTenant(portal.v1.DisableTenantRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/api/v1/portal/tenants/{tenant_key}:disable"
+      body: "*"
+    };
+  }
+  rpc PortalDeleteTenant(portal.v1.DeleteTenantRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/portal/tenants/{tenant_key}:delete"
       body: "*"
     };
   }

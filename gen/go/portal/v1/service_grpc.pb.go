@@ -28,6 +28,7 @@ const (
 	PortalAdminService_UpdateTenant_FullMethodName       = "/portal.v1.PortalAdminService/UpdateTenant"
 	PortalAdminService_SetCapability_FullMethodName      = "/portal.v1.PortalAdminService/SetCapability"
 	PortalAdminService_DisableTenant_FullMethodName      = "/portal.v1.PortalAdminService/DisableTenant"
+	PortalAdminService_DeleteTenant_FullMethodName       = "/portal.v1.PortalAdminService/DeleteTenant"
 	PortalAdminService_CreateApiKey_FullMethodName       = "/portal.v1.PortalAdminService/CreateApiKey"
 	PortalAdminService_ListApiKeys_FullMethodName        = "/portal.v1.PortalAdminService/ListApiKeys"
 	PortalAdminService_RotateApiKeySecret_FullMethodName = "/portal.v1.PortalAdminService/RotateApiKeySecret"
@@ -64,6 +65,11 @@ type PortalAdminServiceClient interface {
 	// DisableTenant toggles a tenant between disabled and active. A disabled
 	// tenant fails every tenant-scoped surface immediately.
 	DisableTenant(ctx context.Context, in *DisableTenantRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteTenant soft-deletes a tenant (gorm soft-delete row + registry
+	// disappearance). Prerequisite: the tenant must already be disabled —
+	// delete is never the kill-switch itself. Per-service data is retained
+	// (unsubscribe semantics); tenant_key is never reused.
+	DeleteTenant(ctx context.Context, in *DeleteTenantRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// CreateApiKey mints a new credential pair for a tenant; the plaintext
 	// secret is returned exactly once.
 	CreateApiKey(ctx context.Context, in *CreateApiKeyRequest, opts ...grpc.CallOption) (*CreateApiKeyResponse, error)
@@ -149,6 +155,16 @@ func (c *portalAdminServiceClient) DisableTenant(ctx context.Context, in *Disabl
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PortalAdminService_DisableTenant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *portalAdminServiceClient) DeleteTenant(ctx context.Context, in *DeleteTenantRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PortalAdminService_DeleteTenant_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -270,6 +286,11 @@ type PortalAdminServiceServer interface {
 	// DisableTenant toggles a tenant between disabled and active. A disabled
 	// tenant fails every tenant-scoped surface immediately.
 	DisableTenant(context.Context, *DisableTenantRequest) (*emptypb.Empty, error)
+	// DeleteTenant soft-deletes a tenant (gorm soft-delete row + registry
+	// disappearance). Prerequisite: the tenant must already be disabled —
+	// delete is never the kill-switch itself. Per-service data is retained
+	// (unsubscribe semantics); tenant_key is never reused.
+	DeleteTenant(context.Context, *DeleteTenantRequest) (*emptypb.Empty, error)
 	// CreateApiKey mints a new credential pair for a tenant; the plaintext
 	// secret is returned exactly once.
 	CreateApiKey(context.Context, *CreateApiKeyRequest) (*CreateApiKeyResponse, error)
@@ -318,6 +339,9 @@ func (UnimplementedPortalAdminServiceServer) SetCapability(context.Context, *Set
 }
 func (UnimplementedPortalAdminServiceServer) DisableTenant(context.Context, *DisableTenantRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DisableTenant not implemented")
+}
+func (UnimplementedPortalAdminServiceServer) DeleteTenant(context.Context, *DeleteTenantRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTenant not implemented")
 }
 func (UnimplementedPortalAdminServiceServer) CreateApiKey(context.Context, *CreateApiKeyRequest) (*CreateApiKeyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateApiKey not implemented")
@@ -471,6 +495,24 @@ func _PortalAdminService_DisableTenant_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PortalAdminServiceServer).DisableTenant(ctx, req.(*DisableTenantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PortalAdminService_DeleteTenant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTenantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PortalAdminServiceServer).DeleteTenant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PortalAdminService_DeleteTenant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PortalAdminServiceServer).DeleteTenant(ctx, req.(*DeleteTenantRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -667,6 +709,10 @@ var PortalAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DisableTenant",
 			Handler:    _PortalAdminService_DisableTenant_Handler,
+		},
+		{
+			MethodName: "DeleteTenant",
+			Handler:    _PortalAdminService_DeleteTenant_Handler,
 		},
 		{
 			MethodName: "CreateApiKey",
